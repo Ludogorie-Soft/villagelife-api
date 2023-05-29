@@ -10,7 +10,4 @@ public class VillageApplication {
 		SpringApplication.run(VillageApplication.class, args);
 	}
 
-	//akfansfsjdnsaojnsmsdfdsapdfe
-	//aofasf
-
 }
