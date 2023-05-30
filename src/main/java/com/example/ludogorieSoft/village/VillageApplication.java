@@ -2,9 +2,8 @@ package com.example.ludogorieSoft.village;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
-@SpringBootApplication(exclude={ DataSourceAutoConfiguration.class})
+@SpringBootApplication
 public class VillageApplication {
 
 	public static void main(String[] args) {
