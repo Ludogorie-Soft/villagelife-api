@@ -1,20 +1,16 @@
 package com.example.ludogorieSoft.village.Model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
+@Table(name = "landscapes")
 @Data
-@Table(name = "ethnicities")
-@AllArgsConstructor
-@NoArgsConstructor
-public class Ethnicity {
+public class Landscape {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
     private Long id;
-    private String ethnicityName;
+    private String landscapeName;
 }
