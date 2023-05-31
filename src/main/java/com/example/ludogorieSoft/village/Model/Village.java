@@ -8,6 +8,7 @@ import java.util.Date;
 
 @Entity
 @Data
+@Table(name = "villages")
 public class Village {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
