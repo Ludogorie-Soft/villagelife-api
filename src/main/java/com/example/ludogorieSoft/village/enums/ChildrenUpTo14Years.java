@@ -7,10 +7,10 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ChildrenUpTo14Years {
 
-    Below10Years ("below 10"),
+    Below10Years ("под 10"),
     From11To20Years ("11 - 20"),
     From21To50Years ("21 - 50"),
-    Over50Years ("over 50");
+    Over50Years ("над 50");
 
     private final String name;
 
