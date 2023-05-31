@@ -15,9 +15,12 @@ public class Village {
     @Column(name = "id", nullable = false)
     private Long id;
     private String name;
-   // private Population population;
+    @OneToOne
+    private Population population;
     private Date dateUpload;
     private boolean status;
+
+
 
 
 
