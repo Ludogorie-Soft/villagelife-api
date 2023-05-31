@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Data
 @Table(name = "objects")
 @AllArgsConstructor
-public class Object {
+public class ObjectAroundVillage {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
