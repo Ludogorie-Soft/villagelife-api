@@ -17,5 +17,5 @@ public class ObjectVillage {
     @ManyToOne
     private Village village;
     @ManyToOne
-    private Object object;
+    private ObjectAroundVillage objectAroundVillage;
 }
