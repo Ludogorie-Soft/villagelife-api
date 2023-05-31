@@ -6,18 +6,14 @@ import javax.persistence.*;
 
 @Entity
 @Data
-public class Village_Answer_Question {
+public class VillageGroundCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
     private Long id;
     @ManyToOne
-    @JoinColumn(name = "villages_id")
     private Village villageID;
     @ManyToOne
-    @JoinColumn(name = "questions_id")
-    private Questions questionsID;
-    private String answer;
-
+    private GroundCategory groundCategory;
 
 }
