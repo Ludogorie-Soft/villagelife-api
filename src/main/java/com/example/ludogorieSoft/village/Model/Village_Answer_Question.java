@@ -12,7 +12,7 @@ public class Village_Answer_Question {
     @Column(name = "id", nullable = false)
     private Long id;
     @ManyToOne
-    @JoinColumn(name = "village_id")
+    @JoinColumn(name = "villages_id")
     private Village villageID;
     @ManyToOne
     @JoinColumn(name = "questions_id")
