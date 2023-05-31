@@ -12,5 +12,5 @@ public enum Consents {
     RatherDisagree(30),
     Disagree(0);
 
-    private int value;
+    private final int value;
 }
