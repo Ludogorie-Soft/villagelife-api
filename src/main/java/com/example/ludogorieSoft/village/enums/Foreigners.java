@@ -9,7 +9,7 @@ public enum Foreigners {
 
     Yes ("Да"),
     IDontKnow("Не знам"),
-    No("не");
+    No("Не");
 
     private final String name;
 }
