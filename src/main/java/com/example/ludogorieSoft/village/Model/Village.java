@@ -1,12 +1,14 @@
 package com.example.ludogorieSoft.village.Model;
+
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 @Data
-@Table(name = "village")
+@Table(name = "villages")
 public class Village {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
