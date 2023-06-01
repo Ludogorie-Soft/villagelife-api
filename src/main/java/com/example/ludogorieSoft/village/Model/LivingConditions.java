@@ -8,8 +8,6 @@ import javax.persistence.*;
 @Data
 @Table(name = "living_conditions")
 @NoArgsConstructor
-@Getter
-@Setter
 @AllArgsConstructor
 public class LivingConditions {
     @Id

@@ -20,8 +20,4 @@ public class Village {
     private Date dateUpload;
     private boolean status;
 
-
-
-
-
 }
