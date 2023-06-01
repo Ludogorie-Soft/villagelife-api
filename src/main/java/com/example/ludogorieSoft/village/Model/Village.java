@@ -1,14 +1,16 @@
 package com.example.ludogorieSoft.village.Model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.format.annotation.DateTimeFormat;
-
+import lombok.NoArgsConstructor;
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
 @Table(name = "villages")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Village {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -17,7 +19,11 @@ public class Village {
     private String name;
     @OneToOne
     private Population population;
-    private Date dateUpload;
+    private LocalDateTime dateUpload;
     private boolean status;
+    @ManyToOne
+    @JoinColumn(name = "admin_id" )
+    private Administrator admin;
+    private LocalDateTime dateApproved;
 
 }
