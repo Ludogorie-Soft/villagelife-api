@@ -1,4 +1,4 @@
-package com.example.ludogorieSoft.village.repositories;
+package com.example.ludogorieSoft.village.Repositories;
 
 import com.example.ludogorieSoft.village.Model.LivingConditions;
 import org.springframework.data.jpa.repository.JpaRepository;

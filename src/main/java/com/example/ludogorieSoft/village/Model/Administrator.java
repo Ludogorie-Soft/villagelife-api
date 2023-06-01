@@ -1,5 +1,6 @@
 package com.example.ludogorieSoft.village.Model;
 
+import jdk.jfr.Name;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.validator.constraints.Length;
@@ -40,6 +41,7 @@ public class Administrator {
     private String mobile;
 
     @CreationTimestamp
+
     private LocalDateTime createdAt;
 
     private final boolean enabled = true;

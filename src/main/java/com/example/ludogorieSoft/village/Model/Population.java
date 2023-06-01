@@ -1,13 +1,12 @@
 package com.example.ludogorieSoft.village.Model;
 
-import com.example.ludogorieSoft.village.enums.ChildrenUpTo14Years;
-import com.example.ludogorieSoft.village.enums.Foreigners;
-import com.example.ludogorieSoft.village.enums.NumberOfPopulation;
-import com.example.ludogorieSoft.village.enums.ResidentsUpTo50Years;
+import com.example.ludogorieSoft.village.Enums.ChildrenUpTo14Years;
+import com.example.ludogorieSoft.village.Enums.Foreigners;
+import com.example.ludogorieSoft.village.Enums.NumberOfPopulation;
+import com.example.ludogorieSoft.village.Enums.ResidentsUpTo50Years;
 import lombok.Data;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 
 @Entity
 @Data

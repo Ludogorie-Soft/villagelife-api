@@ -1,4 +1,4 @@
-package com.example.ludogorieSoft.village.enums;
+package com.example.ludogorieSoft.village.Enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
