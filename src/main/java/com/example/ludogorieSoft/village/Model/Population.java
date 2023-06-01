@@ -18,8 +18,8 @@ public class Population {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Population cannot be empty!")
-    private Integer population;
+//    @NotBlank(message = "Population cannot be empty!")
+//    private Integer population;
 
     private NumberOfPopulation numberOfPopulation;
 
@@ -28,5 +28,6 @@ public class Population {
     private ChildrenUpTo14Years childrenUpTo14Years;
 
     private Foreigners foreigners;
+
 
 }
