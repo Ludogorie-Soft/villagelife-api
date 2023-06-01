@@ -17,12 +17,8 @@ public class Population {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Enumerated(EnumType.STRING)
     private NumberOfPopulation numberOfPopulation;
-    @Enumerated(EnumType.STRING)
     private ResidentsUpTo50Years residentsUpTo50Years;
-    @Enumerated(EnumType.STRING)
     private ChildrenUpTo14Years childrenUpTo14Years;
-    @Enumerated(EnumType.STRING)
     private Foreigners foreigners;
 }
