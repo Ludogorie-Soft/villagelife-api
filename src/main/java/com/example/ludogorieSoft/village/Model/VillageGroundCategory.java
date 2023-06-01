@@ -10,6 +10,7 @@ import javax.persistence.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "village_ground_categories")
 public class VillageGroundCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

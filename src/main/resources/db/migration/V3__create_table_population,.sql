@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS population (
+CREATE TABLE IF NOT EXISTS populations (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     number_of_population VARCHAR(255),
     residents_up_to_50_years VARCHAR(255),
