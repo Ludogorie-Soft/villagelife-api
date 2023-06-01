@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class AdministratorService {
-    AdministratorRepository administratorRepository;
+    private final AdministratorRepository administratorRepository;
     private final ModelMapper modelMapper;
     public AdministratorDTO administratorToAdministratorDTO(Administrator administrator){
         return modelMapper.map(administrator, AdministratorDTO.class);
