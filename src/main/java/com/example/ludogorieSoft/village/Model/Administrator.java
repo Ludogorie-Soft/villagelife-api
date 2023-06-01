@@ -41,7 +41,6 @@ public class Administrator {
     private String mobile;
 
     @CreationTimestamp
-
     private LocalDateTime createdAt;
 
     private final boolean enabled = true;
