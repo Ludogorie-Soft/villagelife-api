@@ -1,9 +1,9 @@
 package com.example.ludogorieSoft.village.Services;
 
 import com.example.ludogorieSoft.village.DTOs.VillagePopulationAssertionDTO;
-import com.example.ludogorieSoft.village.Exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.Model.VillagePopulationAssertion;
 import com.example.ludogorieSoft.village.Repositories.VillagePopulationAssertionRepository;
+import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -13,23 +13,28 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
+
 @Service
 @AllArgsConstructor
 public class VillagePopulationAssertionService {
     private final VillagePopulationAssertionRepository villagePopulationAssertionRepository;
     private final ModelMapper modelMapper;
-    public VillagePopulationAssertionDTO toDTO(VillagePopulationAssertion villagePopulationAssertion){return modelMapper.map(villagePopulationAssertion,VillagePopulationAssertionDTO.class); }
+    public VillagePopulationAssertionDTO toDTO(VillagePopulationAssertion forMap){return modelMapper.map(forMap,VillagePopulationAssertionDTO.class); }
 
     public List<VillagePopulationAssertionDTO> getAllVillagePopulationAssertion(){
         List<VillagePopulationAssertion> villagePopulationAssertions=villagePopulationAssertionRepository.findAll();
         return villagePopulationAssertions
-                .stream().map(this::toDTO).
-                collect(Collectors.toList());
+                .stream()
+                .map(this::toDTO)
+                .collect(toList());
     }
-    public VillagePopulationAssertionDTO CreateVillagePopulationAssertionDTO (VillagePopulationAssertion villagePopulationAssertion) {
+
+    public VillagePopulationAssertionDTO createVillagePopulationAssertionDTO (VillagePopulationAssertion villagePopulationAssertion) {
         villagePopulationAssertionRepository.save(villagePopulationAssertion);
         return toDTO(villagePopulationAssertion);
     }
+
     public VillagePopulationAssertionDTO getByID(Long id){
         Optional<VillagePopulationAssertion> optionalVillagePopulationAssertion= villagePopulationAssertionRepository.findById(id);
         if (optionalVillagePopulationAssertion.isEmpty()){

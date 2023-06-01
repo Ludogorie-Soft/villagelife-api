@@ -9,10 +9,10 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 @ControllerAdvice
 public class ApiExceptionHandler {
-    @ExceptionHandler(value = {ApiRequestException.class})
-    public ResponseEntity<Object> handleApiRequestException(ApiRequestException e){
+    @ExceptionHandler(value = {com.example.ludogorieSoft.village.exeptions.ApiRequestException.class})
+    public ResponseEntity<Object> handleApiRequestException(com.example.ludogorieSoft.village.exeptions.ApiRequestException e){
         HttpStatus badRequest = HttpStatus.BAD_REQUEST;
-        ApiException apiException = new ApiException(
+        com.example.ludogorieSoft.village.exeptions.ApiException apiException = new com.example.ludogorieSoft.village.exeptions.ApiException(
                 e.getMessage(),
                 e.getCause(),
                 badRequest,

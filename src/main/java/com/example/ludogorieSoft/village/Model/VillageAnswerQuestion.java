@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Data
 public class VillageAnswerQuestion {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
     @ManyToOne

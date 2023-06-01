@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 @Table(name = "village_population_assertion")
 public class VillagePopulationAssertion {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
     @ManyToOne

@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Table(name = "village_landscape")
 public class VillageLandscape {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
     @ManyToOne
