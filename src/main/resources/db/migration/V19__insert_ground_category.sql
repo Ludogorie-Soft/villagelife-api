@@ -1,5 +1,12 @@
-INSERT INTO `ground_categories` (`id`, `ground_category`)
-VALUES (NULL, 'първа'), (NULL, 'втора'), (NULL, 'трета'),
-(NULL, 'четвърта'), (NULL, 'пета'), (NULL, 'шеста'),
-(NULL, 'седма'), (NULL, 'осма'), (NULL, 'девета'),
-(NULL, 'десета'), (NULL, 'не знам');
+INSERT INTO ground_categories (ground_category) VALUES
+('първа'),
+('втора'),
+('трета'),
+('четвърта'),
+('пета'),
+('шеста'),
+('седма'),
+('осма'),
+('девета'),
+('десета'),
+('не знам');
