@@ -1,9 +1,8 @@
 package com.example.ludogorieSoft.village.controllers;
 
-import com.example.ludogorieSoft.village.DTOs.EthnicityVillageDTO;
-import com.example.ludogorieSoft.village.Model.Ethnicity;
-import com.example.ludogorieSoft.village.Model.EthnicityVillage;
-import com.example.ludogorieSoft.village.Services.EthnicityVillageService;
+import com.example.ludogorieSoft.village.dtos.EthnicityVillageDTO;
+import com.example.ludogorieSoft.village.model.EthnicityVillage;
+import com.example.ludogorieSoft.village.services.EthnicityVillageService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

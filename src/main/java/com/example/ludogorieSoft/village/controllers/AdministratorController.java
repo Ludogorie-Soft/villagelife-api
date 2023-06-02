@@ -1,8 +1,8 @@
 package com.example.ludogorieSoft.village.controllers;
 
-import com.example.ludogorieSoft.village.DTOs.AdministratorDTO;
-import com.example.ludogorieSoft.village.Model.Administrator;
-import com.example.ludogorieSoft.village.Services.AdministratorService;
+import com.example.ludogorieSoft.village.dtos.AdministratorDTO;
+import com.example.ludogorieSoft.village.model.Administrator;
+import com.example.ludogorieSoft.village.services.AdministratorService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

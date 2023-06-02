@@ -1,8 +1,8 @@
 package com.example.ludogorieSoft.village.controllers;
 
-import com.example.ludogorieSoft.village.DTOs.LandscapeDTO;
-import com.example.ludogorieSoft.village.Model.Landscape;
-import com.example.ludogorieSoft.village.Services.LandscapeService;
+import com.example.ludogorieSoft.village.dtos.LandscapeDTO;
+import com.example.ludogorieSoft.village.model.Landscape;
+import com.example.ludogorieSoft.village.services.LandscapeService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,13 +18,12 @@ public class LandscapeController {
     private final LandscapeService landscapeService;
     @GetMapping
     public ResponseEntity<List<LandscapeDTO>> getAllLandscapes() {
-        System.out.println("TEST Controller: " + landscapeService.getAllLandscapes());
         return ResponseEntity.ok(landscapeService.getAllLandscapes());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<LandscapeDTO> getLandscapeByID(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(landscapeService.getByLandscapeId(id));
+        return ResponseEntity.ok(landscapeService.getLandscapeById(id));
     }
 
     @PostMapping

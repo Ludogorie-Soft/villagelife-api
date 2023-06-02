@@ -1,7 +1,0 @@
-package com.example.ludogorieSoft.village.Repositories;
-
-import com.example.ludogorieSoft.village.Model.EthnicityVillage;
-import org.springframework.data.jpa.repository.JpaRepository;
-
-public interface EthnicityVillageRepository extends JpaRepository<EthnicityVillage, Long> {
-}

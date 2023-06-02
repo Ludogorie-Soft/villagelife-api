@@ -1,17 +1,14 @@
 package com.example.ludogorieSoft.village.controllers;
 
-import com.example.ludogorieSoft.village.DTOs.EthnicityVillageDTO;
-import com.example.ludogorieSoft.village.DTOs.GroundCategoryDTO;
-import com.example.ludogorieSoft.village.Model.GroundCategory;
-import com.example.ludogorieSoft.village.Services.GroundCategoryService;
+import com.example.ludogorieSoft.village.dtos.GroundCategoryDTO;
+import com.example.ludogorieSoft.village.model.GroundCategory;
+import com.example.ludogorieSoft.village.services.GroundCategoryService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
-import java.net.URI;
 import java.util.List;
 
 @RestController
