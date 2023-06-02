@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class VillageGroundCategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<VillageGroundCategoryDTO> createVillageGroundCategories(@RequestBody VillageGroundCategory VillageGroundCategory, UriComponentsBuilder uriComponentsBuilder) {
+    public ResponseEntity<VillageGroundCategoryDTO> createVillageGroundCategories(@Valid @RequestBody VillageGroundCategory VillageGroundCategory, UriComponentsBuilder uriComponentsBuilder) {
         URI location = uriComponentsBuilder.path("/api/v1/villageGroundCategory/{id}")
                 .buildAndExpand(villageGroundCategoryService.createVillageGroundCategoryDTO(VillageGroundCategory).getId())
                 .toUri();
@@ -40,7 +41,7 @@ public class VillageGroundCategoryController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<VillageGroundCategoryDTO> updateVillageGroundCategory(@PathVariable("id") Long id, @RequestBody VillageGroundCategory villageGroundCategory) {
+    public ResponseEntity<VillageGroundCategoryDTO> updateVillageGroundCategory(@PathVariable("id") Long id, @Valid @RequestBody VillageGroundCategory villageGroundCategory) {
         return ResponseEntity.ok(villageGroundCategoryService.updateVillageGroundCategory(id, villageGroundCategory));
     }
 
