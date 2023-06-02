@@ -1,13 +1,10 @@
 package com.example.ludogorieSoft.village.Services;
 
-import com.example.ludogorieSoft.village.DTOs.AdministratorDTO;
 import com.example.ludogorieSoft.village.DTOs.PopulationDTO;
-import com.example.ludogorieSoft.village.Model.Administrator;
 import com.example.ludogorieSoft.village.Model.Population;
 import com.example.ludogorieSoft.village.Repositories.PopulationRepository;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -63,8 +60,8 @@ public class PopulationService {
         }
         findPopulation.get().setNumberOfPopulation(population.getNumberOfPopulation());
         findPopulation.get().setForeigners(population.getForeigners());
-        findPopulation.get().setChildrenUpTo14Years(population.getChildrenUpTo14Years());
-        findPopulation.get().setResidentsUpTo50Years(population.getResidentsUpTo50Years());
+//        findPopulation.get().setChildrenUpTo14Years(population.getChildrenUpTo14Years());
+//        findPopulation.get().setResidentsUpTo50Years(population.getResidentsUpTo50Years());
 
         populationRepository.save(findPopulation.get());
         return populationToPopulationDTO(findPopulation.get());
