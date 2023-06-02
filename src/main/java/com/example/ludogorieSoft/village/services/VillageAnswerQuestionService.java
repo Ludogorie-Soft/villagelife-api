@@ -93,7 +93,4 @@ public class VillageAnswerQuestionService {
         villageAnswerQuestionRepository.save(foundVillageAnswerQuestion.get());
         return toDTO(foundVillageAnswerQuestion.get());
     }
-
-
-
 }

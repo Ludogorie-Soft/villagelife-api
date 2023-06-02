@@ -1,9 +1,13 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.VillageGroundCategoryDTO;
+import com.example.ludogorieSoft.village.model.GroundCategory;
+import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.model.VillageGroundCategory;
+import com.example.ludogorieSoft.village.repositories.GroundCategoryRepository;
 import com.example.ludogorieSoft.village.repositories.VillageGroundCategoryRepository;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
+import com.example.ludogorieSoft.village.repositories.VillageRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -18,6 +22,8 @@ import java.util.stream.Collectors;
 public class VillageGroundCategoryService {
 
     private final VillageGroundCategoryRepository villageGroundCategoryRepository;
+    private final VillageRepository villageRepository;
+    private final GroundCategoryRepository groundCategoryRepository;
     private final ModelMapper modelMapper;
 
     public VillageGroundCategoryDTO toDTO(VillageGroundCategory forMap) {
@@ -39,25 +45,45 @@ public class VillageGroundCategoryService {
         }
         return toDTO(optionalVillageGroundCategory.get());
     }
-
-    public VillageGroundCategoryDTO createVillageGroundCategoryDTO(VillageGroundCategory villageGroundCategory) {
+    public VillageGroundCategoryDTO createVillageGroundCategoryDTO(VillageGroundCategoryDTO villageGroundCategoryDTO) {
+        VillageGroundCategory villageGroundCategory = new VillageGroundCategory();
+        Optional<Village> village = villageRepository.findById(villageGroundCategoryDTO.getVillageId());
+        if (village.isPresent()){
+            villageGroundCategory.setVillage(village.get());
+        }else {
+            throw new ApiRequestException("Village not found");
+        }
+        Optional<GroundCategory> groundCategory = groundCategoryRepository.findById(villageGroundCategoryDTO.getGroundCategoryId());
+        if (groundCategory.isPresent()){
+            villageGroundCategory.setGroundCategory(groundCategory.get());
+        }else {
+            throw new ApiRequestException("GroundCategory not found");
+        }
         villageGroundCategoryRepository.save(villageGroundCategory);
         return toDTO(villageGroundCategory);
     }
 
-    public VillageGroundCategoryDTO updateVillageGroundCategory(Long id, VillageGroundCategory villageGroundCategory) {
+
+    public VillageGroundCategoryDTO updateVillageGroundCategory(Long id, VillageGroundCategoryDTO villageGroundCategoryDTO) {
         Optional<VillageGroundCategory> foundVillageGroundCategory = villageGroundCategoryRepository.findById(id);
         if (foundVillageGroundCategory.isEmpty()) {
             throw new ApiRequestException("Village Ground Category Not Found");
         }
-        foundVillageGroundCategory.get().setId(villageGroundCategory.getId());
-        foundVillageGroundCategory.get().setVillage(villageGroundCategory.getVillage());
-        foundVillageGroundCategory.get().setGroundCategory(villageGroundCategory.getGroundCategory());
-
+        Optional<Village> village = villageRepository.findById(villageGroundCategoryDTO.getVillageId());
+        if (village.isPresent()){
+            foundVillageGroundCategory.get().setVillage(village.get());
+        }else {
+            throw new ApiRequestException("Village not found");
+        }
+        Optional<GroundCategory> groundCategory = groundCategoryRepository.findById(villageGroundCategoryDTO.getGroundCategoryId());
+        if (groundCategory.isPresent()){
+            foundVillageGroundCategory.get().setGroundCategory(groundCategory.get());
+        }else {
+            throw new ApiRequestException("Village not found");
+        }
         villageGroundCategoryRepository.save(foundVillageGroundCategory.get());
         return toDTO(foundVillageGroundCategory.get());
     }
-
     public int deleteVillageGroundCategory(Long id) {
         try {
             villageGroundCategoryRepository.deleteById(id);
