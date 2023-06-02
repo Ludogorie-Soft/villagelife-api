@@ -10,8 +10,6 @@ import lombok.NoArgsConstructor;
 public class EthnicityVillageDTO {
 
     private Long id;
-    //private Village village;
-    //private Ethnicity ethnicity;
     private Long villageId;
     private Long ethnicityId;
 }

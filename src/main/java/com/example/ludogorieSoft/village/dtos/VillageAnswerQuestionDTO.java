@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class VillageAnswerQuestionDTO {
 
     private Long id;
-    private Village village;
-    private Question question;
+    private Long villageId;
+    private Long questionId;
     private String answer;
 }
