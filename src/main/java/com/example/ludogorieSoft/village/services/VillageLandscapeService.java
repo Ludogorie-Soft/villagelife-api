@@ -1,9 +1,14 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.VillageLandscapeDTO;
+import com.example.ludogorieSoft.village.model.GroundCategory;
+import com.example.ludogorieSoft.village.model.Landscape;
+import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.model.VillageLandscape;
+import com.example.ludogorieSoft.village.repositories.LandscapeRepository;
 import com.example.ludogorieSoft.village.repositories.VillageLandscapeRepository;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
+import com.example.ludogorieSoft.village.repositories.VillageRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -17,6 +22,8 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class VillageLandscapeService {
     private final VillageLandscapeRepository villageLandscapeRepository;
+    private final VillageRepository villageRepository;
+    private final LandscapeRepository landscapeRepository;
     private final ModelMapper modelMapper;
 
     public VillageLandscapeDTO toDTO(VillageLandscape villageLandscape) {
@@ -31,7 +38,20 @@ public class VillageLandscapeService {
                 .collect(Collectors.toList());
     }
 
-    public VillageLandscapeDTO createVillageLandscape(VillageLandscape villageLandscape) {
+    public VillageLandscapeDTO createVillageLandscape(VillageLandscapeDTO villageLandscapeDTO) {
+        VillageLandscape villageLandscape = new VillageLandscape();
+        Optional<Village> village = villageRepository.findById(villageLandscapeDTO.getVillageId());
+        if (village.isPresent()){
+            villageLandscape.setVillage(village.get());
+        }else {
+            throw new ApiRequestException("Village not found");
+        }
+        Optional<Landscape> landscape = landscapeRepository.findById(villageLandscapeDTO.getLandscapeId());
+        if (landscape.isPresent()){
+            villageLandscape.setLandscape(landscape.get());
+        }else {
+            throw new ApiRequestException("Landscape not found");
+        }
         villageLandscapeRepository.save(villageLandscape);
         return toDTO(villageLandscape);
     }
@@ -53,14 +73,27 @@ public class VillageLandscapeService {
         }
     }
 
-    public VillageLandscapeDTO updateVillageLandscape(Long id, VillageLandscape villageLandscape) {
+    public VillageLandscapeDTO updateVillageLandscape(Long id, VillageLandscapeDTO villageLandscapeDTO) {
         Optional<VillageLandscape> foundVillageLandscape = villageLandscapeRepository.findById(id);
+        System.out.println("Service1!!!!!!!!!!!!!!!!!!!");
         if (foundVillageLandscape.isEmpty()) {
             throw new ApiRequestException("Village Landscape not found");
         }
-        foundVillageLandscape.get().setId(id);
-        foundVillageLandscape.get().setLandscape(villageLandscape.getLandscape());
-        foundVillageLandscape.get().setVillage(villageLandscape.getVillage());
+        Optional<Village> village = villageRepository.findById(villageLandscapeDTO.getVillageId());
+        if (village.isPresent()){
+            foundVillageLandscape.get().setVillage(village.get());
+            System.out.println("Service2. Set village!!!!!!!!!!!!!!!!!!!");
+        }else {
+            throw new ApiRequestException("Village not found");
+        }
+        Optional<Landscape> landscape = landscapeRepository.findById(villageLandscapeDTO.getLandscapeId());
+        if (landscape.isPresent()){
+            foundVillageLandscape.get().setLandscape(landscape.get());
+            System.out.println("Service3. Set Landscape!!!!!!!!!!!!!!!!!!!");
+        }else {
+            throw new ApiRequestException("Landscape not found");
+        }
+        System.out.println("Service4. Save!!!!!!!!!!!!!!!!!!!");
         villageLandscapeRepository.save(foundVillageLandscape.get());
         return toDTO(foundVillageLandscape.get());
     }
