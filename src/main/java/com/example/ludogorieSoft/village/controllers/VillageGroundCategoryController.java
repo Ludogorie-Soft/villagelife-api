@@ -1,6 +1,8 @@
 package com.example.ludogorieSoft.village.controllers;
 
+import com.example.ludogorieSoft.village.DTOs.GroundCategoryDTO;
 import com.example.ludogorieSoft.village.DTOs.VillageGroundCategoryDTO;
+import com.example.ludogorieSoft.village.Model.GroundCategory;
 import com.example.ludogorieSoft.village.Model.VillageGroundCategory;
 import com.example.ludogorieSoft.village.Services.VillageGroundCategoryService;
 import lombok.AllArgsConstructor;
@@ -35,6 +37,11 @@ public class VillageGroundCategoryController {
                 .buildAndExpand(villageGroundCategoryService.createVillageGroundCategoryDTO(VillageGroundCategory).getId())
                 .toUri();
         return ResponseEntity.created(location).build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<VillageGroundCategoryDTO> updateVillageGroundCategory(@PathVariable("id") Long id, @RequestBody VillageGroundCategory villageGroundCategory) {
+        return ResponseEntity.ok(villageGroundCategoryService.updateVillageGroundCategory(id, villageGroundCategory));
     }
 
     @DeleteMapping("/{id}")

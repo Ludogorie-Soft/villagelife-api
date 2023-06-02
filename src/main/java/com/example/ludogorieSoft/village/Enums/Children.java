@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum ChildrenUpTo14Years {
+public enum Children {
 
     Below10Years  ("под 10", 1),
     From11To20Years ("11 - 20", 2),

@@ -61,9 +61,9 @@ public class VillageAnswerQuestionService {
             throw new ApiRequestException("VillageAnswerQuestion not found");
         }
         foundVillageAnswerQuestion.get().setId(villageAnswerQuestion.getId());
-        foundVillageAnswerQuestion.get().setQuestionsID(villageAnswerQuestion.getQuestionsID());
+        foundVillageAnswerQuestion.get().setQuestions(villageAnswerQuestion.getQuestions());
         foundVillageAnswerQuestion.get().setAnswer(villageAnswerQuestion.getAnswer());
-        foundVillageAnswerQuestion.get().setVillageID(villageAnswerQuestion.getVillageID());
+        foundVillageAnswerQuestion.get().setVillage(villageAnswerQuestion.getVillage());
         villageAnswerQuestionRepository.save(foundVillageAnswerQuestion.get());
         return toDTO(foundVillageAnswerQuestion.get());
     }

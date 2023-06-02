@@ -14,7 +14,7 @@ import javax.persistence.ManyToOne;
 public class VillageAnswerQuestionDTO {
 
     private Long id;
-    private Village villageID;
-    private Questions questionsID;
+    private Village village;
+    private Questions questions;
     private String answer;
 }

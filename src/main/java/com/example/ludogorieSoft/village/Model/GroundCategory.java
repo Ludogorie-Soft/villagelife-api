@@ -14,6 +14,7 @@ public class GroundCategory {
     @Column(name = "id", nullable = false)
     private Long id;
     @NotNull
+    @Column(unique = true)
     private String groundCategory;
 
 

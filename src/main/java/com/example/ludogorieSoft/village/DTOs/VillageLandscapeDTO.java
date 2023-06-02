@@ -14,7 +14,7 @@ import javax.persistence.*;
 public class VillageLandscapeDTO {
 
     private Long id;
-    private Village villageID;
+    private Village village;
     private Landscape landscape;
 
 }

@@ -6,6 +6,6 @@ CREATE TABLE IF NOT EXISTS villages (
     status TINYINT(1) NOT NULL,
     admin_id BIGINT,
     date_approved DATETIME,
-    FOREIGN KEY (population_id) REFERENCES populations(id),
-    FOREIGN KEY (admin_id) REFERENCES admins(id)
+    CONSTRAINT fk_villages_population FOREIGN KEY (population_id) REFERENCES populations(id),
+    CONSTRAINT fk_villages_admin FOREIGN KEY (admin_id) REFERENCES admins(id)
 );

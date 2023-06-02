@@ -18,5 +18,7 @@ public class VillagePopulationAssertionDTO {
         private PopulatedAssertion populatedAssertionID;
         private String answer;
 
+        //  private Consents consents;
+
 
 }

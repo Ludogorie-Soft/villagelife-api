@@ -60,7 +60,7 @@ public class VillageLandscapeService {
         }
         foundVillageLandscape.get().setId(id);
         foundVillageLandscape.get().setLandscape(villageLandscape.getLandscape());
-        foundVillageLandscape.get().setVillageID(villageLandscape.getVillageID());
+        foundVillageLandscape.get().setVillage(villageLandscape.getVillage());
         villageLandscapeRepository.save(foundVillageLandscape.get());
         return toDTO(foundVillageLandscape.get());
     }

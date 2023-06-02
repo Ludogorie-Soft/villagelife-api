@@ -14,11 +14,15 @@ public class VillagePopulationAssertion {
     @Column(name = "id", nullable = false)
     private Long id;
     @ManyToOne
-    private Village villageID;
+    @JoinColumn(name = "village_id")
+    private Village village;
     @ManyToOne
+    @JoinColumn(name = "populated_assertion_id")
     private PopulatedAssertion populatedAssertionID;
     @NotNull
     private String answer;
+
+    //  private Consents consents;
 
 
 }
