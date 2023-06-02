@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum ResidentsUpTo50Years {
+public enum Residents {
 
     UpTo2Percent ("до 2%", 1),
     From2To5Percent ("2% - 5%", 2),

@@ -3,6 +3,8 @@ package com.example.ludogorieSoft.village.Model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -19,11 +21,13 @@ public class Village {
     private String name;
     @OneToOne
     private Population population;
+    @CreationTimestamp
     private LocalDateTime dateUpload;
     private boolean status;
     @ManyToOne
-    @JoinColumn(name = "admin_id" )
+    @JoinColumn(name = "admin_id")
     private Administrator admin;
+    @CreationTimestamp
     private LocalDateTime dateApproved;
 
 }

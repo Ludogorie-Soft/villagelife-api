@@ -1,10 +1,10 @@
 package com.example.ludogorieSoft.village.Model;
 
 
-import com.example.ludogorieSoft.village.Enums.ChildrenUpTo14Years;
+import com.example.ludogorieSoft.village.Enums.Children;
 import com.example.ludogorieSoft.village.Enums.Foreigners;
 import com.example.ludogorieSoft.village.Enums.NumberOfPopulation;
-import com.example.ludogorieSoft.village.Enums.ResidentsUpTo50Years;
+import com.example.ludogorieSoft.village.Enums.Residents;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -17,8 +17,12 @@ public class Population {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Enumerated(EnumType.STRING)
     private NumberOfPopulation numberOfPopulation;
-    private ResidentsUpTo50Years residentsUpTo50Years;
-    private ChildrenUpTo14Years childrenUpTo14Years;
+    @Enumerated(EnumType.STRING)
+    private Residents residents;
+    @Enumerated(EnumType.STRING)
+    private Children children;
+    @Enumerated(EnumType.STRING)
     private Foreigners foreigners;
 }

@@ -12,5 +12,6 @@ public class Landscape {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
+    @Column(unique = true)
     private String landscapeName;
 }

@@ -14,6 +14,5 @@ import javax.persistence.ManyToOne;
 public class EthnicityDTO {
 
     private Long id;
-    private Village village;
-    private Ethnicity ethnicity;
+    private String ethnicityName;
 }
