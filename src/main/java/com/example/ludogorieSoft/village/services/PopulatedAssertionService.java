@@ -4,7 +4,7 @@ package com.example.ludogorieSoft.village.services;
 import com.example.ludogorieSoft.village.dtos.PopulatedAssertionDTO;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.PopulatedAssertion;
-import com.example.ludogorieSoft.village.repositories.PopulatedAssertionRepositories;
+import com.example.ludogorieSoft.village.repositories.PopulatedAssertionRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class PopulatedAssertionService {
 
-    private final PopulatedAssertionRepositories populatedAssertionRepositories;
+    private final PopulatedAssertionRepository populatedAssertionRepository;
     private final ModelMapper modelMapper;
 
     public PopulatedAssertionDTO toPopulatedAssertionDTO(PopulatedAssertion populatedAssertion){
@@ -26,7 +26,7 @@ public class PopulatedAssertionService {
     }
 
     public List<PopulatedAssertionDTO> getAllPopulatedAssertion() {
-        List<PopulatedAssertion> populations = populatedAssertionRepositories.findAll();
+        List<PopulatedAssertion> populations = populatedAssertionRepository.findAll();
         return populations
                 .stream()
                 .map(this::toPopulatedAssertionDTO)
@@ -34,12 +34,12 @@ public class PopulatedAssertionService {
     }
 
     public PopulatedAssertionDTO createPopulatedAssertion(PopulatedAssertion population) {
-        populatedAssertionRepositories.save(population);
+        populatedAssertionRepository.save(population);
         return toPopulatedAssertionDTO(population);
     }
 
     public PopulatedAssertionDTO getPopulatedAssertionById(Long id) {
-        Optional<PopulatedAssertion> population = populatedAssertionRepositories.findById(id);
+        Optional<PopulatedAssertion> population = populatedAssertionRepository.findById(id);
         if (population.isEmpty()) {
             throw new ApiRequestException("This Populated assertion not found!");
         }
@@ -48,7 +48,7 @@ public class PopulatedAssertionService {
 
     public int deletePopulatedAssertionById(Long id) {
         try {
-            populatedAssertionRepositories.deleteById(id);
+            populatedAssertionRepository.deleteById(id);
             return 1;
         } catch (EmptyResultDataAccessException e) {
             return 0;
@@ -56,14 +56,14 @@ public class PopulatedAssertionService {
     }
 
     public PopulatedAssertionDTO updatePopulatedAssertion(Long id, PopulatedAssertion population) {
-        Optional<PopulatedAssertion> findPopulatedAssertion = populatedAssertionRepositories.findById(id);
+        Optional<PopulatedAssertion> findPopulatedAssertion = populatedAssertionRepository.findById(id);
         if (findPopulatedAssertion.isEmpty()) {
             throw new ApiRequestException("Populated Assertion not found!");
         }
         findPopulatedAssertion.get().setAssertion(population.getAssertion());
 
 
-        populatedAssertionRepositories.save(findPopulatedAssertion.get());
+        populatedAssertionRepository.save(findPopulatedAssertion.get());
         return toPopulatedAssertionDTO(findPopulatedAssertion.get());
     }
 }

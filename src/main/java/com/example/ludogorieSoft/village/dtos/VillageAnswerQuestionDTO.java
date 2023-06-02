@@ -1,6 +1,6 @@
 package com.example.ludogorieSoft.village.dtos;
 
-import com.example.ludogorieSoft.village.model.Questions;
+import com.example.ludogorieSoft.village.model.Question;
 import com.example.ludogorieSoft.village.model.Village;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,6 +13,6 @@ public class VillageAnswerQuestionDTO {
 
     private Long id;
     private Village village;
-    private Questions questions;
+    private Question question;
     private String answer;
 }

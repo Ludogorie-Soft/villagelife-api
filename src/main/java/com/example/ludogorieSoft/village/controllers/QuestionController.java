@@ -1,7 +1,7 @@
 package com.example.ludogorieSoft.village.controllers;
 
-import com.example.ludogorieSoft.village.dtos.QuestionsDTO;
-import com.example.ludogorieSoft.village.model.Questions;
+import com.example.ludogorieSoft.village.dtos.QuestionDTO;
+import com.example.ludogorieSoft.village.model.Question;
 import com.example.ludogorieSoft.village.services.QuestionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,21 +15,21 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/questions")
 @RequiredArgsConstructor
-public class QuestionsController {
+public class QuestionController {
 
     private final QuestionService questionService;
     @GetMapping
-    public ResponseEntity<List<QuestionsDTO>> getAllQuestions() {
+    public ResponseEntity<List<QuestionDTO>> getAllQuestions() {
         return ResponseEntity.ok(questionService.getAllQuestions());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<QuestionsDTO> getQuestionById(@PathVariable("id") Long id) {
+    public ResponseEntity<QuestionDTO> getQuestionById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(questionService.getQuestionById(id));
     }
 
     @PostMapping
-    public ResponseEntity<QuestionsDTO> createQuestion(@Valid @RequestBody Questions question, UriComponentsBuilder uriComponentsBuilder) {
+    public ResponseEntity<QuestionDTO> createQuestion(@Valid @RequestBody Question question, UriComponentsBuilder uriComponentsBuilder) {
         URI location = uriComponentsBuilder.path("/api/v1/questions/{id}")
                 .buildAndExpand(questionService.createQuestion(question).getId())
                 .toUri();
@@ -37,12 +37,12 @@ public class QuestionsController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<QuestionsDTO> updateQuestion(@PathVariable("id") Long id, @Valid @RequestBody Questions question) {
+    public ResponseEntity<QuestionDTO> updateQuestion(@PathVariable("id") Long id, @Valid @RequestBody Question question) {
         return ResponseEntity.ok(questionService.updateQuestion(id, question));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<QuestionsDTO> deleteQuestionById(@PathVariable("id") Long id) {
+    public ResponseEntity<QuestionDTO> deleteQuestionById(@PathVariable("id") Long id) {
         int rowsAffected = questionService.deleteQuestionById(id);
         if (rowsAffected > 0) {
             return ResponseEntity.noContent().build();

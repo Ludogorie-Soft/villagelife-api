@@ -16,7 +16,7 @@ public class VillageAnswerQuestion {
     private Village village;
     @ManyToOne
     @JoinColumn(name = "question_id")
-    private Questions questions;
+    private Question question;
     private String answer;
 
 

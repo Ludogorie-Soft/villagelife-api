@@ -58,7 +58,7 @@ public class VillageAnswerQuestionService {
             throw new ApiRequestException("VillageAnswerQuestion not found");
         }
         foundVillageAnswerQuestion.get().setId(villageAnswerQuestion.getId());
-        foundVillageAnswerQuestion.get().setQuestions(villageAnswerQuestion.getQuestions());
+        foundVillageAnswerQuestion.get().setQuestion(villageAnswerQuestion.getQuestion());
         foundVillageAnswerQuestion.get().setAnswer(villageAnswerQuestion.getAnswer());
         foundVillageAnswerQuestion.get().setVillage(villageAnswerQuestion.getVillage());
         villageAnswerQuestionRepository.save(foundVillageAnswerQuestion.get());

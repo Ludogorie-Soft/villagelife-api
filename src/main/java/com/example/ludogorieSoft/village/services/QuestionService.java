@@ -1,8 +1,8 @@
 package com.example.ludogorieSoft.village.services;
 
-import com.example.ludogorieSoft.village.dtos.QuestionsDTO;
-import com.example.ludogorieSoft.village.model.Questions;
-import com.example.ludogorieSoft.village.repositories.QuestionsRepository;
+import com.example.ludogorieSoft.village.dtos.QuestionDTO;
+import com.example.ludogorieSoft.village.model.Question;
+import com.example.ludogorieSoft.village.repositories.QuestionRepository;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -16,27 +16,27 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class QuestionService {
-    private QuestionsRepository questionRepository;
+    private QuestionRepository questionRepository;
     private final ModelMapper modelMapper;
 
-    public QuestionsDTO questionToQuestionDTO(Questions question) {
-        return modelMapper.map(question, QuestionsDTO.class);
+    public QuestionDTO questionToQuestionDTO(Question question) {
+        return modelMapper.map(question, QuestionDTO.class);
     }
 
-    public List<QuestionsDTO> getAllQuestions() {
-        List<Questions> questions = questionRepository.findAll();
+    public List<QuestionDTO> getAllQuestions() {
+        List<Question> questions = questionRepository.findAll();
         return questions.stream()
                 .map(this::questionToQuestionDTO)
                 .collect(Collectors.toList());
     }
 
-    public QuestionsDTO createQuestion(Questions question) {
+    public QuestionDTO createQuestion(Question question) {
         questionRepository.save(question);
         return questionToQuestionDTO(question);
     }
 
-    public QuestionsDTO getQuestionById(Long id) {
-        Optional<Questions> question = questionRepository.findById(id);
+    public QuestionDTO getQuestionById(Long id) {
+        Optional<Question> question = questionRepository.findById(id);
         if (question.isEmpty()) {
             throw new ApiRequestException("This question not found");
         }
@@ -52,8 +52,8 @@ public class QuestionService {
         }
     }
 
-    public QuestionsDTO updateQuestion(Long id, Questions question) {
-        Optional<Questions> findQuestion = questionRepository.findById(id);
+    public QuestionDTO updateQuestion(Long id, Question question) {
+        Optional<Question> findQuestion = questionRepository.findById(id);
         if (findQuestion.isEmpty()) {
             throw new ApiRequestException("Question not found");
         }

@@ -5,8 +5,8 @@ import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.ObjectAroundVillage;
 import com.example.ludogorieSoft.village.model.ObjectVillage;
 import com.example.ludogorieSoft.village.model.Village;
-import com.example.ludogorieSoft.village.repositories.ObjectAroundVillageRepositories;
-import com.example.ludogorieSoft.village.repositories.ObjectVillageRepositories;
+import com.example.ludogorieSoft.village.repositories.ObjectAroundVillageRepository;
+import com.example.ludogorieSoft.village.repositories.ObjectVillageRepository;
 import com.example.ludogorieSoft.village.repositories.VillageRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -20,9 +20,9 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class ObjectVillageService {
     private final ModelMapper modelMapper;
-    private final ObjectAroundVillageRepositories objectAroundVillageRepository;
+    private final ObjectAroundVillageRepository objectAroundVillageRepository;
     private final VillageRepository villageRepository;
-    private final ObjectVillageRepositories objectVillageRepository;
+    private final ObjectVillageRepository objectVillageRepository;
 
     public ObjectVillageDTO objectVillageToObjectVillageDTO(ObjectVillage objectVillage) {
         return modelMapper.map(objectVillage, ObjectVillageDTO.class);

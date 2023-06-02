@@ -21,7 +21,7 @@ public class VillageLivingConditions {
     private Village village;
 
     @ManyToOne
-    private LivingConditions livingConditions;
+    private LivingCondition livingCondition;
 
     @Enumerated
     private Consents consents;

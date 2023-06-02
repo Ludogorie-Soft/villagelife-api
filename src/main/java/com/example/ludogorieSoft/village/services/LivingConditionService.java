@@ -1,8 +1,8 @@
 package com.example.ludogorieSoft.village.services;
 
-import com.example.ludogorieSoft.village.dtos.LivingConditionsDTO;
-import com.example.ludogorieSoft.village.model.LivingConditions;
-import com.example.ludogorieSoft.village.repositories.LivingConditionsRepositories;
+import com.example.ludogorieSoft.village.dtos.LivingConditionDTO;
+import com.example.ludogorieSoft.village.model.LivingCondition;
+import com.example.ludogorieSoft.village.repositories.LivingConditionRepository;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -15,43 +15,43 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class LivingConditionService {
-    private final LivingConditionsRepositories livingConditionsRepository;
+    private final LivingConditionRepository livingConditionsRepository;
     private final ModelMapper modelMapper;
 
-    public LivingConditionsDTO livingConditionToLivingConditionDTO(LivingConditions livingCondition) {
-        return modelMapper.map(livingCondition, LivingConditionsDTO.class);
+    public LivingConditionDTO livingConditionToLivingConditionDTO(LivingCondition livingCondition) {
+        return modelMapper.map(livingCondition, LivingConditionDTO.class);
     }
 
-    public List<LivingConditionsDTO> getAllLivingConditions() {
-        List<LivingConditions> livingConditionsList = livingConditionsRepository.findAll();
-        return livingConditionsList
+    public List<LivingConditionDTO> getAllLivingConditions() {
+        List<LivingCondition> livingConditionList = livingConditionsRepository.findAll();
+        return livingConditionList
                 .stream()
                 .map(this::livingConditionToLivingConditionDTO)
                 .collect(Collectors.toList());
     }
 
-    public LivingConditionsDTO getLivingConditionById(Long id) {
-        Optional<LivingConditions> optionalLivingCondition = livingConditionsRepository.findById(id);
+    public LivingConditionDTO getLivingConditionById(Long id) {
+        Optional<LivingCondition> optionalLivingCondition = livingConditionsRepository.findById(id);
         if (optionalLivingCondition.isEmpty()) {
             throw new ApiRequestException("LivingCondition with id: " + id + " Not Found");
         }
         return livingConditionToLivingConditionDTO(optionalLivingCondition.get());
     }
 
-    public LivingConditionsDTO createLivingCondition(LivingConditionsDTO livingConditionDTO) {
+    public LivingConditionDTO createLivingCondition(LivingConditionDTO livingConditionDTO) {
         if (livingConditionsRepository.existsByLivingCondition(livingConditionDTO.getLivingCondition())) {
             throw new ApiRequestException("LivingCondition with condition: " + livingConditionDTO.getLivingCondition() + " already exists");
         }
 
-        LivingConditions livingCondition = new LivingConditions();
+        LivingCondition livingCondition = new LivingCondition();
         livingCondition.setLivingCondition(livingConditionDTO.getLivingCondition());
         livingConditionsRepository.save(livingCondition);
 
         return livingConditionDTO;
     }
 
-    public LivingConditionsDTO updateLivingCondition(Long id, LivingConditions livingCondition) {
-        Optional<LivingConditions> foundLivingCondition = livingConditionsRepository.findById(id);
+    public LivingConditionDTO updateLivingCondition(Long id, LivingCondition livingCondition) {
+        Optional<LivingCondition> foundLivingCondition = livingConditionsRepository.findById(id);
         if (foundLivingCondition.isEmpty()) {
             throw new ApiRequestException("LivingCondition with id: " + id + " Not Found");
         }
@@ -65,7 +65,7 @@ public class LivingConditionService {
     }
 
     public void deleteLivingCondition(Long id) {
-        Optional<LivingConditions> livingCondition = livingConditionsRepository.findById(id);
+        Optional<LivingCondition> livingCondition = livingConditionsRepository.findById(id);
         if (livingCondition.isEmpty()) {
             throw new ApiRequestException("LivingCondition not found for id " + id);
         }

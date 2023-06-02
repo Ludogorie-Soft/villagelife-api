@@ -1,7 +1,7 @@
 package com.example.ludogorieSoft.village.controllers;
 
-import com.example.ludogorieSoft.village.dtos.LivingConditionsDTO;
-import com.example.ludogorieSoft.village.model.LivingConditions;
+import com.example.ludogorieSoft.village.dtos.LivingConditionDTO;
+import com.example.ludogorieSoft.village.model.LivingCondition;
 import com.example.ludogorieSoft.village.services.LivingConditionService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,23 +18,23 @@ public class LivingConditionController {
     private final LivingConditionService livingConditionService;
 
     @GetMapping
-    public ResponseEntity<List<LivingConditionsDTO>> getAllLivingConditions() {
+    public ResponseEntity<List<LivingConditionDTO>> getAllLivingConditions() {
         return ResponseEntity.ok(livingConditionService.getAllLivingConditions());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<LivingConditionsDTO> getLivingConditionsByID(@PathVariable("id") Long id) {
+    public ResponseEntity<LivingConditionDTO> getLivingConditionsByID(@PathVariable("id") Long id) {
         return ResponseEntity.ok(livingConditionService.getLivingConditionById(id));
     }
 
     @PostMapping
-    public ResponseEntity<LivingConditionsDTO> createLivingConditions(@Valid @RequestBody LivingConditionsDTO livingConditionDTO) {
-        LivingConditionsDTO createdLivingCondition = livingConditionService.createLivingCondition(livingConditionDTO);
+    public ResponseEntity<LivingConditionDTO> createLivingConditions(@Valid @RequestBody LivingConditionDTO livingConditionDTO) {
+        LivingConditionDTO createdLivingCondition = livingConditionService.createLivingCondition(livingConditionDTO);
         return new ResponseEntity<>(createdLivingCondition, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<LivingConditionsDTO> updateLivingCondition(@Valid @PathVariable("id") Long id, @RequestBody LivingConditions livingCondition) {
+    public ResponseEntity<LivingConditionDTO> updateLivingCondition(@Valid @PathVariable("id") Long id, @RequestBody LivingCondition livingCondition) {
         return ResponseEntity.ok(livingConditionService.updateLivingCondition(id, livingCondition));
     }
 

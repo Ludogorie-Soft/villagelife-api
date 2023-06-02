@@ -1,20 +1,17 @@
 package com.example.ludogorieSoft.village.model;
 
-import lombok.*;
+import lombok.Data;
 
 import javax.persistence.*;
 
 @Entity
 @Data
-@Table(name = "living_conditions")
-@NoArgsConstructor
-@AllArgsConstructor
-public class LivingConditions {
+@Table(name ="questions" )
+public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
-    @Column(unique = true)
-    private String livingCondition;
+    private String question;
 
 }

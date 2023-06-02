@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class LivingConditionsDTO {
+public class LivingConditionDTO {
 
     private Long id;
     private String livingCondition;
