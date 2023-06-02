@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class PopulationController {
         return ResponseEntity.ok(populationService.getPopulationById(id));
     }
     @PostMapping
-    public ResponseEntity<PopulationDTO> createPopulation(@RequestBody Population population, UriComponentsBuilder uriComponentsBuilder) {
+    public ResponseEntity<PopulationDTO> createPopulation(@RequestBody @Valid Population population, UriComponentsBuilder uriComponentsBuilder) {
         URI location = uriComponentsBuilder.path("/api/v1/population/{id}")
                 .buildAndExpand(populationService.createPopulation(population).getId())
                 .toUri();
@@ -35,7 +36,7 @@ public class PopulationController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PopulationDTO> updatePopulation(@PathVariable("id") Long id, @RequestBody Population population) {
+    public ResponseEntity<PopulationDTO> updatePopulation(@PathVariable("id") Long id,@Valid @RequestBody Population population) {
         return ResponseEntity.ok(populationService.updatePopulation(id, population));
     }
 
