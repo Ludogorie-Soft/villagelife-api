@@ -1,10 +1,9 @@
 package com.example.ludogorieSoft.village.controllers;
 
-import com.example.ludogorieSoft.village.DTOs.VillagePopulationAssertionDTO;
-import com.example.ludogorieSoft.village.Model.VillagePopulationAssertion;
-import com.example.ludogorieSoft.village.Services.VillagePopulationAssertionService;
+import com.example.ludogorieSoft.village.dtos.VillagePopulationAssertionDTO;
+import com.example.ludogorieSoft.village.model.VillagePopulationAssertion;
+import com.example.ludogorieSoft.village.services.VillagePopulationAssertionService;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;

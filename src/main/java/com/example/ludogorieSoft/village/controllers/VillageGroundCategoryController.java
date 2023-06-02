@@ -1,10 +1,8 @@
 package com.example.ludogorieSoft.village.controllers;
 
-import com.example.ludogorieSoft.village.DTOs.GroundCategoryDTO;
-import com.example.ludogorieSoft.village.DTOs.VillageGroundCategoryDTO;
-import com.example.ludogorieSoft.village.Model.GroundCategory;
-import com.example.ludogorieSoft.village.Model.VillageGroundCategory;
-import com.example.ludogorieSoft.village.Services.VillageGroundCategoryService;
+import com.example.ludogorieSoft.village.dtos.VillageGroundCategoryDTO;
+import com.example.ludogorieSoft.village.model.VillageGroundCategory;
+import com.example.ludogorieSoft.village.services.VillageGroundCategoryService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
