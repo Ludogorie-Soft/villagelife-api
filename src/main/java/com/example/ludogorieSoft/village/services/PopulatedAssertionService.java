@@ -1,9 +1,10 @@
-package com.example.ludogorieSoft.village.Services;
+package com.example.ludogorieSoft.village.services;
 
-import com.example.ludogorieSoft.village.DTOs.PopulatedAssertionDTO;
-import com.example.ludogorieSoft.village.Model.PopulatedAssertion;
-import com.example.ludogorieSoft.village.Repositories.PopulatedAssertionRepositories;
+
+import com.example.ludogorieSoft.village.dtos.PopulatedAssertionDTO;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
+import com.example.ludogorieSoft.village.model.PopulatedAssertion;
+import com.example.ludogorieSoft.village.repositories.PopulatedAssertionRepositories;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;

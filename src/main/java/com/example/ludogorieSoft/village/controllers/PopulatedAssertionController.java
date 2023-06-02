@@ -1,8 +1,9 @@
 package com.example.ludogorieSoft.village.controllers;
 
-import com.example.ludogorieSoft.village.DTOs.PopulatedAssertionDTO;
-import com.example.ludogorieSoft.village.Model.PopulatedAssertion;
+
 import com.example.ludogorieSoft.village.Services.PopulatedAssertionService;
+import com.example.ludogorieSoft.village.dtos.PopulatedAssertionDTO;
+import com.example.ludogorieSoft.village.model.PopulatedAssertion;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
