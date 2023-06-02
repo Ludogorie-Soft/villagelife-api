@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 public class LivingConditionsDTO {
 
     private Long id;
-    private String conditions;
+    private String livingCondition;
 }

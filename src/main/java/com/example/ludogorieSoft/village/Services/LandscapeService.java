@@ -30,7 +30,7 @@ public class LandscapeService {
                 .collect(Collectors.toList());
     }
 
-    public LandscapeDTO getByLandscapeId(Long id) {
+    public LandscapeDTO getLandscapeById(Long id) {
         Optional<Landscape> optionalLandscape = landscapeRepository.findById(id);
         if (optionalLandscape.isEmpty()) {
             throw new ApiRequestException("Landscape with id: " + id + " Not Found");

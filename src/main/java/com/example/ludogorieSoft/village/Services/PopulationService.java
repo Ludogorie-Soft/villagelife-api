@@ -60,8 +60,8 @@ public class PopulationService {
         }
         findPopulation.get().setNumberOfPopulation(population.getNumberOfPopulation());
         findPopulation.get().setForeigners(population.getForeigners());
-//        findPopulation.get().setChildrenUpTo14Years(population.getChildrenUpTo14Years());
-//        findPopulation.get().setResidentsUpTo50Years(population.getResidentsUpTo50Years());
+        findPopulation.get().setChildren(population.getChildren());
+        findPopulation.get().setResidents(population.getResidents());
 
         populationRepository.save(findPopulation.get());
         return populationToPopulationDTO(findPopulation.get());

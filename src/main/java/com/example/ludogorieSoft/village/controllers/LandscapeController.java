@@ -18,13 +18,12 @@ public class LandscapeController {
     private final LandscapeService landscapeService;
     @GetMapping
     public ResponseEntity<List<LandscapeDTO>> getAllLandscapes() {
-        System.out.println("TEST Controller: " + landscapeService.getAllLandscapes());
         return ResponseEntity.ok(landscapeService.getAllLandscapes());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<LandscapeDTO> getLandscapeByID(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(landscapeService.getByLandscapeId(id));
+        return ResponseEntity.ok(landscapeService.getLandscapeById(id));
     }
 
     @PostMapping
