@@ -5,8 +5,11 @@ CREATE TABLE IF NOT EXISTS admins (
     username VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
     mobile VARCHAR(255),
-    created_at DATETIME,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     enabled TINYINT(1) NOT NULL DEFAULT 1,
+    UNIQUE (full_name),
+    UNIQUE (email),
     UNIQUE (username),
-    UNIQUE (email)
+    UNIQUE (password),
+    UNIQUE (mobile)
 );
