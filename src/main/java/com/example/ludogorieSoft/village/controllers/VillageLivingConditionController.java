@@ -28,15 +28,18 @@ public class VillageLivingConditionController {
     }
 
     @PostMapping
-    public ResponseEntity<VillageLivingConditionDTO> createVillageLivingConditions(@RequestBody VillageLivingConditions villageLivingConditions, UriComponentsBuilder uriComponentsBuilder) {
-        System.out.println(villageLivingConditions);
+    public ResponseEntity<VillageLivingConditionDTO> createVillageLivingConditions(@RequestBody VillageLivingConditionDTO villageLivingConditionsDTO, UriComponentsBuilder uriComponentsBuilder) {
+        System.out.println(villageLivingConditionsDTO);
         URI location = uriComponentsBuilder.path("/api/v1/villageLivingConditions/{id}")
-                .buildAndExpand(villageLivingConditionService.createVillageLivingConditionsDTO(villageLivingConditions).getId())
+                .buildAndExpand(villageLivingConditionService.createVillageLivingCondition(villageLivingConditionsDTO).getId())
                 .toUri();
         return ResponseEntity.created(location).build();
     }
 
-
+    @PutMapping("/{id}")
+    public ResponseEntity<VillageLivingConditionDTO> updateVillageLivingConditions(@PathVariable("id") Long id, @RequestBody VillageLivingConditionDTO villageLivingConditionDTO) {
+        return ResponseEntity.ok(villageLivingConditionService.updateVillageLivingCondition(id, villageLivingConditionDTO));
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<VillageLivingConditions> deleteVillageLivingConditionsById(@PathVariable("id") Long id) {
