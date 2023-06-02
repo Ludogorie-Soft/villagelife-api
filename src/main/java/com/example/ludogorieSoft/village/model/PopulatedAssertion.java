@@ -17,6 +17,6 @@ public class PopulatedAssertion {
     @Column(name = "id", nullable = false)
     private Long id;
     @Column(unique = true)
-    private String assertion;
+    private String populatedAssertion;
 
 }

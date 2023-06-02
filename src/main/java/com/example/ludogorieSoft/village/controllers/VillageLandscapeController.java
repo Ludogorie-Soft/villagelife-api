@@ -38,7 +38,6 @@ public class VillageLandscapeController {
 
     @PutMapping("/{id}")
     public ResponseEntity<VillageLandscapeDTO> updateVillageLandscape(@PathVariable("id") Long id, @RequestBody VillageLandscapeDTO villageLandscapeDTO) {
-        System.out.println("Controller!!!!!!!!!!!!!!!!!!!");
         return ResponseEntity.ok(villageLandscapeService.updateVillageLandscape(id, villageLandscapeDTO));
     }
 

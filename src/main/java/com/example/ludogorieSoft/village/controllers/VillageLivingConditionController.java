@@ -19,7 +19,6 @@ public class VillageLivingConditionController {
 
     @GetMapping
     public ResponseEntity<List<VillageLivingConditionDTO>> getAllVillageLivingConditions() {
-
         return ResponseEntity.ok(villageLivingConditionService.getAllVillageLivingConditions());
     }
 

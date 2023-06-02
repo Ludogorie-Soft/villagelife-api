@@ -75,25 +75,21 @@ public class VillageLandscapeService {
 
     public VillageLandscapeDTO updateVillageLandscape(Long id, VillageLandscapeDTO villageLandscapeDTO) {
         Optional<VillageLandscape> foundVillageLandscape = villageLandscapeRepository.findById(id);
-        System.out.println("Service1!!!!!!!!!!!!!!!!!!!");
         if (foundVillageLandscape.isEmpty()) {
             throw new ApiRequestException("Village Landscape not found");
         }
         Optional<Village> village = villageRepository.findById(villageLandscapeDTO.getVillageId());
         if (village.isPresent()){
             foundVillageLandscape.get().setVillage(village.get());
-            System.out.println("Service2. Set village!!!!!!!!!!!!!!!!!!!");
         }else {
             throw new ApiRequestException("Village not found");
         }
         Optional<Landscape> landscape = landscapeRepository.findById(villageLandscapeDTO.getLandscapeId());
         if (landscape.isPresent()){
             foundVillageLandscape.get().setLandscape(landscape.get());
-            System.out.println("Service3. Set Landscape!!!!!!!!!!!!!!!!!!!");
         }else {
             throw new ApiRequestException("Landscape not found");
         }
-        System.out.println("Service4. Save!!!!!!!!!!!!!!!!!!!");
         villageLandscapeRepository.save(foundVillageLandscape.get());
         return toDTO(foundVillageLandscape.get());
     }

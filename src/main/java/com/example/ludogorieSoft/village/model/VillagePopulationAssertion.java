@@ -1,5 +1,6 @@
 package com.example.ludogorieSoft.village.model;
 
+import com.example.ludogorieSoft.village.enums.Consents;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -19,10 +20,10 @@ public class VillagePopulationAssertion {
     @ManyToOne
     @JoinColumn(name = "populated_assertion_id")
     private PopulatedAssertion populatedAssertionID;
-    @NotNull
-    private String answer;
-
-    //  private Consents consents;
+    //@NotNull
+    //private String answer;
+    @Enumerated(EnumType.STRING)
+    private Consents answer;
 
 
 }
