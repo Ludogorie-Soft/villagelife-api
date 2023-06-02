@@ -1,5 +1,6 @@
 package com.example.ludogorieSoft.village.dtos;
 
+import com.example.ludogorieSoft.village.enums.Distance;
 import com.example.ludogorieSoft.village.model.ObjectAroundVillage;
 import com.example.ludogorieSoft.village.model.Village;
 import lombok.AllArgsConstructor;
@@ -12,7 +13,8 @@ import lombok.NoArgsConstructor;
 public class ObjectVillageDTO {
 
     private Long id;
-    private Village village;
-    private ObjectAroundVillage objectAroundVillage;
+    private Long villageId;
+    private Long objectAroundVillageId;
+    private Distance distance;
 
 }

@@ -1,5 +1,6 @@
 package com.example.ludogorieSoft.village.model;
 
+import com.example.ludogorieSoft.village.enums.Distance;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,5 +20,7 @@ public class ObjectVillage {
     @ManyToOne
     private Village village;
     @ManyToOne
-    private ObjectAroundVillage objectAroundVillage;
+    private ObjectAroundVillage object;
+    @Enumerated(EnumType.STRING)
+    private Distance distance;
 }
