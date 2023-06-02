@@ -1,17 +1,12 @@
 package com.example.ludogorieSoft.village.Services;
 
-import com.example.ludogorieSoft.village.DTOs.EthnicityVillageDTO;
 import com.example.ludogorieSoft.village.DTOs.GroundCategoryDTO;
-import com.example.ludogorieSoft.village.Model.Ethnicity;
-import com.example.ludogorieSoft.village.Model.EthnicityVillage;
 import com.example.ludogorieSoft.village.Model.GroundCategory;
-import com.example.ludogorieSoft.village.Model.Village;
 import com.example.ludogorieSoft.village.Repositories.GroundCategoryRepository;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+
 import org.modelmapper.ModelMapper;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
