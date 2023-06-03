@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.testng.annotations.Test;
 
 import java.util.List;
 import java.util.Optional;
@@ -43,12 +44,11 @@ public class EthnicityService {
         return ethnicityToEthnicityDTO(ethnicity.get());
     }
 
-    public int deleteEthnicityById(Long id) {
-        try {
+    public void deleteEthnicityById(Long id) {
+        if (ethnicityRepository.existsById(id)) {
             ethnicityRepository.deleteById(id);
-            return 1;
-        } catch (EmptyResultDataAccessException e) {
-            return 0;
+        } else {
+            throw new ApiRequestException("Ethnicity with id " + id + " not found");
         }
     }
     public EthnicityDTO updateEthnicity(Long id, Ethnicity ethnicity) {
@@ -60,4 +60,5 @@ public class EthnicityService {
         ethnicityRepository.save(foundEthnicity.get());
         return ethnicityToEthnicityDTO(foundEthnicity.get());
     }
+
 }

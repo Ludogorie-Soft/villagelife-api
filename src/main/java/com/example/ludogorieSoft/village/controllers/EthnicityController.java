@@ -4,6 +4,7 @@ import com.example.ludogorieSoft.village.dtos.EthnicityDTO;
 import com.example.ludogorieSoft.village.model.Ethnicity;
 import com.example.ludogorieSoft.village.services.EthnicityService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -39,14 +40,8 @@ public class EthnicityController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Ethnicity> deleteEthnicityById(@PathVariable("id") Long id) {
-        int rowsAffected = ethnicityService.deleteEthnicityById(id);
-        if (rowsAffected > 0) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<String> deleteEthnicityById(@PathVariable("id") Long id) {
+        ethnicityService.deleteEthnicityById(id);
+        return new ResponseEntity<>("Ethnicity with id: " + id + " has been deleted successfully!!", HttpStatus.OK);
     }
-
-
 }
