@@ -3,6 +3,7 @@ package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.PopulatedAssertionDTO;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
+import com.example.ludogorieSoft.village.model.ObjectAroundVillage;
 import com.example.ludogorieSoft.village.model.PopulatedAssertion;
 import com.example.ludogorieSoft.village.repositories.PopulatedAssertionRepository;
 import lombok.AllArgsConstructor;
@@ -34,6 +35,9 @@ public class PopulatedAssertionService {
     }
 
     public PopulatedAssertionDTO createPopulatedAssertion(PopulatedAssertion population) {
+        if (populatedAssertionRepository.existsByPopulatedAssertion(population.getPopulatedAssertion())) {
+            throw new ApiRequestException("PopulatedAssertion with name: " + population.getPopulatedAssertion() + " already exists");
+        }
         populatedAssertionRepository.save(population);
         return toPopulatedAssertionDTO(population);
     }
@@ -46,13 +50,12 @@ public class PopulatedAssertionService {
         return toPopulatedAssertionDTO(population.get());
     }
 
-    public int deletePopulatedAssertionById(Long id) {
-        try {
-            populatedAssertionRepository.deleteById(id);
-            return 1;
-        } catch (EmptyResultDataAccessException e) {
-            return 0;
+    public void deletePopulatedAssertionById(Long id) {
+        Optional<PopulatedAssertion> populatedAssertion = populatedAssertionRepository.findById(id);
+        if (populatedAssertion.isEmpty()) {
+            throw new ApiRequestException("PopulatedAssertion not found for id " + id);
         }
+        populatedAssertionRepository.delete(populatedAssertion.get());
     }
 
     public PopulatedAssertionDTO updatePopulatedAssertion(Long id, PopulatedAssertion population) {
@@ -60,9 +63,10 @@ public class PopulatedAssertionService {
         if (findPopulatedAssertion.isEmpty()) {
             throw new ApiRequestException("Populated Assertion not found!");
         }
+        if (populatedAssertionRepository.existsByPopulatedAssertion(population.getPopulatedAssertion())) {
+            throw new ApiRequestException("PopulatedAssertion with name: " + population.getPopulatedAssertion() + " already exists");
+        }
         findPopulatedAssertion.get().setPopulatedAssertion(population.getPopulatedAssertion());
-
-
         populatedAssertionRepository.save(findPopulatedAssertion.get());
         return toPopulatedAssertionDTO(findPopulatedAssertion.get());
     }

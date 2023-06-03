@@ -28,8 +28,8 @@ public class ObjectAroundVillageServiceTest {
     private ModelMapper modelMapper;
 
     @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.initMocks(this);
+    public void setUp(){
+        MockitoAnnotations.openMocks(this);
     }
     @Test
     public void testGetAllObjectsAroundVillageWithMultipleObjects() {

@@ -30,8 +30,8 @@ public class LivingConditionServiceTest {
     private ModelMapper modelMapper;
 
     @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.initMocks(this);
+    public void setUp(){
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
