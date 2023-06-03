@@ -71,6 +71,5 @@ public class ObjectAroundVillageService {
             throw new ApiRequestException("Object Around Village not found for id " + id);
         }
         objectAroundVillageRepository.delete(objectAroundVillage.get());
-
     }
 }
