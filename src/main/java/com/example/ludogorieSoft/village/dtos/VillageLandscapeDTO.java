@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class VillageLandscapeDTO {
 
     private Long id;
-    private Village village;
-    private Landscape landscape;
+    private Long villageId;
+    private Long landscapeId;
 
 }

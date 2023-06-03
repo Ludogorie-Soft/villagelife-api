@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 public class VillageGroundCategoryDTO {
 
     private Long id;
-    private Village villageID;
-    private GroundCategory groundCategory;
+    private Long villageId;
+    private Long groundCategoryId;
 }

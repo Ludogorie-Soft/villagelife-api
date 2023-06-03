@@ -31,16 +31,16 @@ public class VillageGroundCategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<VillageGroundCategoryDTO> createVillageGroundCategories(@Valid @RequestBody VillageGroundCategory VillageGroundCategory, UriComponentsBuilder uriComponentsBuilder) {
+    public ResponseEntity<VillageGroundCategoryDTO> createVillageGroundCategories(@Valid @RequestBody VillageGroundCategoryDTO VillageGroundCategoryDTO, UriComponentsBuilder uriComponentsBuilder) {
         URI location = uriComponentsBuilder.path("/api/v1/villageGroundCategory/{id}")
-                .buildAndExpand(villageGroundCategoryService.createVillageGroundCategoryDTO(VillageGroundCategory).getId())
+                .buildAndExpand(villageGroundCategoryService.createVillageGroundCategoryDTO(VillageGroundCategoryDTO).getId())
                 .toUri();
         return ResponseEntity.created(location).build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<VillageGroundCategoryDTO> updateVillageGroundCategory(@PathVariable("id") Long id, @Valid @RequestBody VillageGroundCategory villageGroundCategory) {
-        return ResponseEntity.ok(villageGroundCategoryService.updateVillageGroundCategory(id, villageGroundCategory));
+    public ResponseEntity<VillageGroundCategoryDTO> updateVillageGroundCategory(@PathVariable("id") Long id, @Valid @RequestBody VillageGroundCategoryDTO villageGroundCategoryDTO) {
+        return ResponseEntity.ok(villageGroundCategoryService.updateVillageGroundCategory(id, villageGroundCategoryDTO));
     }
 
     @DeleteMapping("/{id}")

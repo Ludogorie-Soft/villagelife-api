@@ -13,7 +13,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/villageLandscape")
+@RequestMapping("/api/v1/villageLandscapes")
 @AllArgsConstructor
 public class VillageLandscapeController {
     private final VillageLandscapeService villageLandscapeService;
@@ -29,16 +29,16 @@ public class VillageLandscapeController {
     }
 
     @PostMapping
-    public ResponseEntity<VillageLandscapeDTO> createVillageLandscape(@RequestBody VillageLandscape villageLandscape, UriComponentsBuilder uriComponentsBuilder) {
+    public ResponseEntity<VillageLandscapeDTO> createVillageLandscape(@RequestBody VillageLandscapeDTO villageLandscapeDTO, UriComponentsBuilder uriComponentsBuilder) {
         URI location = uriComponentsBuilder.path("/api/v1/villageLandscape/{id}")
-                .buildAndExpand(villageLandscapeService.createVillageLandscape(villageLandscape).getId())
+                .buildAndExpand(villageLandscapeService.createVillageLandscape(villageLandscapeDTO).getId())
                 .toUri();
         return ResponseEntity.created(location).build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<VillageLandscapeDTO> updateVillageLandscape(@PathVariable("id") Long id, @RequestBody VillageLandscape villageLandscape) {
-        return ResponseEntity.ok(villageLandscapeService.updateVillageLandscape(id, villageLandscape));
+    public ResponseEntity<VillageLandscapeDTO> updateVillageLandscape(@PathVariable("id") Long id, @RequestBody VillageLandscapeDTO villageLandscapeDTO) {
+        return ResponseEntity.ok(villageLandscapeService.updateVillageLandscape(id, villageLandscapeDTO));
     }
 
     @DeleteMapping("/{id}")

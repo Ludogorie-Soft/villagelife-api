@@ -1,9 +1,13 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.VillageAnswerQuestionDTO;
+import com.example.ludogorieSoft.village.model.Question;
+import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.model.VillageAnswerQuestion;
+import com.example.ludogorieSoft.village.repositories.QuestionRepository;
 import com.example.ludogorieSoft.village.repositories.VillageAnswerQuestionRepository;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
+import com.example.ludogorieSoft.village.repositories.VillageRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -17,6 +21,8 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class VillageAnswerQuestionService {
     private final VillageAnswerQuestionRepository villageAnswerQuestionRepository;
+    private final VillageRepository villageRepository;
+    private final QuestionRepository questionRepository;
     private final ModelMapper modelMapper;
     public VillageAnswerQuestionDTO toDTO(VillageAnswerQuestion villageAnswerQuestion){
         return modelMapper.map(villageAnswerQuestion, VillageAnswerQuestionDTO.class);}
@@ -30,7 +36,21 @@ public class VillageAnswerQuestionService {
                 .collect(Collectors.toList());
     }
 
-    public VillageAnswerQuestionDTO createVillageAnswerQuestion(VillageAnswerQuestion villageAnswerQuestion) {
+    public VillageAnswerQuestionDTO createVillageAnswerQuestion(VillageAnswerQuestionDTO villageAnswerQuestionDTO) {
+        VillageAnswerQuestion villageAnswerQuestion = new VillageAnswerQuestion();
+        Optional<Village> village = villageRepository.findById(villageAnswerQuestionDTO.getVillageId());
+        if (village.isPresent()){
+            villageAnswerQuestion.setVillage(village.get());
+        }else {
+            throw new ApiRequestException("Village not found");
+        }
+        Optional<Question> question = questionRepository.findById(villageAnswerQuestionDTO.getQuestionId());
+        if (question.isPresent()){
+            villageAnswerQuestion.setQuestion(question.get());
+        }else {
+            throw new ApiRequestException("Question not found");
+        }
+        villageAnswerQuestion.setAnswer(villageAnswerQuestionDTO.getAnswer());
         villageAnswerQuestionRepository.save(villageAnswerQuestion);
         return toDTO(villageAnswerQuestion);
     }
@@ -52,17 +72,25 @@ public class VillageAnswerQuestionService {
         }
     }
 
-    public VillageAnswerQuestionDTO updateVillageAnswerQuestion(Long id, VillageAnswerQuestion villageAnswerQuestion) {
+    public VillageAnswerQuestionDTO updateVillageAnswerQuestion(Long id, VillageAnswerQuestionDTO villageAnswerQuestionDTO) {
         Optional<VillageAnswerQuestion> foundVillageAnswerQuestion = villageAnswerQuestionRepository.findById(id);
         if (foundVillageAnswerQuestion.isEmpty()) {
             throw new ApiRequestException("VillageAnswerQuestion not found");
         }
-        foundVillageAnswerQuestion.get().setId(villageAnswerQuestion.getId());
-        foundVillageAnswerQuestion.get().setQuestion(villageAnswerQuestion.getQuestion());
-        foundVillageAnswerQuestion.get().setAnswer(villageAnswerQuestion.getAnswer());
-        foundVillageAnswerQuestion.get().setVillage(villageAnswerQuestion.getVillage());
+        Optional<Village> village = villageRepository.findById(villageAnswerQuestionDTO.getVillageId());
+        if (village.isPresent()){
+            foundVillageAnswerQuestion.get().setVillage(village.get());
+        }else {
+            throw new ApiRequestException("Village not found");
+        }
+        Optional<Question> question = questionRepository.findById(villageAnswerQuestionDTO.getQuestionId());
+        if (question.isPresent()){
+            foundVillageAnswerQuestion.get().setQuestion(question.get());
+        }else {
+            throw new ApiRequestException("Question not found");
+        }
+        foundVillageAnswerQuestion.get().setAnswer(villageAnswerQuestionDTO.getAnswer());
         villageAnswerQuestionRepository.save(foundVillageAnswerQuestion.get());
         return toDTO(foundVillageAnswerQuestion.get());
     }
-
 }

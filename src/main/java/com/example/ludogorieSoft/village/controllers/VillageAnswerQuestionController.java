@@ -28,16 +28,16 @@ public class VillageAnswerQuestionController {
     }
 
     @PostMapping
-    public ResponseEntity<VillageAnswerQuestionDTO> createVillageAnswerQuestion(@RequestBody VillageAnswerQuestion villageAnswerQuestion, UriComponentsBuilder uriComponentsBuilder) {
+    public ResponseEntity<VillageAnswerQuestionDTO> createVillageAnswerQuestion(@RequestBody VillageAnswerQuestionDTO villageAnswerQuestionDTO, UriComponentsBuilder uriComponentsBuilder) {
         URI location = uriComponentsBuilder.path("/api/v1/villageAnswerQuestion/{id}")
-                .buildAndExpand(villageAnswerQuestionService.createVillageAnswerQuestion(villageAnswerQuestion).getId())
+                .buildAndExpand(villageAnswerQuestionService.createVillageAnswerQuestion(villageAnswerQuestionDTO).getId())
                 .toUri();
         return ResponseEntity.created(location).build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<VillageAnswerQuestionDTO> updateVillageAnswerQuestion(@PathVariable("id") Long id, @RequestBody VillageAnswerQuestion villageAnswerQuestion) {
-        return ResponseEntity.ok(villageAnswerQuestionService.updateVillageAnswerQuestion(id, villageAnswerQuestion));
+    public ResponseEntity<VillageAnswerQuestionDTO> updateVillageAnswerQuestion(@PathVariable("id") Long id, @RequestBody VillageAnswerQuestionDTO villageAnswerQuestionDTO) {
+        return ResponseEntity.ok(villageAnswerQuestionService.updateVillageAnswerQuestion(id, villageAnswerQuestionDTO));
     }
 
     @DeleteMapping("/{id}")

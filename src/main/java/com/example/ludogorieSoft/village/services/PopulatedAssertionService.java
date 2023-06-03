@@ -60,7 +60,7 @@ public class PopulatedAssertionService {
         if (findPopulatedAssertion.isEmpty()) {
             throw new ApiRequestException("Populated Assertion not found!");
         }
-        findPopulatedAssertion.get().setAssertion(population.getAssertion());
+        findPopulatedAssertion.get().setPopulatedAssertion(population.getPopulatedAssertion());
 
 
         populatedAssertionRepository.save(findPopulatedAssertion.get());
