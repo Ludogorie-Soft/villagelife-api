@@ -1,6 +1,7 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.QuestionDTO;
+import com.example.ludogorieSoft.village.model.PopulatedAssertion;
 import com.example.ludogorieSoft.village.model.Question;
 import com.example.ludogorieSoft.village.repositories.QuestionRepository;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
@@ -31,6 +32,9 @@ public class QuestionService {
     }
 
     public QuestionDTO createQuestion(Question question) {
+        if (questionRepository.existsByQuestion(question.getQuestion())) {
+            throw new ApiRequestException("Question: " + question.getQuestion() + " already exists");
+        }
         questionRepository.save(question);
         return questionToQuestionDTO(question);
     }
@@ -43,19 +47,21 @@ public class QuestionService {
         return questionToQuestionDTO(question.get());
     }
 
-    public int deleteQuestionById(Long id) {
-        try {
-            questionRepository.deleteById(id);
-            return 1;
-        } catch (EmptyResultDataAccessException e) {
-            return 0;
+    public void deleteQuestionById(Long id) {
+        Optional<Question> question = questionRepository.findById(id);
+        if (question.isEmpty()) {
+            throw new ApiRequestException("Question not found for id " + id);
         }
+        questionRepository.delete(question.get());
     }
 
     public QuestionDTO updateQuestion(Long id, Question question) {
         Optional<Question> findQuestion = questionRepository.findById(id);
         if (findQuestion.isEmpty()) {
             throw new ApiRequestException("Question not found");
+        }
+        if (questionRepository.existsByQuestion(question.getQuestion())) {
+            throw new ApiRequestException("Question: " + question.getQuestion() + " already exists");
         }
         findQuestion.get().setQuestion(question.getQuestion());
         questionRepository.save(findQuestion.get());

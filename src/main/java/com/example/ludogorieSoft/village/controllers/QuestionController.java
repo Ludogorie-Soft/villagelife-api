@@ -4,6 +4,7 @@ import com.example.ludogorieSoft.village.dtos.QuestionDTO;
 import com.example.ludogorieSoft.village.model.Question;
 import com.example.ludogorieSoft.village.services.QuestionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -42,12 +43,8 @@ public class QuestionController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<QuestionDTO> deleteQuestionById(@PathVariable("id") Long id) {
-        int rowsAffected = questionService.deleteQuestionById(id);
-        if (rowsAffected > 0) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<String> deleteQuestionById(@PathVariable("id") Long id) {
+        questionService.deleteQuestionById(id);
+        return new ResponseEntity<>("Question with id: " + id + " has been deleted successfully!!", HttpStatus.OK);
     }
 }
