@@ -20,7 +20,6 @@ public class VillagePopulationAssertionController {
 
     @GetMapping
     public ResponseEntity<List<VillagePopulationAssertionDTO>> getAllVillagePopulationAssertions(){
-        System.out.println("TEST Controller :"  +villagePopulationAssertionService.getAllVillagePopulationAssertion());
         return ResponseEntity.ok(villagePopulationAssertionService.getAllVillagePopulationAssertion());
     }
     @GetMapping("/{id}")
