@@ -40,12 +40,11 @@ public class AdministratorService {
         }
         return administratorToAdministratorDTO(administrator.get());
     }
-    public int deleteAdministratorById(Long id) {
-        try {
+    public void deleteAdministratorById(Long id) {
+        if (administratorRepository.existsById(id)) {
             administratorRepository.deleteById(id);
-            return 1;
-        } catch (EmptyResultDataAccessException e) {
-            return 0;
+        } else {
+            throw new ApiRequestException("Administrator with id " + id + " not found");
         }
     }
     public AdministratorDTO updateAdministrator(Long id, Administrator administrator) {
