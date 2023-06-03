@@ -1,6 +1,7 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.PopulationDTO;
+import com.example.ludogorieSoft.village.model.PopulatedAssertion;
 import com.example.ludogorieSoft.village.model.Population;
 import com.example.ludogorieSoft.village.repositories.PopulationRepository;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
@@ -44,13 +45,12 @@ public class PopulationService {
         return populationToPopulationDTO(population.get());
     }
 
-    public int deletePopulationById(Long id) {
-        try {
-            populationRepository.deleteById(id);
-            return 1;
-        } catch (EmptyResultDataAccessException e) {
-            return 0;
+    public void deletePopulationById(Long id) {
+        Optional<Population> population = populationRepository.findById(id);
+        if (population.isEmpty()) {
+            throw new ApiRequestException("Population not found for id " + id);
         }
+        populationRepository.delete(population.get());
     }
 
     public PopulationDTO updatePopulation(Long id, Population population) {
