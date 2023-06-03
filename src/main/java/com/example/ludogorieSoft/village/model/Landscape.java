@@ -1,11 +1,15 @@
 package com.example.ludogorieSoft.village.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "landscapes")
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class Landscape {
     @Id

@@ -40,11 +40,9 @@ public class LandscapeService {
         if (landscapeRepository.existsByLandscapeName(landscapeDTO.getLandscapeName())) {
             throw new ApiRequestException("Landscape with name: " + landscapeDTO.getLandscapeName() + " already exists");
         }
-
         Landscape landscape = new Landscape();
         landscape.setLandscapeName(landscapeDTO.getLandscapeName());
         landscapeRepository.save(landscape);
-
         return landscapeDTO;
     }
     public LandscapeDTO updateLandscape(Long id, Landscape landscape) {
