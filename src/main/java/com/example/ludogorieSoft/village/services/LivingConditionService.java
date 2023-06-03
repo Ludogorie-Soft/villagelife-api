@@ -42,11 +42,9 @@ public class LivingConditionService {
         if (livingConditionsRepository.existsByLivingCondition(livingConditionDTO.getLivingCondition())) {
             throw new ApiRequestException("LivingCondition with condition: " + livingConditionDTO.getLivingCondition() + " already exists");
         }
-
         LivingCondition livingCondition = new LivingCondition();
         livingCondition.setLivingCondition(livingConditionDTO.getLivingCondition());
         livingConditionsRepository.save(livingCondition);
-
         return livingConditionDTO;
     }
 
