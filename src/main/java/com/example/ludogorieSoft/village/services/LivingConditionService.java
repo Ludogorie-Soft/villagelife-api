@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -40,11 +39,11 @@ public class LivingConditionService {
     }
 
     public LivingConditionDTO createLivingCondition(LivingConditionDTO livingConditionDTO) {
-        if (livingConditionsRepository.existsByLivingCondition(livingConditionDTO.getLivingCondition())) {
+        if (livingConditionsRepository.existsByLivingConditionName(livingConditionDTO.getLivingCondition())) {
             throw new ApiRequestException("LivingCondition with condition: " + livingConditionDTO.getLivingCondition() + " already exists");
         }
         LivingCondition livingCondition = new LivingCondition();
-        livingCondition.setLivingCondition(livingConditionDTO.getLivingCondition());
+        livingCondition.setLivingConditionName(livingConditionDTO.getLivingCondition());
         livingConditionsRepository.save(livingCondition);
         return livingConditionDTO;
     }
@@ -54,10 +53,10 @@ public class LivingConditionService {
         if (foundLivingCondition.isEmpty()) {
             throw new ApiRequestException("LivingCondition with id: " + id + " Not Found");
         }
-        if (livingConditionsRepository.existsByLivingCondition(livingCondition.getLivingCondition())) {
-            throw new ApiRequestException("LivingCondition with name: " + livingCondition.getLivingCondition() + " already exists");
+        if (livingConditionsRepository.existsByLivingConditionName(livingCondition.getLivingConditionName())) {
+            throw new ApiRequestException("LivingCondition with name: " + livingCondition.getLivingConditionName() + " already exists");
         }
-        foundLivingCondition.get().setLivingCondition(livingCondition.getLivingCondition());
+        foundLivingCondition.get().setLivingConditionName(livingCondition.getLivingConditionName());
 
         livingConditionsRepository.save(foundLivingCondition.get());
         return livingConditionToLivingConditionDTO(foundLivingCondition.get());
