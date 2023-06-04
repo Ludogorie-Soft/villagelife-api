@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -30,8 +29,8 @@ public class QuestionService {
     }
 
     public QuestionDTO createQuestion(Question question) {
-        if (questionRepository.existsByQuestion(question.getQuestion())) {
-            throw new ApiRequestException("Question: " + question.getQuestion() + " already exists");
+        if (questionRepository.existsByQuestion(question.getQuestionName())) {
+            throw new ApiRequestException("Question: " + question.getQuestionName() + " already exists");
         }
         questionRepository.save(question);
         return questionToQuestionDTO(question);
@@ -58,10 +57,10 @@ public class QuestionService {
         if (findQuestion.isEmpty()) {
             throw new ApiRequestException("Question not found");
         }
-        if (questionRepository.existsByQuestion(question.getQuestion())) {
-            throw new ApiRequestException("Question: " + question.getQuestion() + " already exists");
+        if (questionRepository.existsByQuestion(question.getQuestionName())) {
+            throw new ApiRequestException("Question: " + question.getQuestionName() + " already exists");
         }
-        findQuestion.get().setQuestion(question.getQuestion());
+        findQuestion.get().setQuestionName(question.getQuestionName());
         questionRepository.save(findQuestion.get());
         return questionToQuestionDTO(findQuestion.get());
     }

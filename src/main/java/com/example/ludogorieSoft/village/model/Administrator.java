@@ -49,6 +49,6 @@ public class Administrator {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    private final boolean enabled = true;
+    private  final  boolean enabled = true;
 
 }

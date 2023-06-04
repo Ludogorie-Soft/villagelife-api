@@ -12,6 +12,6 @@ public class Question {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
-    private String question;
+    private String questionName;
 
 }
