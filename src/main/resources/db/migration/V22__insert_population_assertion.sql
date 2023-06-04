@@ -1,4 +1,4 @@
-INSERT INTO populated_assertion (assertion) VALUES
+INSERT INTO populated_assertion (populated_assertion_name) VALUES
 ('добронамерени'),
 ('предпазливи'),
 ('услужливи'),

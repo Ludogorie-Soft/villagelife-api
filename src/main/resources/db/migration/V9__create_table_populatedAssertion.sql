@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS populated_assertion (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    assertion VARCHAR(255),
-    UNIQUE (assertion)
+    populated_assertion_name VARCHAR(255),
+    UNIQUE (populated_assertion_name)
 );

@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PopulatedAssertionDTO {
     private Long id;
-    private String populatedAssertion;
+    private String populatedAssertionName;
 }
