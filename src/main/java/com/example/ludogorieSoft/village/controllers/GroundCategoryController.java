@@ -36,8 +36,8 @@ public class GroundCategoryController {
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<GroundCategoryDTO> updateGroundCategory(@PathVariable("id") Long id, @Valid @RequestBody GroundCategory groundCategory) {
-        return ResponseEntity.ok(groundCategoryService.updateGroundCategory(id, groundCategory));
+    public ResponseEntity<GroundCategoryDTO> updateGroundCategory(@PathVariable("id") Long id, @Valid @RequestBody GroundCategoryDTO groundCategoryDTO) {
+        return ResponseEntity.ok(groundCategoryService.updateGroundCategory(id, groundCategoryDTO));
     }
 
 
