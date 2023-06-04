@@ -2,7 +2,7 @@ package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.dtos.GroundCategoryDTO;
 import com.example.ludogorieSoft.village.model.GroundCategory;
-import com.example.ludogorieSoft.village.services.GroundCategoryService;
+import com.example.ludogorieSoft.village.services_tests.GroundCategoryService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,15 +29,14 @@ public class GroundCategoryController {
 
     @PostMapping
     public ResponseEntity<GroundCategoryDTO> createGroundCategory(@Valid @RequestBody GroundCategoryDTO groundCategoryDTO) {
-        GroundCategoryDTO createdGroundCategory = groundCategoryService.createGroundCategoryDTO(groundCategoryDTO);
-        return new ResponseEntity<>(createdGroundCategory, HttpStatus.CREATED);
+        GroundCategoryDTO createdGroundCategoryDTO = groundCategoryService.createGroundCategoryDTO(groundCategoryDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdGroundCategoryDTO);
     }
-
-
 
     @PutMapping("/{id}")
     public ResponseEntity<GroundCategoryDTO> updateGroundCategory(@PathVariable("id") Long id, @Valid @RequestBody GroundCategoryDTO groundCategoryDTO) {
-        return ResponseEntity.ok(groundCategoryService.updateGroundCategory(id, groundCategoryDTO));
+        GroundCategoryDTO updatedGroundCategoryDTO = groundCategoryService.updateGroundCategory(id, groundCategoryDTO);
+        return ResponseEntity.ok(updatedGroundCategoryDTO);
     }
 
 

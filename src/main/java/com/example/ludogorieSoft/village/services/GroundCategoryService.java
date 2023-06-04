@@ -1,4 +1,4 @@
-package com.example.ludogorieSoft.village.services;
+package com.example.ludogorieSoft.village.services_tests;
 
 import com.example.ludogorieSoft.village.dtos.GroundCategoryDTO;
 import com.example.ludogorieSoft.village.model.GroundCategory;
@@ -50,7 +50,7 @@ public class GroundCategoryService {
         groundCategory.setGroundCategoryName(groundCategoryDTO.getGroundCategoryName());
         groundCategoryRepository.save(groundCategory);
 
-        return groundCategoryDTO;
+        return toDTO(groundCategory);
     }
 
 
@@ -59,10 +59,12 @@ public class GroundCategoryService {
         if (foundGroundCategory.isEmpty()) {
             throw new ApiRequestException("Ground Category Not Found");
         }
-        foundGroundCategory.get().setGroundCategoryName(groundCategoryDTO.getGroundCategoryName());
 
-        groundCategoryRepository.save(foundGroundCategory.get());
-        return toDTO(foundGroundCategory.get());
+        GroundCategory groundCategory = foundGroundCategory.get();
+        groundCategory.setGroundCategoryName(groundCategoryDTO.getGroundCategoryName());
+
+        groundCategoryRepository.save(groundCategory);
+        return toDTO(groundCategory);
     }
 
 
