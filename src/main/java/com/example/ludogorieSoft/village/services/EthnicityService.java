@@ -36,16 +36,37 @@ public class EthnicityService {
                 .toList();
     }
 
-    public EthnicityDTO createEthnicity(Ethnicity ethnicity) {
-        ethnicityRepository.save(ethnicity);
-        return ethnicityToEthnicityDTO(ethnicity);
-    }
+
     public EthnicityDTO getEthnicityById(Long id) {
         Optional<Ethnicity> ethnicity = ethnicityRepository.findById(id);
         if (ethnicity.isEmpty()) {
             throw new ApiRequestException("Ethnicity not found");
         }
         return ethnicityToEthnicityDTO(ethnicity.get());
+    }
+
+    public EthnicityDTO createEthnicity(EthnicityDTO ethnicityDTO) {
+        if (ethnicityRepository.existsByEthnicityName(ethnicityDTO.getEthnicityName())) {
+            throw new ApiRequestException("Ethnicity with name: " + ethnicityDTO.getEthnicityName() + " already exists");
+        }
+
+        Ethnicity ethnicity = new Ethnicity();
+        ethnicity.setEthnicityName(ethnicityDTO.getEthnicityName());
+        ethnicityRepository.save(ethnicity);
+
+        return ethnicityToEthnicityDTO(ethnicity);
+    }
+
+
+    public EthnicityDTO updateEthnicity(Long id, EthnicityDTO ethnicityDTO) {
+        Optional<Ethnicity> foundEthnicity = ethnicityRepository.findById(id);
+        if (foundEthnicity.isEmpty()) {
+            throw new ApiRequestException("Ethnicity not found");
+        }
+        foundEthnicity.get().setEthnicityName(ethnicityDTO.getEthnicityName());
+
+        ethnicityRepository.save(foundEthnicity.get());
+        return ethnicityToEthnicityDTO(foundEthnicity.get());
     }
 
     public void deleteEthnicityById(Long id) {

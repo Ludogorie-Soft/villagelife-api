@@ -1,7 +1,6 @@
 package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.dtos.EthnicityDTO;
-import com.example.ludogorieSoft.village.model.Ethnicity;
 import com.example.ludogorieSoft.village.services.EthnicityService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,16 +27,21 @@ public class EthnicityController {
     }
 
     @PostMapping
-    public ResponseEntity<EthnicityDTO> createEthnicity(@RequestBody Ethnicity ethnicity, UriComponentsBuilder uriComponentsBuilder) {
+    public ResponseEntity<EthnicityDTO> createEthnicity(@RequestBody EthnicityDTO ethnicityDTO, UriComponentsBuilder uriComponentsBuilder) {
+        EthnicityDTO createdEthnicityDTO = ethnicityService.createEthnicity(ethnicityDTO);
         URI location = uriComponentsBuilder.path("/api/v1/ethnicities/{id}")
-                .buildAndExpand(ethnicityService.createEthnicity(ethnicity).getId())
+                .buildAndExpand(createdEthnicityDTO.getId())
                 .toUri();
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(location).body(createdEthnicityDTO);
     }
+
     @PutMapping("/{id}")
-    public ResponseEntity<EthnicityDTO> updateEthnicity(@PathVariable("id") Long id, @RequestBody Ethnicity ethnicity) {
-        return ResponseEntity.ok(ethnicityService.updateEthnicity(id, ethnicity));
+    public ResponseEntity<EthnicityDTO> updateEthnicity(@PathVariable("id") Long id, @RequestBody EthnicityDTO ethnicityDTO) {
+        EthnicityDTO updatedEthnicityDTO = ethnicityService.updateEthnicity(id, ethnicityDTO);
+        return ResponseEntity.ok(updatedEthnicityDTO);
     }
+
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteEthnicityById(@PathVariable("id") Long id) {

@@ -111,7 +111,7 @@ public class EthnicityServiceTest {
         when(ethnicityRepository.save(ethnicity)).thenReturn(ethnicity);
         when(modelMapper.map(ethnicity, EthnicityDTO.class)).thenReturn(expectedEthnicityDTO);
 
-        EthnicityDTO result = ethnicityService.createEthnicity(ethnicity);
+        EthnicityDTO result = ethnicityService.createEthnicity(expectedEthnicityDTO);
 
         verify(ethnicityRepository, times(1)).save(ethnicity);
         Assertions.assertEquals(expectedEthnicityDTO, result);
