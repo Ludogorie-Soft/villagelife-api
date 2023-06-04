@@ -30,16 +30,16 @@ public class QuestionController {
     }
 
     @PostMapping
-    public ResponseEntity<QuestionDTO> createQuestion(@Valid @RequestBody Question question, UriComponentsBuilder uriComponentsBuilder) {
+    public ResponseEntity<QuestionDTO> createQuestion(@Valid @RequestBody QuestionDTO questionDTO, UriComponentsBuilder uriComponentsBuilder) {
         URI location = uriComponentsBuilder.path("/api/v1/questions/{id}")
-                .buildAndExpand(questionService.createQuestion(question).getId())
+                .buildAndExpand(questionService.createQuestion(questionDTO).getId())
                 .toUri();
         return ResponseEntity.created(location).build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<QuestionDTO> updateQuestion(@PathVariable("id") Long id, @Valid @RequestBody Question question) {
-        return ResponseEntity.ok(questionService.updateQuestion(id, question));
+    public ResponseEntity<QuestionDTO> updateQuestion(@PathVariable("id") Long id, @Valid @RequestBody QuestionDTO questionDTO) {
+        return ResponseEntity.ok(questionService.updateQuestion(id, questionDTO));
     }
 
     @DeleteMapping("/{id}")
