@@ -1,4 +1,4 @@
-package com.example.ludogorieSoft.village.services;
+package com.example.ludogorieSoft.village.services_tests;
 
 import com.example.ludogorieSoft.village.dtos.QuestionDTO;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
@@ -57,17 +57,17 @@ public class QuestionServiceTest {
     @Test
     public void testCreateQuestionWithNonExistingQuestion() {
         Question question = new Question();
-        question.setQuestion("New Question");
+        question.setQuestionName("New Question");
         QuestionDTO questionDTO = new QuestionDTO();
         questionDTO.setQuestion("New Question");
 
-        when(questionRepository.existsByQuestion(question.getQuestion())).thenReturn(false);
+        when(questionRepository.existsByQuestionName(question.getQuestionName())).thenReturn(false);
         when(questionRepository.save(any(Question.class))).thenReturn(question);
         when(modelMapper.map(question, QuestionDTO.class)).thenReturn(questionDTO);
 
         QuestionDTO result = questionService.createQuestion(question);
 
-        verify(questionRepository, times(1)).existsByQuestion(question.getQuestion());
+        verify(questionRepository, times(1)).existsByQuestionName(question.getQuestionName());
         verify(questionRepository, times(1)).save(question);
         Assertions.assertEquals(questionService.questionToQuestionDTO(question), result);
     }
@@ -75,15 +75,15 @@ public class QuestionServiceTest {
     @Test
     public void testCreateQuestionWithExistingQuestion() {
         Question question = new Question();
-        question.setQuestion("Existing Question");
+        question.setQuestionName("Existing Question");
 
-        when(questionRepository.existsByQuestion(question.getQuestion())).thenReturn(true);
+        when(questionRepository.existsByQuestionName(question.getQuestionName())).thenReturn(true);
 
         Assertions.assertThrows(ApiRequestException.class, () -> {
             questionService.createQuestion(question);
         });
 
-        verify(questionRepository, times(1)).existsByQuestion(question.getQuestion());
+        verify(questionRepository, times(1)).existsByQuestionName(question.getQuestionName());
         verify(questionRepository, times(0)).save(any(Question.class));
     }
     @Test
@@ -150,19 +150,19 @@ public class QuestionServiceTest {
         Long questionId = 123L;
         Question question = new Question();
         question.setId(questionId);
-        question.setQuestion("Updated Question");
+        question.setQuestionName("Updated Question");
 
         Optional<Question> optionalQuestion = Optional.of(new Question());
-        optionalQuestion.get().setQuestion("Old Question");
+        optionalQuestion.get().setQuestionName("Old Question");
 
         when(questionRepository.findById(questionId)).thenReturn(optionalQuestion);
-        when(questionRepository.existsByQuestion(question.getQuestion())).thenReturn(false);
+        when(questionRepository.existsByQuestionName(question.getQuestionName())).thenReturn(false);
         when(questionRepository.save(any(Question.class))).thenReturn(question);
 
         QuestionDTO result = questionService.updateQuestion(questionId, question);
 
         verify(questionRepository, times(1)).findById(questionId);
-        verify(questionRepository, times(1)).existsByQuestion(question.getQuestion());
+        verify(questionRepository, times(1)).existsByQuestionName(question.getQuestionName());
         verify(questionRepository, times(1)).save(any(Question.class));
         Assertions.assertEquals(questionService.questionToQuestionDTO(question), result);
     }
@@ -172,7 +172,7 @@ public class QuestionServiceTest {
         Long questionId = 123L;
         Question question = new Question();
         question.setId(questionId);
-        question.setQuestion("Updated Question");
+        question.setQuestionName("Updated Question");
 
         when(questionRepository.findById(questionId)).thenReturn(Optional.empty());
 
@@ -181,7 +181,7 @@ public class QuestionServiceTest {
         });
 
         verify(questionRepository, times(1)).findById(questionId);
-        verify(questionRepository, never()).existsByQuestion(anyString());
+        verify(questionRepository, never()).existsByQuestionName(anyString());
         verify(questionRepository, never()).save(any(Question.class));
     }
 
@@ -190,20 +190,20 @@ public class QuestionServiceTest {
         Long questionId = 123L;
         Question question = new Question();
         question.setId(questionId);
-        question.setQuestion("Updated Question");
+        question.setQuestionName("Updated Question");
 
         Optional<Question> optionalQuestion = Optional.of(new Question());
-        optionalQuestion.get().setQuestion("Existing Question");
+        optionalQuestion.get().setQuestionName("Existing Question");
 
         when(questionRepository.findById(questionId)).thenReturn(optionalQuestion);
-        when(questionRepository.existsByQuestion(question.getQuestion())).thenReturn(true);
+        when(questionRepository.existsByQuestionName(question.getQuestionName())).thenReturn(true);
 
         Assertions.assertThrows(ApiRequestException.class, () -> {
             questionService.updateQuestion(questionId, question);
         });
 
         verify(questionRepository, times(1)).findById(questionId);
-        verify(questionRepository, times(1)).existsByQuestion(question.getQuestion());
+        verify(questionRepository, times(1)).existsByQuestionName(question.getQuestionName());
         verify(questionRepository, never()).save(any(Question.class));
     }
 }

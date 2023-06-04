@@ -1,9 +1,8 @@
-package com.example.ludogorieSoft.village.services;
+package com.example.ludogorieSoft.village.services_tests;
 
 import com.example.ludogorieSoft.village.dtos.ObjectAroundVillageDTO;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.ObjectAroundVillage;
-import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.repositories.ObjectAroundVillageRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;

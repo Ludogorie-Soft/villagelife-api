@@ -1,8 +1,7 @@
-package com.example.ludogorieSoft.village.services;
+package com.example.ludogorieSoft.village.services_tests;
 
 import com.example.ludogorieSoft.village.dtos.GroundCategoryDTO;
 import com.example.ludogorieSoft.village.model.GroundCategory;
-import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.repositories.GroundCategoryRepository;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import lombok.AllArgsConstructor;
@@ -43,12 +42,12 @@ public class GroundCategoryService {
 
 
     public GroundCategoryDTO createGroundCategoryDTO(GroundCategoryDTO groundCategoryDTO) {
-        if (groundCategoryRepository.existsByGroundCategoryName(groundCategoryDTO.getGroundCategory())) {
-            throw new ApiRequestException("Ground Category with name: " + groundCategoryDTO.getGroundCategory() + " already exists");
+        if (groundCategoryRepository.existsByGroundCategoryName(groundCategoryDTO.getGroundCategoryName())) {
+            throw new ApiRequestException("Ground Category with name: " + groundCategoryDTO.getGroundCategoryName() + " already exists");
         }
 
         GroundCategory groundCategory = new GroundCategory();
-        groundCategory.setGroundCategoryName(groundCategoryDTO.getGroundCategory());
+        groundCategory.setGroundCategoryName(groundCategoryDTO.getGroundCategoryName());
         groundCategoryRepository.save(groundCategory);
 
         return groundCategoryDTO;
