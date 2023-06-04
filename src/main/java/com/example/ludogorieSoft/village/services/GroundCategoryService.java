@@ -54,12 +54,12 @@ public class GroundCategoryService {
     }
 
 
-    public GroundCategoryDTO updateGroundCategory(Long id, GroundCategory groundCategory) {
+    public GroundCategoryDTO updateGroundCategory(Long id, GroundCategoryDTO groundCategoryDTO) {
         Optional<GroundCategory> foundGroundCategory = groundCategoryRepository.findById(id);
         if (foundGroundCategory.isEmpty()) {
             throw new ApiRequestException("Ground Category Not Found");
         }
-        foundGroundCategory.get().setGroundCategoryName(groundCategory.getGroundCategoryName());
+        foundGroundCategory.get().setGroundCategoryName(groundCategoryDTO.getGroundCategoryName());
 
         groundCategoryRepository.save(foundGroundCategory.get());
         return toDTO(foundGroundCategory.get());

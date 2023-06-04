@@ -34,8 +34,8 @@ public class LivingConditionController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<LivingConditionDTO> updateLivingCondition(@Valid @PathVariable("id") Long id, @RequestBody LivingCondition livingCondition) {
-        return ResponseEntity.ok(livingConditionService.updateLivingCondition(id, livingCondition));
+    public ResponseEntity<LivingConditionDTO> updateLivingCondition(@Valid @PathVariable("id") Long id, @RequestBody LivingConditionDTO livingConditionDTO) {
+        return ResponseEntity.ok(livingConditionService.updateLivingCondition(id, livingConditionDTO));
     }
 
     @DeleteMapping("/{id}")

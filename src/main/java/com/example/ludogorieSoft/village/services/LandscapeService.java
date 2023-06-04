@@ -44,15 +44,15 @@ public class LandscapeService {
         landscapeRepository.save(landscape);
         return landscapeDTO;
     }
-    public LandscapeDTO updateLandscape(Long id, Landscape landscape) {
+    public LandscapeDTO updateLandscape(Long id, LandscapeDTO landscapeDTO) {
         Optional<Landscape> foundLandscape = landscapeRepository.findById(id);
         if (foundLandscape.isEmpty()) {
             throw new ApiRequestException("Landscape with id: " + id + " Not Found");
         }
-        if (landscapeRepository.existsByLandscapeName(landscape.getLandscapeName())) {
-            throw new ApiRequestException("Landscape with name: " + landscape.getLandscapeName() + " already exists");
+        if (landscapeRepository.existsByLandscapeName(landscapeDTO.getLandscapeName())) {
+            throw new ApiRequestException("Landscape with name: " + landscapeDTO.getLandscapeName() + " already exists");
         }
-        foundLandscape.get().setLandscapeName(landscape.getLandscapeName());
+        foundLandscape.get().setLandscapeName(landscapeDTO.getLandscapeName());
 
         landscapeRepository.save(foundLandscape.get());
         return landscapeToLandscapeDTO(foundLandscape.get());
