@@ -1,4 +1,4 @@
-package com.example.ludogorieSoft.village.services;
+package com.example.ludogorieSoft.village.services_tests;
 
 import com.example.ludogorieSoft.village.dtos.AdministratorDTO;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
@@ -21,7 +21,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-public class AdministratorServiceTest {
+class AdministratorServiceTest {
     @BeforeEach
     public void setUp(){
         MockitoAnnotations.openMocks(this);
@@ -34,7 +34,7 @@ public class AdministratorServiceTest {
     private ModelMapper modelMapper;
 
     @Test
-    public void testGetAllAdministrators() {
+    void testGetAllAdministrators() {
         List<Administrator> administrators = new ArrayList<>();
         administrators.add(new Administrator(1L, "John Doe", "john@example.com", "john", "password1", "1234567890", LocalDateTime.now()));
         administrators.add(new Administrator(2L, "Jane Smith", "jane@example.com", "jane", "password2", "0987654321", LocalDateTime.now()));
@@ -55,7 +55,7 @@ public class AdministratorServiceTest {
         Assertions.assertEquals(administratorDTOs, result);
     }
     @Test
-    public void testGetAllAdministratorsWithNoAdministrators() {
+    void testGetAllAdministratorsWithNoAdministrators() {
         List<Administrator> administrators = new ArrayList<>();
         List<AdministratorDTO> administratorDTOs = new ArrayList<>();
 
@@ -68,7 +68,7 @@ public class AdministratorServiceTest {
     }
 
     @Test
-    public void testGetAdministratorByIdWithExistingAdministratorIdThenReturnsAdministratorDTO() {
+    void testGetAdministratorByIdWithExistingAdministratorIdThenReturnsAdministratorDTO() {
         Long administratorId = 123L;
         Administrator existingAdministrator = new Administrator(administratorId, "Test Administrator", "test@example.com", "testadmin", "password", "1234567890", LocalDateTime .now());
 
@@ -85,7 +85,7 @@ public class AdministratorServiceTest {
         Assertions.assertEquals(expectedAdministratorDTO, result);
     }
     @Test
-    public void testGetAdministratorByIdWithNonExistingAdministratorIdThenThrowsApiRequestException() {
+    void testGetAdministratorByIdWithNonExistingAdministratorIdThenThrowsApiRequestException() {
         Long administratorId = 123L;
 
         when(administratorRepository.findById(administratorId)).thenReturn(Optional.empty());
@@ -96,7 +96,7 @@ public class AdministratorServiceTest {
         verify(modelMapper, never()).map(any(), eq(AdministratorDTO.class));
     }
     @Test
-    public void testDeleteAdministratorByIdWithExistingAdministratorId() {
+    void testDeleteAdministratorByIdWithExistingAdministratorId() {
         Long administratorId = 123L;
 
         when(administratorRepository.existsById(administratorId)).thenReturn(true);
@@ -107,7 +107,7 @@ public class AdministratorServiceTest {
         verify(administratorRepository, times(1)).deleteById(administratorId);
     }
     @Test
-    public void testDeleteAdministratorByIdWithNonExistingAdministratorIdThenThrowsApiRequestException() {
+    void testDeleteAdministratorByIdWithNonExistingAdministratorIdThenThrowsApiRequestException() {
         Long administratorId = 123L;
 
         when(administratorRepository.existsById(administratorId)).thenReturn(false);

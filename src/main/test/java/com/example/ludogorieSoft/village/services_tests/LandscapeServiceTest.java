@@ -1,4 +1,4 @@
-package com.example.ludogorieSoft.village.services;
+package com.example.ludogorieSoft.village.services_tests;
 
 import com.example.ludogorieSoft.village.dtos.LandscapeDTO;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
@@ -18,7 +18,7 @@ import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 
-public class LandscapeServiceTest {
+class LandscapeServiceTest {
     @BeforeEach
     public void setUp(){
         MockitoAnnotations.openMocks(this);
@@ -34,7 +34,7 @@ public class LandscapeServiceTest {
     private LandscapeService landscapeService;
 
     @Test
-    public void testGetAllLandscapesWithExistingLandscapes() {
+    void testGetAllLandscapesWithExistingLandscapes() {
         Landscape landscape1 = new Landscape(1L, "Landscape 1");
         Landscape landscape2 = new Landscape(2L, "Landscape 2");
 
@@ -62,7 +62,7 @@ public class LandscapeServiceTest {
     }
 
     @Test
-    public void testGetAllLandscapesWithNoLandscapes() {
+    void testGetAllLandscapesWithNoLandscapes() {
         List<Landscape> landscapes = new ArrayList<>();
         List<LandscapeDTO> expectedLandscapes = new ArrayList<>();
 
@@ -75,7 +75,7 @@ public class LandscapeServiceTest {
     }
 
     @Test
-    public void testGetLandscapeByIdWithExistingLandscapeId() {
+    void testGetLandscapeByIdWithExistingLandscapeId() {
         Long landscapeId = 123L;
         Landscape existingLandscape = new Landscape(landscapeId, "Existing Landscape");
 
@@ -91,7 +91,7 @@ public class LandscapeServiceTest {
     }
 
     @Test
-    public void testGetLandscapeByIdWithNonExistingLandscapeIdThenThrowsApiRequestException() {
+    void testGetLandscapeByIdWithNonExistingLandscapeIdThenThrowsApiRequestException() {
         Long landscapeId = 123L;
         when(landscapeRepository.findById(landscapeId)).thenReturn(Optional.empty());
         Assertions.assertThrows(ApiRequestException.class, () -> landscapeService.getLandscapeById(landscapeId));
@@ -100,7 +100,7 @@ public class LandscapeServiceTest {
     }
 
     @Test
-    public void testCreateLandscapeWithNonExistingLandscapeName() {
+    void testCreateLandscapeWithNonExistingLandscapeName() {
         LandscapeDTO landscapeDTO = new LandscapeDTO();
         landscapeDTO.setLandscapeName("New Landscape");
 
@@ -118,7 +118,7 @@ public class LandscapeServiceTest {
     }
 
     @Test
-    public void testCreateLandscapeWithExistingLandscapeNameThenThrowsApiRequestException() {
+    void testCreateLandscapeWithExistingLandscapeNameThenThrowsApiRequestException() {
         LandscapeDTO landscapeDTO = new LandscapeDTO();
         landscapeDTO.setLandscapeName("Existing Landscape");
 
@@ -181,7 +181,7 @@ public class LandscapeServiceTest {
     //    verify(landscapeRepository, never()).save(any(Landscape.class));
     //}
     @Test
-    public void testDeleteLandscapeWithExistingId() {
+    void testDeleteLandscapeWithExistingId() {
         Long landscapeId = 123L;
         Landscape landscape = new Landscape();
         when(landscapeRepository.findById(landscapeId)).thenReturn(Optional.of(landscape));
@@ -191,7 +191,7 @@ public class LandscapeServiceTest {
     }
 
     @Test
-    public void testDeleteLandscapeWithNonExistingIdThenThrowsApiRequestException() {
+    void testDeleteLandscapeWithNonExistingIdThenThrowsApiRequestException() {
         Long landscapeId = 123L;
         when(landscapeRepository.findById(landscapeId)).thenReturn(Optional.empty());
         Assertions.assertThrows(ApiRequestException.class, () -> landscapeService.deleteLandscape(landscapeId));
