@@ -1,4 +1,4 @@
-package com.example.ludogorieSoft.village.services_tests;
+package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.QuestionDTO;
 import com.example.ludogorieSoft.village.model.Question;
@@ -20,6 +20,7 @@ public class QuestionService {
     public QuestionDTO questionToQuestionDTO(Question question) {
         return modelMapper.map(question, QuestionDTO.class);
     }
+    public Question questionDTOtoQuestion(QuestionDTO questionDTO){return modelMapper.map(questionDTO,Question.class);}
 
     public List<QuestionDTO> getAllQuestions() {
         List<Question> questions = questionRepository.findAll();
@@ -28,10 +29,11 @@ public class QuestionService {
                 .toList();
     }
 
-    public QuestionDTO createQuestion(Question question) {
-        if (questionRepository.existsByQuestionName(question.getQuestionName())) {
-            throw new ApiRequestException("Question: " + question.getQuestionName() + " already exists");
+    public QuestionDTO createQuestion(QuestionDTO questionDTO) {
+        if (questionRepository.existsByQuestionName(questionDTO.getQuestion())) {
+            throw new ApiRequestException("Question: " + questionDTO.getQuestion() + " already exists");
         }
+        Question question=questionDTOtoQuestion(questionDTO);
         questionRepository.save(question);
         return questionToQuestionDTO(question);
     }
@@ -52,15 +54,15 @@ public class QuestionService {
         questionRepository.delete(question.get());
     }
 
-    public QuestionDTO updateQuestion(Long id, Question question) {
+    public QuestionDTO updateQuestion(Long id, QuestionDTO questionDTO) {
         Optional<Question> findQuestion = questionRepository.findById(id);
         if (findQuestion.isEmpty()) {
             throw new ApiRequestException("Question not found");
         }
-        if (questionRepository.existsByQuestionName(question.getQuestionName())) {
-            throw new ApiRequestException("Question: " + question.getQuestionName() + " already exists");
+        if (questionRepository.existsByQuestionName(questionDTO.getQuestion())) {
+            throw new ApiRequestException("Question: " + questionDTO.getQuestion() + " already exists");
         }
-        findQuestion.get().setQuestionName(question.getQuestionName());
+        findQuestion.get().setQuestionName(questionDTO.getQuestion());
         questionRepository.save(findQuestion.get());
         return questionToQuestionDTO(findQuestion.get());
     }

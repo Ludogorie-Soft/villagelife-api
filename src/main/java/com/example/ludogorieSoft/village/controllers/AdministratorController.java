@@ -2,7 +2,7 @@ package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.dtos.AdministratorDTO;
 import com.example.ludogorieSoft.village.dtos.AdministratorRequest;
-import com.example.ludogorieSoft.village.services_tests.AdministratorService;
+import com.example.ludogorieSoft.village.services.AdministratorService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -2,7 +2,7 @@ package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.dtos.VillageLivingConditionDTO;
 import com.example.ludogorieSoft.village.model.VillageLivingConditions;
-import com.example.ludogorieSoft.village.services_tests.VillageLivingConditionService;
+import com.example.ludogorieSoft.village.services.VillageLivingConditionService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

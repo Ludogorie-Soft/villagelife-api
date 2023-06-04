@@ -2,7 +2,7 @@ package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.dtos.EthnicityDTO;
 import com.example.ludogorieSoft.village.model.Ethnicity;
-import com.example.ludogorieSoft.village.services_tests.EthnicityService;
+import com.example.ludogorieSoft.village.services.EthnicityService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

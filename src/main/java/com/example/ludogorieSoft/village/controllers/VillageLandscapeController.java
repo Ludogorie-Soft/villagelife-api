@@ -3,7 +3,7 @@ package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.dtos.VillageLandscapeDTO;
 import com.example.ludogorieSoft.village.model.VillageLandscape;
-import com.example.ludogorieSoft.village.services_tests.VillageLandscapeService;
+import com.example.ludogorieSoft.village.services.VillageLandscapeService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
