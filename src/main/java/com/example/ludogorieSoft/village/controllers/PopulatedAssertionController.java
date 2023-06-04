@@ -33,16 +33,16 @@ public class PopulatedAssertionController {
     }
 
     @PostMapping
-    public ResponseEntity<PopulatedAssertionDTO> createPopulatedAssertion(@RequestBody @Valid PopulatedAssertion populatedAssertion, UriComponentsBuilder uriComponentsBuilder) {
+    public ResponseEntity<PopulatedAssertionDTO> createPopulatedAssertion(@RequestBody @Valid PopulatedAssertionDTO populatedAssertionDTO, UriComponentsBuilder uriComponentsBuilder) {
         URI location = uriComponentsBuilder.path("/api/v1/population/{id}")
-                .buildAndExpand(populatedAssertionService.createPopulatedAssertion(populatedAssertion).getId())
+                .buildAndExpand(populatedAssertionService.createPopulatedAssertion(populatedAssertionDTO).getId())
                 .toUri();
         return ResponseEntity.created(location).build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PopulatedAssertionDTO> updatePopulatedAssertionById(@PathVariable("id") Long id, @Valid @RequestBody PopulatedAssertion populatedAssertion) {
-        return ResponseEntity.ok(populatedAssertionService.updatePopulatedAssertion(id, populatedAssertion));
+    public ResponseEntity<PopulatedAssertionDTO> updatePopulatedAssertionById(@PathVariable("id") Long id, @Valid @RequestBody PopulatedAssertionDTO populatedAssertionDTO) {
+        return ResponseEntity.ok(populatedAssertionService.updatePopulatedAssertion(id, new PopulatedAssertionDTO()));
     }
 
     @DeleteMapping("/{id}")
