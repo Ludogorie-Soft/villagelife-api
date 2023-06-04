@@ -1,4 +1,4 @@
-package com.example.ludogorieSoft.village.services_tests;
+package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.PopulationDTO;
 import com.example.ludogorieSoft.village.model.Population;

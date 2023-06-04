@@ -1,4 +1,4 @@
-package com.example.ludogorieSoft.village.services_tests;
+package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.LivingConditionDTO;
 import com.example.ludogorieSoft.village.model.LivingCondition;
@@ -38,24 +38,24 @@ public class LivingConditionService {
     }
 
     public LivingConditionDTO createLivingCondition(LivingConditionDTO livingConditionDTO) {
-        if (livingConditionsRepository.existsByLivingConditionName(livingConditionDTO.getLivingCondition())) {
-            throw new ApiRequestException("LivingCondition with condition: " + livingConditionDTO.getLivingCondition() + " already exists");
+        if (livingConditionsRepository.existsByLivingConditionName(livingConditionDTO.getLivingConditionName())) {
+            throw new ApiRequestException("LivingCondition with condition: " + livingConditionDTO.getLivingConditionName() + " already exists");
         }
         LivingCondition livingCondition = new LivingCondition();
-        livingCondition.setLivingConditionName(livingConditionDTO.getLivingCondition());
+        livingCondition.setLivingConditionName(livingConditionDTO.getLivingConditionName());
         livingConditionsRepository.save(livingCondition);
         return livingConditionDTO;
     }
 
-    public LivingConditionDTO updateLivingCondition(Long id, LivingCondition livingCondition) {
+    public LivingConditionDTO updateLivingCondition(Long id, LivingConditionDTO livingConditionDTO) {
         Optional<LivingCondition> foundLivingCondition = livingConditionsRepository.findById(id);
         if (foundLivingCondition.isEmpty()) {
             throw new ApiRequestException("LivingCondition with id: " + id + " Not Found");
         }
-        if (livingConditionsRepository.existsByLivingConditionName(livingCondition.getLivingConditionName())) {
-            throw new ApiRequestException("LivingCondition with name: " + livingCondition.getLivingConditionName() + " already exists");
+        if (livingConditionsRepository.existsByLivingConditionName(livingConditionDTO.getLivingConditionName())) {
+            throw new ApiRequestException("LivingCondition with name: " + livingConditionDTO.getLivingConditionName() + " already exists");
         }
-        foundLivingCondition.get().setLivingConditionName(livingCondition.getLivingConditionName());
+        foundLivingCondition.get().setLivingConditionName(livingConditionDTO.getLivingConditionName());
 
         livingConditionsRepository.save(foundLivingCondition.get());
         return livingConditionToLivingConditionDTO(foundLivingCondition.get());

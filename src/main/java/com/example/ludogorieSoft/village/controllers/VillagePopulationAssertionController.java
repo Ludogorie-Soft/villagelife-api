@@ -2,7 +2,7 @@ package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.dtos.VillagePopulationAssertionDTO;
 import com.example.ludogorieSoft.village.model.VillagePopulationAssertion;
-import com.example.ludogorieSoft.village.services_tests.VillagePopulationAssertionService;
+import com.example.ludogorieSoft.village.services.VillagePopulationAssertionService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -1,8 +1,7 @@
 package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.dtos.LandscapeDTO;
-import com.example.ludogorieSoft.village.model.Landscape;
-import com.example.ludogorieSoft.village.services_tests.LandscapeService;
+import com.example.ludogorieSoft.village.services.LandscapeService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,8 +31,8 @@ public class LandscapeController {
         return new ResponseEntity<>(createdLandscape, HttpStatus.CREATED);
     }
     @PutMapping("/{id}")
-    public ResponseEntity<LandscapeDTO> updateLandscape(@Valid @PathVariable("id") Long id, @RequestBody Landscape landscape) {
-        return ResponseEntity.ok(landscapeService.updateLandscape(id, landscape));
+    public ResponseEntity<LandscapeDTO> updateLandscape(@Valid @PathVariable("id") Long id, @RequestBody LandscapeDTO landscapeDTO) {
+        return ResponseEntity.ok(landscapeService.updateLandscape(id, landscapeDTO));
     }
 
     @DeleteMapping("/{id}")
