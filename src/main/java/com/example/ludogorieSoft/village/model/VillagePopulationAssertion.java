@@ -4,7 +4,6 @@ import com.example.ludogorieSoft.village.enums.Consents;
 import lombok.Data;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 @Entity
 @Data

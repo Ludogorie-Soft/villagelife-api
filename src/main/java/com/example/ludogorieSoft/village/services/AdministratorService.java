@@ -3,15 +3,13 @@ package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.AdministratorDTO;
 import com.example.ludogorieSoft.village.dtos.AdministratorRequest;
+import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.Administrator;
 import com.example.ludogorieSoft.village.repositories.AdministratorRepository;
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -67,9 +65,7 @@ public class AdministratorService {
         foundAdministrator.get().setUsername(administratorRequest.getUsername());
         foundAdministrator.get().setPassword(administratorRequest.getPassword());
         foundAdministrator.get().setMobile(administratorRequest.getMobile());
-        System.out.println("!!!!!!!!!!!!!!!!!!!!!!" + foundAdministrator.get().getCreatedAt());
         foundAdministrator.get().setCreatedAt(foundAdministrator.get().getCreatedAt());
-        System.out.println("!!!!!!!!!!!!!!!!!!!!!!" + foundAdministrator.get().getCreatedAt());
         administratorRepository.save(foundAdministrator.get());
         return administratorToAdministratorDTO(foundAdministrator.get());
     }

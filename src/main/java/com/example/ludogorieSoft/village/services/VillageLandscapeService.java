@@ -1,7 +1,6 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.VillageLandscapeDTO;
-import com.example.ludogorieSoft.village.model.GroundCategory;
 import com.example.ludogorieSoft.village.model.Landscape;
 import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.model.VillageLandscape;

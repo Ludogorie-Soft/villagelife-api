@@ -6,9 +6,7 @@ import com.example.ludogorieSoft.village.repositories.EthnicityRepository;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
-import org.testng.annotations.Test;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,7 +21,14 @@ public class EthnicityService {
     public EthnicityDTO ethnicityToEthnicityDTO(Ethnicity ethnicity){
         return modelMapper.map(ethnicity, EthnicityDTO.class);
     }
-
+    public Ethnicity checkEthnicity(Long id){
+        Optional<Ethnicity> ethnicity = ethnicityRepository.findById(id);
+        if (ethnicity.isPresent()){
+            return ethnicity.get();
+        }else {
+            throw new ApiRequestException("Ethnicity not found");
+        }
+    }
     public List<EthnicityDTO> getAllEthnicities() {
         List<Ethnicity> ethnicities = ethnicityRepository.findAll();
         return ethnicities
