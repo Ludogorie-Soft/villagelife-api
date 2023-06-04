@@ -42,7 +42,7 @@ public class GroundCategoryService {
 
 
     public GroundCategoryDTO createGroundCategoryDTO(GroundCategoryDTO groundCategoryDTO) {
-        if (groundCategoryRepository.existsByGroundCategory(groundCategoryDTO.getGroundCategory())) {
+        if (groundCategoryRepository.existsByGroundCategoryName(groundCategoryDTO.getGroundCategory())) {
             throw new ApiRequestException("Ground Category with name: " + groundCategoryDTO.getGroundCategory() + " already exists");
         }
 

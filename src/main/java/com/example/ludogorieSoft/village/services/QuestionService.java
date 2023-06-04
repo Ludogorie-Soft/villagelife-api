@@ -29,7 +29,7 @@ public class QuestionService {
     }
 
     public QuestionDTO createQuestion(Question question) {
-        if (questionRepository.existsByQuestion(question.getQuestionName())) {
+        if (questionRepository.existsByQuestionName(question.getQuestionName())) {
             throw new ApiRequestException("Question: " + question.getQuestionName() + " already exists");
         }
         questionRepository.save(question);
@@ -57,7 +57,7 @@ public class QuestionService {
         if (findQuestion.isEmpty()) {
             throw new ApiRequestException("Question not found");
         }
-        if (questionRepository.existsByQuestion(question.getQuestionName())) {
+        if (questionRepository.existsByQuestionName(question.getQuestionName())) {
             throw new ApiRequestException("Question: " + question.getQuestionName() + " already exists");
         }
         findQuestion.get().setQuestionName(question.getQuestionName());
