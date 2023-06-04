@@ -24,6 +24,8 @@ public class EthnicityVillageService {
     private final EthnicityVillageRepository ethnicityVillageRepository;
     private final EthnicityRepository ethnicityRepository;
     private final VillageRepository villageRepository;
+    private final VillageService villageService;
+    private final EthnicityService ethnicityService;
 
     public EthnicityVillageDTO ethnicityVillageToEthnicityVillageDTO(EthnicityVillage ethnicityVillage) {
         return modelMapper.map(ethnicityVillage, EthnicityVillageDTO.class);
@@ -69,30 +71,14 @@ public class EthnicityVillageService {
     public EthnicityVillageDTO createEthnicityVillage(EthnicityVillageDTO ethnicityVillageDTO) {
         EthnicityVillage ethnicityVillage = new EthnicityVillage();
 
-        Village village = checkVillage(ethnicityVillageDTO.getVillageId());
+        Village village = villageService.checkVillage(ethnicityVillageDTO.getVillageId());
         ethnicityVillage.setVillage(village);
 
-        Ethnicity ethnicity = checkEthnicity(ethnicityVillageDTO.getEthnicityId());
+        Ethnicity ethnicity = ethnicityService.checkEthnicity(ethnicityVillageDTO.getEthnicityId());
         ethnicityVillage.setEthnicity(ethnicity);
 
         ethnicityVillageRepository.save(ethnicityVillage);
         return ethnicityVillageDTO;
-    }
-    public Village checkVillage(Long id){
-        Optional<Village> village = villageRepository.findById(id);
-        if (village.isPresent()){
-           return village.get();
-        }else {
-            throw new ApiRequestException("Village not found");
-        }
-    }
-    public Ethnicity checkEthnicity(Long id){
-        Optional<Ethnicity> ethnicity = ethnicityRepository.findById(id);
-        if (ethnicity.isPresent()){
-          return ethnicity.get();
-        }else {
-            throw new ApiRequestException("Ethnicity not found");
-        }
     }
 
     public int deleteEthnicityVillageById(Long id) {

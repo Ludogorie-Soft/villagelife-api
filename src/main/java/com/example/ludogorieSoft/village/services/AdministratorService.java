@@ -3,9 +3,9 @@ package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.AdministratorDTO;
 import com.example.ludogorieSoft.village.dtos.AdministratorRequest;
+import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.Administrator;
 import com.example.ludogorieSoft.village.repositories.AdministratorRepository;
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;

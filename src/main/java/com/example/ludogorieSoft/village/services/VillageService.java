@@ -72,6 +72,13 @@ public class VillageService {
             throw new ApiRequestException(errorMessage1 + id + errorMessage2);
         }
     }
-
+    public Village checkVillage(Long id){
+        Optional<Village> village = villageRepository.findById(id);
+        if (village.isPresent()){
+            return village.get();
+        }else {
+            throw new ApiRequestException("Village not found");
+        }
+    }
 
 }

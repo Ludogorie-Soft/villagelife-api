@@ -21,7 +21,14 @@ public class EthnicityService {
     public EthnicityDTO ethnicityToEthnicityDTO(Ethnicity ethnicity){
         return modelMapper.map(ethnicity, EthnicityDTO.class);
     }
-
+    public Ethnicity checkEthnicity(Long id){
+        Optional<Ethnicity> ethnicity = ethnicityRepository.findById(id);
+        if (ethnicity.isPresent()){
+            return ethnicity.get();
+        }else {
+            throw new ApiRequestException("Ethnicity not found");
+        }
+    }
     public List<EthnicityDTO> getAllEthnicities() {
         List<Ethnicity> ethnicities = ethnicityRepository.findAll();
         return ethnicities
