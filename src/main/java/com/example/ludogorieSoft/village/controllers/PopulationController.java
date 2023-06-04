@@ -29,16 +29,16 @@ public class PopulationController {
         return ResponseEntity.ok(populationService.getPopulationById(id));
     }
     @PostMapping
-    public ResponseEntity<PopulationDTO> createPopulation(@RequestBody @Valid Population population, UriComponentsBuilder uriComponentsBuilder) {
+    public ResponseEntity<PopulationDTO> createPopulation(@RequestBody @Valid PopulationDTO populationDTO, UriComponentsBuilder uriComponentsBuilder) {
         URI location = uriComponentsBuilder.path("/api/v1/population/{id}")
-                .buildAndExpand(populationService.createPopulation(population).getId())
+                .buildAndExpand(populationService.createPopulation(populationDTO).getId())
                 .toUri();
         return ResponseEntity.created(location).build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PopulationDTO> updatePopulation(@PathVariable("id") Long id,@Valid @RequestBody Population population) {
-        return ResponseEntity.ok(populationService.updatePopulation(id, population));
+    public ResponseEntity<PopulationDTO> updatePopulation(@PathVariable("id") Long id,@Valid @RequestBody PopulationDTO populationDTO) {
+        return ResponseEntity.ok(populationService.updatePopulation(id, populationDTO));
     }
 
     @DeleteMapping("/{id}")
