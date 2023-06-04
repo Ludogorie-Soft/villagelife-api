@@ -50,15 +50,15 @@ public class ObjectAroundVillageService {
     }
 
 
-    public ObjectAroundVillageDTO updateObjectAroundVillage(Long id, ObjectAroundVillage objectAroundVillage) {
+    public ObjectAroundVillageDTO updateObjectAroundVillage(Long id, ObjectAroundVillageDTO objectAroundVillageDTO) {
         Optional<ObjectAroundVillage> findObjectAroundVillage = objectAroundVillageRepository.findById(id);
         if (findObjectAroundVillage.isEmpty()) {
             throw new ApiRequestException("Object Around Village with id: " + id + " Not Found");
         }
-        if (objectAroundVillageRepository.existsByType(objectAroundVillage.getType())) {
-            throw new ApiRequestException("Object Around Village with type: " + objectAroundVillage.getType() + " already exists");
+        if (objectAroundVillageRepository.existsByType(objectAroundVillageDTO.getType())) {
+            throw new ApiRequestException("Object Around Village with type: " + objectAroundVillageDTO.getType() + " already exists");
         }
-        findObjectAroundVillage.get().setType(objectAroundVillage.getType());
+        findObjectAroundVillage.get().setType(objectAroundVillageDTO.getType());
         objectAroundVillageRepository.save(findObjectAroundVillage.get());
         return convertToDTO(findObjectAroundVillage.get());
     }

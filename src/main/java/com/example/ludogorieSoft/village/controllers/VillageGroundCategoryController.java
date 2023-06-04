@@ -30,9 +30,9 @@ public class VillageGroundCategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<VillageGroundCategoryDTO> createVillageGroundCategories(@Valid @RequestBody VillageGroundCategoryDTO VillageGroundCategoryDTO, UriComponentsBuilder uriComponentsBuilder) {
+    public ResponseEntity<VillageGroundCategoryDTO> createVillageGroundCategories(@Valid @RequestBody VillageGroundCategoryDTO villageGroundCategoryDTO, UriComponentsBuilder uriComponentsBuilder) {
         URI location = uriComponentsBuilder.path("/api/v1/villageGroundCategory/{id}")
-                .buildAndExpand(villageGroundCategoryService.createVillageGroundCategoryDTO(VillageGroundCategoryDTO).getId())
+                .buildAndExpand(villageGroundCategoryService.createVillageGroundCategoryDTO(villageGroundCategoryDTO).getId())
                 .toUri();
         return ResponseEntity.created(location).build();
     }
