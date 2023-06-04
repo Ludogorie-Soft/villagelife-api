@@ -1,4 +1,4 @@
-INSERT INTO ground_categories (ground_category) VALUES
+INSERT INTO ground_categories (ground_category_name) VALUES
 ('първа'),
 ('втора'),
 ('трета'),

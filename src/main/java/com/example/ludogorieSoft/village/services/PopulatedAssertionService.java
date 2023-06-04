@@ -4,6 +4,7 @@ package com.example.ludogorieSoft.village.services;
 import com.example.ludogorieSoft.village.dtos.PopulatedAssertionDTO;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.PopulatedAssertion;
+import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.repositories.PopulatedAssertionRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -67,5 +68,14 @@ public class PopulatedAssertionService {
         findPopulatedAssertion.get().setPopulatedAssertionName(population.getPopulatedAssertionName());
         populatedAssertionRepository.save(findPopulatedAssertion.get());
         return toPopulatedAssertionDTO(findPopulatedAssertion.get());
+    }
+
+    public PopulatedAssertion checkPopulatedAssertion(Long id) {
+        Optional<PopulatedAssertion> populatedAssertion = populatedAssertionRepository.findById(id);
+        if (populatedAssertion.isPresent()){
+            return populatedAssertion.get();
+        }else {
+            throw new ApiRequestException("Populated Assertion not found");
+        }
     }
 }

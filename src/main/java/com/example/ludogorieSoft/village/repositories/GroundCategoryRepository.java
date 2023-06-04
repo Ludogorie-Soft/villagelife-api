@@ -5,7 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface GroundCategoryRepository extends JpaRepository<GroundCategory, Long> {
 
-    boolean existsByGroundCategory(String groundCategory);
-
-
+    boolean existsByGroundCategoryName(String groundCategory);
 }

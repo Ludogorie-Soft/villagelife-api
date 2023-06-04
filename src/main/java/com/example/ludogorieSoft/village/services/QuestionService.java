@@ -2,6 +2,7 @@ package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.QuestionDTO;
 import com.example.ludogorieSoft.village.model.Question;
+import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.repositories.QuestionRepository;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import lombok.AllArgsConstructor;
@@ -64,5 +65,14 @@ public class QuestionService {
         findQuestion.get().setQuestion(question.getQuestion());
         questionRepository.save(findQuestion.get());
         return questionToQuestionDTO(findQuestion.get());
+    }
+
+    public Question checkQuestion(Long id) {
+        Optional<Question> question = questionRepository.findById(id);
+        if (question.isPresent()){
+            return question.get();
+        }else {
+            throw new ApiRequestException("Question not found");
+        }
     }
 }

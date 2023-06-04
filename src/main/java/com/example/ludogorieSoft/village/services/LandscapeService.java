@@ -2,6 +2,7 @@ package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.LandscapeDTO;
 import com.example.ludogorieSoft.village.model.Landscape;
+import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.repositories.LandscapeRepository;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import lombok.AllArgsConstructor;
@@ -67,4 +68,12 @@ public class LandscapeService {
         landscapeRepository.delete(landscape.get());
     }
 
+    public Landscape checkLandscape(Long id) {
+        Optional<Landscape> landscape = landscapeRepository.findById(id);
+        if (landscape.isPresent()){
+            return landscape.get();
+        }else {
+            throw new ApiRequestException("Landscape not found");
+        }
+    }
 }

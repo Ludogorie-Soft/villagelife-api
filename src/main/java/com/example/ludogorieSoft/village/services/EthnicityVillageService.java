@@ -52,18 +52,12 @@ public class EthnicityVillageService {
         if (foundEthnicityVillage.isEmpty()) {
             throw new ApiRequestException("EthnicityVillage not found");
         }
-        Optional<Ethnicity> ethnicity = ethnicityRepository.findById(ethnicityVillage.getEthnicityId());
-        if (ethnicity.isPresent()){
-            foundEthnicityVillage.get().setEthnicity(ethnicity.get());
-        }else {
-            throw new ApiRequestException("Ethnicity not found");
-        }
-        Optional<Village> village = villageRepository.findById(ethnicityVillage.getVillageId());
-        if (village.isPresent()){
-            foundEthnicityVillage.get().setVillage(village.get());
-        }else {
-            throw new ApiRequestException("Village not found");
-        }
+        Ethnicity ethnicity = ethnicityService.checkEthnicity(ethnicityVillage.getEthnicityId());
+        foundEthnicityVillage.get().setEthnicity(ethnicity);
+
+        Village village = villageService.checkVillage(ethnicityVillage.getVillageId());
+        foundEthnicityVillage.get().setVillage(village);
+
         ethnicityVillageRepository.save(foundEthnicityVillage.get());
         return ethnicityVillage;
     }

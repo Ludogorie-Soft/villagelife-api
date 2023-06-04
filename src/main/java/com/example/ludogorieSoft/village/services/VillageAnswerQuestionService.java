@@ -24,6 +24,8 @@ public class VillageAnswerQuestionService {
     private final VillageRepository villageRepository;
     private final QuestionRepository questionRepository;
     private final ModelMapper modelMapper;
+    private final VillageService villageService;
+    private final QuestionService questionService;
     public VillageAnswerQuestionDTO toDTO(VillageAnswerQuestion villageAnswerQuestion){
         return modelMapper.map(villageAnswerQuestion, VillageAnswerQuestionDTO.class);}
 
@@ -38,18 +40,13 @@ public class VillageAnswerQuestionService {
 
     public VillageAnswerQuestionDTO createVillageAnswerQuestion(VillageAnswerQuestionDTO villageAnswerQuestionDTO) {
         VillageAnswerQuestion villageAnswerQuestion = new VillageAnswerQuestion();
-        Optional<Village> village = villageRepository.findById(villageAnswerQuestionDTO.getVillageId());
-        if (village.isPresent()){
-            villageAnswerQuestion.setVillage(village.get());
-        }else {
-            throw new ApiRequestException("Village not found");
-        }
-        Optional<Question> question = questionRepository.findById(villageAnswerQuestionDTO.getQuestionId());
-        if (question.isPresent()){
-            villageAnswerQuestion.setQuestion(question.get());
-        }else {
-            throw new ApiRequestException("Question not found");
-        }
+
+        Village village = villageService.checkVillage(villageAnswerQuestionDTO.getVillageId());
+        villageAnswerQuestion.setVillage(village);
+
+        Question question = questionService.checkQuestion(villageAnswerQuestionDTO.getQuestionId());
+        villageAnswerQuestion.setQuestion(question);
+
         villageAnswerQuestion.setAnswer(villageAnswerQuestionDTO.getAnswer());
         villageAnswerQuestionRepository.save(villageAnswerQuestion);
         return toDTO(villageAnswerQuestion);
@@ -77,18 +74,12 @@ public class VillageAnswerQuestionService {
         if (foundVillageAnswerQuestion.isEmpty()) {
             throw new ApiRequestException("VillageAnswerQuestion not found");
         }
-        Optional<Village> village = villageRepository.findById(villageAnswerQuestionDTO.getVillageId());
-        if (village.isPresent()){
-            foundVillageAnswerQuestion.get().setVillage(village.get());
-        }else {
-            throw new ApiRequestException("Village not found");
-        }
-        Optional<Question> question = questionRepository.findById(villageAnswerQuestionDTO.getQuestionId());
-        if (question.isPresent()){
-            foundVillageAnswerQuestion.get().setQuestion(question.get());
-        }else {
-            throw new ApiRequestException("Question not found");
-        }
+        Village village = villageService.checkVillage(villageAnswerQuestionDTO.getVillageId());
+        foundVillageAnswerQuestion.get().setVillage(village);
+
+        Question question = questionService.checkQuestion(villageAnswerQuestionDTO.getQuestionId());
+        foundVillageAnswerQuestion.get().setQuestion(question);
+
         foundVillageAnswerQuestion.get().setAnswer(villageAnswerQuestionDTO.getAnswer());
         villageAnswerQuestionRepository.save(foundVillageAnswerQuestion.get());
         return toDTO(foundVillageAnswerQuestion.get());

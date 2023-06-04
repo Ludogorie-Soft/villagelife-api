@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -22,6 +21,8 @@ public class VillageLivingConditionService {
 
     private final LivingConditionRepository livingConditionRepository;
     private final VillageRepository villageRepository;
+    private final VillageService villageService;
+    private final LivingConditionService livingConditionService;
 
     private final ModelMapper modelMapper;
 
@@ -48,18 +49,12 @@ public class VillageLivingConditionService {
     public VillageLivingConditionDTO createVillageLivingCondition(VillageLivingConditionDTO villageLivingConditionsDTO) {
         VillageLivingConditions villageLivingConditions = new VillageLivingConditions();
 
-        Optional<Village> village = villageRepository.findById(villageLivingConditionsDTO.getVillageId());
-        if (village.isPresent()) {
-            villageLivingConditions.setVillage(village.get());
-        } else {
-            throw new ApiRequestException("Village not found");
-        }
-        Optional<LivingCondition> livingCondition = livingConditionRepository.findById(villageLivingConditionsDTO.getLivingConditionId());
-        if (livingCondition.isPresent()) {
-            villageLivingConditions.setLivingCondition(livingCondition.get());
-        } else {
-            throw new ApiRequestException("Living condition not found");
-        }
+        Village village = villageService.checkVillage(villageLivingConditionsDTO.getVillageId());
+        villageLivingConditions.setVillage(village);
+
+        LivingCondition livingCondition = livingConditionService.checkLandscape(villageLivingConditionsDTO.getLivingConditionId());
+        villageLivingConditions.setLivingCondition(livingCondition);
+
         villageLivingConditions.setConsents(villageLivingConditionsDTO.getConsents());
         villageLivingConditionRepository.save(villageLivingConditions);
         return toDTO(villageLivingConditions);
@@ -70,18 +65,12 @@ public class VillageLivingConditionService {
         if (villageLivingConditions.isEmpty()) {
             throw new ApiRequestException("Village living condition not found");
         }
-        Optional<Village> village = villageRepository.findById(villageLivingConditionDTO.getVillageId());
-        if (village.isPresent()) {
-            villageLivingConditions.get().setVillage(village.get());
-        } else {
-            throw new ApiRequestException("Village not found");
-        }
-        Optional<LivingCondition> livingCondition = livingConditionRepository.findById(villageLivingConditionDTO.getLivingConditionId());
-        if (livingCondition.isPresent()) {
-            villageLivingConditions.get().setLivingCondition(livingCondition.get());
-        } else {
-            throw new ApiRequestException("Living condition not found");
-        }
+        Village village = villageService.checkVillage(villageLivingConditionDTO.getVillageId());
+        villageLivingConditions.get().setVillage(village);
+
+        LivingCondition livingCondition = livingConditionService.checkLandscape(villageLivingConditionDTO.getLivingConditionId());
+        villageLivingConditions.get().setLivingCondition(livingCondition);
+
         villageLivingConditions.get().setConsents(villageLivingConditionDTO.getConsents());
         villageLivingConditionRepository.save(villageLivingConditions.get());
         return toDTO(villageLivingConditions.get());

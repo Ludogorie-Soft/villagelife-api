@@ -1,6 +1,7 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.LivingConditionDTO;
+import com.example.ludogorieSoft.village.model.GroundCategory;
 import com.example.ludogorieSoft.village.model.LivingCondition;
 import com.example.ludogorieSoft.village.repositories.LivingConditionRepository;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
@@ -71,4 +72,12 @@ public class LivingConditionService {
     }
 
 
+    public LivingCondition checkLandscape(Long id) {
+        Optional<LivingCondition> livingCondition = livingConditionsRepository.findById(id);
+        if (livingCondition.isPresent()){
+            return livingCondition.get();
+        }else {
+            throw new ApiRequestException("Living Condition not found");
+        }
+    }
 }

@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -23,6 +22,8 @@ public class ObjectVillageService {
     private final ObjectAroundVillageRepository objectAroundVillageRepository;
     private final VillageRepository villageRepository;
     private final ObjectVillageRepository objectVillageRepository;
+    private final VillageService villageService;
+    private final ObjectAroundVillageService objectAroundVillageService;
 
     public ObjectVillageDTO objectVillageToObjectVillageDTO(ObjectVillage objectVillage) {
         return modelMapper.map(objectVillage, ObjectVillageDTO.class);
@@ -49,18 +50,12 @@ public class ObjectVillageService {
         if (foundObjectVillage.isEmpty()) {
             throw new ApiRequestException("ObjectVillage not found");
         }
-        Optional<ObjectAroundVillage> objectAroundVillage = objectAroundVillageRepository.findById(objectVillageDTO.getObjectAroundVillageId());
-        if (objectAroundVillage.isPresent()) {
-            foundObjectVillage.get().setObject(objectAroundVillage.get());
-        } else {
-            throw new ApiRequestException("Object not found");
-        }
-        Optional<Village> village = villageRepository.findById(objectVillageDTO.getVillageId());
-        if (village.isPresent()) {
-            foundObjectVillage.get().setVillage(village.get());
-        } else {
-            throw new ApiRequestException("Village not found");
-        }
+        Village village = villageService.checkVillage(objectVillageDTO.getVillageId());
+        foundObjectVillage.get().setVillage(village);
+
+        ObjectAroundVillage objectAroundVillage = objectAroundVillageService.checkObject(objectVillageDTO.getObjectAroundVillageId());
+        foundObjectVillage.get().setObject(objectAroundVillage);
+
         foundObjectVillage.get().setDistance(objectVillageDTO.getDistance());
         objectVillageRepository.save(foundObjectVillage.get());
         return objectVillageDTO;
@@ -68,18 +63,13 @@ public class ObjectVillageService {
 
     public ObjectVillageDTO createObjectVillage(ObjectVillageDTO objectVillageDTO) {
         ObjectVillage objectVillage = new ObjectVillage();
-        Optional<Village> village = villageRepository.findById(objectVillageDTO.getVillageId());
-        if (village.isPresent()) {
-            objectVillage.setVillage(village.get());
-        } else {
-            throw new ApiRequestException("Village not found");
-        }
-        Optional<ObjectAroundVillage> objectAroundVillage = objectAroundVillageRepository.findById(objectVillageDTO.getObjectAroundVillageId());
-        if (objectAroundVillage.isPresent()) {
-            objectVillage.setObject(objectAroundVillage.get());
-        } else {
-            throw new ApiRequestException("Object not found");
-        }
+
+        Village village = villageService.checkVillage(objectVillageDTO.getVillageId());
+        objectVillage.setVillage(village);
+
+        ObjectAroundVillage objectAroundVillage = objectAroundVillageService.checkObject(objectVillageDTO.getObjectAroundVillageId());
+        objectVillage.setObject(objectAroundVillage);
+
         objectVillage.setDistance(objectVillageDTO.getDistance());
         objectVillageRepository.save(objectVillage);
         return objectVillageDTO;

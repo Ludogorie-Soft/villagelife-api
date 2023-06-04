@@ -2,6 +2,7 @@ package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.VillageGroundCategoryDTO;
 import com.example.ludogorieSoft.village.model.GroundCategory;
+import com.example.ludogorieSoft.village.model.Question;
 import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.model.VillageGroundCategory;
 import com.example.ludogorieSoft.village.repositories.GroundCategoryRepository;
@@ -24,6 +25,8 @@ public class VillageGroundCategoryService {
     private final VillageRepository villageRepository;
     private final GroundCategoryRepository groundCategoryRepository;
     private final ModelMapper modelMapper;
+    private final VillageService villageService;
+    private final GroundCategoryService groundCategoryService;
     private final  String errorMessage="Village not found";
 
     public VillageGroundCategoryDTO toDTO(VillageGroundCategory forMap) {
@@ -47,18 +50,13 @@ public class VillageGroundCategoryService {
     }
     public VillageGroundCategoryDTO createVillageGroundCategoryDTO(VillageGroundCategoryDTO villageGroundCategoryDTO) {
         VillageGroundCategory villageGroundCategory = new VillageGroundCategory();
-        Optional<Village> village = villageRepository.findById(villageGroundCategoryDTO.getVillageId());
-        if (village.isPresent()){
-            villageGroundCategory.setVillage(village.get());
-        }else {
-            throw new ApiRequestException(errorMessage);
-        }
-        Optional<GroundCategory> groundCategory = groundCategoryRepository.findById(villageGroundCategoryDTO.getGroundCategoryId());
-        if (groundCategory.isPresent()){
-            villageGroundCategory.setGroundCategory(groundCategory.get());
-        }else {
-            throw new ApiRequestException("GroundCategory not found");
-        }
+
+        Village village = villageService.checkVillage(villageGroundCategoryDTO.getVillageId());
+        villageGroundCategory.setVillage(village);
+
+        GroundCategory groundCategory = groundCategoryService.checkGroundCategory(villageGroundCategoryDTO.getGroundCategoryId());
+        villageGroundCategory.setGroundCategory(groundCategory);
+
         villageGroundCategoryRepository.save(villageGroundCategory);
         return toDTO(villageGroundCategory);
     }
@@ -69,18 +67,13 @@ public class VillageGroundCategoryService {
         if (foundVillageGroundCategory.isEmpty()) {
             throw new ApiRequestException("Village Ground Category Not Found");
         }
-        Optional<Village> village = villageRepository.findById(villageGroundCategoryDTO.getVillageId());
-        if (village.isPresent()){
-            foundVillageGroundCategory.get().setVillage(village.get());
-        }else {
-            throw new ApiRequestException(errorMessage);
-        }
-        Optional<GroundCategory> groundCategory = groundCategoryRepository.findById(villageGroundCategoryDTO.getGroundCategoryId());
-        if (groundCategory.isPresent()){
-            foundVillageGroundCategory.get().setGroundCategory(groundCategory.get());
-        }else {
-            throw new ApiRequestException(errorMessage);
-        }
+
+        Village village = villageService.checkVillage(villageGroundCategoryDTO.getVillageId());
+        foundVillageGroundCategory.get().setVillage(village);
+
+        GroundCategory groundCategory = groundCategoryService.checkGroundCategory(villageGroundCategoryDTO.getGroundCategoryId());
+        foundVillageGroundCategory.get().setGroundCategory(groundCategory);
+
         villageGroundCategoryRepository.save(foundVillageGroundCategory.get());
         return toDTO(foundVillageGroundCategory.get());
     }

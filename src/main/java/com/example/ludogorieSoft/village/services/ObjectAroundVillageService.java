@@ -3,6 +3,7 @@ package com.example.ludogorieSoft.village.services;
 import com.example.ludogorieSoft.village.dtos.ObjectAroundVillageDTO;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.ObjectAroundVillage;
+import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.repositories.ObjectAroundVillageRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -71,5 +72,14 @@ public class ObjectAroundVillageService {
             throw new ApiRequestException("Object Around Village not found for id " + id);
         }
         objectAroundVillageRepository.delete(objectAroundVillage.get());
+    }
+
+    public ObjectAroundVillage checkObject(Long id) {
+        Optional<ObjectAroundVillage> objectAroundVillage = objectAroundVillageRepository.findById(id);
+        if (objectAroundVillage.isPresent()){
+            return objectAroundVillage.get();
+        }else {
+            throw new ApiRequestException("Object Around Village not found");
+        }
     }
 }
