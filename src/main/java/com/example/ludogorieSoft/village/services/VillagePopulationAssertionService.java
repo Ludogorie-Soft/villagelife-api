@@ -16,7 +16,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.stream.Collectors.toList;
+
+
 
 @Service
 @AllArgsConstructor
@@ -34,7 +35,7 @@ public class VillagePopulationAssertionService {
         return villagePopulationAssertions
                 .stream()
                 .map(this::toDTO)
-                .collect(toList());
+                .toList();
     }
 
     public VillagePopulationAssertionDTO createVillagePopulationAssertionDTO (VillagePopulationAssertionDTO villagePopulationAssertionDTO) {

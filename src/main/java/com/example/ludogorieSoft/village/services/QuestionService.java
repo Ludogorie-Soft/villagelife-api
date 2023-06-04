@@ -26,7 +26,7 @@ public class QuestionService {
         List<Question> questions = questionRepository.findAll();
         return questions.stream()
                 .map(this::questionToQuestionDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public QuestionDTO createQuestion(Question question) {

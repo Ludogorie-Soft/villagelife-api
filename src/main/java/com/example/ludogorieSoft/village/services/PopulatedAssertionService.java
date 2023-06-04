@@ -29,7 +29,7 @@ public class PopulatedAssertionService {
         return populations
                 .stream()
                 .map(this::toPopulatedAssertionDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public PopulatedAssertionDTO createPopulatedAssertion(PopulatedAssertion population) {

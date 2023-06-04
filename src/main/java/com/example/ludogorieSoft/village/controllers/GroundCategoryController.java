@@ -19,7 +19,6 @@ public class GroundCategoryController {
 
     @GetMapping
     public ResponseEntity<List<GroundCategoryDTO>> getAllGroundCategories() {
-        System.out.println("TEST Controller :" + groundCategoryService.getAllGroundCategories());
         return ResponseEntity.ok(groundCategoryService.getAllGroundCategories());
     }
 
@@ -33,16 +32,6 @@ public class GroundCategoryController {
         GroundCategoryDTO createdGroundCategory = groundCategoryService.createGroundCategoryDTO(groundCategoryDTO);
         return new ResponseEntity<>(createdGroundCategory, HttpStatus.CREATED);
     }
-
-//    @PostMapping
-//    public ResponseEntity<GroundCategoryDTO> createGroundCategory(@Valid @RequestBody GroundCategoryDTO groundCategoryDTO, UriComponentsBuilder uriComponentsBuilder) {
-//        GroundCategoryDTO createdGroundCategory = groundCategoryService.createGroundCategoryDTO(groundCategoryDTO);
-//        URI location = uriComponentsBuilder.path("/api/v1/groundCategory/{id}")
-//                .buildAndExpand(groundCategoryService.createGroundCategoryDTO(groundCategoryDTO).getId())
-//                .toUri();
-////        return new ResponseEntity<>(createdGroundCategory, HttpStatus.CREATED);
-//        return ResponseEntity.created(location).build();
-//    }
 
 
 

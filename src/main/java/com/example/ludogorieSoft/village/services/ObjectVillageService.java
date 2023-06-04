@@ -33,7 +33,7 @@ public class ObjectVillageService {
         return objectVillages
                 .stream()
                 .map(this::objectVillageToObjectVillageDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public ObjectVillageDTO getObjectVillageById(Long id) {

@@ -34,7 +34,7 @@ public class EthnicityService {
         return ethnicities
                 .stream()
                 .map(this::ethnicityToEthnicityDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public EthnicityDTO createEthnicity(Ethnicity ethnicity) {

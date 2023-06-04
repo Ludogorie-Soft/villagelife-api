@@ -19,8 +19,6 @@ public class VillagePopulationAssertion {
     @ManyToOne
     @JoinColumn(name = "populated_assertion_id")
     private PopulatedAssertion populatedAssertionID;
-    //@NotNull
-    //private String answer;
     @Enumerated(EnumType.STRING)
     private Consents answer;
 

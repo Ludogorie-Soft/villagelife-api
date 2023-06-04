@@ -21,7 +21,6 @@ public class VillageGroundCategoryController {
 
     @GetMapping
     public ResponseEntity<List<VillageGroundCategoryDTO>> getAllVillageGroundCategories() {
-        System.out.println("TEST Controller :" + villageGroundCategoryService.getAllVillageGroundCategories());
         return ResponseEntity.ok(villageGroundCategoryService.getAllVillageGroundCategories());
     }
 

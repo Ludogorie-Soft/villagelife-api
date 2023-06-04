@@ -33,7 +33,7 @@ public class VillageLivingConditionService {
         List<VillageLivingConditions> villageLivingConditions = villageLivingConditionRepository.findAll();
         return villageLivingConditions.stream()
                 .map(this::toDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public VillageLivingConditionDTO getByID(Long id) {

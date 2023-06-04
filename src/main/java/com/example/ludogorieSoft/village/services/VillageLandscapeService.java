@@ -34,7 +34,7 @@ public class VillageLandscapeService {
         return villageLandscapes
                 .stream()
                 .map(this::toDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public VillageLandscapeDTO createVillageLandscape(VillageLandscapeDTO villageLandscapeDTO) {

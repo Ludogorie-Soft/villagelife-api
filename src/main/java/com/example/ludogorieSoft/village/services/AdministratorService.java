@@ -30,7 +30,7 @@ public class AdministratorService {
         return administrators
                 .stream()
                 .map(this::administratorToAdministratorDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
     public AdministratorDTO createAdministrator(AdministratorRequest administratorRequest) {
         if (administratorRepository.existsByUsername(administratorRequest.getUsername())) {

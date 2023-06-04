@@ -12,10 +12,9 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
 
 @Service
 @AllArgsConstructor
@@ -25,6 +24,7 @@ public class VillageGroundCategoryService {
     private final VillageRepository villageRepository;
     private final GroundCategoryRepository groundCategoryRepository;
     private final ModelMapper modelMapper;
+    private final  String errorMessage="Village not found";
 
     public VillageGroundCategoryDTO toDTO(VillageGroundCategory forMap) {
         return modelMapper.map(forMap, VillageGroundCategoryDTO.class);
@@ -35,7 +35,7 @@ public class VillageGroundCategoryService {
         List<VillageGroundCategory> villageGroundCategories = villageGroundCategoryRepository.findAll();
         return villageGroundCategories.stream()
                 .map(this::toDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public VillageGroundCategoryDTO getByID(Long id) {
@@ -51,7 +51,7 @@ public class VillageGroundCategoryService {
         if (village.isPresent()){
             villageGroundCategory.setVillage(village.get());
         }else {
-            throw new ApiRequestException("Village not found");
+            throw new ApiRequestException(errorMessage);
         }
         Optional<GroundCategory> groundCategory = groundCategoryRepository.findById(villageGroundCategoryDTO.getGroundCategoryId());
         if (groundCategory.isPresent()){
@@ -73,13 +73,13 @@ public class VillageGroundCategoryService {
         if (village.isPresent()){
             foundVillageGroundCategory.get().setVillage(village.get());
         }else {
-            throw new ApiRequestException("Village not found");
+            throw new ApiRequestException(errorMessage);
         }
         Optional<GroundCategory> groundCategory = groundCategoryRepository.findById(villageGroundCategoryDTO.getGroundCategoryId());
         if (groundCategory.isPresent()){
             foundVillageGroundCategory.get().setGroundCategory(groundCategory.get());
         }else {
-            throw new ApiRequestException("Village not found");
+            throw new ApiRequestException(errorMessage);
         }
         villageGroundCategoryRepository.save(foundVillageGroundCategory.get());
         return toDTO(foundVillageGroundCategory.get());

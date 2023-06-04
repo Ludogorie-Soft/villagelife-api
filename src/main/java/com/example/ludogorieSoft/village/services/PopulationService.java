@@ -27,7 +27,7 @@ public class PopulationService {
         return populations
                 .stream()
                 .map(this::populationToPopulationDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public PopulationDTO createPopulation(Population population) {

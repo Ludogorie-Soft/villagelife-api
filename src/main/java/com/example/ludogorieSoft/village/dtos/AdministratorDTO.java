@@ -14,7 +14,6 @@ public class AdministratorDTO {
     private String fullName;
     private String email;
     private String username;
-    //private String password;
     private String mobile;
     private LocalDateTime createdAt;
     private final boolean enabled = true;

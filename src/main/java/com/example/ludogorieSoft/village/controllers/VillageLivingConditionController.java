@@ -29,7 +29,6 @@ public class VillageLivingConditionController {
 
     @PostMapping
     public ResponseEntity<VillageLivingConditionDTO> createVillageLivingConditions(@RequestBody VillageLivingConditionDTO villageLivingConditionsDTO, UriComponentsBuilder uriComponentsBuilder) {
-        System.out.println(villageLivingConditionsDTO);
         URI location = uriComponentsBuilder.path("/api/v1/villageLivingConditions/{id}")
                 .buildAndExpand(villageLivingConditionService.createVillageLivingCondition(villageLivingConditionsDTO).getId())
                 .toUri();
