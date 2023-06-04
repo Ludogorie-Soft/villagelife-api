@@ -6,9 +6,7 @@ import com.example.ludogorieSoft.village.repositories.EthnicityRepository;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
-import org.testng.annotations.Test;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,7 +27,7 @@ public class EthnicityService {
         return ethnicities
                 .stream()
                 .map(this::ethnicityToEthnicityDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public EthnicityDTO createEthnicity(Ethnicity ethnicity) {

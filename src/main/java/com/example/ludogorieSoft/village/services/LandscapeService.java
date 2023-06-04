@@ -26,7 +26,7 @@ public class LandscapeService {
         return landscapes
                 .stream()
                 .map(this::landscapeToLandscapeDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public LandscapeDTO getLandscapeById(Long id) {

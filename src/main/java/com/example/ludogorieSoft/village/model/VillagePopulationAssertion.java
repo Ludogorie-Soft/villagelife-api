@@ -4,7 +4,6 @@ import com.example.ludogorieSoft.village.enums.Consents;
 import lombok.Data;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 @Entity
 @Data
@@ -20,8 +19,6 @@ public class VillagePopulationAssertion {
     @ManyToOne
     @JoinColumn(name = "populated_assertion_id")
     private PopulatedAssertion populatedAssertionID;
-    //@NotNull
-    //private String answer;
     @Enumerated(EnumType.STRING)
     private Consents answer;
 

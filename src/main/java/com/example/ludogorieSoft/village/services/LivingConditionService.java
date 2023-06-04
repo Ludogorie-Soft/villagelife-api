@@ -27,7 +27,7 @@ public class LivingConditionService {
         return livingConditionList
                 .stream()
                 .map(this::livingConditionToLivingConditionDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public LivingConditionDTO getLivingConditionById(Long id) {
