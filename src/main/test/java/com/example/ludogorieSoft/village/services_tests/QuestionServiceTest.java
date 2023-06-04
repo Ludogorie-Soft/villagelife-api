@@ -1,4 +1,4 @@
-package com.example.ludogorieSoft.village.services;
+package com.example.ludogorieSoft.village.services_tests;
 
 import com.example.ludogorieSoft.village.dtos.QuestionDTO;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
@@ -19,7 +19,7 @@ import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 
-public class QuestionServiceTest {
+class QuestionServiceTest {
     @Mock
     private QuestionRepository questionRepository;
 
@@ -33,7 +33,7 @@ public class QuestionServiceTest {
         MockitoAnnotations.openMocks(this);
     }
     @Test
-    public void testGetAllQuestionsWithQuestions() {
+    void testGetAllQuestionsWithQuestions() {
         List<Question> questions = new ArrayList<>();
         questions.add(new Question());
         questions.add(new Question());
@@ -46,7 +46,7 @@ public class QuestionServiceTest {
     }
 
     @Test
-    public void testGetAllQuestionsWithNoQuestions() {
+    void testGetAllQuestionsWithNoQuestions() {
         List<Question> questions = new ArrayList<>();
         when(questionRepository.findAll()).thenReturn(questions);
 
@@ -88,7 +88,7 @@ public class QuestionServiceTest {
     //    verify(questionRepository, times(0)).save(any(Question.class));
     //}
     @Test
-    public void testGetQuestionByIdWithExistingId() {
+    void testGetQuestionByIdWithExistingId() {
         Long questionId = 123L;
         Question question = new Question();
         question.setId(questionId);
@@ -107,7 +107,7 @@ public class QuestionServiceTest {
     }
 
     @Test
-    public void testGetQuestionByIdWithNonExistingId() {
+    void testGetQuestionByIdWithNonExistingId() {
         Long questionId = 123L;
 
         when(questionRepository.findById(questionId)).thenReturn(Optional.empty());
@@ -119,7 +119,7 @@ public class QuestionServiceTest {
         verify(questionRepository, times(1)).findById(questionId);
     }
     @Test
-    public void testDeleteQuestionByIdWithExistingId() {
+    void testDeleteQuestionByIdWithExistingId() {
         Long questionId = 123L;
         Question question = new Question();
         question.setId(questionId);
@@ -134,7 +134,7 @@ public class QuestionServiceTest {
     }
 
     @Test
-    public void testDeleteQuestionByIdWithNonExistingId() {
+    void testDeleteQuestionByIdWithNonExistingId() {
         Long questionId = 123L;
 
         when(questionRepository.findById(questionId)).thenReturn(Optional.empty());
