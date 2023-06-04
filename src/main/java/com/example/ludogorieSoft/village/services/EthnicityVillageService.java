@@ -68,21 +68,33 @@ public class EthnicityVillageService {
 
     public EthnicityVillageDTO createEthnicityVillage(EthnicityVillageDTO ethnicityVillageDTO) {
         EthnicityVillage ethnicityVillage = new EthnicityVillage();
-        Optional<Village> village = villageRepository.findById(ethnicityVillageDTO.getVillageId());
-        if (village.isPresent()){
-            ethnicityVillage.setVillage(village.get());
-        }else {
-            throw new ApiRequestException("Village not found");
-        }
-        Optional<Ethnicity> ethnicity = ethnicityRepository.findById(ethnicityVillageDTO.getEthnicityId());
-        if (ethnicity.isPresent()){
-            ethnicityVillage.setEthnicity(ethnicity.get());
-        }else {
-            throw new ApiRequestException("Ethnicity not found");
-        }
+
+        Village village = checkVillage(ethnicityVillageDTO.getVillageId());
+        ethnicityVillage.setVillage(village);
+
+        Ethnicity ethnicity = checkEthnicity(ethnicityVillageDTO.getEthnicityId());
+        ethnicityVillage.setEthnicity(ethnicity);
+
         ethnicityVillageRepository.save(ethnicityVillage);
         return ethnicityVillageDTO;
     }
+    public Village checkVillage(Long id){
+        Optional<Village> village = villageRepository.findById(id);
+        if (village.isPresent()){
+           return village.get();
+        }else {
+            throw new ApiRequestException("Village not found");
+        }
+    }
+    public Ethnicity checkEthnicity(Long id){
+        Optional<Ethnicity> ethnicity = ethnicityRepository.findById(id);
+        if (ethnicity.isPresent()){
+          return ethnicity.get();
+        }else {
+            throw new ApiRequestException("Ethnicity not found");
+        }
+    }
+
     public int deleteEthnicityVillageById(Long id) {
         try {
             ethnicityVillageRepository.deleteById(id);
