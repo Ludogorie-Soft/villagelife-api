@@ -1,4 +1,4 @@
-package com.example.ludogorieSoft.village.services;
+package com.example.ludogorieSoft.village.services_tests;
 
 import com.example.ludogorieSoft.village.dtos.VillageDTO;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.*;
 
@@ -37,7 +36,7 @@ class VillageServiceTest {
 
 
     @Test
-    public void testVillageToVillageDTO() {
+    void testVillageToVillageDTO() {
 
         VillageDTO expectedVillageDTO = new VillageDTO();
         expectedVillageDTO.setId(1L);
@@ -53,7 +52,7 @@ class VillageServiceTest {
     }
 
     @Test
-    public void testGetAllVillages() {
+    void testGetAllVillages() {
 
         List<Village> villages = new ArrayList<>();
         villages.add(new Village());
@@ -70,7 +69,7 @@ class VillageServiceTest {
     }
 
     @Test
-    public void testGetVillageByIdWhenExist() {
+    void testGetVillageByIdWhenExist() {
 
         Long villageId = 1L;
 
@@ -93,7 +92,7 @@ class VillageServiceTest {
     }
 
     @Test
-    public void testGetVillageByIdWhenNotExist() {
+    void testGetVillageByIdWhenNotExist() {
 
         Long villageId = 1L;
 
@@ -104,7 +103,7 @@ class VillageServiceTest {
     }
 
     @Test
-    public void testCreateVillage() {
+    void testCreateVillage() {
 
         VillageDTO villageDTO = new VillageDTO();
         villageDTO.setName("Test Village");
@@ -125,7 +124,7 @@ class VillageServiceTest {
     }
 
     @Test
-    public void testUpdateVillageWithExistingVillageId() {
+    void testUpdateVillageWithExistingVillageId() {
         Long villageId = 123L;
         Village existingVillage = new Village();
         existingVillage.setId(villageId);
@@ -149,7 +148,7 @@ class VillageServiceTest {
     }
 
     @Test
-    public void testUpdateVillageExceptionCase() {
+    void testUpdateVillageExceptionCase() {
 
         Long villageId = 1L;
 
@@ -164,7 +163,7 @@ class VillageServiceTest {
     }
 
     @Test
-    public void testDeleteVillagePositiveCase() {
+    void testDeleteVillagePositiveCase() {
 
         Long villageId = 1L;
 
@@ -176,7 +175,7 @@ class VillageServiceTest {
     }
 
     @Test
-    public void testDeleteVillageExceptionCase() {
+    void testDeleteVillageExceptionCase() {
 
         Long villageId = 1L;
 

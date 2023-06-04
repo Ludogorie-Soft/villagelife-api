@@ -31,12 +31,17 @@ public class PopulatedAssertionService {
                 .toList();
     }
 
-    public PopulatedAssertionDTO createPopulatedAssertion(PopulatedAssertion population) {
-        if (populatedAssertionRepository.existsByPopulatedAssertionName(population.getPopulatedAssertionName())) {
-            throw new ApiRequestException("PopulatedAssertion with name: " + population.getPopulatedAssertionName() + " already exists");
+    public PopulatedAssertionDTO createPopulatedAssertion(PopulatedAssertionDTO populatedAssertionDTO) {
+
+        if (populatedAssertionRepository.existsByPopulatedAssertionName(populatedAssertionDTO.getPopulatedAssertionName())) {
+            throw new ApiRequestException("PopulatedAssertion with name: " + populatedAssertionDTO.getPopulatedAssertionName() + " already exists");
         }
-        populatedAssertionRepository.save(population);
-        return toPopulatedAssertionDTO(population);
+        PopulatedAssertion populatedAssertion = new PopulatedAssertion();
+        populatedAssertion.setPopulatedAssertionName(populatedAssertionDTO.getPopulatedAssertionName());
+
+        populatedAssertionRepository.save(populatedAssertion);
+
+        return toPopulatedAssertionDTO(populatedAssertion);
     }
 
     public PopulatedAssertionDTO getPopulatedAssertionById(Long id) {
@@ -55,15 +60,15 @@ public class PopulatedAssertionService {
         populatedAssertionRepository.delete(populatedAssertion.get());
     }
 
-    public PopulatedAssertionDTO updatePopulatedAssertion(Long id, PopulatedAssertion population) {
+    public PopulatedAssertionDTO updatePopulatedAssertion(Long id, PopulatedAssertionDTO populationDTO) {
         Optional<PopulatedAssertion> findPopulatedAssertion = populatedAssertionRepository.findById(id);
         if (findPopulatedAssertion.isEmpty()) {
             throw new ApiRequestException("Populated Assertion not found!");
         }
-        if (populatedAssertionRepository.existsByPopulatedAssertionName(population.getPopulatedAssertionName())) {
-            throw new ApiRequestException("PopulatedAssertion with name: " + population.getPopulatedAssertionName() + " already exists");
+        if (populatedAssertionRepository.existsByPopulatedAssertionName(populationDTO.getPopulatedAssertionName())) {
+            throw new ApiRequestException("PopulatedAssertion with name: " + populationDTO.getPopulatedAssertionName() + " already exists");
         }
-        findPopulatedAssertion.get().setPopulatedAssertionName(population.getPopulatedAssertionName());
+        findPopulatedAssertion.get().setPopulatedAssertionName(populationDTO.getPopulatedAssertionName());
         populatedAssertionRepository.save(findPopulatedAssertion.get());
         return toPopulatedAssertionDTO(findPopulatedAssertion.get());
     }

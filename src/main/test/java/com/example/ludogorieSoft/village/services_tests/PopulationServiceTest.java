@@ -1,4 +1,4 @@
-package com.example.ludogorieSoft.village.services;
+package com.example.ludogorieSoft.village.services_tests;
 
 import com.example.ludogorieSoft.village.dtos.PopulationDTO;
 import com.example.ludogorieSoft.village.enums.Children;
@@ -24,7 +24,7 @@ import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 
-public class PopulationServiceTest {
+class PopulationServiceTest {
     @Mock
     private PopulationRepository populationRepository;
 
@@ -38,7 +38,7 @@ public class PopulationServiceTest {
         MockitoAnnotations.openMocks(this);
     }
     @Test
-    public void testGetAllPopulationWithPopulations() {
+    void testGetAllPopulationWithPopulations() {
         List<Population> populationList = Arrays.asList(
                 new Population(),
                 new Population()
@@ -53,7 +53,7 @@ public class PopulationServiceTest {
     }
 
     @Test
-    public void testGetAllPopulationWithNoPopulations() {
+    void testGetAllPopulationWithNoPopulations() {
         List<Population> emptyPopulationList = Collections.emptyList();
 
         when(populationRepository.findAll()).thenReturn(emptyPopulationList);
@@ -64,7 +64,7 @@ public class PopulationServiceTest {
         Assertions.assertEquals(0, result.size());
     }
     @Test
-    public void testCreatePopulation() {
+    void testCreatePopulation() {
         Population population = new Population();
         PopulationDTO populationDTO = new PopulationDTO();
 
@@ -77,7 +77,7 @@ public class PopulationServiceTest {
         Assertions.assertEquals(populationService.populationToPopulationDTO(population), result);
     }
     @Test
-    public void testGetPopulationById() {
+    void testGetPopulationById() {
         Long populationId = 123L;
         Population population = new Population();
         PopulationDTO populationDTO = new PopulationDTO();
@@ -93,7 +93,7 @@ public class PopulationServiceTest {
     }
 
     @Test
-    public void testGetPopulationByIdWithNonExistingId() {
+    void testGetPopulationByIdWithNonExistingId() {
         Long populationId = 123L;
         Optional<Population> optionalPopulation = Optional.empty();
         when(populationRepository.findById(populationId)).thenReturn(optionalPopulation);
@@ -106,12 +106,12 @@ public class PopulationServiceTest {
     }
 
     @Test
-    public void testUpdatePopulationWithExistingId() {
+    void testUpdatePopulationWithExistingId() {
         Long populationId = 123L;
-        Population population = new Population(populationId, NumberOfPopulation.UpTo10People, Residents.From2To5Percent, Children.Below10Years, Foreigners.Yes);
+        Population population = new Population(populationId, NumberOfPopulation.UP_TO_10_PEOPLE, Residents.FROM_2_TO_5_PERCENT, Children.BELOW_10_YEARS, Foreigners.YES);
 
-        Population existingPopulation = new Population(populationId, NumberOfPopulation.From11To50People, Residents.From21To30Percent, Children.Below10Years, Foreigners.No);
-        PopulationDTO existingPopulationDTO = new PopulationDTO(populationId, NumberOfPopulation.From11To50People, Residents.From21To30Percent, Children.Below10Years, Foreigners.No);
+        Population existingPopulation = new Population(populationId, NumberOfPopulation.FROM_11_TO_50_PEOPLE, Residents.FROM_21_TO_30_PERCENT, Children.BELOW_10_YEARS, Foreigners.NO);
+        PopulationDTO existingPopulationDTO = new PopulationDTO(populationId, NumberOfPopulation.FROM_11_TO_50_PEOPLE, Residents.FROM_21_TO_30_PERCENT, Children.BELOW_10_YEARS, Foreigners.NO);
 
 
         Optional<Population> optionalPopulation = Optional.of(existingPopulation);
@@ -130,9 +130,9 @@ public class PopulationServiceTest {
         Assertions.assertEquals(population.getResidents(), existingPopulation.getResidents());
     }
     @Test
-    public void testUpdatePopulationWithNonExistingId() {
+    void testUpdatePopulationWithNonExistingId() {
         Long populationId = 123L;
-        Population population = new Population(populationId, NumberOfPopulation.From11To50People, Residents.From21To30Percent, Children.Below10Years, Foreigners.No);
+        Population population = new Population(populationId, NumberOfPopulation.FROM_11_TO_50_PEOPLE, Residents.FROM_21_TO_30_PERCENT, Children.BELOW_10_YEARS, Foreigners.NO);
 
         Optional<Population> optionalPopulation = Optional.empty();
         when(populationRepository.findById(populationId)).thenReturn(optionalPopulation);
@@ -145,10 +145,10 @@ public class PopulationServiceTest {
         verify(populationRepository, times(0)).save(any(Population.class));
     }
     @Test
-    public void testDeletePopulationById() {
+    void testDeletePopulationById() {
         Long populationId = 123L;
 
-        Population population = new Population(populationId, NumberOfPopulation.From11To50People, Residents.From21To30Percent, Children.Below10Years, Foreigners.No);
+        Population population = new Population(populationId, NumberOfPopulation.FROM_11_TO_50_PEOPLE, Residents.FROM_21_TO_30_PERCENT, Children.BELOW_10_YEARS, Foreigners.NO);
         Optional<Population> optionalPopulation = Optional.of(population);
         when(populationRepository.findById(populationId)).thenReturn(optionalPopulation);
 
@@ -158,7 +158,7 @@ public class PopulationServiceTest {
         verify(populationRepository, times(1)).delete(population);
     }
     @Test
-    public void testDeletePopulationByIdWithNonExistingId() {
+    void testDeletePopulationByIdWithNonExistingId() {
         Long populationId = 123L;
 
         Optional<Population> optionalPopulation = Optional.empty();

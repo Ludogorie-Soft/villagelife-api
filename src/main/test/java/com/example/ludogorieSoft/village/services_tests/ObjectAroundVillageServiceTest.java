@@ -1,4 +1,4 @@
-package com.example.ludogorieSoft.village.services;
+package com.example.ludogorieSoft.village.services_tests;
 
 import com.example.ludogorieSoft.village.dtos.ObjectAroundVillageDTO;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
@@ -19,7 +19,7 @@ import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 
-public class ObjectAroundVillageServiceTest {
+class ObjectAroundVillageServiceTest {
     @Mock
     private ObjectAroundVillageRepository objectAroundVillageRepository;
 
@@ -33,7 +33,7 @@ public class ObjectAroundVillageServiceTest {
         MockitoAnnotations.openMocks(this);
     }
     @Test
-    public void testGetAllObjectsAroundVillageWithMultipleObjects() {
+    void testGetAllObjectsAroundVillageWithMultipleObjects() {
         List<ObjectAroundVillage> objectAroundVillages = new ArrayList<>();
         objectAroundVillages.add(new ObjectAroundVillage(1L, "Object 1"));
         objectAroundVillages.add(new ObjectAroundVillage(2L, "Object 2"));
@@ -47,7 +47,7 @@ public class ObjectAroundVillageServiceTest {
     }
 
     @Test
-    public void testGetAllObjectsAroundVillageWithNoObjects() {
+    void testGetAllObjectsAroundVillageWithNoObjects() {
         List<ObjectAroundVillage> objectAroundVillages = new ArrayList<>();
         when(objectAroundVillageRepository.findAll()).thenReturn(objectAroundVillages);
         List<ObjectAroundVillageDTO> result = objectAroundVillageService.getAllObjectsAroundVillage();
@@ -55,7 +55,7 @@ public class ObjectAroundVillageServiceTest {
         Assertions.assertTrue(result.isEmpty());
     }
     @Test
-    public void testGetObjectAroundVillageByIdWithExistingId() {
+    void testGetObjectAroundVillageByIdWithExistingId() {
         Long objectId = 123L;
         ObjectAroundVillage objectAroundVillage = new ObjectAroundVillage(objectId, "Object 1");
         ObjectAroundVillageDTO expectedDTO = new ObjectAroundVillageDTO(objectId, "Object 1");
@@ -68,7 +68,7 @@ public class ObjectAroundVillageServiceTest {
     }
 
     @Test
-    public void testGetObjectAroundVillageByIdWithNonExistingId() {
+    void testGetObjectAroundVillageByIdWithNonExistingId() {
         Long objectId = 123L;
         when(objectAroundVillageRepository.findById(objectId)).thenReturn(Optional.empty());
         Assertions.assertThrows(ApiRequestException.class,
@@ -76,7 +76,7 @@ public class ObjectAroundVillageServiceTest {
         verify(objectAroundVillageRepository, times(1)).findById(objectId);
     }
     @Test
-    public void testCreateObjectAroundVillageWithNonExistingType() {
+    void testCreateObjectAroundVillageWithNonExistingType() {
         ObjectAroundVillageDTO objectAroundVillageDTO = new ObjectAroundVillageDTO();
         objectAroundVillageDTO.setType("Object 1");
 
@@ -90,7 +90,7 @@ public class ObjectAroundVillageServiceTest {
     }
 
     @Test
-    public void testCreateObjectAroundVillageWithExistingType() {
+    void testCreateObjectAroundVillageWithExistingType() {
         ObjectAroundVillageDTO objectAroundVillageDTO = new ObjectAroundVillageDTO();
         objectAroundVillageDTO.setType("Object 1");
 
@@ -157,7 +157,7 @@ public class ObjectAroundVillageServiceTest {
     //    verify(objectAroundVillageRepository, never()).save(any(ObjectAroundVillage.class));
     //}
     @Test
-    public void testDeleteObjectAroundVillageByIdWithExistingId() {
+    void testDeleteObjectAroundVillageByIdWithExistingId() {
         Long objectId = 123L;
         ObjectAroundVillage objectAroundVillage = new ObjectAroundVillage();
         when(objectAroundVillageRepository.findById(objectId)).thenReturn(Optional.of(objectAroundVillage));
@@ -169,7 +169,7 @@ public class ObjectAroundVillageServiceTest {
     }
 
     @Test
-    public void testDeleteObjectAroundVillageByIdWithNonExistingId() {
+    void testDeleteObjectAroundVillageByIdWithNonExistingId() {
         Long objectId = 123L;
         when(objectAroundVillageRepository.findById(objectId)).thenReturn(Optional.empty());
 
