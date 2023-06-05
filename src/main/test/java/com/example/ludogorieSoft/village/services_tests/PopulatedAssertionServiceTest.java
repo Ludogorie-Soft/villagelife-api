@@ -17,9 +17,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class PopulatedAssertionServiceTest {
+class PopulatedAssertionServiceTest {
     @Mock
     private PopulatedAssertionRepository populatedAssertionRepository;
 
@@ -28,12 +29,16 @@ public class PopulatedAssertionServiceTest {
     @Mock
     private ModelMapper modelMapper;
 
+
     @BeforeEach
-    public void setUp(){
+    void setUp() {
         MockitoAnnotations.openMocks(this);
+        ModelMapper modelMapper = new ModelMapper();
+        populatedAssertionService = new PopulatedAssertionService(populatedAssertionRepository, modelMapper);
     }
+
     @Test
-    public void testGetAllPopulatedAssertionWithPopulations() {
+    void testGetAllPopulatedAssertionWithPopulations() {
         List<PopulatedAssertion> populations = new ArrayList<>();
         populations.add(new PopulatedAssertion());
         populations.add(new PopulatedAssertion());
@@ -46,7 +51,7 @@ public class PopulatedAssertionServiceTest {
     }
 
     @Test
-    public void testGetAllPopulatedAssertionWithNoPopulations() {
+    void testGetAllPopulatedAssertionWithNoPopulations() {
         List<PopulatedAssertion> populations = new ArrayList<>();
         when(populatedAssertionRepository.findAll()).thenReturn(populations);
 
@@ -55,23 +60,32 @@ public class PopulatedAssertionServiceTest {
         verify(populatedAssertionRepository, times(1)).findAll();
         Assertions.assertEquals(0, result.size());
     }
-    @Test
-    public void testCreatePopulatedAssertion() {
-        PopulatedAssertion population = new PopulatedAssertion();
-        population.setPopulatedAssertionName("Test Population");
-        PopulatedAssertionDTO populationDTO = new PopulatedAssertionDTO();
-        populationDTO.setPopulatedAssertionName("Test Population");
-        when(populatedAssertionRepository.existsByPopulatedAssertionName(population.getPopulatedAssertionName())).thenReturn(false);
-        when(populatedAssertionRepository.save(population)).thenReturn(population);
-        when(modelMapper.map(population, PopulatedAssertionDTO.class)).thenReturn(populationDTO);
 
-        PopulatedAssertionDTO result = populatedAssertionService.createPopulatedAssertion(populationDTO);
-        verify(populatedAssertionRepository, times(1)).existsByPopulatedAssertionName(population.getPopulatedAssertionName());
-        verify(populatedAssertionRepository, times(1)).save(population);
-        Assertions.assertEquals(populatedAssertionService.toPopulatedAssertionDTO(population), result);
-    }
+
     @Test
-    public void testCreatePopulatedAssertionWithExistingPopulation() {
+    void testCreatePopulatedAssertion() {
+        String populatedAssertionName = "Test Populated Assertion";
+        PopulatedAssertionDTO populatedAssertionDTO = new PopulatedAssertionDTO();
+        populatedAssertionDTO.setPopulatedAssertionName(populatedAssertionName);
+
+        when(populatedAssertionRepository.existsByPopulatedAssertionName(populatedAssertionName)).thenReturn(false);
+        when(populatedAssertionRepository.save(any(PopulatedAssertion.class))).thenAnswer(invocation -> {
+            PopulatedAssertion savedPopulatedAssertion = invocation.getArgument(0);
+            savedPopulatedAssertion.setId(1L);
+            return savedPopulatedAssertion;
+        });
+
+        PopulatedAssertionDTO createdPopulatedAssertion = populatedAssertionService.createPopulatedAssertion(populatedAssertionDTO);
+
+        assertNotNull(createdPopulatedAssertion);
+        assertEquals(populatedAssertionName, createdPopulatedAssertion.getPopulatedAssertionName());
+        assertNotNull(createdPopulatedAssertion.getId());
+        verify(populatedAssertionRepository, times(1)).existsByPopulatedAssertionName(populatedAssertionName);
+        verify(populatedAssertionRepository, times(1)).save(any(PopulatedAssertion.class));
+    }
+
+    @Test
+    void testCreatePopulatedAssertionWithExistingPopulation() {
         PopulatedAssertionDTO populationDTO = new PopulatedAssertionDTO();
         populationDTO.setPopulatedAssertionName("Test Population");
 
@@ -84,8 +98,9 @@ public class PopulatedAssertionServiceTest {
         verify(populatedAssertionRepository, times(1)).existsByPopulatedAssertionName(populationDTO.getPopulatedAssertionName());
         verify(populatedAssertionRepository, never()).save(any(PopulatedAssertion.class));
     }
+
     @Test
-    public void testGetPopulatedAssertionByIdWithExistingId() {
+    void testGetPopulatedAssertionByIdWithExistingId() {
         Long populationId = 123L;
         PopulatedAssertion population = new PopulatedAssertion();
         population.setId(populationId);
@@ -105,7 +120,7 @@ public class PopulatedAssertionServiceTest {
     }
 
     @Test
-    public void testGetPopulatedAssertionByIdWithNonExistingId() {
+    void testGetPopulatedAssertionByIdWithNonExistingId() {
         Long populationId = 123L;
 
         when(populatedAssertionRepository.findById(populationId)).thenReturn(Optional.empty());
@@ -117,8 +132,90 @@ public class PopulatedAssertionServiceTest {
         verify(populatedAssertionRepository, times(1)).findById(populationId);
     }
 
+
     @Test
-    public void testDeletePopulatedAssertionByIdWithExistingId() {
+    void testCreatePopulatedAssertionAlreadyExists() {
+        String populatedAssertionName = "Test Populated Assertion";
+        PopulatedAssertionDTO populatedAssertionDTO = new PopulatedAssertionDTO();
+        populatedAssertionDTO.setPopulatedAssertionName(populatedAssertionName);
+
+        when(populatedAssertionRepository.existsByPopulatedAssertionName(populatedAssertionName)).thenReturn(true);
+
+        assertThrows(ApiRequestException.class, () -> {
+            populatedAssertionService.createPopulatedAssertion(populatedAssertionDTO);
+        });
+
+        verify(populatedAssertionRepository, times(1)).existsByPopulatedAssertionName(populatedAssertionName);
+        verify(populatedAssertionRepository, never()).save(any(PopulatedAssertion.class));
+    }
+
+    @Test
+    void testUpdatePopulatedAssertion() {
+        Long populatedAssertionId = 1L;
+        String updatedName = "Updated Populated Assertion";
+        PopulatedAssertionDTO populatedAssertionDTO = new PopulatedAssertionDTO();
+        populatedAssertionDTO.setPopulatedAssertionName(updatedName);
+
+        PopulatedAssertion existingPopulatedAssertion = new PopulatedAssertion();
+        existingPopulatedAssertion.setId(populatedAssertionId);
+        existingPopulatedAssertion.setPopulatedAssertionName("Old Populated Assertion");
+
+        when(populatedAssertionRepository.findById(populatedAssertionId)).thenReturn(Optional.of(existingPopulatedAssertion));
+        when(populatedAssertionRepository.existsByPopulatedAssertionName(updatedName)).thenReturn(false);
+        when(populatedAssertionRepository.save(existingPopulatedAssertion)).thenReturn(existingPopulatedAssertion);
+
+        PopulatedAssertionDTO updatedPopulatedAssertion = populatedAssertionService.updatePopulatedAssertion(populatedAssertionId, populatedAssertionDTO);
+
+        assertNotNull(updatedPopulatedAssertion);
+        assertEquals(updatedName, updatedPopulatedAssertion.getPopulatedAssertionName());
+        assertEquals(populatedAssertionId, updatedPopulatedAssertion.getId());
+        verify(populatedAssertionRepository, times(1)).findById(populatedAssertionId);
+        verify(populatedAssertionRepository, times(1)).existsByPopulatedAssertionName(updatedName);
+        verify(populatedAssertionRepository, times(1)).save(existingPopulatedAssertion);
+    }
+
+    @Test
+    void testUpdatePopulatedAssertionInvalidPopulatedAssertionId() {
+        Long invalidPopulatedAssertionId = 100L;
+        PopulatedAssertionDTO populatedAssertionDTO = new PopulatedAssertionDTO();
+        populatedAssertionDTO.setPopulatedAssertionName("Updated Populated Assertion");
+
+        when(populatedAssertionRepository.findById(invalidPopulatedAssertionId)).thenReturn(Optional.empty());
+
+        assertThrows(ApiRequestException.class, () -> {
+            populatedAssertionService.updatePopulatedAssertion(invalidPopulatedAssertionId, populatedAssertionDTO);
+        });
+
+        verify(populatedAssertionRepository, times(1)).findById(invalidPopulatedAssertionId);
+        verify(populatedAssertionRepository, never()).existsByPopulatedAssertionName(anyString());
+        verify(populatedAssertionRepository, never()).save(any(PopulatedAssertion.class));
+    }
+
+    @Test
+    void testUpdatePopulatedAssertionAlreadyExists() {
+        Long populatedAssertionId = 1L;
+        String updatedName = "Updated Populated Assertion";
+        PopulatedAssertionDTO populatedAssertionDTO = new PopulatedAssertionDTO();
+        populatedAssertionDTO.setPopulatedAssertionName(updatedName);
+
+        PopulatedAssertion existingPopulatedAssertion = new PopulatedAssertion();
+        existingPopulatedAssertion.setId(populatedAssertionId);
+        existingPopulatedAssertion.setPopulatedAssertionName("Old Populated Assertion");
+
+        when(populatedAssertionRepository.findById(populatedAssertionId)).thenReturn(Optional.of(existingPopulatedAssertion));
+        when(populatedAssertionRepository.existsByPopulatedAssertionName(updatedName)).thenReturn(true);
+
+        assertThrows(ApiRequestException.class, () -> {
+            populatedAssertionService.updatePopulatedAssertion(populatedAssertionId, populatedAssertionDTO);
+        });
+
+        verify(populatedAssertionRepository, times(1)).findById(populatedAssertionId);
+        verify(populatedAssertionRepository, times(1)).existsByPopulatedAssertionName(updatedName);
+        verify(populatedAssertionRepository, never()).save(any(PopulatedAssertion.class));
+    }
+
+    @Test
+    void testDeletePopulatedAssertionByIdWithExistingId() {
         Long populationId = 123L;
         PopulatedAssertion population = new PopulatedAssertion();
         population.setId(populationId);
@@ -133,7 +230,7 @@ public class PopulatedAssertionServiceTest {
     }
 
     @Test
-    public void testDeletePopulatedAssertionByIdWithNonExistingId() {
+    void testDeletePopulatedAssertionByIdWithNonExistingId() {
         Long populationId = 123L;
 
         when(populatedAssertionRepository.findById(populationId)).thenReturn(Optional.empty());
@@ -145,47 +242,5 @@ public class PopulatedAssertionServiceTest {
         verify(populatedAssertionRepository, times(1)).findById(populationId);
         verify(populatedAssertionRepository, never()).delete(any());
     }
-//    @Test
-//    public void testUpdatePopulatedAssertionWithExistingIdAndNonExistingPopulatedAssertionName() {
-//        Long populationId = 123L;
-//        PopulatedAssertion population = new PopulatedAssertion();
-//        population.setPopulatedAssertionName("Updated Populated Assertion");
-//
-//        Optional<PopulatedAssertion> optionalPopulation = Optional.of(new PopulatedAssertion());
-//        optionalPopulation.get().setPopulatedAssertionName("Old Populated Assertion");
-//
-//        when(populatedAssertionRepository.findById(populationId)).thenReturn(optionalPopulation);
-//        when(populatedAssertionRepository.existsByPopulatedAssertionName(population.getPopulatedAssertionName())).thenReturn(false);
-//        when(populatedAssertionRepository.save(any(PopulatedAssertion.class))).thenReturn(population);
-//
-//        PopulatedAssertionDTO result = populatedAssertionService.updatePopulatedAssertion(populationId, population);
-//
-//        verify(populatedAssertionRepository, times(1)).findById(populationId);
-//        verify(populatedAssertionRepository, times(1)).existsByPopulatedAssertionName(population.getPopulatedAssertionName());
-//        verify(populatedAssertionRepository, times(1)).save(any(PopulatedAssertion.class));
-//        Assertions.assertEquals(populatedAssertionService.toPopulatedAssertionDTO(population), result);
-//    }
-//    @Test
-//    public void testUpdatePopulatedAssertionWithExistingAssertionName() {
-//        Long populationId = 123L;
-//        PopulatedAssertion population = new PopulatedAssertion();
-//        population.setPopulatedAssertionName("Updated Populated Assertion");
-//
-//        Optional<PopulatedAssertion> optionalPopulation = Optional.of(new PopulatedAssertion());
-//        optionalPopulation.get().setPopulatedAssertionName("Existing Assertion");
-//
-//        when(populatedAssertionRepository.findById(populationId)).thenReturn(optionalPopulation);
-//        when(populatedAssertionRepository.existsByPopulatedAssertionName(population.getPopulatedAssertionName())).thenReturn(true);
-//
-//        Assertions.assertThrows(ApiRequestException.class, () -> {
-//            populatedAssertionService.updatePopulatedAssertion(populationId, population);
-//        });
-//
-//        verify(populatedAssertionRepository, times(1)).findById(populationId);
-//        verify(populatedAssertionRepository, times(1)).existsByPopulatedAssertionName(population.getPopulatedAssertionName());
-//        verify(populatedAssertionRepository, never()).save(any(PopulatedAssertion.class));
-//    }
-
-
 
 }

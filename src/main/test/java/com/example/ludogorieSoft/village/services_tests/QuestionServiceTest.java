@@ -17,21 +17,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.mockito.Mockito.*;
+import static org.testng.Assert.assertThrows;
 
 class QuestionServiceTest {
+
     @Mock
     private QuestionRepository questionRepository;
 
     @InjectMocks
     private QuestionService questionService;
+
     @Mock
     private ModelMapper modelMapper;
 
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
         MockitoAnnotations.openMocks(this);
     }
+
     @Test
     void testGetAllQuestionsWithQuestions() {
         List<Question> questions = new ArrayList<>();
@@ -55,38 +60,7 @@ class QuestionServiceTest {
         verify(questionRepository, times(1)).findAll();
         Assertions.assertEquals(0, result.size());
     }
-    //@Test
-    //public void testCreateQuestionWithNonExistingQuestion() {
-    //    Question question = new Question();
-    //    question.setQuestionName("New Question");
-    //    QuestionDTO questionDTO = new QuestionDTO();
-    //    questionDTO.setQuestion("New Question");
-//
-    //    when(questionRepository.existsByQuestionName(question.getQuestionName())).thenReturn(false);
-    //    when(questionRepository.save(any(Question.class))).thenReturn(question);
-    //    when(modelMapper.map(question, QuestionDTO.class)).thenReturn(questionDTO);
-//
-    //    QuestionDTO result = questionService.createQuestion(question);
-//
-    //    verify(questionRepository, times(1)).existsByQuestionName(question.getQuestionName());
-    //    verify(questionRepository, times(1)).save(question);
-    //    Assertions.assertEquals(questionService.questionToQuestionDTO(question), result);
-    //}
-//
-    //@Test
-    //public void testCreateQuestionWithExistingQuestion() {
-    //    Question question = new Question();
-    //    question.setQuestionName("Existing Question");
-//
-    //    when(questionRepository.existsByQuestionName(question.getQuestionName())).thenReturn(true);
-//
-    //    Assertions.assertThrows(ApiRequestException.class, () -> {
-    //        questionService.createQuestion(question);
-    //    });
-//
-    //    verify(questionRepository, times(1)).existsByQuestionName(question.getQuestionName());
-    //    verify(questionRepository, times(0)).save(any(Question.class));
-    //}
+
     @Test
     void testGetQuestionByIdWithExistingId() {
         Long questionId = 123L;
@@ -118,6 +92,7 @@ class QuestionServiceTest {
 
         verify(questionRepository, times(1)).findById(questionId);
     }
+
     @Test
     void testDeleteQuestionByIdWithExistingId() {
         Long questionId = 123L;
@@ -146,65 +121,107 @@ class QuestionServiceTest {
         verify(questionRepository, times(1)).findById(questionId);
         verify(questionRepository, never()).delete(any(Question.class));
     }
-    //@Test
-    //public void testUpdateQuestionWithExistingIdAndNonExistingQuestion() {
-    //    Long questionId = 123L;
-    //    Question question = new Question();
-    //    question.setId(questionId);
-    //    question.setQuestionName("Updated Question");
+
+
+    @Test
+     void testCreateQuestionThrowsExceptionWhenQuestionExists() {
+        QuestionDTO questionDTO = new QuestionDTO();
+        questionDTO.setQuestion("Test Question");
+
+        when(questionRepository.existsByQuestionName(questionDTO.getQuestion())).thenReturn(true);
+
+        Assertions.assertThrows(ApiRequestException.class, () -> {
+            questionService.createQuestion(questionDTO);
+        });
+
+        verify(questionRepository, times(1)).existsByQuestionName(questionDTO.getQuestion());
+        verifyNoMoreInteractions(questionRepository);
+        verifyNoInteractions(modelMapper);
+    }
+
+
+    @Test
+     void testUpdateQuestionThrowsExceptionWhenQuestionNotFound() {
+        Long id = 1L;
+        QuestionDTO questionDTO = new QuestionDTO();
+        questionDTO.setQuestion("Updated Question");
+
+        when(questionRepository.findById(id)).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(ApiRequestException.class, () -> {
+            questionService.updateQuestion(id, questionDTO);
+        });
+
+        verify(questionRepository, times(1)).findById(id);
+        verifyNoMoreInteractions(questionRepository);
+        verifyNoInteractions(modelMapper);
+    }
+
+    @Test
+     void testUpdateQuestionThrowsExceptionWhenQuestionExists() {
+        Long id = 1L;
+        QuestionDTO questionDTO = new QuestionDTO();
+        questionDTO.setQuestion("Updated Question");
+
+        Question question = new Question();
+        question.setId(id);
+        question.setQuestionName("Original Question");
+
+        Optional<Question> optionalQuestion = Optional.of(question);
+
+        when(questionRepository.findById(id)).thenReturn(optionalQuestion);
+        when(questionRepository.existsByQuestionName(questionDTO.getQuestion())).thenReturn(true);
+
+        Assertions.assertThrows(ApiRequestException.class, () -> {
+            questionService.updateQuestion(id, questionDTO);
+        });
+
+        verify(questionRepository, times(1)).findById(id);
+        verify(questionRepository, times(1)).existsByQuestionName(questionDTO.getQuestion());
+        verifyNoMoreInteractions(questionRepository);
+        verifyNoInteractions(modelMapper);
+    }
+
+//    @Test
+//    void createQuestionWhenQuestionDoesNotExistShouldCreateQuestion() {
+//        QuestionDTO questionDTO = new QuestionDTO();
+//        questionDTO.setQuestion("What is your name?");
 //
-    //    Optional<Question> optionalQuestion = Optional.of(new Question());
-    //    optionalQuestion.get().setQuestionName("Old Question");
+//        when(questionRepository.existsByQuestionName(questionDTO.getQuestion())).thenReturn(false);
 //
-    //    when(questionRepository.findById(questionId)).thenReturn(optionalQuestion);
-    //    when(questionRepository.existsByQuestionName(question.getQuestionName())).thenReturn(false);
-    //    when(questionRepository.save(any(Question.class))).thenReturn(question);
+//        QuestionDTO result = questionService.createQuestion(questionDTO);
 //
-    //    QuestionDTO result = questionService.updateQuestion(questionId, question);
-//
-    //    verify(questionRepository, times(1)).findById(questionId);
-    //    verify(questionRepository, times(1)).existsByQuestionName(question.getQuestionName());
-    //    verify(questionRepository, times(1)).save(any(Question.class));
-    //    Assertions.assertEquals(questionService.questionToQuestionDTO(question), result);
-    //}
-//
-    //@Test
-    //public void testUpdateQuestionWithNonExistingId() {
-    //    Long questionId = 123L;
-    //    Question question = new Question();
-    //    question.setId(questionId);
-    //    question.setQuestionName("Updated Question");
-//
-    //    when(questionRepository.findById(questionId)).thenReturn(Optional.empty());
-//
-    //    Assertions.assertThrows(ApiRequestException.class, () -> {
-    //        questionService.updateQuestion(questionId, question);
-    //    });
-//
-    //    verify(questionRepository, times(1)).findById(questionId);
-    //    verify(questionRepository, never()).existsByQuestionName(anyString());
-    //    verify(questionRepository, never()).save(any(Question.class));
-    //}
-//
-    //@Test
-    //public void testUpdateQuestionWithExistingQuestion() {
-    //    Long questionId = 123L;
-    //    Question question = new Question();
-    //    question.setId(questionId);
-    //    question.setQuestionName("Updated Question");
-//
-    //    Optional<Question> optionalQuestion = Optional.of(new Question());
-    //    optionalQuestion.get().setQuestionName("Existing Question");
-//
-    //    when(questionRepository.findById(questionId)).thenReturn(optionalQuestion);
-    //    when(questionRepository.existsByQuestionName(question.getQuestionName())).thenReturn(true);
-//
-    //    Assertions.assertThrows(ApiRequestException.class, () -> {
-    //        questionService.updateQuestion(questionId, question);
-    //    });
-//
-    //    verify(questionRepository, times(1)).findById(questionId);
-    //    verify(questionRepository, times(1)).existsByQuestionName(question.getQuestionName());
-    //    verify(questionRepository, never()).save(any(Question.class));
-    //}
+//        assertNotNull(result);
+//        Assertions.assertEquals(questionDTO.getQuestion(), result.getQuestion());
+//    }
+
+
+    @Test
+     void createQuestion_WhenQuestionExists_ShouldThrowApiRequestException() {
+        QuestionDTO questionDTO = new QuestionDTO();
+        questionDTO.setQuestion("What is your name?");
+
+        when(questionRepository.existsByQuestionName(questionDTO.getQuestion())).thenReturn(true);
+
+        assertThrows(ApiRequestException.class, () -> {
+            questionService.createQuestion(questionDTO);
+        });
+    }
+
+
+
+    @Test
+     void updateQuestion_WhenQuestionIsNull_ShouldThrowApiRequestException() {
+        Long questionId = 1L;
+        QuestionDTO questionDTO = new QuestionDTO();
+        questionDTO.setQuestion(null);
+
+        assertThrows(ApiRequestException.class, () -> {
+            questionService.updateQuestion(questionId, questionDTO);
+        });
+    }
+
+
+
+
 }

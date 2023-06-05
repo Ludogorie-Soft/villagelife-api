@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class ObjectAroundVillageServiceTest {
@@ -28,10 +29,14 @@ class ObjectAroundVillageServiceTest {
     @Mock
     private ModelMapper modelMapper;
 
+
     @BeforeEach
-    public void setUp(){
+    void setUp() {
         MockitoAnnotations.openMocks(this);
+        ModelMapper modelMapper = new ModelMapper();
+        objectAroundVillageService = new ObjectAroundVillageService(objectAroundVillageRepository, modelMapper);
     }
+
     @Test
     void testGetAllObjectsAroundVillageWithMultipleObjects() {
         List<ObjectAroundVillage> objectAroundVillages = new ArrayList<>();
@@ -54,6 +59,7 @@ class ObjectAroundVillageServiceTest {
         verify(objectAroundVillageRepository, times(1)).findAll();
         Assertions.assertTrue(result.isEmpty());
     }
+
     @Test
     void testGetObjectAroundVillageByIdWithExistingId() {
         Long objectId = 123L;
@@ -75,6 +81,7 @@ class ObjectAroundVillageServiceTest {
                 () -> objectAroundVillageService.getObjectAroundVillageById(objectId));
         verify(objectAroundVillageRepository, times(1)).findById(objectId);
     }
+
     @Test
     void testCreateObjectAroundVillageWithNonExistingType() {
         ObjectAroundVillageDTO objectAroundVillageDTO = new ObjectAroundVillageDTO();
@@ -101,61 +108,107 @@ class ObjectAroundVillageServiceTest {
         verify(objectAroundVillageRepository, times(1)).existsByType(objectAroundVillageDTO.getType());
         verify(objectAroundVillageRepository, never()).save(any(ObjectAroundVillage.class));
     }
-    //@Test
-    //public void testUpdateObjectAroundVillageWithExistingIdAndNonExistingType() {
-    //    Long objectId = 123L;
-    //    ObjectAroundVillage objectAroundVillage = new ObjectAroundVillage();
-    //    objectAroundVillage.setType("Updated Object");
-//
-    //    Optional<ObjectAroundVillage> optionalObjectAroundVillage = Optional.of(new ObjectAroundVillage());
-    //    optionalObjectAroundVillage.get().setType("Old Object");
-//
-    //    when(objectAroundVillageRepository.findById(objectId)).thenReturn(optionalObjectAroundVillage);
-    //    when(objectAroundVillageRepository.existsByType(objectAroundVillage.getType())).thenReturn(false);
-    //    when(objectAroundVillageRepository.save(any(ObjectAroundVillage.class))).thenReturn(objectAroundVillage);
-//
-    //    ObjectAroundVillageDTO result = objectAroundVillageService.updateObjectAroundVillage(objectId, objectAroundVillage);
-//
-    //    verify(objectAroundVillageRepository, times(1)).findById(objectId);
-    //    verify(objectAroundVillageRepository, times(1)).existsByType(objectAroundVillage.getType());
-    //    verify(objectAroundVillageRepository, times(1)).save(any(ObjectAroundVillage.class));
-    //    Assertions.assertEquals(objectAroundVillageService.convertToDTO(objectAroundVillage), result);
-    //}
-//
-    //@Test
-    //public void testUpdateObjectAroundVillageWithNonExistingId() {
-    //    Long objectId = 123L;
-    //    ObjectAroundVillage objectAroundVillage = new ObjectAroundVillage();
-    //    objectAroundVillage.setType("Updated Object");
-//
-    //    when(objectAroundVillageRepository.findById(objectId)).thenReturn(Optional.empty());
-//
-    //    Assertions.assertThrows(ApiRequestException.class,
-    //            () -> objectAroundVillageService.updateObjectAroundVillage(objectId, objectAroundVillage));
-    //    verify(objectAroundVillageRepository, times(1)).findById(objectId);
-    //    verify(objectAroundVillageRepository, never()).existsByType(objectAroundVillage.getType());
-    //    verify(objectAroundVillageRepository, never()).save(any(ObjectAroundVillage.class));
-    //}
-    //@Test
-    //public void testUpdateObjectAroundVillageWithExistingType() {
-    //    Long objectId = 123L;
-    //    ObjectAroundVillage objectAroundVillage = new ObjectAroundVillage();
-    //    objectAroundVillage.setType("Updated Object");
-//
-    //    Optional<ObjectAroundVillage> optionalObjectAroundVillage = Optional.of(new ObjectAroundVillage());
-    //    optionalObjectAroundVillage.get().setType("Old Object");
-//
-    //    when(objectAroundVillageRepository.findById(objectId)).thenReturn(optionalObjectAroundVillage);
-    //    when(objectAroundVillageRepository.existsByType(objectAroundVillage.getType())).thenReturn(true);
-//
-    //    ApiRequestException exception = Assertions.assertThrows(ApiRequestException.class,
-    //            () -> objectAroundVillageService.updateObjectAroundVillage(objectId, objectAroundVillage));
-//
-    //    Assertions.assertEquals("Object Around Village with type: Updated Object already exists", exception.getMessage());
-    //    verify(objectAroundVillageRepository, times(1)).findById(objectId);
-    //    verify(objectAroundVillageRepository, times(1)).existsByType(objectAroundVillage.getType());
-    //    verify(objectAroundVillageRepository, never()).save(any(ObjectAroundVillage.class));
-    //}
+
+
+    @Test
+    void testCreateObjectAroundVillage() {
+        ObjectAroundVillageDTO objectAroundVillageDTO = new ObjectAroundVillageDTO();
+        objectAroundVillageDTO.setType("Test Type");
+        ObjectAroundVillage objectAroundVillage = new ObjectAroundVillage();
+        objectAroundVillage.setType("Test Type");
+
+        when(objectAroundVillageRepository.existsByType("Test Type")).thenReturn(false);
+        when(modelMapper.map(objectAroundVillage, ObjectAroundVillageDTO.class)).thenReturn(objectAroundVillageDTO);
+        when(objectAroundVillageRepository.save(any(ObjectAroundVillage.class))).thenReturn(objectAroundVillage);
+
+        ObjectAroundVillageDTO result = objectAroundVillageService.createObjectAroundVillage(objectAroundVillageDTO);
+
+        assertNotNull(result);
+        assertEquals("Test Type", result.getType());
+        verify(objectAroundVillageRepository, times(1)).existsByType("Test Type");
+        verify(objectAroundVillageRepository, times(1)).save(any(ObjectAroundVillage.class));
+    }
+
+    @Test
+    void testCreateObjectAroundVillageExistingType() {
+        ObjectAroundVillageDTO objectAroundVillageDTO = new ObjectAroundVillageDTO();
+        objectAroundVillageDTO.setType("Test Type");
+
+        when(objectAroundVillageRepository.existsByType("Test Type")).thenReturn(true);
+
+        assertThrows(ApiRequestException.class, () -> {
+            objectAroundVillageService.createObjectAroundVillage(objectAroundVillageDTO);
+        });
+
+        verify(objectAroundVillageRepository, times(1)).existsByType("Test Type");
+        verify(objectAroundVillageRepository, never()).save(any(ObjectAroundVillage.class));
+    }
+
+    @Test
+    void testUpdateObjectAroundVillage() {
+        Long objectId = 1L;
+        String updatedType = "Updated Type";
+        ObjectAroundVillageDTO objectAroundVillageDTO = new ObjectAroundVillageDTO();
+        objectAroundVillageDTO.setType(updatedType);
+
+        ObjectAroundVillage existingObject = new ObjectAroundVillage();
+        existingObject.setId(objectId);
+        existingObject.setType("Old Type");
+
+        when(objectAroundVillageRepository.findById(objectId)).thenReturn(Optional.of(existingObject));
+        when(objectAroundVillageRepository.existsByType(updatedType)).thenReturn(false);
+        when(objectAroundVillageRepository.save(existingObject)).thenReturn(existingObject);
+
+        ObjectAroundVillageDTO updatedObject = objectAroundVillageService.updateObjectAroundVillage(objectId, objectAroundVillageDTO);
+
+        assertNotNull(updatedObject);
+        assertEquals(updatedType, updatedObject.getType());
+        verify(objectAroundVillageRepository, times(1)).findById(objectId);
+        verify(objectAroundVillageRepository, times(1)).existsByType(updatedType);
+        verify(objectAroundVillageRepository, times(1)).save(existingObject);
+    }
+
+    @Test
+    void testUpdateObjectAroundVillageInvalidId() {
+        Long id = 1L;
+        ObjectAroundVillageDTO objectAroundVillageDTO = new ObjectAroundVillageDTO();
+        objectAroundVillageDTO.setType("Updated Type");
+
+        when(objectAroundVillageRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(ApiRequestException.class, () -> {
+            objectAroundVillageService.updateObjectAroundVillage(id, objectAroundVillageDTO);
+        });
+
+        verify(objectAroundVillageRepository, times(1)).findById(id);
+        verify(objectAroundVillageRepository, never()).existsByType(anyString());
+        verify(objectAroundVillageRepository, never()).save(any(ObjectAroundVillage.class));
+    }
+
+    @Test
+    void testUpdateObjectAroundVillageExistingType() {
+        Long id = 1L;
+        ObjectAroundVillageDTO objectAroundVillageDTO = new ObjectAroundVillageDTO();
+        objectAroundVillageDTO.setType("Updated Type");
+        ObjectAroundVillage existingObjectAroundVillage = new ObjectAroundVillage();
+        existingObjectAroundVillage.setId(id);
+        existingObjectAroundVillage.setType("Old Type");
+
+        Optional<ObjectAroundVillage> optionalObjectAroundVillage = Optional.of(existingObjectAroundVillage);
+
+        when(objectAroundVillageRepository.findById(id)).thenReturn(optionalObjectAroundVillage);
+        when(objectAroundVillageRepository.existsByType("Updated Type")).thenReturn(true);
+
+        assertThrows(ApiRequestException.class, () -> {
+            objectAroundVillageService.updateObjectAroundVillage(id, objectAroundVillageDTO);
+        });
+
+        verify(objectAroundVillageRepository, times(1)).findById(id);
+        verify(objectAroundVillageRepository, times(1)).existsByType("Updated Type");
+        verify(objectAroundVillageRepository, never()).save(any(ObjectAroundVillage.class));
+    }
+
+
     @Test
     void testDeleteObjectAroundVillageByIdWithExistingId() {
         Long objectId = 123L;

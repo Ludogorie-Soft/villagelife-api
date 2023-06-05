@@ -18,10 +18,11 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
+import static org.testng.Assert.assertThrows;
 
 public class EthnicityServiceTest {
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 
@@ -37,7 +38,7 @@ public class EthnicityServiceTest {
     @Test
     public void testGetAllEthnicities() {
         Ethnicity ethnicity1 = new Ethnicity(1L, "Ethnicity 1");
-        Ethnicity ethnicity2 = new Ethnicity(2L,"Ethnicity 2");
+        Ethnicity ethnicity2 = new Ethnicity(2L, "Ethnicity 2");
 
         List<Ethnicity> ethnicities = new ArrayList<>();
         ethnicities.add(ethnicity1);
@@ -62,6 +63,8 @@ public class EthnicityServiceTest {
         Assertions.assertEquals(expectedEthnicityDTOs, result);
     }
 
+
+
     @Test
     public void testGetAllEthnicitiesWithNoEthnicities() {
         List<Ethnicity> ethnicities = new ArrayList<>();
@@ -74,6 +77,7 @@ public class EthnicityServiceTest {
         verify(ethnicityRepository, times(1)).findAll();
         Assertions.assertEquals(expectedEthnicityDTOs, result);
     }
+
     @Test
     public void testGetEthnicityByIdWithExistingEthnicityIdThenReturnsEthnicityDTO() {
         Long ethnicityId = 123L;
@@ -94,7 +98,6 @@ public class EthnicityServiceTest {
     @Test
     public void testGetEthnicityByIdWithNonExistingEthnicityIdThenThrowsApiRequestException() {
         Long ethnicityId = 123L;
-
         when(ethnicityRepository.findById(ethnicityId)).thenReturn(Optional.empty());
 
         Assertions.assertThrows(ApiRequestException.class, () -> ethnicityService.getEthnicityById(ethnicityId));
@@ -102,37 +105,43 @@ public class EthnicityServiceTest {
         verify(modelMapper, never()).map(any(), eq(EthnicityDTO.class));
     }
 
-//    @Test
-//    public void testCreateEthnicity() {
-//        Ethnicity ethnicity = new Ethnicity(1L, "Test Ethnicity");
-//
-//        EthnicityDTO expectedEthnicityDTO = new EthnicityDTO(1L, "Test Ethnicity");
-//
-//        when(ethnicityRepository.save(ethnicity)).thenReturn(ethnicity);
-//        when(modelMapper.map(ethnicity, EthnicityDTO.class)).thenReturn(expectedEthnicityDTO);
-//
-//        EthnicityDTO result = ethnicityService.createEthnicity(expectedEthnicityDTO);
-//
-//        verify(ethnicityRepository, times(1)).save(ethnicity);
-//        Assertions.assertEquals(expectedEthnicityDTO, result);
-//    }
     @Test
-    public void testDeleteEthnicityByIdWithExistingEthnicityId() {
-        Long ethnicityId = 123L;
-        when(ethnicityRepository.existsById(ethnicityId)).thenReturn(true);
-        ethnicityService.deleteEthnicityById(ethnicityId);
-        verify(ethnicityRepository, times(1)).existsById(ethnicityId);
-        verify(ethnicityRepository, times(1)).deleteById(ethnicityId);
+    public void testCreateEthnicity_WhenEthnicityDoesNotExist() {
+        // Arrange
+        EthnicityDTO ethnicityDTO = new EthnicityDTO();
+        ethnicityDTO.setEthnicityName("Ethnicity 1");
+
+        Ethnicity ethnicity = new Ethnicity();
+        ethnicity.setEthnicityName("Ethnicity 1");
+
+        EthnicityDTO expectedDTO = new EthnicityDTO();
+        expectedDTO.setEthnicityName("Ethnicity 1");
+
+        when(ethnicityRepository.existsByEthnicityName(ethnicityDTO.getEthnicityName())).thenReturn(false);
+        when(modelMapper.map(ethnicityDTO, Ethnicity.class)).thenReturn(ethnicity);
+        when(ethnicityRepository.save(ethnicity)).thenReturn(ethnicity);
+        when(modelMapper.map(ethnicity, EthnicityDTO.class)).thenReturn(expectedDTO);
+
+        // Act
+        EthnicityDTO resultDTO = ethnicityService.createEthnicity(ethnicityDTO);
+
+        // Assert
+        Assertions.assertEquals(expectedDTO.getEthnicityName(), resultDTO.getEthnicityName());
     }
 
     @Test
-    public void testDeleteEthnicityByIdWithNonExistingEthnicityIdThenThrowsApiRequestException() {
-        Long ethnicityId = 123L;
-        when(ethnicityRepository.existsById(ethnicityId)).thenReturn(false);
-        Assertions.assertThrows(ApiRequestException.class, () -> ethnicityService.deleteEthnicityById(ethnicityId));
-        verify(ethnicityRepository, times(1)).existsById(ethnicityId);
-        verify(ethnicityRepository, never()).deleteById(ethnicityId);
+    public void testCreateEthnicity_WhenEthnicityExists() {
+        // Arrange
+        EthnicityDTO ethnicityDTO = new EthnicityDTO();
+        ethnicityDTO.setEthnicityName("Ethnicity 1");
+
+        when(ethnicityRepository.existsByEthnicityName(ethnicityDTO.getEthnicityName())).thenReturn(true);
+
+        // Act & Assert
+        assertThrows(ApiRequestException.class, () -> ethnicityService.createEthnicity(ethnicityDTO));
     }
+
+
     @Test
     public void testUpdateEthnicityWithExistingEthnicityId() {
         Long ethnicityId = 123L;
@@ -162,5 +171,24 @@ public class EthnicityServiceTest {
         Assertions.assertThrows(ApiRequestException.class, () -> ethnicityService.updateEthnicity(ethnicityId, updatedEthnicity));
         verify(ethnicityRepository, times(1)).findById(ethnicityId);
         verify(ethnicityRepository, never()).save(any(Ethnicity.class));
+    }
+
+    @Test
+    public void testDeleteEthnicityByIdWithExistingEthnicityId() {
+        Long ethnicityId = 123L;
+        when(ethnicityRepository.existsById(ethnicityId)).thenReturn(true);
+        ethnicityService.deleteEthnicityById(ethnicityId);
+        verify(ethnicityRepository, times(1)).existsById(ethnicityId);
+        verify(ethnicityRepository, times(1)).deleteById(ethnicityId);
+    }
+
+
+    @Test
+    public void testDeleteEthnicityByIdWithNonExistingEthnicityIdThenThrowsApiRequestException() {
+        Long ethnicityId = 123L;
+        when(ethnicityRepository.existsById(ethnicityId)).thenReturn(false);
+        Assertions.assertThrows(ApiRequestException.class, () -> ethnicityService.deleteEthnicityById(ethnicityId));
+        verify(ethnicityRepository, times(1)).existsById(ethnicityId);
+        verify(ethnicityRepository, never()).deleteById(ethnicityId);
     }
 }

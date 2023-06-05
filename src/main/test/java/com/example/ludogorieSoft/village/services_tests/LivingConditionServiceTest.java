@@ -12,13 +12,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class LivingConditionServiceTest {
@@ -31,8 +31,10 @@ class LivingConditionServiceTest {
     private ModelMapper modelMapper;
 
     @BeforeEach
-    public void setUp(){
-        MockitoAnnotations.openMocks(this);
+    public void setup() {
+        livingConditionRepository = mock(LivingConditionRepository.class);
+        modelMapper = mock(ModelMapper.class);
+        livingConditionService = new LivingConditionService(livingConditionRepository, modelMapper);
     }
 
     @Test
@@ -62,6 +64,7 @@ class LivingConditionServiceTest {
         verify(modelMapper, times(1)).map(livingCondition2, LivingConditionDTO.class);
         Assertions.assertEquals(expectedDTOs, result);
     }
+
     @Test
     void testGetAllLivingConditionsWhenNoLivingConditionsExist() {
         List<LivingCondition> livingConditions = new ArrayList<>();
@@ -74,6 +77,7 @@ class LivingConditionServiceTest {
         verify(livingConditionRepository, times(1)).findAll();
         Assertions.assertEquals(expectedDTOs, result);
     }
+
     @Test
     void testGetLivingConditionByIdWithExistingId() {
         Long livingConditionId = 1L;
@@ -99,72 +103,104 @@ class LivingConditionServiceTest {
         verify(modelMapper, never()).map(any(Landscape.class), eq(LandscapeDTO.class));
     }
 
-    //@Test
-    //public void testCreateLivingConditionWithUniqueCondition() {
-    //    LivingConditionDTO livingConditionDTO = new LivingConditionDTO(1L, "Condition");
-    //    when(livingConditionRepository.existsByLivingConditionName(livingConditionDTO.getLivingCondition())).thenReturn(false);
-    //    LivingConditionDTO result = livingConditionService.createLivingCondition(livingConditionDTO);
-    //    verify(livingConditionRepository, times(1)).existsByLivingConditionName(livingConditionDTO.getLivingCondition());
-    //    verify(livingConditionRepository, times(1)).save(any(LivingCondition.class));
-    //    Assertions.assertEquals(livingConditionDTO, result);
-    //}
-//
-    //@Test
-    //public void testCreateLivingConditionWithDuplicateCondition() {
-    //    LivingConditionDTO livingConditionDTO = new LivingConditionDTO(1L, "Condition");
-    //    when(livingConditionRepository.existsByLivingConditionName(livingConditionDTO.getLivingCondition())).thenReturn(true);
-    //    Assertions.assertThrows(ApiRequestException.class, () -> livingConditionService.createLivingCondition(livingConditionDTO));
-    //    verify(livingConditionRepository, times(1)).existsByLivingConditionName(livingConditionDTO.getLivingCondition());
-    //    verify(livingConditionRepository, never()).save(any(LivingCondition.class));
-    //}
-    //@Test
-    //public void testUpdateLivingConditionWithExistingIdAndNonExistingConditionName() {
-    //    Long livingConditionId = 123L;
-    //    LivingCondition livingCondition = new LivingCondition();
-    //    livingCondition.setLivingConditionName("Updated Condition");
-    //    LivingCondition existingLivingCondition = new LivingCondition();
-    //    existingLivingCondition.setLivingConditionName("Old Condition");
-    //    LivingConditionDTO expectedDTO = livingConditionService.livingConditionToLivingConditionDTO(livingCondition);
-//
-    //    when(livingConditionRepository.findById(livingConditionId)).thenReturn(Optional.of(existingLivingCondition));
-    //    when(livingConditionRepository.existsByLivingConditionName(livingCondition.getLivingConditionName())).thenReturn(false);
-    //    when(livingConditionRepository.save(any(LivingCondition.class))).thenReturn(livingCondition);
-//
-    //    LivingConditionDTO result = livingConditionService.updateLivingCondition(livingConditionId, livingCondition);
-//
-    //    verify(livingConditionRepository, times(1)).findById(livingConditionId);
-    //    verify(livingConditionRepository, times(1)).existsByLivingConditionName(livingCondition.getLivingConditionName());
-    //    verify(livingConditionRepository, times(1)).save(any(LivingCondition.class));
-    //    Assertions.assertEquals(expectedDTO, result);
-    //}
-//
-    //@Test
-    //public void testUpdateLivingConditionWithNonExistingId() {
-    //    Long livingConditionId = 1L;
-    //    LivingCondition livingCondition = new LivingCondition(livingConditionId, "Condition");
-//
-    //    when(livingConditionRepository.findById(livingConditionId)).thenReturn(Optional.empty());
-//
-    //    Assertions.assertThrows(ApiRequestException.class, () -> livingConditionService.updateLivingCondition(livingConditionId, livingCondition));
-    //    verify(livingConditionRepository, times(1)).findById(livingConditionId);
-    //    verify(livingConditionRepository, never()).existsByLivingConditionName(anyString());
-    //    verify(livingConditionRepository, never()).save(any(LivingCondition.class));
-    //}
-//
-    //@Test
-    //public void testUpdateLivingConditionWithExistingIdAndDuplicateCondition() {
-    //    Long livingConditionId = 1L;
-    //    LivingCondition livingCondition = new LivingCondition(livingConditionId, "Condition");
-    //    LivingCondition existingLivingCondition = new LivingCondition(livingConditionId, "Existing Condition");
-//
-    //    when(livingConditionRepository.findById(livingConditionId)).thenReturn(Optional.of(existingLivingCondition));
-    //    when(livingConditionRepository.existsByLivingConditionName(livingCondition.getLivingConditionName())).thenReturn(true);
-//
-    //    Assertions.assertThrows(ApiRequestException.class, () -> livingConditionService.updateLivingCondition(livingConditionId, livingCondition));
-    //    verify(livingConditionRepository, times(1)).findById(livingConditionId);
-    //    verify(livingConditionRepository, times(1)).existsByLivingConditionName(livingCondition.getLivingConditionName());
-    //    verify(livingConditionRepository, never()).save(any(LivingCondition.class));
-    //}
+    @Test
+    void testCreateLivingCondition() {
+        LivingConditionDTO livingConditionDTO = new LivingConditionDTO();
+        livingConditionDTO.setLivingConditionName("Test Condition");
+        LivingCondition livingCondition = new LivingCondition();
+        livingCondition.setLivingConditionName("Test Condition");
+
+        when(livingConditionRepository.existsByLivingConditionName("Test Condition")).thenReturn(false);
+        when(modelMapper.map(livingCondition, LivingConditionDTO.class)).thenReturn(livingConditionDTO);
+        when(livingConditionRepository.save(any(LivingCondition.class))).thenReturn(livingCondition);
+
+        LivingConditionDTO result = livingConditionService.createLivingCondition(livingConditionDTO);
+
+        assertNotNull(result);
+        assertEquals("Test Condition", result.getLivingConditionName());
+        verify(livingConditionRepository, times(1)).existsByLivingConditionName("Test Condition");
+        verify(livingConditionRepository, times(1)).save(any(LivingCondition.class));
+    }
+
+    @Test
+    void testCreateLivingConditionExistingCondition() {
+        LivingConditionDTO livingConditionDTO = new LivingConditionDTO();
+        livingConditionDTO.setLivingConditionName("Test Condition");
+
+        when(livingConditionRepository.existsByLivingConditionName("Test Condition")).thenReturn(true);
+
+        assertThrows(ApiRequestException.class, () -> {
+            livingConditionService.createLivingCondition(livingConditionDTO);
+        });
+
+        verify(livingConditionRepository, times(1)).existsByLivingConditionName("Test Condition");
+        verify(livingConditionRepository, never()).save(any(LivingCondition.class));
+    }
+
+    @Test
+    void testUpdateLivingCondition() {
+        Long id = 1L;
+        LivingConditionDTO livingConditionDTO = new LivingConditionDTO();
+        livingConditionDTO.setLivingConditionName("Updated Condition");
+        LivingCondition existingLivingCondition = new LivingCondition();
+        existingLivingCondition.setId(id);
+        existingLivingCondition.setLivingConditionName("Old Condition");
+
+        Optional<LivingCondition> optionalLivingCondition = Optional.of(existingLivingCondition);
+
+        when(livingConditionRepository.findById(id)).thenReturn(optionalLivingCondition);
+        when(livingConditionRepository.existsByLivingConditionName("Updated Condition")).thenReturn(false);
+        when(livingConditionRepository.save(any(LivingCondition.class))).thenReturn(existingLivingCondition);
+        when(modelMapper.map(existingLivingCondition, LivingConditionDTO.class)).thenReturn(livingConditionDTO);
+
+        LivingConditionDTO result = livingConditionService.updateLivingCondition(id, livingConditionDTO);
+
+        assertNotNull(result);
+        assertEquals("Updated Condition", result.getLivingConditionName());
+        verify(livingConditionRepository, times(1)).findById(id);
+        verify(livingConditionRepository, times(1)).existsByLivingConditionName("Updated Condition");
+        verify(livingConditionRepository, times(1)).save(any(LivingCondition.class));
+    }
+
+    @Test
+    void testUpdateLivingConditionInvalidId() {
+        Long id = 1L;
+        LivingConditionDTO livingConditionDTO = new LivingConditionDTO();
+        livingConditionDTO.setLivingConditionName("Updated Condition");
+
+        when(livingConditionRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(ApiRequestException.class, () -> {
+            livingConditionService.updateLivingCondition(id, livingConditionDTO);
+        });
+
+        verify(livingConditionRepository, times(1)).findById(id);
+        verify(livingConditionRepository, never()).existsByLivingConditionName(anyString());
+        verify(livingConditionRepository, never()).save(any(LivingCondition.class));
+    }
+
+    @Test
+    void testUpdateLivingConditionExistingCondition() {
+        Long id = 1L;
+        LivingConditionDTO livingConditionDTO = new LivingConditionDTO();
+        livingConditionDTO.setLivingConditionName("Updated Condition");
+        LivingCondition existingLivingCondition = new LivingCondition();
+        existingLivingCondition.setId(id);
+        existingLivingCondition.setLivingConditionName("Old Condition");
+
+        Optional<LivingCondition> optionalLivingCondition = Optional.of(existingLivingCondition);
+
+        when(livingConditionRepository.findById(id)).thenReturn(optionalLivingCondition);
+        when(livingConditionRepository.existsByLivingConditionName("Updated Condition")).thenReturn(true);
+
+        assertThrows(ApiRequestException.class, () -> {
+            livingConditionService.updateLivingCondition(id, livingConditionDTO);
+        });
+
+        verify(livingConditionRepository, times(1)).findById(id);
+        verify(livingConditionRepository, times(1)).existsByLivingConditionName("Updated Condition");
+        verify(livingConditionRepository, never()).save(any(LivingCondition.class));
+    }
 
     @Test
     void testDeleteLivingConditionWithExistingId() {

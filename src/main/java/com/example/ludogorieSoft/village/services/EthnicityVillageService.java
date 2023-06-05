@@ -10,7 +10,6 @@ import com.example.ludogorieSoft.village.repositories.VillageRepository;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -75,12 +74,15 @@ public class EthnicityVillageService {
         return ethnicityVillageDTO;
     }
 
-    public int deleteEthnicityVillageById(Long id) {
-        try {
+
+    public void deleteEthnicityVillageById(Long id) {
+        if (ethnicityVillageRepository.existsById(id)) {
             ethnicityVillageRepository.deleteById(id);
-            return 1;
-        } catch (EmptyResultDataAccessException e) {
-            return 0;
+        } else {
+            throw new ApiRequestException("Ethnicity in Village with id " + id + " not found");
         }
     }
+
+
+
 }

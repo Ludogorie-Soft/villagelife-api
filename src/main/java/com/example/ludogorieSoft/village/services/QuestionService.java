@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+
 @Service
 @AllArgsConstructor
 public class QuestionService {
@@ -20,7 +21,6 @@ public class QuestionService {
     public QuestionDTO questionToQuestionDTO(Question question) {
         return modelMapper.map(question, QuestionDTO.class);
     }
-    public Question questionDTOtoQuestion(QuestionDTO questionDTO){return modelMapper.map(questionDTO,Question.class);}
 
     public List<QuestionDTO> getAllQuestions() {
         List<Question> questions = questionRepository.findAll();
@@ -33,7 +33,8 @@ public class QuestionService {
         if (questionRepository.existsByQuestionName(questionDTO.getQuestion())) {
             throw new ApiRequestException("Question: " + questionDTO.getQuestion() + " already exists");
         }
-        Question question=questionDTOtoQuestion(questionDTO);
+        Question question = new Question();
+        question.setQuestionName(questionDTO.getQuestion());
         questionRepository.save(question);
         return questionToQuestionDTO(question);
     }
@@ -54,24 +55,45 @@ public class QuestionService {
         questionRepository.delete(question.get());
     }
 
+//    public QuestionDTO updateQuestion(Long id, QuestionDTO questionDTO) {
+//        Optional<Question> findQuestion = questionRepository.findById(id);
+//        if (findQuestion.isEmpty()) {
+//            throw new ApiRequestException("Question not found");
+//        }
+//        if (questionRepository.existsByQuestionName(questionDTO.getQuestion())) {
+//            throw new ApiRequestException("Question: " + questionDTO.getQuestion() + " already exists");
+//        }
+//        findQuestion.get().setQuestionName(questionDTO.getQuestion());
+//        questionRepository.save(findQuestion.get());
+//        return questionToQuestionDTO(findQuestion.get());
+//    }
+
     public QuestionDTO updateQuestion(Long id, QuestionDTO questionDTO) {
         Optional<Question> findQuestion = questionRepository.findById(id);
-        if (findQuestion.isEmpty()) {
-            throw new ApiRequestException("Question not found");
+        Question question = findQuestion.orElseThrow(() -> new ApiRequestException("Question not found"));
+
+        if (questionDTO == null || questionDTO.getQuestion() == null || questionDTO.getQuestion().isEmpty()) {
+            throw new ApiRequestException("Invalid question data");
         }
-        if (questionRepository.existsByQuestionName(questionDTO.getQuestion())) {
-            throw new ApiRequestException("Question: " + questionDTO.getQuestion() + " already exists");
+
+        String newQuestionName = questionDTO.getQuestion();
+        if (!newQuestionName.equals(question.getQuestionName())) {
+            if (questionRepository.existsByQuestionName(newQuestionName)) {
+                throw new ApiRequestException("Question: " + newQuestionName + " already exists");
+            }
+            question.setQuestionName(newQuestionName);
+            questionRepository.save(question);
         }
-        findQuestion.get().setQuestionName(questionDTO.getQuestion());
-        questionRepository.save(findQuestion.get());
-        return questionToQuestionDTO(findQuestion.get());
+
+        return questionToQuestionDTO(question);
     }
+
 
     public Question checkQuestion(Long id) {
         Optional<Question> question = questionRepository.findById(id);
-        if (question.isPresent()){
+        if (question.isPresent()) {
             return question.get();
-        }else {
+        } else {
             throw new ApiRequestException("Question not found");
         }
     }

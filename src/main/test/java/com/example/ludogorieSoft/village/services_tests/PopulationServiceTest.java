@@ -22,6 +22,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import static org.mockito.Mockito.*;
 
 class PopulationServiceTest {
@@ -34,9 +36,10 @@ class PopulationServiceTest {
     private ModelMapper modelMapper;
 
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
         MockitoAnnotations.openMocks(this);
     }
+
     @Test
     void testGetAllPopulationWithPopulations() {
         List<Population> populationList = Arrays.asList(
@@ -63,19 +66,7 @@ class PopulationServiceTest {
         verify(populationRepository, times(1)).findAll();
         Assertions.assertEquals(0, result.size());
     }
-//    @Test
-//    void testCreatePopulation() {
-//        Population population = new Population();
-//        PopulationDTO populationDTO = new PopulationDTO();
-//
-//        when(populationRepository.save(population)).thenReturn(population);
-//        when(modelMapper.map(population, PopulationDTO.class)).thenReturn(populationDTO);
-//
-//        PopulationDTO result = populationService.createPopulation(population);
-//
-//        verify(populationRepository, times(1)).save(population);
-//        Assertions.assertEquals(populationService.populationToPopulationDTO(population), result);
-//    }
+
     @Test
     void testGetPopulationById() {
         Long populationId = 123L;
@@ -92,6 +83,7 @@ class PopulationServiceTest {
         Assertions.assertEquals(populationService.populationToPopulationDTO(population), result);
     }
 
+
     @Test
     void testGetPopulationByIdWithNonExistingId() {
         Long populationId = 123L;
@@ -105,45 +97,92 @@ class PopulationServiceTest {
         verify(populationRepository, times(1)).findById(populationId);
     }
 
+
 //    @Test
-//    void testUpdatePopulationWithExistingId() {
-//        Long populationId = 123L;
-//        Population population = new Population(populationId, NumberOfPopulation.UP_TO_10_PEOPLE, Residents.FROM_2_TO_5_PERCENT, Children.BELOW_10_YEARS, Foreigners.YES);
+//    void testCreatePopulation() {
+//        PopulationDTO populationDTO = new PopulationDTO();
+//        populationDTO.setNumberOfPopulation(NumberOfPopulation.UP_TO_10_PEOPLE);
+//        populationDTO.setResidents(Residents.UP_TO_2_PERCENT);
+//        populationDTO.setChildren(Children.BELOW_10_YEARS);
+//        populationDTO.setForeigners(Foreigners.YES);
 //
-//        Population existingPopulation = new Population(populationId, NumberOfPopulation.FROM_11_TO_50_PEOPLE, Residents.FROM_21_TO_30_PERCENT, Children.BELOW_10_YEARS, Foreigners.NO);
-//        PopulationDTO existingPopulationDTO = new PopulationDTO(populationId, NumberOfPopulation.FROM_11_TO_50_PEOPLE, Residents.FROM_21_TO_30_PERCENT, Children.BELOW_10_YEARS, Foreigners.NO);
+//        Population population = new Population();
+//        population.setNumberOfPopulation(populationDTO.getNumberOfPopulation());
+//        population.setResidents(populationDTO.getResidents());
+//        population.setChildren(populationDTO.getChildren());
+//        population.setForeigners(populationDTO.getForeigners());
 //
-//
-//        Optional<Population> optionalPopulation = Optional.of(existingPopulation);
-//        when(populationRepository.findById(populationId)).thenReturn(optionalPopulation);
 //        when(populationRepository.save(any(Population.class))).thenReturn(population);
-//        when(modelMapper.map(population, PopulationDTO.class)).thenReturn(existingPopulationDTO);
 //
-//        PopulationDTO result = populationService.updatePopulation(populationId, population);
+//        PopulationDTO result = populationService.createPopulation(populationDTO);
 //
-//        verify(populationRepository, times(1)).findById(populationId);
+//        assertNotNull(result);
+//        assertEquals(populationDTO.getNumberOfPopulation(), result.getNumberOfPopulation());
+//        assertEquals(populationDTO.getResidents(), result.getResidents());
+//        assertEquals(populationDTO.getChildren(), result.getChildren());
+//        assertEquals(populationDTO.getForeigners(), result.getForeigners());
+//
 //        verify(populationRepository, times(1)).save(any(Population.class));
-//        Assertions.assertEquals(populationService.populationToPopulationDTO(population), result);
-//        Assertions.assertEquals(population.getNumberOfPopulation(), existingPopulation.getNumberOfPopulation());
-//        Assertions.assertEquals(population.getForeigners(), existingPopulation.getForeigners());
-//        Assertions.assertEquals(population.getChildren(), existingPopulation.getChildren());
-//        Assertions.assertEquals(population.getResidents(), existingPopulation.getResidents());
 //    }
-//    @Test
-//    void testUpdatePopulationWithNonExistingId() {
-//        Long populationId = 123L;
-//        Population population = new Population(populationId, NumberOfPopulation.FROM_11_TO_50_PEOPLE, Residents.FROM_21_TO_30_PERCENT, Children.BELOW_10_YEARS, Foreigners.NO);
-//
-//        Optional<Population> optionalPopulation = Optional.empty();
-//        when(populationRepository.findById(populationId)).thenReturn(optionalPopulation);
-//
-//        Assertions.assertThrows(ApiRequestException.class, () -> {
-//            populationService.updatePopulation(populationId, population);
-//        });
-//
-//        verify(populationRepository, times(1)).findById(populationId);
-//        verify(populationRepository, times(0)).save(any(Population.class));
-//    }
+
+    @Test
+    public void testGetPopulationByIdNotFound() {
+        Long populationId = 1L;
+        when(populationRepository.findById(populationId)).thenReturn(Optional.empty());
+
+        assertThrows(ApiRequestException.class, () -> {
+            populationService.getPopulationById(populationId);
+        });
+        verify(populationRepository, times(1)).findById(populationId);
+    }
+
+
+    @Test
+    void testDeletePopulationByIdNotFound() {
+        Long populationId = 1L;
+        when(populationRepository.findById(populationId)).thenReturn(Optional.empty());
+
+        assertThrows(ApiRequestException.class, () -> {
+            populationService.deletePopulationById(populationId);
+        });
+        verify(populationRepository, times(1)).findById(populationId);
+        verify(populationRepository, never()).delete(any(Population.class));
+    }
+
+    @Test
+    void testUpdatePopulation() {
+        Long populationId = 1L;
+        PopulationDTO populationDTO = new PopulationDTO();
+        populationDTO.setNumberOfPopulation(NumberOfPopulation.FROM_51_TO_200_PEOPLE);
+        Population population = new Population();
+        population.setId(populationId);
+        when(populationRepository.findById(populationId)).thenReturn(Optional.of(population));
+        when(populationRepository.save(any(Population.class))).thenReturn(population);
+        when(modelMapper.map(population, PopulationDTO.class)).thenReturn(populationDTO);
+
+        PopulationDTO result = populationService.updatePopulation(populationId, populationDTO);
+
+        assertNotNull(result);
+        assertEquals(populationDTO, result);
+        verify(populationRepository, times(1)).findById(populationId);
+        verify(populationRepository, times(1)).save(any(Population.class));
+    }
+
+    @Test
+    void testUpdatePopulationNotFound() {
+        Long populationId = 1L;
+        PopulationDTO populationDTO = new PopulationDTO();
+        populationDTO.setNumberOfPopulation(NumberOfPopulation.FROM_2000_PEOPLE);
+        when(populationRepository.findById(populationId)).thenReturn(Optional.empty());
+
+        assertThrows(ApiRequestException.class, () -> {
+            populationService.updatePopulation(populationId, populationDTO);
+        });
+        verify(populationRepository, times(1)).findById(populationId);
+        verify(populationRepository, never()).save(any(Population.class));
+    }
+
+
     @Test
     void testDeletePopulationById() {
         Long populationId = 123L;
@@ -157,6 +196,8 @@ class PopulationServiceTest {
         verify(populationRepository, times(1)).findById(populationId);
         verify(populationRepository, times(1)).delete(population);
     }
+
+
     @Test
     void testDeletePopulationByIdWithNonExistingId() {
         Long populationId = 123L;
