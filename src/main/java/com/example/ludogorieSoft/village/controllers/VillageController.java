@@ -6,9 +6,11 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/villages")
@@ -46,5 +48,11 @@ public class VillageController {
     public ResponseEntity<Void> deleteVillage(@PathVariable("id") Long id) {
         villageService.deleteVillage(id);
         return ResponseEntity.noContent().build();
+    }
+    @PostMapping("/upload-villages-data")
+    public ResponseEntity<?> uploadVillagessData(@RequestParam("file") MultipartFile file){
+        this.villageService.saveVillagesToDatabase(file);
+        return ResponseEntity
+                .ok(Map.of("Message", " Customers data uploaded and saved to database successfully"));
     }
 }
