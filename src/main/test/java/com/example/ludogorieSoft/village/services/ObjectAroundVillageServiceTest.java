@@ -1,10 +1,9 @@
-package com.example.ludogorieSoft.village.services_tests;
+package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.ObjectAroundVillageDTO;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.ObjectAroundVillage;
 import com.example.ludogorieSoft.village.repositories.ObjectAroundVillageRepository;
-import com.example.ludogorieSoft.village.services.ObjectAroundVillageService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

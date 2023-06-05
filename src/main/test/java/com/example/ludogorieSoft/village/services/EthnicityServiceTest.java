@@ -1,10 +1,9 @@
-package com.example.ludogorieSoft.village.services_tests;
+package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.EthnicityDTO;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.Ethnicity;
 import com.example.ludogorieSoft.village.repositories.EthnicityRepository;
-import com.example.ludogorieSoft.village.services.EthnicityService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
