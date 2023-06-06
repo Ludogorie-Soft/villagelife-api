@@ -222,4 +222,30 @@ class LivingConditionServiceTest {
         verify(livingConditionRepository, times(1)).findById(livingConditionId);
         verify(livingConditionRepository, never()).delete(any(LivingCondition.class));
     }
+    @Test
+    void checkLivingConditionShouldReturnExistingLivingCondition() {
+        Long livingConditionId = 1L;
+        LivingCondition existingLivingCondition = new LivingCondition();
+        existingLivingCondition.setId(livingConditionId);
+        Optional<LivingCondition> optionalLivingCondition = Optional.of(existingLivingCondition);
+
+        when(livingConditionRepository.findById(livingConditionId)).thenReturn(optionalLivingCondition);
+
+        LivingCondition result = livingConditionService.checkLivingCondition(livingConditionId);
+
+        verify(livingConditionRepository, times(1)).findById(livingConditionId);
+        assertEquals(existingLivingCondition, result);
+    }
+
+    @Test
+    void checkLivingConditionShouldThrowExceptionWhenLivingConditionNotFound() {
+        Long livingConditionId = 1L;
+        Optional<LivingCondition> optionalLivingCondition = Optional.empty();
+
+        when(livingConditionRepository.findById(livingConditionId)).thenReturn(optionalLivingCondition);
+
+        Assertions.assertThrows(ApiRequestException.class, () -> livingConditionService.checkLivingCondition(livingConditionId));
+
+        verify(livingConditionRepository, times(1)).findById(livingConditionId);
+    }
 }
