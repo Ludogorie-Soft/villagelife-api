@@ -169,7 +169,11 @@ class VillageAnswerQuestionServiceTest {
         Long id = 1L;
         VillageAnswerQuestion villageAnswerQuestion = new VillageAnswerQuestion();
         villageAnswerQuestion.setId(id);
+        VillageAnswerQuestionDTO villageAnswerQuestionDTO = new VillageAnswerQuestionDTO();
+        villageAnswerQuestionDTO.setId(id);
+
         when(villageAnswerQuestionRepository.findById(id)).thenReturn(Optional.of(villageAnswerQuestion));
+        when(villageAnswerQuestionService.toDTO(villageAnswerQuestion)).thenReturn(villageAnswerQuestionDTO);
 
         VillageAnswerQuestionDTO result = villageAnswerQuestionService.getVillageAnswerQuestionById(id);
 
