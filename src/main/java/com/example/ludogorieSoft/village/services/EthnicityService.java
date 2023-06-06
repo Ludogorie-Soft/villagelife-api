@@ -16,6 +16,7 @@ import java.util.Optional;
 public class EthnicityService {
     private final EthnicityRepository ethnicityRepository;
     private final ModelMapper modelMapper;
+    private  final  String errorMessage="Ethnicity not found";
 
     public EthnicityDTO ethnicityToEthnicityDTO(Ethnicity ethnicity){
         return modelMapper.map(ethnicity, EthnicityDTO.class);
@@ -25,7 +26,7 @@ public class EthnicityService {
         if (ethnicity.isPresent()){
             return ethnicity.get();
         }else {
-            throw new ApiRequestException("Ethnicity not found");
+            throw new ApiRequestException(errorMessage);
         }
     }
     public List<EthnicityDTO> getAllEthnicities() {
@@ -40,7 +41,7 @@ public class EthnicityService {
     public EthnicityDTO getEthnicityById(Long id) {
         Optional<Ethnicity> ethnicity = ethnicityRepository.findById(id);
         if (ethnicity.isEmpty()) {
-            throw new ApiRequestException("Ethnicity not found");
+            throw new ApiRequestException(errorMessage);
         }
         return ethnicityToEthnicityDTO(ethnicity.get());
     }
@@ -61,7 +62,7 @@ public class EthnicityService {
     public EthnicityDTO updateEthnicity(Long id, EthnicityDTO ethnicityDTO) {
         Optional<Ethnicity> foundEthnicity = ethnicityRepository.findById(id);
         if (foundEthnicity.isEmpty()) {
-            throw new ApiRequestException("Ethnicity not found");
+            throw new ApiRequestException(errorMessage);
         }
         foundEthnicity.get().setEthnicityName(ethnicityDTO.getEthnicityName());
 
