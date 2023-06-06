@@ -3,7 +3,6 @@ package com.example.ludogorieSoft.village.controllers;
 
 
 import com.example.ludogorieSoft.village.dtos.PopulatedAssertionDTO;
-import com.example.ludogorieSoft.village.model.PopulatedAssertion;
 import com.example.ludogorieSoft.village.services.PopulatedAssertionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
