@@ -126,7 +126,7 @@ class PopulationServiceTest {
     }
 
     @Test
-    public void testGetPopulationByIdNotFound() {
+    void testGetPopulationByIdNotFound() {
         Long populationId = 1L;
         when(populationRepository.findById(populationId)).thenReturn(Optional.empty());
 

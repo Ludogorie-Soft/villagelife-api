@@ -49,7 +49,7 @@ class VillageAnswerQuestionServiceTest {
     }
 
     @Test
-    public void testCreateVillageAnswerQuestionWithValidInputThenReturnsDTO() {
+    void testCreateVillageAnswerQuestionWithValidInputThenReturnsDTO() {
         VillageAnswerQuestionDTO inputDTO = new VillageAnswerQuestionDTO();
         inputDTO.setVillageId(1L);
         inputDTO.setQuestionId(1L);
