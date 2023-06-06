@@ -2,9 +2,7 @@ package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.VillageGroundCategoryDTO;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
-import com.example.ludogorieSoft.village.model.GroundCategory;
-import com.example.ludogorieSoft.village.model.Village;
-import com.example.ludogorieSoft.village.model.VillageGroundCategory;
+import com.example.ludogorieSoft.village.model.*;
 import com.example.ludogorieSoft.village.repositories.GroundCategoryRepository;
 import com.example.ludogorieSoft.village.repositories.VillageGroundCategoryRepository;
 import com.example.ludogorieSoft.village.repositories.VillageRepository;
@@ -112,6 +110,45 @@ class VillageGroundCategoryServiceTest {
 
 
     @Test
+    void testCreateVillageGroundCategoryDTOValidInputReturnsExpectedDTO() {
+        VillageGroundCategoryDTO inputDTO = new VillageGroundCategoryDTO();
+        inputDTO.setVillageId(1L);
+        inputDTO.setGroundCategoryId(1L);
+        VillageGroundCategory savedVillageGroundCategory = new VillageGroundCategory();
+
+        Village village = new Village();
+        village.setId(1L);
+        when(villageService.checkVillage(1L)).thenReturn(village);
+        savedVillageGroundCategory.setVillage(villageService.checkVillage(1L));
+
+        GroundCategory groundCategory = new GroundCategory();
+        groundCategory.setId(1L);
+        when(groundCategoryService.checkGroundCategory(1L)).thenReturn(groundCategory);
+        savedVillageGroundCategory.setGroundCategory(groundCategoryService.checkGroundCategory(1L));
+        savedVillageGroundCategory.setVillage(villageService.checkVillage(1L));
+
+        when(villageGroundCategoryRepository.save(any(VillageGroundCategory.class))).thenReturn(savedVillageGroundCategory);
+        when(villageGroundCategoryService.toDTO(savedVillageGroundCategory)).thenReturn(inputDTO);
+
+        VillageGroundCategoryDTO expectedDTO = new VillageGroundCategoryDTO();
+        expectedDTO.setId(savedVillageGroundCategory.getId());
+        expectedDTO.setVillageId(savedVillageGroundCategory.getVillage().getId());
+        expectedDTO.setGroundCategoryId(savedVillageGroundCategory.getGroundCategory().getId());
+
+        VillageGroundCategoryDTO resultDTO = villageGroundCategoryService.createVillageGroundCategoryDTO(inputDTO);
+
+        assertNotNull(resultDTO);
+        assertEquals(expectedDTO.getId(), resultDTO.getId());
+        assertEquals(expectedDTO.getVillageId(), resultDTO.getVillageId());
+        assertEquals(expectedDTO.getGroundCategoryId(), resultDTO.getGroundCategoryId());
+
+        verify(villageService, times(3)).checkVillage(1L);
+        verify(groundCategoryService, times(2)).checkGroundCategory(1L);
+        verify(villageGroundCategoryRepository, times(1)).save(any(VillageGroundCategory.class));
+    }
+
+
+    @Test
     void testUpdateVillageGroundCategory() {
         Long id = 1L;
         Village village = new Village();
@@ -170,5 +207,68 @@ class VillageGroundCategoryServiceTest {
         assertEquals(0, result);
         verify(villageGroundCategoryRepository, times(1)).deleteById(id);
     }
+
+
+    @Test
+    void testGetAllVillageGroundCategoriesWhenNoneExist() {
+        when(villageGroundCategoryRepository.findAll()).thenReturn(new ArrayList<>());
+
+        List<VillageGroundCategoryDTO> resultDTOs = villageGroundCategoryService.getAllVillageGroundCategories();
+
+        assertTrue(resultDTOs.isEmpty());
+    }
+
+
+    @Test
+    void testCreateVillageGroundCategoryDTOInvalidVillage() {
+        VillageGroundCategoryDTO inputDTO = new VillageGroundCategoryDTO();
+        inputDTO.setVillageId(1L);
+        inputDTO.setGroundCategoryId(1L);
+
+        when(villageService.checkVillage(1L)).thenThrow(ApiRequestException.class);
+
+        assertThrows(ApiRequestException.class, () -> villageGroundCategoryService.createVillageGroundCategoryDTO(inputDTO));
+
+        verify(villageService, times(1)).checkVillage(1L);
+        verify(groundCategoryService, never()).checkGroundCategory(anyLong());
+        verify(villageGroundCategoryRepository, never()).save(any(VillageGroundCategory.class));
+    }
+
+    @Test
+    void testCreateVillageGroundCategoryDTOInvalidGroundCategory() {
+        VillageGroundCategoryDTO inputDTO = new VillageGroundCategoryDTO();
+        inputDTO.setVillageId(1L);
+        inputDTO.setGroundCategoryId(1L);
+
+        Village village = new Village();
+        village.setId(1L);
+        when(villageService.checkVillage(1L)).thenReturn(village);
+
+        when(groundCategoryService.checkGroundCategory(1L)).thenThrow(ApiRequestException.class);
+
+        assertThrows(ApiRequestException.class, () -> villageGroundCategoryService.createVillageGroundCategoryDTO(inputDTO));
+
+        verify(villageService, times(1)).checkVillage(1L);
+        verify(groundCategoryService, times(1)).checkGroundCategory(1L);
+        verify(villageGroundCategoryRepository, never()).save(any(VillageGroundCategory.class));
+    }
+
+    @Test
+    void testUpdateVillageGroundCategoryWhenIdDoesNotExist() {
+        Long id = 1L;
+        VillageGroundCategoryDTO inputDTO = new VillageGroundCategoryDTO();
+        inputDTO.setVillageId(1L);
+        inputDTO.setGroundCategoryId(1L);
+
+        when(villageGroundCategoryRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(ApiRequestException.class, () -> villageGroundCategoryService.updateVillageGroundCategory(id, inputDTO));
+
+        verify(villageGroundCategoryRepository, times(1)).findById(id);
+        verify(villageService, never()).checkVillage(anyLong());
+        verify(groundCategoryService, never()).checkGroundCategory(anyLong());
+        verify(villageGroundCategoryRepository, never()).save(any(VillageGroundCategory.class));
+    }
+
 
 }
