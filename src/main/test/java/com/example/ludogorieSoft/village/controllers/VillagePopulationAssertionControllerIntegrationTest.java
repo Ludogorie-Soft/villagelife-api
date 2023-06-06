@@ -1,0 +1,140 @@
+package com.example.ludogorieSoft.village.controllers;
+
+import com.example.ludogorieSoft.village.dtos.VillagePopulationAssertionDTO;
+import com.example.ludogorieSoft.village.services.VillagePopulationAssertionService;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.Arrays;
+import java.util.List;
+
+import static com.example.ludogorieSoft.village.enums.Consents.*;
+import static org.hamcrest.Matchers.*;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+@WebMvcTest(VillagePopulationAssertionController.class)
+public class VillagePopulationAssertionControllerIntegrationTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean
+    private VillagePopulationAssertionService villagePopulationAssertionService;
+
+    @Test
+    public void getAllVillagePopulationAssertions_ShouldReturnListOfAssertions() throws Exception {
+        VillagePopulationAssertionDTO assertion1 = new VillagePopulationAssertionDTO();
+        assertion1.setId(1L);
+        assertion1.setVillageId(1L);
+        assertion1.setPopulatedAssertionId(1L);
+        assertion1.setAnswer(COMPLETELY_AGREED);
+
+        VillagePopulationAssertionDTO assertion2 = new VillagePopulationAssertionDTO();
+        assertion2.setId(2L);
+        assertion2.setVillageId(2L);
+        assertion2.setPopulatedAssertionId(2L);
+        assertion2.setAnswer(COMPLETELY_AGREED);
+
+        List<VillagePopulationAssertionDTO> assertions = Arrays.asList(assertion1, assertion2);
+
+        when(villagePopulationAssertionService.getAllVillagePopulationAssertion())
+                .thenReturn(assertions);
+
+        mockMvc.perform(get("/api/v1/villagePopulationAssertions"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].id", is(1)))
+                .andExpect(jsonPath("$[0].villageId", is(1)))
+                .andExpect(jsonPath("$[0].populatedAssertionId", is(1)))
+                .andExpect(jsonPath("$[0].answer", is(COMPLETELY_AGREED.toString())))
+                .andExpect(jsonPath("$[1].id", is(2)))
+                .andExpect(jsonPath("$[1].villageId", is(2)))
+                .andExpect(jsonPath("$[1].populatedAssertionId", is(2)))
+                .andExpect(jsonPath("$[1].answer", is(COMPLETELY_AGREED.toString())));
+    }
+
+    @Test
+    public void getVillagePopulationAssertionById_ShouldReturnAssertion() throws Exception {
+        VillagePopulationAssertionDTO assertion = new VillagePopulationAssertionDTO();
+        assertion.setId(1L);
+        assertion.setVillageId(1L);
+        assertion.setPopulatedAssertionId(1L);
+        assertion.setAnswer(DISAGREE);
+
+        when(villagePopulationAssertionService.getByID(1L))
+                .thenReturn(assertion);
+
+        mockMvc.perform(get("/api/v1/villagePopulationAssertions/1"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.villageId", is(1)))
+                .andExpect(jsonPath("$.populatedAssertionId", is(1)))
+                .andExpect(jsonPath("$.answer", is(DISAGREE.toString())));
+    }
+
+    @Test
+    public void updateVillagePopulationAssertionById_ShouldReturnUpdatedAssertion() throws Exception {
+        VillagePopulationAssertionDTO assertion = new VillagePopulationAssertionDTO();
+        assertion.setId(1L);
+        assertion.setVillageId(1L);
+        assertion.setPopulatedAssertionId(1L);
+        assertion.setAnswer(DISAGREE);
+
+        when(villagePopulationAssertionService.updateVillagePopulationAssertion(1L, assertion))
+                .thenReturn(assertion);
+
+        mockMvc.perform(put("/api/v1/villagePopulationAssertions/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"id\": 1, \"villageId\": 1, \"populatedAssertionId\": 1, \"answer\": \"DISAGREE\"}"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.villageId", is(1)))
+                .andExpect(jsonPath("$.populatedAssertionId", is(1)))
+                .andExpect(jsonPath("$.answer", is(DISAGREE.toString())));
+    }
+
+    @Test
+    public void createVillagePopulationAssertion_ShouldReturnCreatedAssertion() throws Exception {
+        VillagePopulationAssertionDTO assertion = new VillagePopulationAssertionDTO();
+        assertion.setId(1L);
+        assertion.setVillageId(1L);
+        assertion.setPopulatedAssertionId(1L);
+        assertion.setAnswer(COMPLETELY_AGREED);
+
+        when(villagePopulationAssertionService.createVillagePopulationAssertionDTO(assertion))
+                .thenReturn(assertion);
+
+        mockMvc.perform(post("/api/v1/villagePopulationAssertions")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"id\": 1, \"villageId\": 1, \"populatedAssertionId\": 1, \"answer\": \"COMPLETELY_AGREED\"}"))
+                .andExpect(status().isCreated());
+    }
+
+    @Test
+    public void deleteVillagePopulationAssertionById_ShouldReturnNoContentWhenDeleted() throws Exception {
+        when(villagePopulationAssertionService.deleteVillagePopulationAssertion(1L))
+                .thenReturn(1);
+
+        mockMvc.perform(delete("/api/v1/villagePopulationAssertions/1"))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void deleteVillagePopulationAssertionById_ShouldReturnNotFoundWhenNotDeleted() throws Exception {
+        when(villagePopulationAssertionService.deleteVillagePopulationAssertion(1L))
+                .thenReturn(0);
+
+        mockMvc.perform(delete("/api/v1/villagePopulationAssertions/1"))
+                .andExpect(status().isNotFound());
+    }
+}
+
