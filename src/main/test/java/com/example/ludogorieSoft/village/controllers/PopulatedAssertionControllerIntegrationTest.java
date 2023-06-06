@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(PopulatedAssertionController.class)
 @AutoConfigureMockMvc
-public class PopulatedAssertionControllerIntegrationTest {
+class PopulatedAssertionControllerIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -40,7 +40,7 @@ public class PopulatedAssertionControllerIntegrationTest {
     }
 
     @Test
-    public void testGetAllPopulatedAssertion() throws Exception {
+    void testGetAllPopulatedAssertion() throws Exception {
 
         PopulatedAssertionDTO populatedAssertionDTO1 = new PopulatedAssertionDTO();
         populatedAssertionDTO1.setId(1L);
@@ -64,7 +64,7 @@ public class PopulatedAssertionControllerIntegrationTest {
     }
 
     @Test
-    public void testGetPopulatedAssertionById() throws Exception {
+    void testGetPopulatedAssertionById() throws Exception {
 
         PopulatedAssertionDTO populatedAssertionDTO = new PopulatedAssertionDTO();
         populatedAssertionDTO.setId(1L);
@@ -84,7 +84,7 @@ public class PopulatedAssertionControllerIntegrationTest {
     }
 
     @Test
-    public void testCreatePopulatedAssertion() throws Exception {
+    void testCreatePopulatedAssertion() throws Exception {
 
         PopulatedAssertionDTO populatedAssertionDTO = new PopulatedAssertionDTO();
         populatedAssertionDTO.setId(1L);
@@ -105,7 +105,7 @@ public class PopulatedAssertionControllerIntegrationTest {
     }
 
     @Test
-    public void testUpdatePopulatedAssertionById() throws Exception {
+    void testUpdatePopulatedAssertionById() throws Exception {
 
         PopulatedAssertionDTO populatedAssertionDTO = new PopulatedAssertionDTO();
         populatedAssertionDTO.setId(1L);
@@ -126,7 +126,7 @@ public class PopulatedAssertionControllerIntegrationTest {
     }
 
     @Test
-    public void testDeletePopulatedAssertionById() throws Exception {
+    void testDeletePopulatedAssertionById() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/populated_assertions/{id}", 1))
                 .andExpect(status().isOk())

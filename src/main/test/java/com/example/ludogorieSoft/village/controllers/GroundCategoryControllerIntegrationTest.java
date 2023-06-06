@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(GroundCategoryController.class)
 @AutoConfigureMockMvc
-public class GroundCategoryControllerIntegrationTest {
+class GroundCategoryControllerIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -39,7 +39,7 @@ public class GroundCategoryControllerIntegrationTest {
     }
 
     @Test
-    public void testGetAllGroundCategories() throws Exception {
+    void testGetAllGroundCategories() throws Exception {
 
         GroundCategoryDTO groundCategoryDTO1 = new GroundCategoryDTO();
         groundCategoryDTO1.setId(1L);
@@ -63,7 +63,7 @@ public class GroundCategoryControllerIntegrationTest {
     }
 
     @Test
-    public void testGetGroundCategoryById() throws Exception {
+    void testGetGroundCategoryById() throws Exception {
 
         GroundCategoryDTO groundCategoryDTO = new GroundCategoryDTO();
         groundCategoryDTO.setId(1L);
@@ -83,7 +83,7 @@ public class GroundCategoryControllerIntegrationTest {
     }
 
     @Test
-    public void testCreateGroundCategory() throws Exception {
+    void testCreateGroundCategory() throws Exception {
 
         GroundCategoryDTO groundCategoryDTO = new GroundCategoryDTO();
         groundCategoryDTO.setId(1L);
@@ -103,7 +103,7 @@ public class GroundCategoryControllerIntegrationTest {
     }
 
     @Test
-    public void testUpdateGroundCategory() throws Exception {
+    void testUpdateGroundCategory() throws Exception {
 
         GroundCategoryDTO groundCategoryDTO = new GroundCategoryDTO();
         groundCategoryDTO.setId(1L);
@@ -124,7 +124,7 @@ public class GroundCategoryControllerIntegrationTest {
     }
 
     @Test
-    public void testDeleteGroundCategoryById() throws Exception {
+    void testDeleteGroundCategoryById() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/groundCategory/{id}", 1))
                 .andExpect(status().isOk())

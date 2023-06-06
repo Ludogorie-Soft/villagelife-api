@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(QuestionController.class)
 @AutoConfigureMockMvc
-public class QuestionControllerIntegrationTest {
+class QuestionControllerIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -37,7 +37,7 @@ public class QuestionControllerIntegrationTest {
     }
 
     @Test
-    public void testGetAllQuestions() throws Exception {
+    void testGetAllQuestions() throws Exception {
 
         QuestionDTO questionDTO1 = new QuestionDTO();
         questionDTO1.setId(1L);
@@ -61,7 +61,7 @@ public class QuestionControllerIntegrationTest {
     }
 
     @Test
-    public void testGetQuestionById() throws Exception {
+    void testGetQuestionById() throws Exception {
 
         QuestionDTO questionDTO = new QuestionDTO();
         questionDTO.setId(1L);
@@ -81,7 +81,7 @@ public class QuestionControllerIntegrationTest {
     }
 
     @Test
-    public void testCreateQuestion() throws Exception {
+    void testCreateQuestion() throws Exception {
 
         QuestionDTO questionDTO = new QuestionDTO();
         questionDTO.setId(1L);
@@ -102,7 +102,7 @@ public class QuestionControllerIntegrationTest {
     }
 
     @Test
-    public void testUpdateQuestion() throws Exception {
+    void testUpdateQuestion() throws Exception {
         QuestionDTO questionDTO = new QuestionDTO();
         questionDTO.setId(1L);
 
@@ -122,7 +122,7 @@ public class QuestionControllerIntegrationTest {
     }
 
     @Test
-    public void testDeleteQuestionById() throws Exception {
+    void testDeleteQuestionById() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/questions/{id}", 1))
                 .andExpect(status().isOk())

@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(ObjectVillageController.class)
 @AutoConfigureMockMvc
-public class ObjectVillageControllerIntegrationTest {
+class ObjectVillageControllerIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -39,7 +39,7 @@ public class ObjectVillageControllerIntegrationTest {
     }
 
     @Test
-    public void testGetAllObjectVillages() throws Exception {
+    void testGetAllObjectVillages() throws Exception {
 
         ObjectVillageDTO objectVillageDTO1 = new ObjectVillageDTO();
         objectVillageDTO1.setId(1L);
@@ -62,7 +62,7 @@ public class ObjectVillageControllerIntegrationTest {
     }
 
     @Test
-    public void testGetObjectVillageByID() throws Exception {
+    void testGetObjectVillageByID() throws Exception {
 
         ObjectVillageDTO objectVillageDTO = new ObjectVillageDTO();
         objectVillageDTO.setId(1L);
@@ -82,7 +82,7 @@ public class ObjectVillageControllerIntegrationTest {
     }
 
     @Test
-    public void testUpdateObjectVillageByID() throws Exception {
+    void testUpdateObjectVillageByID() throws Exception {
 
         ObjectVillageDTO objectVillageDTO = new ObjectVillageDTO();
         objectVillageDTO.setId(1L);
@@ -103,7 +103,7 @@ public class ObjectVillageControllerIntegrationTest {
     }
 
     @Test
-    public void testCreateObjectVillage() throws Exception {
+    void testCreateObjectVillage() throws Exception {
 
         ObjectVillageDTO objectVillageDTO = new ObjectVillageDTO();
         objectVillageDTO.setId(1L);
@@ -123,7 +123,7 @@ public class ObjectVillageControllerIntegrationTest {
     }
 
     @Test
-    public void testDeleteObjectVillageById() throws Exception {
+    void testDeleteObjectVillageById() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/objectVillages/{id}", 1))
                 .andExpect(status().isOk())

@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(ObjectAroundVillageController.class)
 @AutoConfigureMockMvc
-public class ObjectAroundVillageControllerIntegrationTest {
+class ObjectAroundVillageControllerIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -39,7 +39,7 @@ public class ObjectAroundVillageControllerIntegrationTest {
     }
 
     @Test
-    public void testGetAllObjectsAroundVillage() throws Exception {
+    void testGetAllObjectsAroundVillage() throws Exception {
 
         ObjectAroundVillageDTO objectAroundVillageDTO1 = new ObjectAroundVillageDTO();
         objectAroundVillageDTO1.setId(1L);
@@ -63,7 +63,7 @@ public class ObjectAroundVillageControllerIntegrationTest {
     }
 
     @Test
-    public void testGetObjectAroundVillageByID() throws Exception {
+    void testGetObjectAroundVillageByID() throws Exception {
 
         ObjectAroundVillageDTO objectAroundVillageDTO = new ObjectAroundVillageDTO();
         objectAroundVillageDTO.setId(1L);
@@ -83,7 +83,7 @@ public class ObjectAroundVillageControllerIntegrationTest {
     }
 
     @Test
-    public void testCreateObjectAroundVillage() throws Exception {
+    void testCreateObjectAroundVillage() throws Exception {
 
         ObjectAroundVillageDTO objectAroundVillageDTO = new ObjectAroundVillageDTO();
         objectAroundVillageDTO.setId(1L);
@@ -103,7 +103,7 @@ public class ObjectAroundVillageControllerIntegrationTest {
     }
 
     @Test
-    public void testUpdateObjectAroundVillage() throws Exception {
+    void testUpdateObjectAroundVillage() throws Exception {
 
         ObjectAroundVillageDTO objectAroundVillageDTO = new ObjectAroundVillageDTO();
         objectAroundVillageDTO.setId(1L);
@@ -123,7 +123,7 @@ public class ObjectAroundVillageControllerIntegrationTest {
     }
 
     @Test
-    public void testDeleteObjectAroundVillageById() throws Exception {
+    void testDeleteObjectAroundVillageById() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/objectAroundVillage/{id}", 1))
                 .andExpect(status().isOk())

@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(PopulationController.class)
 @AutoConfigureMockMvc
-public class PopulationControllerIntegrationTest {
+class PopulationControllerIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -39,7 +39,7 @@ public class PopulationControllerIntegrationTest {
     }
 
     @Test
-    public void testGetAllPopulation() throws Exception {
+    void testGetAllPopulation() throws Exception {
 
         PopulationDTO populationDTO1 = new PopulationDTO();
         populationDTO1.setId(1L);
@@ -63,7 +63,7 @@ public class PopulationControllerIntegrationTest {
     }
 
     @Test
-    public void testGetPopulationById() throws Exception {
+    void testGetPopulationById() throws Exception {
 
         PopulationDTO populationDTO = new PopulationDTO();
         populationDTO.setId(1L);
@@ -83,7 +83,7 @@ public class PopulationControllerIntegrationTest {
     }
 
     @Test
-    public void testCreatePopulation() throws Exception {
+    void testCreatePopulation() throws Exception {
 
         PopulationDTO populationDTO = new PopulationDTO();
         populationDTO.setId(1L);
@@ -103,7 +103,7 @@ public class PopulationControllerIntegrationTest {
     }
 
     @Test
-    public void testUpdatePopulation() throws Exception {
+    void testUpdatePopulation() throws Exception {
 
         PopulationDTO populationDTO = new PopulationDTO();
         populationDTO.setId(1L);
@@ -124,7 +124,7 @@ public class PopulationControllerIntegrationTest {
     }
 
     @Test
-    public void testDeletePopulationById() throws Exception {
+    void testDeletePopulationById() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/populations/{id}", 1))
                 .andExpect(status().isOk())

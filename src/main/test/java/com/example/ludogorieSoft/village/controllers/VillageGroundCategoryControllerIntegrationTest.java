@@ -1,11 +1,9 @@
 package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.dtos.VillageGroundCategoryDTO;
-import com.example.ludogorieSoft.village.model.VillageGroundCategory;
 import com.example.ludogorieSoft.village.services.VillageGroundCategoryService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -17,7 +15,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.validation.Valid;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
@@ -29,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(VillageGroundCategoryController.class)
 @AutoConfigureMockMvc
-public class VillageGroundCategoryControllerIntegrationTest {
+ class VillageGroundCategoryControllerIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -43,7 +40,7 @@ public class VillageGroundCategoryControllerIntegrationTest {
     }
 
     @Test
-    public void testGetAllVillageGroundCategories() throws Exception {
+    void testGetAllVillageGroundCategories() throws Exception {
 
         VillageGroundCategoryDTO villageGroundCategoryDTO1 = new VillageGroundCategoryDTO();
         villageGroundCategoryDTO1.setId(1L);
@@ -67,7 +64,7 @@ public class VillageGroundCategoryControllerIntegrationTest {
     }
 
     @Test
-    public void testGetVillageGroundCategoryByID() throws Exception {
+    void testGetVillageGroundCategoryByID() throws Exception {
 
         VillageGroundCategoryDTO villageGroundCategoryDTO = new VillageGroundCategoryDTO();
         villageGroundCategoryDTO.setId(1L);
@@ -87,7 +84,7 @@ public class VillageGroundCategoryControllerIntegrationTest {
     }
 
     @Test
-    public void testCreateVillageGroundCategories() throws Exception {
+    void testCreateVillageGroundCategories() throws Exception {
 
         VillageGroundCategoryDTO villageGroundCategoryDTO = new VillageGroundCategoryDTO();
         villageGroundCategoryDTO.setId(1L);
@@ -111,7 +108,7 @@ public class VillageGroundCategoryControllerIntegrationTest {
     }
 
     @Test
-    public void testUpdateVillageGroundCategory() throws Exception {
+    void testUpdateVillageGroundCategory() throws Exception {
 
         VillageGroundCategoryDTO villageGroundCategoryDTO = new VillageGroundCategoryDTO();
         villageGroundCategoryDTO.setId(1L);
@@ -132,7 +129,7 @@ public class VillageGroundCategoryControllerIntegrationTest {
     }
 
     @Test
-    public void testDeleteVillageGroundCategoryById() throws Exception {
+    void testDeleteVillageGroundCategoryById() throws Exception {
 
         when(villageGroundCategoryService.deleteVillageGroundCategory(anyLong())).thenReturn(1);
 

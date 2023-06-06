@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(VillageController.class)
 @AutoConfigureMockMvc
-public class VillageControllerIntegrationTest {
+class VillageControllerIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -39,7 +39,7 @@ public class VillageControllerIntegrationTest {
     }
 
     @Test
-    public void testGetAllVillages() throws Exception {
+    void testGetAllVillages() throws Exception {
 
         VillageDTO villageDTO1 = new VillageDTO();
         villageDTO1.setId(1L);
@@ -63,7 +63,7 @@ public class VillageControllerIntegrationTest {
     }
 
     @Test
-    public void testGetVillageById() throws Exception {
+    void testGetVillageById() throws Exception {
 
         VillageDTO villageDTO = new VillageDTO();
         villageDTO.setId(1L);
@@ -83,7 +83,7 @@ public class VillageControllerIntegrationTest {
     }
 
     @Test
-    public void testCreateVillage() throws Exception {
+    void testCreateVillage() throws Exception {
 
         VillageDTO villageDTO = new VillageDTO();
         villageDTO.setId(1L);
@@ -103,7 +103,7 @@ public class VillageControllerIntegrationTest {
     }
 
     @Test
-    public void testUpdateVillage() throws Exception {
+    void testUpdateVillage() throws Exception {
 
         VillageDTO villageDTO = new VillageDTO();
         villageDTO.setId(1L);
@@ -124,7 +124,7 @@ public class VillageControllerIntegrationTest {
     }
 
     @Test
-    public void testDeleteVillage() throws Exception {
+    void testDeleteVillage() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/villages/{id}", 1))
                 .andExpect(status().isNoContent());

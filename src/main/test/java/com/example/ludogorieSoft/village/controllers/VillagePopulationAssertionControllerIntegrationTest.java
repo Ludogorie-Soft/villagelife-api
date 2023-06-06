@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(VillagePopulationAssertionController.class)
-public class VillagePopulationAssertionControllerIntegrationTest {
+class VillagePopulationAssertionControllerIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -28,7 +28,7 @@ public class VillagePopulationAssertionControllerIntegrationTest {
     private VillagePopulationAssertionService villagePopulationAssertionService;
 
     @Test
-    public void getAllVillagePopulationAssertions_ShouldReturnListOfAssertions() throws Exception {
+    void getAllVillagePopulationAssertions_ShouldReturnListOfAssertions() throws Exception {
         VillagePopulationAssertionDTO assertion1 = new VillagePopulationAssertionDTO();
         assertion1.setId(1L);
         assertion1.setVillageId(1L);
@@ -61,7 +61,7 @@ public class VillagePopulationAssertionControllerIntegrationTest {
     }
 
     @Test
-    public void getVillagePopulationAssertionById_ShouldReturnAssertion() throws Exception {
+    void getVillagePopulationAssertionById_ShouldReturnAssertion() throws Exception {
         VillagePopulationAssertionDTO assertion = new VillagePopulationAssertionDTO();
         assertion.setId(1L);
         assertion.setVillageId(1L);
@@ -81,7 +81,7 @@ public class VillagePopulationAssertionControllerIntegrationTest {
     }
 
     @Test
-    public void updateVillagePopulationAssertionById_ShouldReturnUpdatedAssertion() throws Exception {
+    void updateVillagePopulationAssertionById_ShouldReturnUpdatedAssertion() throws Exception {
         VillagePopulationAssertionDTO assertion = new VillagePopulationAssertionDTO();
         assertion.setId(1L);
         assertion.setVillageId(1L);
@@ -103,7 +103,7 @@ public class VillagePopulationAssertionControllerIntegrationTest {
     }
 
     @Test
-    public void createVillagePopulationAssertion_ShouldReturnCreatedAssertion() throws Exception {
+    void createVillagePopulationAssertion_ShouldReturnCreatedAssertion() throws Exception {
         VillagePopulationAssertionDTO assertion = new VillagePopulationAssertionDTO();
         assertion.setId(1L);
         assertion.setVillageId(1L);
@@ -120,7 +120,7 @@ public class VillagePopulationAssertionControllerIntegrationTest {
     }
 
     @Test
-    public void deleteVillagePopulationAssertionById_ShouldReturnNoContentWhenDeleted() throws Exception {
+    void deleteVillagePopulationAssertionById_ShouldReturnNoContentWhenDeleted() throws Exception {
         when(villagePopulationAssertionService.deleteVillagePopulationAssertion(1L))
                 .thenReturn(1);
 
@@ -129,7 +129,7 @@ public class VillagePopulationAssertionControllerIntegrationTest {
     }
 
     @Test
-    public void deleteVillagePopulationAssertionById_ShouldReturnNotFoundWhenNotDeleted() throws Exception {
+    void deleteVillagePopulationAssertionById_ShouldReturnNotFoundWhenNotDeleted() throws Exception {
         when(villagePopulationAssertionService.deleteVillagePopulationAssertion(1L))
                 .thenReturn(0);
 
