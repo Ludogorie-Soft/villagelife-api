@@ -3,7 +3,6 @@ package com.example.ludogorieSoft.village.services;
 import com.example.ludogorieSoft.village.dtos.GroundCategoryDTO;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.GroundCategory;
-import com.example.ludogorieSoft.village.repositories.EthnicityRepository;
 import com.example.ludogorieSoft.village.repositories.GroundCategoryRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
