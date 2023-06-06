@@ -19,7 +19,7 @@ import java.util.Optional;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertThrows;
 
-public class EthnicityServiceTest {
+class EthnicityServiceTest {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -35,7 +35,7 @@ public class EthnicityServiceTest {
     private EthnicityService ethnicityService;
 
     @Test
-    public void testGetAllEthnicities() {
+    void testGetAllEthnicities() {
         Ethnicity ethnicity1 = new Ethnicity(1L, "Ethnicity 1");
         Ethnicity ethnicity2 = new Ethnicity(2L, "Ethnicity 2");
 
@@ -63,9 +63,8 @@ public class EthnicityServiceTest {
     }
 
 
-
     @Test
-    public void testGetAllEthnicitiesWithNoEthnicities() {
+    void testGetAllEthnicitiesWithNoEthnicities() {
         List<Ethnicity> ethnicities = new ArrayList<>();
         List<EthnicityDTO> expectedEthnicityDTOs = new ArrayList<>();
 
@@ -78,7 +77,7 @@ public class EthnicityServiceTest {
     }
 
     @Test
-    public void testGetEthnicityByIdWithExistingEthnicityIdThenReturnsEthnicityDTO() {
+    void testGetEthnicityByIdWithExistingEthnicityIdThenReturnsEthnicityDTO() {
         Long ethnicityId = 123L;
         Ethnicity existingEthnicity = new Ethnicity(ethnicityId, "Test Ethnicity");
 
@@ -95,7 +94,7 @@ public class EthnicityServiceTest {
     }
 
     @Test
-    public void testGetEthnicityByIdWithNonExistingEthnicityIdThenThrowsApiRequestException() {
+    void testGetEthnicityByIdWithNonExistingEthnicityIdThenThrowsApiRequestException() {
         Long ethnicityId = 123L;
         when(ethnicityRepository.findById(ethnicityId)).thenReturn(Optional.empty());
 
@@ -105,8 +104,7 @@ public class EthnicityServiceTest {
     }
 
     @Test
-    public void testCreateEthnicity_WhenEthnicityDoesNotExist() {
-        // Arrange
+    void testCreateEthnicityWhenEthnicityDoesNotExist() {
         EthnicityDTO ethnicityDTO = new EthnicityDTO();
         ethnicityDTO.setEthnicityName("Ethnicity 1");
 
@@ -121,28 +119,24 @@ public class EthnicityServiceTest {
         when(ethnicityRepository.save(ethnicity)).thenReturn(ethnicity);
         when(modelMapper.map(ethnicity, EthnicityDTO.class)).thenReturn(expectedDTO);
 
-        // Act
         EthnicityDTO resultDTO = ethnicityService.createEthnicity(ethnicityDTO);
 
-        // Assert
         Assertions.assertEquals(expectedDTO.getEthnicityName(), resultDTO.getEthnicityName());
     }
 
     @Test
-    public void testCreateEthnicity_WhenEthnicityExists() {
-        // Arrange
+    void testCreateEthnicityWhenEthnicityExists() {
         EthnicityDTO ethnicityDTO = new EthnicityDTO();
         ethnicityDTO.setEthnicityName("Ethnicity 1");
 
         when(ethnicityRepository.existsByEthnicityName(ethnicityDTO.getEthnicityName())).thenReturn(true);
 
-        // Act & Assert
         assertThrows(ApiRequestException.class, () -> ethnicityService.createEthnicity(ethnicityDTO));
     }
 
 
     @Test
-    public void testUpdateEthnicityWithExistingEthnicityId() {
+    void testUpdateEthnicityWithExistingEthnicityId() {
         Long ethnicityId = 123L;
         Ethnicity existingEthnicity = new Ethnicity(ethnicityId, "Existing Ethnicity");
 
@@ -162,7 +156,7 @@ public class EthnicityServiceTest {
     }
 
     @Test
-    public void testUpdateEthnicityWithNonExistingEthnicityIdThenThrowsApiRequestException() {
+    void testUpdateEthnicityWithNonExistingEthnicityIdThenThrowsApiRequestException() {
         Long ethnicityId = 123L;
         Ethnicity updatedEthnicity = new Ethnicity();
         updatedEthnicity.setEthnicityName("Updated Ethnicity");
@@ -173,7 +167,7 @@ public class EthnicityServiceTest {
     }
 
     @Test
-    public void testDeleteEthnicityByIdWithExistingEthnicityId() {
+    void testDeleteEthnicityByIdWithExistingEthnicityId() {
         Long ethnicityId = 123L;
         when(ethnicityRepository.existsById(ethnicityId)).thenReturn(true);
         ethnicityService.deleteEthnicityById(ethnicityId);
@@ -183,11 +177,12 @@ public class EthnicityServiceTest {
 
 
     @Test
-    public void testDeleteEthnicityByIdWithNonExistingEthnicityIdThenThrowsApiRequestException() {
+    void testDeleteEthnicityByIdWithNonExistingEthnicityIdThenThrowsApiRequestException() {
         Long ethnicityId = 123L;
         when(ethnicityRepository.existsById(ethnicityId)).thenReturn(false);
         Assertions.assertThrows(ApiRequestException.class, () -> ethnicityService.deleteEthnicityById(ethnicityId));
         verify(ethnicityRepository, times(1)).existsById(ethnicityId);
         verify(ethnicityRepository, never()).deleteById(ethnicityId);
     }
+
 }

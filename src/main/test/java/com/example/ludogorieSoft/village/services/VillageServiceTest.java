@@ -120,7 +120,6 @@ class VillageServiceTest {
         Assertions.assertEquals(villageDTO.getName(), createdVillageDTO.getName());
 
         verify(villageRepository, times(1)).save(village);
-        System.out.println("ДА СЕ ИЗТРИЕ");
     }
 
     @Test

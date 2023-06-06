@@ -5,6 +5,7 @@ import com.example.ludogorieSoft.village.model.Question;
 import com.example.ludogorieSoft.village.repositories.QuestionRepository;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +30,11 @@ public class QuestionService {
                 .toList();
     }
 
+
     public QuestionDTO createQuestion(QuestionDTO questionDTO) {
+        if (StringUtils.isBlank(questionDTO.getQuestion())) {
+            throw new ApiRequestException("Question is blank");
+        }
         if (questionRepository.existsByQuestionName(questionDTO.getQuestion())) {
             throw new ApiRequestException("Question: " + questionDTO.getQuestion() + " already exists");
         }
@@ -38,6 +43,7 @@ public class QuestionService {
         questionRepository.save(question);
         return questionToQuestionDTO(question);
     }
+
 
     public QuestionDTO getQuestionById(Long id) {
         Optional<Question> question = questionRepository.findById(id);
@@ -55,18 +61,6 @@ public class QuestionService {
         questionRepository.delete(question.get());
     }
 
-//    public QuestionDTO updateQuestion(Long id, QuestionDTO questionDTO) {
-//        Optional<Question> findQuestion = questionRepository.findById(id);
-//        if (findQuestion.isEmpty()) {
-//            throw new ApiRequestException("Question not found");
-//        }
-//        if (questionRepository.existsByQuestionName(questionDTO.getQuestion())) {
-//            throw new ApiRequestException("Question: " + questionDTO.getQuestion() + " already exists");
-//        }
-//        findQuestion.get().setQuestionName(questionDTO.getQuestion());
-//        questionRepository.save(findQuestion.get());
-//        return questionToQuestionDTO(findQuestion.get());
-//    }
 
     public QuestionDTO updateQuestion(Long id, QuestionDTO questionDTO) {
         Optional<Question> findQuestion = questionRepository.findById(id);

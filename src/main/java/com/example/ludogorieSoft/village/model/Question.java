@@ -3,6 +3,7 @@ package com.example.ludogorieSoft.village.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 @Data
@@ -12,7 +13,8 @@ public class Question {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
-    @Column(name = "question_name")
+    @NotBlank
+    @Column(name = "question_name", nullable = false)
     private String questionName;
 
 }

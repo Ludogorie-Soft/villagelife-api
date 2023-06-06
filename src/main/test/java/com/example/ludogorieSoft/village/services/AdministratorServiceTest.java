@@ -1,11 +1,10 @@
-package com.example.ludogorieSoft.village.services_tests;
+package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.AdministratorDTO;
 import com.example.ludogorieSoft.village.dtos.AdministratorRequest;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.Administrator;
 import com.example.ludogorieSoft.village.repositories.AdministratorRepository;
-import com.example.ludogorieSoft.village.services.AdministratorService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
@@ -19,7 +18,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class AdministratorServiceTest {
+class AdministratorServiceTest {
 
     private AdministratorService administratorService;
     private AdministratorRepository administratorRepository;
@@ -33,8 +32,7 @@ public class AdministratorServiceTest {
     }
 
     @Test
-    public void testGetAllAdministrators() {
-        // Arrange
+    void testGetAllAdministrators() {
         Administrator administrator1 = new Administrator();
         administrator1.setId(1L);
         Administrator administrator2 = new Administrator();
@@ -56,18 +54,15 @@ public class AdministratorServiceTest {
                 .thenReturn(administratorDTO1)
                 .thenReturn(administratorDTO2);
 
-        // Act
         List<AdministratorDTO> resultDTOs = administratorService.getAllAdministrators();
 
-        // Assert
         assertEquals(expectedDTOs.size(), resultDTOs.size());
         assertEquals(expectedDTOs.get(0).getId(), resultDTOs.get(0).getId());
         assertEquals(expectedDTOs.get(1).getId(), resultDTOs.get(1).getId());
     }
 
     @Test
-    public void testCreateAdministrator_WhenUsernameDoesNotExist() {
-        // Arrange
+    void testCreateAdministratorWhenUsernameDoesNotExist() {
         AdministratorRequest administratorRequest = new AdministratorRequest();
         administratorRequest.setUsername("admin");
         Administrator administrator = new Administrator();
@@ -82,28 +77,23 @@ public class AdministratorServiceTest {
         when(administratorRepository.findByUsername(administrator.getUsername())).thenReturn(administrator);
         when(modelMapper.map(administrator, AdministratorDTO.class)).thenReturn(expectedDTO);
 
-        // Act
         AdministratorDTO resultDTO = administratorService.createAdministrator(administratorRequest);
 
-        // Assert
         assertEquals(expectedDTO.getUsername(), resultDTO.getUsername());
     }
 
     @Test
-    public void testCreateAdministrator_WhenUsernameExists() {
-        // Arrange
+    void testCreateAdministratorWhenUsernameExists() {
         AdministratorRequest administratorRequest = new AdministratorRequest();
         administratorRequest.setUsername("admin");
 
         when(administratorRepository.existsByUsername(administratorRequest.getUsername())).thenReturn(true);
 
-        // Act & Assert
         assertThrows(ApiRequestException.class, () -> administratorService.createAdministrator(administratorRequest));
     }
 
     @Test
-    public void testGetAdministratorById_WhenAdministratorExists() {
-        // Arrange
+    void testGetAdministratorByIdWhenAdministratorExists() {
         Long id = 1L;
         Administrator administrator = new Administrator();
         administrator.setId(id);
@@ -114,46 +104,37 @@ public class AdministratorServiceTest {
         when(administratorRepository.findById(id)).thenReturn(Optional.of(administrator));
         when(modelMapper.map(administrator, AdministratorDTO.class)).thenReturn(expectedDTO);
 
-        // Act
         AdministratorDTO resultDTO = administratorService.getAdministratorById(id);
 
-        // Assert
         assertEquals(expectedDTO.getId(), resultDTO.getId());
     }
 
     @Test
-    public void testGetAdministratorById_WhenAdministratorDoesNotExist() {
-        // Arrange
+    void testGetAdministratorByIdWhenAdministratorDoesNotExist() {
         Long id = 1L;
         when(administratorRepository.findById(id)).thenReturn(Optional.empty());
 
-        // Act & Assert
         assertThrows(ApiRequestException.class, () -> administratorService.getAdministratorById(id));
     }
 
     @Test
-    public void testDeleteAdministratorById_WhenAdministratorExists() {
-        // Arrange
+    void testDeleteAdministratorByIdWhenAdministratorExists() {
         Long id = 1L;
         when(administratorRepository.existsById(id)).thenReturn(true);
 
-        // Act & Assert
         assertDoesNotThrow(() -> administratorService.deleteAdministratorById(id));
     }
 
     @Test
-    public void testDeleteAdministratorById_WhenAdministratorDoesNotExist() {
-        // Arrange
+    void testDeleteAdministratorByIdWhenAdministratorDoesNotExist() {
         Long id = 1L;
         when(administratorRepository.existsById(id)).thenReturn(false);
 
-        // Act & Assert
         assertThrows(ApiRequestException.class, () -> administratorService.deleteAdministratorById(id));
     }
 
     @Test
-    public void testUpdateAdministrator_WhenAdministratorExists() {
-        // Arrange
+    void testUpdateAdministratorWhenAdministratorExists() {
         Long id = 1L;
         AdministratorRequest administratorRequest = new AdministratorRequest();
         administratorRequest.setFullName("John Doe");
@@ -178,10 +159,8 @@ public class AdministratorServiceTest {
         when(administratorRepository.save(foundAdministrator.get())).thenReturn(foundAdministrator.get());
         when(modelMapper.map(foundAdministrator.get(), AdministratorDTO.class)).thenReturn(expectedDTO);
 
-        // Act
         AdministratorDTO resultDTO = administratorService.updateAdministrator(id, administratorRequest);
 
-        // Assert
         assertEquals(expectedDTO.getId(), resultDTO.getId());
         assertEquals(expectedDTO.getFullName(), resultDTO.getFullName());
         assertEquals(expectedDTO.getEmail(), resultDTO.getEmail());
@@ -190,13 +169,11 @@ public class AdministratorServiceTest {
     }
 
     @Test
-    public void testUpdateAdministrator_WhenAdministratorDoesNotExist() {
-        // Arrange
+    void testUpdateAdministratorWhenAdministratorDoesNotExist() {
         Long id = 1L;
         AdministratorRequest administratorRequest = new AdministratorRequest();
         when(administratorRepository.findById(id)).thenReturn(Optional.empty());
 
-        // Act & Assert
         assertThrows(ApiRequestException.class, () -> administratorService.updateAdministrator(id, administratorRequest));
     }
 }

@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 
@@ -16,9 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class QuestionServiceTest {
 
@@ -92,6 +93,114 @@ class QuestionServiceTest {
         verify(questionRepository, times(1)).findById(questionId);
     }
 
+
+    @Test
+    void createQuestionWhenQuestionDoesNotExistShouldCreateQuestion() {
+        QuestionRepository questionRepository = Mockito.mock(QuestionRepository.class);
+        ModelMapper modelMapper = new ModelMapper();
+        QuestionService questionService = new QuestionService(questionRepository, modelMapper);
+        String createdQuestion = "New question?";
+        QuestionDTO questionDTO = new QuestionDTO();
+        questionDTO.setQuestion(createdQuestion);
+
+        Mockito.when(questionRepository.existsByQuestionName(questionDTO.getQuestion())).thenReturn(false);
+
+        QuestionDTO createdQuestionDTO = questionService.createQuestion(questionDTO);
+
+        assertNotNull(createdQuestionDTO);
+        assertEquals(questionDTO.getQuestion(), createdQuestionDTO.getQuestion());
+    }
+
+
+    @Test
+    void testCreateQuestionThrowsExceptionWhenQuestionExists() {
+        QuestionDTO questionDTO = new QuestionDTO();
+        questionDTO.setQuestion("Test Question");
+
+        when(questionRepository.existsByQuestionName(questionDTO.getQuestion())).thenReturn(true);
+
+        Assertions.assertThrows(ApiRequestException.class, () -> {
+            questionService.createQuestion(questionDTO);
+        });
+
+        verify(questionRepository, times(1)).existsByQuestionName(questionDTO.getQuestion());
+        verifyNoMoreInteractions(questionRepository);
+        verifyNoInteractions(modelMapper);
+    }
+
+
+    @Test
+    void createQuestionBlankQuestionThrowsApiRequestException() {
+        QuestionDTO questionDTO = new QuestionDTO(null, " ");
+
+        assertThrows(ApiRequestException.class, () -> questionService.createQuestion(questionDTO));
+    }
+
+    @Test
+    void createQuestionDuplicateQuestionThrowsApiRequestException() {
+        String questionText = "Same question?";
+        QuestionDTO questionDTO = new QuestionDTO(null, questionText);
+        when(questionRepository.existsByQuestionName(questionText)).thenReturn(true);
+
+        assertThrows(ApiRequestException.class, () -> questionService.createQuestion(questionDTO));
+    }
+
+
+    @Test
+    void testUpdateQuestionThrowsExceptionWhenQuestionNotFound() {
+        Long id = 1L;
+        QuestionDTO questionDTO = new QuestionDTO();
+        questionDTO.setQuestion("Updated Question");
+
+        when(questionRepository.findById(id)).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(ApiRequestException.class, () -> {
+            questionService.updateQuestion(id, questionDTO);
+        });
+
+        verify(questionRepository, times(1)).findById(id);
+        verifyNoMoreInteractions(questionRepository);
+        verifyNoInteractions(modelMapper);
+    }
+
+    @Test
+    void testUpdateQuestionThrowsExceptionWhenQuestionExists() {
+        Long id = 1L;
+        QuestionDTO questionDTO = new QuestionDTO();
+        questionDTO.setQuestion("Updated Question");
+
+        Question question = new Question();
+        question.setId(id);
+        question.setQuestionName("Original Question");
+
+        Optional<Question> optionalQuestion = Optional.of(question);
+
+        when(questionRepository.findById(id)).thenReturn(optionalQuestion);
+        when(questionRepository.existsByQuestionName(questionDTO.getQuestion())).thenReturn(true);
+
+        Assertions.assertThrows(ApiRequestException.class, () -> {
+            questionService.updateQuestion(id, questionDTO);
+        });
+
+        verify(questionRepository, times(1)).findById(id);
+        verify(questionRepository, times(1)).existsByQuestionName(questionDTO.getQuestion());
+        verifyNoMoreInteractions(questionRepository);
+        verifyNoInteractions(modelMapper);
+    }
+
+
+    @Test
+    void updateQuestionWhenQuestionIsNullShouldThrowApiRequestException() {
+        Long questionId = 1L;
+        QuestionDTO questionDTO = new QuestionDTO();
+        questionDTO.setQuestion(null);
+
+        assertThrows(ApiRequestException.class, () -> {
+            questionService.updateQuestion(questionId, questionDTO);
+        });
+    }
+
+
     @Test
     void testDeleteQuestionByIdWithExistingId() {
         Long questionId = 123L;
@@ -120,107 +229,5 @@ class QuestionServiceTest {
         verify(questionRepository, times(1)).findById(questionId);
         verify(questionRepository, never()).delete(any(Question.class));
     }
-
-
-    @Test
-     void testCreateQuestionThrowsExceptionWhenQuestionExists() {
-        QuestionDTO questionDTO = new QuestionDTO();
-        questionDTO.setQuestion("Test Question");
-
-        when(questionRepository.existsByQuestionName(questionDTO.getQuestion())).thenReturn(true);
-
-        Assertions.assertThrows(ApiRequestException.class, () -> {
-            questionService.createQuestion(questionDTO);
-        });
-
-        verify(questionRepository, times(1)).existsByQuestionName(questionDTO.getQuestion());
-        verifyNoMoreInteractions(questionRepository);
-        verifyNoInteractions(modelMapper);
-    }
-
-
-    @Test
-     void testUpdateQuestionThrowsExceptionWhenQuestionNotFound() {
-        Long id = 1L;
-        QuestionDTO questionDTO = new QuestionDTO();
-        questionDTO.setQuestion("Updated Question");
-
-        when(questionRepository.findById(id)).thenReturn(Optional.empty());
-
-        Assertions.assertThrows(ApiRequestException.class, () -> {
-            questionService.updateQuestion(id, questionDTO);
-        });
-
-        verify(questionRepository, times(1)).findById(id);
-        verifyNoMoreInteractions(questionRepository);
-        verifyNoInteractions(modelMapper);
-    }
-
-    @Test
-     void testUpdateQuestionThrowsExceptionWhenQuestionExists() {
-        Long id = 1L;
-        QuestionDTO questionDTO = new QuestionDTO();
-        questionDTO.setQuestion("Updated Question");
-
-        Question question = new Question();
-        question.setId(id);
-        question.setQuestionName("Original Question");
-
-        Optional<Question> optionalQuestion = Optional.of(question);
-
-        when(questionRepository.findById(id)).thenReturn(optionalQuestion);
-        when(questionRepository.existsByQuestionName(questionDTO.getQuestion())).thenReturn(true);
-
-        Assertions.assertThrows(ApiRequestException.class, () -> {
-            questionService.updateQuestion(id, questionDTO);
-        });
-
-        verify(questionRepository, times(1)).findById(id);
-        verify(questionRepository, times(1)).existsByQuestionName(questionDTO.getQuestion());
-        verifyNoMoreInteractions(questionRepository);
-        verifyNoInteractions(modelMapper);
-    }
-
-//    @Test
-//    void createQuestionWhenQuestionDoesNotExistShouldCreateQuestion() {
-//        QuestionDTO questionDTO = new QuestionDTO();
-//        questionDTO.setQuestion("What is your name?");
-//
-//        when(questionRepository.existsByQuestionName(questionDTO.getQuestion())).thenReturn(false);
-//
-//        QuestionDTO result = questionService.createQuestion(questionDTO);
-//
-//        assertNotNull(result);
-//        Assertions.assertEquals(questionDTO.getQuestion(), result.getQuestion());
-//    }
-
-
-    @Test
-     void createQuestion_WhenQuestionExists_ShouldThrowApiRequestException() {
-        QuestionDTO questionDTO = new QuestionDTO();
-        questionDTO.setQuestion("What is your name?");
-
-        when(questionRepository.existsByQuestionName(questionDTO.getQuestion())).thenReturn(true);
-
-        assertThrows(ApiRequestException.class, () -> {
-            questionService.createQuestion(questionDTO);
-        });
-    }
-
-
-
-    @Test
-     void updateQuestion_WhenQuestionIsNull_ShouldThrowApiRequestException() {
-        Long questionId = 1L;
-        QuestionDTO questionDTO = new QuestionDTO();
-        questionDTO.setQuestion(null);
-
-        assertThrows(ApiRequestException.class, () -> {
-            questionService.updateQuestion(questionId, questionDTO);
-        });
-    }
-
-
-
 
 }
