@@ -70,7 +70,7 @@ public class LivingConditionService {
     }
 
 
-    public LivingCondition checkLandscape(Long id) {
+    public LivingCondition checkLivingCondition(Long id) {
         Optional<LivingCondition> livingCondition = livingConditionsRepository.findById(id);
         if (livingCondition.isPresent()){
             return livingCondition.get();
