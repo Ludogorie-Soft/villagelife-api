@@ -12,12 +12,12 @@ public class ApiExceptionHandler {
     @ExceptionHandler(value = {com.example.ludogorieSoft.village.exeptions.ApiRequestException.class})
     public ResponseEntity<Object> handleApiRequestException(com.example.ludogorieSoft.village.exeptions.ApiRequestException e){
         HttpStatus badRequest = HttpStatus.BAD_REQUEST;
-        com.example.ludogorieSoft.village.exeptions.ApiException apiException = new com.example.ludogorieSoft.village.exeptions.ApiException(
+        ApiVillageException apiVillageException = new ApiVillageException(
                 e.getMessage(),
                 e.getCause(),
                 badRequest,
                 ZonedDateTime.now(ZoneId.of("Z"))
         );
-        return new ResponseEntity<>(apiException, badRequest);
+        return new ResponseEntity<>(apiVillageException, badRequest);
     }
 }
