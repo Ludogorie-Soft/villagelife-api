@@ -1,11 +1,9 @@
 package com.example.ludogorieSoft.village.services;
 
-import com.example.ludogorieSoft.village.dtos.VillageLandscapeDTO;
 import com.example.ludogorieSoft.village.dtos.VillagePopulationAssertionDTO;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.PopulatedAssertion;
 import com.example.ludogorieSoft.village.model.Village;
-import com.example.ludogorieSoft.village.model.VillageLandscape;
 import com.example.ludogorieSoft.village.model.VillagePopulationAssertion;
 import com.example.ludogorieSoft.village.repositories.PopulatedAssertionRepository;
 import com.example.ludogorieSoft.village.repositories.VillagePopulationAssertionRepository;
@@ -18,7 +16,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.stream.Collectors.toList;
+
+
 
 @Service
 @AllArgsConstructor
@@ -26,6 +25,8 @@ public class VillagePopulationAssertionService {
     private final VillagePopulationAssertionRepository villagePopulationAssertionRepository;
     private final VillageRepository villageRepository;
     private final PopulatedAssertionRepository populatedAssertionRepository;
+    private final PopulatedAssertionService populatedAssertionService;
+    private final VillageService villageService;
     private final ModelMapper modelMapper;
     public VillagePopulationAssertionDTO toDTO(VillagePopulationAssertion villagePopulationAssertion) {
         return modelMapper.map(villagePopulationAssertion, VillagePopulationAssertionDTO.class);
@@ -36,23 +37,17 @@ public class VillagePopulationAssertionService {
         return villagePopulationAssertions
                 .stream()
                 .map(this::toDTO)
-                .collect(toList());
+                .toList();
     }
 
     public VillagePopulationAssertionDTO createVillagePopulationAssertionDTO (VillagePopulationAssertionDTO villagePopulationAssertionDTO) {
         VillagePopulationAssertion villagePopulationAssertion = new VillagePopulationAssertion();
-        Optional<Village> village = villageRepository.findById(villagePopulationAssertionDTO.getVillageId());
-        if (village.isPresent()){
-            villagePopulationAssertion.setVillage(village.get());
-        }else {
-            throw new ApiRequestException("Village not found");
-        }
-        Optional<PopulatedAssertion> populatedAssertion = populatedAssertionRepository.findById(villagePopulationAssertionDTO.getPopulatedAssertionId());
-        if (populatedAssertion.isPresent()){
-            villagePopulationAssertion.setPopulatedAssertionID(populatedAssertion.get());
-        }else {
-            throw new ApiRequestException("PopulatedAssertion not found");
-        }
+        Village village = villageService.checkVillage(villagePopulationAssertionDTO.getVillageId());
+        villagePopulationAssertion.setVillage(village);
+
+        PopulatedAssertion populatedAssertion = populatedAssertionService.checkPopulatedAssertion(villagePopulationAssertionDTO.getPopulatedAssertionId());
+        villagePopulationAssertion.setPopulatedAssertionID(populatedAssertion);
+
         villagePopulationAssertion.setAnswer(villagePopulationAssertionDTO.getAnswer());
         villagePopulationAssertionRepository.save(villagePopulationAssertion);
         return toDTO(villagePopulationAssertion);
@@ -80,18 +75,12 @@ public class VillagePopulationAssertionService {
         if (foundVillagePopulationAssertion.isEmpty()) {
             throw new ApiRequestException("VillagePopulationAssertion not found");
         }
-        Optional<Village> village = villageRepository.findById(villagePopulationAssertionDTO.getVillageId());
-        if (village.isPresent()){
-            foundVillagePopulationAssertion.get().setVillage(village.get());
-        }else {
-            throw new ApiRequestException("Village not found");
-        }
-        Optional<PopulatedAssertion> populatedAssertion = populatedAssertionRepository.findById(villagePopulationAssertionDTO.getPopulatedAssertionId());
-        if (populatedAssertion.isPresent()){
-            foundVillagePopulationAssertion.get().setPopulatedAssertionID(populatedAssertion.get());
-        }else {
-            throw new ApiRequestException("PopulatedAssertion not found");
-        }
+        Village village = villageService.checkVillage(villagePopulationAssertionDTO.getVillageId());
+        foundVillagePopulationAssertion.get().setVillage(village);
+
+        PopulatedAssertion populatedAssertion = populatedAssertionService.checkPopulatedAssertion(villagePopulationAssertionDTO.getPopulatedAssertionId());
+        foundVillagePopulationAssertion.get().setPopulatedAssertionID(populatedAssertion);
+
         foundVillagePopulationAssertion.get().setAnswer(villagePopulationAssertionDTO.getAnswer());
         villagePopulationAssertionRepository.save(foundVillagePopulationAssertion.get());
         return toDTO(foundVillagePopulationAssertion.get());

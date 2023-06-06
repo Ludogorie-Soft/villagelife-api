@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -29,7 +28,7 @@ public class GroundCategoryService {
         List<GroundCategory> groundCategories = groundCategoryRepository.findAll();
         return groundCategories.stream()
                 .map(this::toDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public GroundCategoryDTO getByID(Long id) {
@@ -41,46 +40,31 @@ public class GroundCategoryService {
     }
 
 
-//    public GroundCategoryDTO createGroundCategoryDTO(GroundCategoryDTO groundCategoryDTO) {
-//        GroundCategory existingGroundCategory = groundCategoryRepository.findByGroundCategoryName(groundCategoryDTO.getGroundCategory());
-//
-//        if (existingGroundCategory != null) {
-//            System.out.println("ВЛИЗАМЕ В ----------------> IF");
-//            throw new ApiRequestException("Ground Category with name: " + groundCategoryDTO.getGroundCategory() + " already exists");
-//        }
-//
-//        GroundCategory groundCategory = new GroundCategory();
-//        groundCategory.setGroundCategory(groundCategoryDTO.getGroundCategory());
-//        groundCategoryRepository.save(groundCategory);
-//
-//        return groundCategoryDTO;
-////        GroundCategory groundCategory = modelMapper.map(groundCategoryDTO, GroundCategory.class);
-////
-////        return modelMapper.map(groundCategoryRepository.save(groundCategory), GroundCategoryDTO.class);
-//    }
 
     public GroundCategoryDTO createGroundCategoryDTO(GroundCategoryDTO groundCategoryDTO) {
-        if (groundCategoryRepository.existsByGroundCategory(groundCategoryDTO.getGroundCategory())) {
-            throw new ApiRequestException("Ground Category with name: " + groundCategoryDTO.getGroundCategory() + " already exists");
+        if (groundCategoryRepository.existsByGroundCategoryName(groundCategoryDTO.getGroundCategoryName())) {
+            throw new ApiRequestException("Ground Category with name: " + groundCategoryDTO.getGroundCategoryName() + " already exists");
         }
 
         GroundCategory groundCategory = new GroundCategory();
-        groundCategory.setGroundCategory(groundCategoryDTO.getGroundCategory());
+        groundCategory.setGroundCategoryName(groundCategoryDTO.getGroundCategoryName());
         groundCategoryRepository.save(groundCategory);
 
-        return groundCategoryDTO;
+        return toDTO(groundCategory);
     }
 
 
-    public GroundCategoryDTO updateGroundCategory(Long id, GroundCategory groundCategory) {
+    public GroundCategoryDTO updateGroundCategory(Long id, GroundCategoryDTO groundCategoryDTO) {
         Optional<GroundCategory> foundGroundCategory = groundCategoryRepository.findById(id);
         if (foundGroundCategory.isEmpty()) {
             throw new ApiRequestException("Ground Category Not Found");
         }
-        foundGroundCategory.get().setGroundCategory(groundCategory.getGroundCategory());
 
-        groundCategoryRepository.save(foundGroundCategory.get());
-        return toDTO(foundGroundCategory.get());
+        GroundCategory groundCategory = foundGroundCategory.get();
+        groundCategory.setGroundCategoryName(groundCategoryDTO.getGroundCategoryName());
+
+        groundCategoryRepository.save(groundCategory);
+        return toDTO(groundCategory);
     }
 
 
@@ -92,4 +76,14 @@ public class GroundCategoryService {
         }
         groundCategoryRepository.delete(groundCategory.get());
     }
+
+    public GroundCategory checkGroundCategory(Long id) {
+        Optional<GroundCategory> groundCategory = groundCategoryRepository.findById(id);
+        if (groundCategory.isPresent()){
+            return groundCategory.get();
+        }else {
+            throw new ApiRequestException("Ground Category not found");
+        }
+    }
+
 }

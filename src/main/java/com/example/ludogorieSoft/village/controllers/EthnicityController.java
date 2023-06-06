@@ -1,9 +1,9 @@
 package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.dtos.EthnicityDTO;
-import com.example.ludogorieSoft.village.model.Ethnicity;
 import com.example.ludogorieSoft.village.services.EthnicityService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -27,26 +27,25 @@ public class EthnicityController {
     }
 
     @PostMapping
-    public ResponseEntity<EthnicityDTO> createEthnicity(@RequestBody Ethnicity ethnicity, UriComponentsBuilder uriComponentsBuilder) {
+    public ResponseEntity<EthnicityDTO> createEthnicity(@RequestBody EthnicityDTO ethnicityDTO, UriComponentsBuilder uriComponentsBuilder) {
+        EthnicityDTO createdEthnicityDTO = ethnicityService.createEthnicity(ethnicityDTO);
         URI location = uriComponentsBuilder.path("/api/v1/ethnicities/{id}")
-                .buildAndExpand(ethnicityService.createEthnicity(ethnicity).getId())
+                .buildAndExpand(createdEthnicityDTO.getId())
                 .toUri();
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(location).body(createdEthnicityDTO);
     }
+
     @PutMapping("/{id}")
-    public ResponseEntity<EthnicityDTO> updateEthnicity(@PathVariable("id") Long id, @RequestBody Ethnicity ethnicity) {
-        return ResponseEntity.ok(ethnicityService.updateEthnicity(id, ethnicity));
+    public ResponseEntity<EthnicityDTO> updateEthnicity(@PathVariable("id") Long id, @RequestBody EthnicityDTO ethnicityDTO) {
+        EthnicityDTO updatedEthnicityDTO = ethnicityService.updateEthnicity(id, ethnicityDTO);
+        return ResponseEntity.ok(updatedEthnicityDTO);
     }
+
+
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Ethnicity> deleteEthnicityById(@PathVariable("id") Long id) {
-        int rowsAffected = ethnicityService.deleteEthnicityById(id);
-        if (rowsAffected > 0) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<String> deleteEthnicityById(@PathVariable("id") Long id) {
+        ethnicityService.deleteEthnicityById(id);
+        return new ResponseEntity<>("Ethnicity with id: " + id + " has been deleted successfully!!", HttpStatus.OK);
     }
-
-
 }

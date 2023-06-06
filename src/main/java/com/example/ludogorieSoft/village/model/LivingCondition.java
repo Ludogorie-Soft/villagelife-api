@@ -14,7 +14,7 @@ public class LivingCondition {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
-    @Column(unique = true)
-    private String livingCondition;
+    @Column(name = "living_condition_name", unique = true)
+    private String livingConditionName;
 
 }

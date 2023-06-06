@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 public class GroundCategoryDTO {
 
     private Long id;
-    private String groundCategory;
+    private String groundCategoryName;
 }

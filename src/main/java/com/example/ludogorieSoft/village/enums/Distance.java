@@ -6,11 +6,11 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum Distance {
-    InTheVillage("в селото"),
-    On10km("на 10 км"),
-    On11to30km("на 11-30 км"),
-    On31to50km("на 31-50 км"),
-    Over50km("над 50 км.");
+    IN_THE_VILLAGE("в селото"),
+    ON_10_KM("на 10 км"),
+    ON_11_TO_30KM("на 11-30 км"),
+    ON_31_TO_50_KM("на 31-50 км"),
+    OVER_50_KM("над 50 км.");
 
     private final String name;
 }

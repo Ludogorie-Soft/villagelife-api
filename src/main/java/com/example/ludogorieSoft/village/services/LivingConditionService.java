@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -27,7 +26,7 @@ public class LivingConditionService {
         return livingConditionList
                 .stream()
                 .map(this::livingConditionToLivingConditionDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public LivingConditionDTO getLivingConditionById(Long id) {
@@ -39,26 +38,24 @@ public class LivingConditionService {
     }
 
     public LivingConditionDTO createLivingCondition(LivingConditionDTO livingConditionDTO) {
-        if (livingConditionsRepository.existsByLivingCondition(livingConditionDTO.getLivingCondition())) {
-            throw new ApiRequestException("LivingCondition with condition: " + livingConditionDTO.getLivingCondition() + " already exists");
+        if (livingConditionsRepository.existsByLivingConditionName(livingConditionDTO.getLivingConditionName())) {
+            throw new ApiRequestException("LivingCondition with condition: " + livingConditionDTO.getLivingConditionName() + " already exists");
         }
-
         LivingCondition livingCondition = new LivingCondition();
-        livingCondition.setLivingCondition(livingConditionDTO.getLivingCondition());
+        livingCondition.setLivingConditionName(livingConditionDTO.getLivingConditionName());
         livingConditionsRepository.save(livingCondition);
-
         return livingConditionDTO;
     }
 
-    public LivingConditionDTO updateLivingCondition(Long id, LivingCondition livingCondition) {
+    public LivingConditionDTO updateLivingCondition(Long id, LivingConditionDTO livingConditionDTO) {
         Optional<LivingCondition> foundLivingCondition = livingConditionsRepository.findById(id);
         if (foundLivingCondition.isEmpty()) {
             throw new ApiRequestException("LivingCondition with id: " + id + " Not Found");
         }
-        if (livingConditionsRepository.existsByLivingCondition(livingCondition.getLivingCondition())) {
-            throw new ApiRequestException("LivingCondition with name: " + livingCondition.getLivingCondition() + " already exists");
+        if (livingConditionsRepository.existsByLivingConditionName(livingConditionDTO.getLivingConditionName())) {
+            throw new ApiRequestException("LivingCondition with name: " + livingConditionDTO.getLivingConditionName() + " already exists");
         }
-        foundLivingCondition.get().setLivingCondition(livingCondition.getLivingCondition());
+        foundLivingCondition.get().setLivingConditionName(livingConditionDTO.getLivingConditionName());
 
         livingConditionsRepository.save(foundLivingCondition.get());
         return livingConditionToLivingConditionDTO(foundLivingCondition.get());
@@ -73,4 +70,12 @@ public class LivingConditionService {
     }
 
 
+    public LivingCondition checkLivingCondition(Long id) {
+        Optional<LivingCondition> livingCondition = livingConditionsRepository.findById(id);
+        if (livingCondition.isPresent()){
+            return livingCondition.get();
+        }else {
+            throw new ApiRequestException("Living Condition not found");
+        }
+    }
 }

@@ -6,12 +6,10 @@ import com.example.ludogorieSoft.village.repositories.PopulationRepository;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -22,18 +20,21 @@ public class PopulationService {
     public PopulationDTO populationToPopulationDTO(Population population){
         return modelMapper.map(population, PopulationDTO.class);
     }
+    public Population populationDTOtoPopulation(PopulationDTO populationDTO){
+        return modelMapper.map(populationDTO, Population.class);
+    }
 
     public List<PopulationDTO> getAllPopulation() {
         List<Population> populations = populationRepository.findAll();
         return populations
                 .stream()
                 .map(this::populationToPopulationDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
-    public PopulationDTO createPopulation(Population population) {
-        populationRepository.save(population);
-        return populationToPopulationDTO(population);
+    public PopulationDTO createPopulation(PopulationDTO populationDTO) {
+        populationRepository.save(populationDTOtoPopulation(populationDTO));
+        return populationDTO;
     }
 
     public PopulationDTO getPopulationById(Long id) {
@@ -44,24 +45,23 @@ public class PopulationService {
         return populationToPopulationDTO(population.get());
     }
 
-    public int deletePopulationById(Long id) {
-        try {
-            populationRepository.deleteById(id);
-            return 1;
-        } catch (EmptyResultDataAccessException e) {
-            return 0;
+    public void deletePopulationById(Long id) {
+        Optional<Population> population = populationRepository.findById(id);
+        if (population.isEmpty()) {
+            throw new ApiRequestException("Population not found for id " + id);
         }
+        populationRepository.delete(population.get());
     }
 
-    public PopulationDTO updatePopulation(Long id, Population population) {
+    public PopulationDTO updatePopulation(Long id, PopulationDTO populationDTO) {
         Optional<Population> findPopulation = populationRepository.findById(id);
         if (findPopulation.isEmpty()) {
             throw new ApiRequestException("Population not found");
         }
-        findPopulation.get().setNumberOfPopulation(population.getNumberOfPopulation());
-        findPopulation.get().setForeigners(population.getForeigners());
-        findPopulation.get().setChildren(population.getChildren());
-        findPopulation.get().setResidents(population.getResidents());
+        findPopulation.get().setNumberOfPopulation(populationDTO.getNumberOfPopulation());
+        findPopulation.get().setForeigners(populationDTO.getForeigners());
+        findPopulation.get().setChildren(populationDTO.getChildren());
+        findPopulation.get().setResidents(populationDTO.getResidents());
 
         populationRepository.save(findPopulation.get());
         return populationToPopulationDTO(findPopulation.get());

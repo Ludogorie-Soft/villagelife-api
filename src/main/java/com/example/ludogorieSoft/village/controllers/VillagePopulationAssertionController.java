@@ -1,6 +1,5 @@
 package com.example.ludogorieSoft.village.controllers;
 
-import com.example.ludogorieSoft.village.dtos.VillageLandscapeDTO;
 import com.example.ludogorieSoft.village.dtos.VillagePopulationAssertionDTO;
 import com.example.ludogorieSoft.village.model.VillagePopulationAssertion;
 import com.example.ludogorieSoft.village.services.VillagePopulationAssertionService;
@@ -20,7 +19,6 @@ public class VillagePopulationAssertionController {
 
     @GetMapping
     public ResponseEntity<List<VillagePopulationAssertionDTO>> getAllVillagePopulationAssertions(){
-        System.out.println("TEST Controller :"  +villagePopulationAssertionService.getAllVillagePopulationAssertion());
         return ResponseEntity.ok(villagePopulationAssertionService.getAllVillagePopulationAssertion());
     }
     @GetMapping("/{id}")
@@ -33,9 +31,9 @@ public class VillagePopulationAssertionController {
     }
 
     @PostMapping
-    public ResponseEntity<VillagePopulationAssertionDTO> createVillagePopulationAssertion(@RequestBody VillagePopulationAssertionDTO VillagePopulationAssertionDTO, UriComponentsBuilder uriComponentsBuilder) {
+    public ResponseEntity<VillagePopulationAssertionDTO> createVillagePopulationAssertion(@RequestBody VillagePopulationAssertionDTO villagePopulationAssertionDTO, UriComponentsBuilder uriComponentsBuilder) {
         URI location = uriComponentsBuilder.path("/api/v1/villagePopulationAssertions/{id}")
-                .buildAndExpand(villagePopulationAssertionService.createVillagePopulationAssertionDTO(VillagePopulationAssertionDTO).getId())
+                .buildAndExpand(villagePopulationAssertionService.createVillagePopulationAssertionDTO(villagePopulationAssertionDTO).getId())
                 .toUri();
         return ResponseEntity.created(location).build();
     }

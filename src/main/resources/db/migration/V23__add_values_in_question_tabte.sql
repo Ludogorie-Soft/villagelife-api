@@ -1,4 +1,4 @@
-INSERT INTO questions (question)
+INSERT INTO questions (question_name)
 VALUES
     ('Какви култури и животни вирят най-добре в селото?'),
     ('Какви компании (възможности за работа) има в радиус до 20 км около селото?'),

@@ -1,4 +1,4 @@
-INSERT INTO living_conditions (living_condition) VALUES
+INSERT INTO living_conditions (living_condition_name) VALUES
 ('инфраструктурата на селото е добра'),
 ('добра пътна достъпност при зимни условия'),
 ('наличие на обществен транспорт до града'),

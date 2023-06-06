@@ -35,8 +35,8 @@ public class ObjectAroundVillageController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ObjectAroundVillageDTO> updateObjectAroundVillage(@PathVariable("id") Long id, @Valid @RequestBody ObjectAroundVillage objectAroundVillage) {
-        return ResponseEntity.ok(objectAroundVillageService.updateObjectAroundVillage(id, objectAroundVillage));
+    public ResponseEntity<ObjectAroundVillageDTO> updateObjectAroundVillage(@PathVariable("id") Long id, @Valid @RequestBody ObjectAroundVillageDTO objectAroundVillageDTO) {
+        return ResponseEntity.ok(objectAroundVillageService.updateObjectAroundVillage(id, objectAroundVillageDTO));
     }
 
     @DeleteMapping("/{id}")

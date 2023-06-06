@@ -1,7 +1,6 @@
 package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.dtos.GroundCategoryDTO;
-import com.example.ludogorieSoft.village.model.GroundCategory;
 import com.example.ludogorieSoft.village.services.GroundCategoryService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,7 +18,6 @@ public class GroundCategoryController {
 
     @GetMapping
     public ResponseEntity<List<GroundCategoryDTO>> getAllGroundCategories() {
-        System.out.println("TEST Controller :" + groundCategoryService.getAllGroundCategories());
         return ResponseEntity.ok(groundCategoryService.getAllGroundCategories());
     }
 
@@ -30,25 +28,14 @@ public class GroundCategoryController {
 
     @PostMapping
     public ResponseEntity<GroundCategoryDTO> createGroundCategory(@Valid @RequestBody GroundCategoryDTO groundCategoryDTO) {
-        GroundCategoryDTO createdGroundCategory = groundCategoryService.createGroundCategoryDTO(groundCategoryDTO);
-        return new ResponseEntity<>(createdGroundCategory, HttpStatus.CREATED);
+        GroundCategoryDTO createdGroundCategoryDTO = groundCategoryService.createGroundCategoryDTO(groundCategoryDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdGroundCategoryDTO);
     }
 
-//    @PostMapping
-//    public ResponseEntity<GroundCategoryDTO> createGroundCategory(@Valid @RequestBody GroundCategoryDTO groundCategoryDTO, UriComponentsBuilder uriComponentsBuilder) {
-//        GroundCategoryDTO createdGroundCategory = groundCategoryService.createGroundCategoryDTO(groundCategoryDTO);
-//        URI location = uriComponentsBuilder.path("/api/v1/groundCategory/{id}")
-//                .buildAndExpand(groundCategoryService.createGroundCategoryDTO(groundCategoryDTO).getId())
-//                .toUri();
-////        return new ResponseEntity<>(createdGroundCategory, HttpStatus.CREATED);
-//        return ResponseEntity.created(location).build();
-//    }
-
-
-
     @PutMapping("/{id}")
-    public ResponseEntity<GroundCategoryDTO> updateGroundCategory(@PathVariable("id") Long id, @Valid @RequestBody GroundCategory groundCategory) {
-        return ResponseEntity.ok(groundCategoryService.updateGroundCategory(id, groundCategory));
+    public ResponseEntity<GroundCategoryDTO> updateGroundCategory(@PathVariable("id") Long id, @Valid @RequestBody GroundCategoryDTO groundCategoryDTO) {
+        GroundCategoryDTO updatedGroundCategoryDTO = groundCategoryService.updateGroundCategory(id, groundCategoryDTO);
+        return ResponseEntity.ok(updatedGroundCategoryDTO);
     }
 
 

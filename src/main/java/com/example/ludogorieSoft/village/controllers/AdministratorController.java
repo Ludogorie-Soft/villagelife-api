@@ -1,9 +1,10 @@
 package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.dtos.AdministratorDTO;
-import com.example.ludogorieSoft.village.model.Administrator;
+import com.example.ludogorieSoft.village.dtos.AdministratorRequest;
 import com.example.ludogorieSoft.village.services.AdministratorService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -28,24 +29,20 @@ public class AdministratorController {
     }
 
     @PostMapping
-    public ResponseEntity<AdministratorDTO> createAdministrator(@RequestBody Administrator administrator, UriComponentsBuilder uriComponentsBuilder) {
+    public ResponseEntity<AdministratorDTO> createAdministrator(@RequestBody AdministratorRequest administratorRequest, UriComponentsBuilder uriComponentsBuilder) {
         URI location = uriComponentsBuilder.path("/api/v1/admins/{id}")
-                .buildAndExpand(administratorService.createAdministrator(administrator).getId())
+                .buildAndExpand(administratorService.createAdministrator(administratorRequest).getId())
                 .toUri();
         return ResponseEntity.created(location).build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<AdministratorDTO> updateAdministrator(@PathVariable("id") Long id, @RequestBody Administrator administrator) {
-        return ResponseEntity.ok(administratorService.updateAdministrator(id, administrator));
+    public ResponseEntity<AdministratorDTO> updateAdministrator(@PathVariable("id") Long id, @RequestBody AdministratorRequest administratorRequest) {
+        return ResponseEntity.ok(administratorService.updateAdministrator(id, administratorRequest));
     }
     @DeleteMapping("/{id}")
-    public ResponseEntity<Administrator> deleteAdministratorById(@PathVariable("id") Long id) {
-        int rowsAffected = administratorService.deleteAdministratorById(id);
-        if (rowsAffected > 0) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<String> deleteAdministratorById(@PathVariable("id") Long id) {
+        administratorService.deleteAdministratorById(id);
+        return new ResponseEntity<>("Administrator with id: " + id + " has been deleted successfully!!", HttpStatus.OK);
     }
 }

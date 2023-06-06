@@ -16,7 +16,7 @@ public class PopulatedAssertion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
-    @Column(unique = true)
-    private String populatedAssertion;
+    @Column(name = "populated_assertion_name",unique = true)
+    private String populatedAssertionName;
 
 }

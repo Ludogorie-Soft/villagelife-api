@@ -10,12 +10,11 @@ import com.example.ludogorieSoft.village.repositories.VillageRepository;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
 
 @Service
 @AllArgsConstructor
@@ -24,6 +23,8 @@ public class EthnicityVillageService {
     private final EthnicityVillageRepository ethnicityVillageRepository;
     private final EthnicityRepository ethnicityRepository;
     private final VillageRepository villageRepository;
+    private final VillageService villageService;
+    private final EthnicityService ethnicityService;
 
     public EthnicityVillageDTO ethnicityVillageToEthnicityVillageDTO(EthnicityVillage ethnicityVillage) {
         return modelMapper.map(ethnicityVillage, EthnicityVillageDTO.class);
@@ -34,7 +35,7 @@ public class EthnicityVillageService {
         return ethnicityVillages
                 .stream()
                 .map(this::ethnicityVillageToEthnicityVillageDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public EthnicityVillageDTO getEthnicityVillageById(Long id) {
@@ -50,45 +51,38 @@ public class EthnicityVillageService {
         if (foundEthnicityVillage.isEmpty()) {
             throw new ApiRequestException("EthnicityVillage not found");
         }
-        Optional<Ethnicity> ethnicity = ethnicityRepository.findById(ethnicityVillage.getEthnicityId());
-        if (ethnicity.isPresent()){
-            foundEthnicityVillage.get().setEthnicity(ethnicity.get());
-        }else {
-            throw new ApiRequestException("Ethnicity not found");
-        }
-        Optional<Village> village = villageRepository.findById(ethnicityVillage.getVillageId());
-        if (village.isPresent()){
-            foundEthnicityVillage.get().setVillage(village.get());
-        }else {
-            throw new ApiRequestException("Village not found");
-        }
+        Ethnicity ethnicity = ethnicityService.checkEthnicity(ethnicityVillage.getEthnicityId());
+        foundEthnicityVillage.get().setEthnicity(ethnicity);
+
+        Village village = villageService.checkVillage(ethnicityVillage.getVillageId());
+        foundEthnicityVillage.get().setVillage(village);
+
         ethnicityVillageRepository.save(foundEthnicityVillage.get());
         return ethnicityVillage;
     }
 
     public EthnicityVillageDTO createEthnicityVillage(EthnicityVillageDTO ethnicityVillageDTO) {
         EthnicityVillage ethnicityVillage = new EthnicityVillage();
-        Optional<Village> village = villageRepository.findById(ethnicityVillageDTO.getVillageId());
-        if (village.isPresent()){
-            ethnicityVillage.setVillage(village.get());
-        }else {
-            throw new ApiRequestException("Village not found");
-        }
-        Optional<Ethnicity> ethnicity = ethnicityRepository.findById(ethnicityVillageDTO.getEthnicityId());
-        if (ethnicity.isPresent()){
-            ethnicityVillage.setEthnicity(ethnicity.get());
-        }else {
-            throw new ApiRequestException("Ethnicity not found");
-        }
+
+        Village village = villageService.checkVillage(ethnicityVillageDTO.getVillageId());
+        ethnicityVillage.setVillage(village);
+
+        Ethnicity ethnicity = ethnicityService.checkEthnicity(ethnicityVillageDTO.getEthnicityId());
+        ethnicityVillage.setEthnicity(ethnicity);
+
         ethnicityVillageRepository.save(ethnicityVillage);
         return ethnicityVillageDTO;
     }
-    public int deleteEthnicityVillageById(Long id) {
-        try {
+
+
+    public void deleteEthnicityVillageById(Long id) {
+        if (ethnicityVillageRepository.existsById(id)) {
             ethnicityVillageRepository.deleteById(id);
-            return 1;
-        } catch (EmptyResultDataAccessException e) {
-            return 0;
+        } else {
+            throw new ApiRequestException("Ethnicity in Village with id " + id + " not found");
         }
     }
+
+
+
 }

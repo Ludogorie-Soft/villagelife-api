@@ -6,6 +6,7 @@ import com.example.ludogorieSoft.village.dtos.PopulatedAssertionDTO;
 import com.example.ludogorieSoft.village.model.PopulatedAssertion;
 import com.example.ludogorieSoft.village.services.PopulatedAssertionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -15,7 +16,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/populated_assertion")
+@RequestMapping("/api/v1/populated_assertions")
 @RequiredArgsConstructor
 public class PopulatedAssertionController {
 
@@ -32,25 +33,21 @@ public class PopulatedAssertionController {
     }
 
     @PostMapping
-    public ResponseEntity<PopulatedAssertionDTO> createPopulatedAssertion(@RequestBody @Valid PopulatedAssertion populatedAssertion, UriComponentsBuilder uriComponentsBuilder) {
+    public ResponseEntity<PopulatedAssertionDTO> createPopulatedAssertion(@RequestBody @Valid PopulatedAssertionDTO populatedAssertionDTO, UriComponentsBuilder uriComponentsBuilder) {
         URI location = uriComponentsBuilder.path("/api/v1/population/{id}")
-                .buildAndExpand(populatedAssertionService.createPopulatedAssertion(populatedAssertion).getId())
+                .buildAndExpand(populatedAssertionService.createPopulatedAssertion(populatedAssertionDTO).getId())
                 .toUri();
         return ResponseEntity.created(location).build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PopulatedAssertionDTO> updatePopulatedAssertionById(@PathVariable("id") Long id, @Valid @RequestBody PopulatedAssertion populatedAssertion) {
-        return ResponseEntity.ok(populatedAssertionService.updatePopulatedAssertion(id, populatedAssertion));
+    public ResponseEntity<PopulatedAssertionDTO> updatePopulatedAssertionById(@PathVariable("id") Long id, @Valid @RequestBody PopulatedAssertionDTO populatedAssertionDTO) {
+        return ResponseEntity.ok(populatedAssertionService.updatePopulatedAssertion(id, new PopulatedAssertionDTO()));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<PopulatedAssertionDTO> deletePopulatedAssertionById(@PathVariable("id") Long id) {
-        int rowsAffected = populatedAssertionService.deletePopulatedAssertionById(id);
-        if (rowsAffected > 0) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<String> deletePopulatedAssertionById(@PathVariable("id") Long id) {
+        populatedAssertionService.deletePopulatedAssertionById(id);
+        return new ResponseEntity<>("PopulatedAssertion with id: " + id + " has been deleted successfully!!", HttpStatus.OK);
     }
 }

@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -26,7 +25,7 @@ public class LandscapeService {
         return landscapes
                 .stream()
                 .map(this::landscapeToLandscapeDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public LandscapeDTO getLandscapeById(Long id) {
@@ -40,22 +39,20 @@ public class LandscapeService {
         if (landscapeRepository.existsByLandscapeName(landscapeDTO.getLandscapeName())) {
             throw new ApiRequestException("Landscape with name: " + landscapeDTO.getLandscapeName() + " already exists");
         }
-
         Landscape landscape = new Landscape();
         landscape.setLandscapeName(landscapeDTO.getLandscapeName());
         landscapeRepository.save(landscape);
-
         return landscapeDTO;
     }
-    public LandscapeDTO updateLandscape(Long id, Landscape landscape) {
+    public LandscapeDTO updateLandscape(Long id, LandscapeDTO landscapeDTO) {
         Optional<Landscape> foundLandscape = landscapeRepository.findById(id);
         if (foundLandscape.isEmpty()) {
             throw new ApiRequestException("Landscape with id: " + id + " Not Found");
         }
-        if (landscapeRepository.existsByLandscapeName(landscape.getLandscapeName())) {
-            throw new ApiRequestException("Landscape with name: " + landscape.getLandscapeName() + " already exists");
+        if (landscapeRepository.existsByLandscapeName(landscapeDTO.getLandscapeName())) {
+            throw new ApiRequestException("Landscape with name: " + landscapeDTO.getLandscapeName() + " already exists");
         }
-        foundLandscape.get().setLandscapeName(landscape.getLandscapeName());
+        foundLandscape.get().setLandscapeName(landscapeDTO.getLandscapeName());
 
         landscapeRepository.save(foundLandscape.get());
         return landscapeToLandscapeDTO(foundLandscape.get());
@@ -69,4 +66,12 @@ public class LandscapeService {
         landscapeRepository.delete(landscape.get());
     }
 
+    public Landscape checkLandscape(Long id) {
+        Optional<Landscape> landscape = landscapeRepository.findById(id);
+        if (landscape.isPresent()){
+            return landscape.get();
+        }else {
+            throw new ApiRequestException("Landscape not found");
+        }
+    }
 }

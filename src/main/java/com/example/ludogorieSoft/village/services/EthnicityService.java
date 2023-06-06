@@ -6,12 +6,10 @@ import com.example.ludogorieSoft.village.repositories.EthnicityRepository;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -22,19 +20,23 @@ public class EthnicityService {
     public EthnicityDTO ethnicityToEthnicityDTO(Ethnicity ethnicity){
         return modelMapper.map(ethnicity, EthnicityDTO.class);
     }
-
+    public Ethnicity checkEthnicity(Long id){
+        Optional<Ethnicity> ethnicity = ethnicityRepository.findById(id);
+        if (ethnicity.isPresent()){
+            return ethnicity.get();
+        }else {
+            throw new ApiRequestException("Ethnicity not found");
+        }
+    }
     public List<EthnicityDTO> getAllEthnicities() {
         List<Ethnicity> ethnicities = ethnicityRepository.findAll();
         return ethnicities
                 .stream()
                 .map(this::ethnicityToEthnicityDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
-    public EthnicityDTO createEthnicity(Ethnicity ethnicity) {
-        ethnicityRepository.save(ethnicity);
-        return ethnicityToEthnicityDTO(ethnicity);
-    }
+
     public EthnicityDTO getEthnicityById(Long id) {
         Optional<Ethnicity> ethnicity = ethnicityRepository.findById(id);
         if (ethnicity.isEmpty()) {
@@ -43,12 +45,35 @@ public class EthnicityService {
         return ethnicityToEthnicityDTO(ethnicity.get());
     }
 
-    public int deleteEthnicityById(Long id) {
-        try {
+    public EthnicityDTO createEthnicity(EthnicityDTO ethnicityDTO) {
+        if (ethnicityRepository.existsByEthnicityName(ethnicityDTO.getEthnicityName())) {
+            throw new ApiRequestException("Ethnicity with name: " + ethnicityDTO.getEthnicityName() + " already exists");
+        }
+
+        Ethnicity ethnicity = new Ethnicity();
+        ethnicity.setEthnicityName(ethnicityDTO.getEthnicityName());
+        ethnicityRepository.save(ethnicity);
+
+        return ethnicityToEthnicityDTO(ethnicity);
+    }
+
+
+    public EthnicityDTO updateEthnicity(Long id, EthnicityDTO ethnicityDTO) {
+        Optional<Ethnicity> foundEthnicity = ethnicityRepository.findById(id);
+        if (foundEthnicity.isEmpty()) {
+            throw new ApiRequestException("Ethnicity not found");
+        }
+        foundEthnicity.get().setEthnicityName(ethnicityDTO.getEthnicityName());
+
+        ethnicityRepository.save(foundEthnicity.get());
+        return ethnicityToEthnicityDTO(foundEthnicity.get());
+    }
+
+    public void deleteEthnicityById(Long id) {
+        if (ethnicityRepository.existsById(id)) {
             ethnicityRepository.deleteById(id);
-            return 1;
-        } catch (EmptyResultDataAccessException e) {
-            return 0;
+        } else {
+            throw new ApiRequestException("Ethnicity with id " + id + " not found");
         }
     }
     public EthnicityDTO updateEthnicity(Long id, Ethnicity ethnicity) {
@@ -60,4 +85,5 @@ public class EthnicityService {
         ethnicityRepository.save(foundEthnicity.get());
         return ethnicityToEthnicityDTO(foundEthnicity.get());
     }
+
 }

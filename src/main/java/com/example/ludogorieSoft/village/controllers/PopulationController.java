@@ -4,6 +4,7 @@ import com.example.ludogorieSoft.village.dtos.PopulationDTO;
 import com.example.ludogorieSoft.village.model.Population;
 import com.example.ludogorieSoft.village.services.PopulationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -13,7 +14,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/population")
+@RequestMapping("/api/v1/populations")
 @RequiredArgsConstructor
 public class PopulationController {
 
@@ -28,25 +29,21 @@ public class PopulationController {
         return ResponseEntity.ok(populationService.getPopulationById(id));
     }
     @PostMapping
-    public ResponseEntity<PopulationDTO> createPopulation(@RequestBody @Valid Population population, UriComponentsBuilder uriComponentsBuilder) {
+    public ResponseEntity<PopulationDTO> createPopulation(@RequestBody @Valid PopulationDTO populationDTO, UriComponentsBuilder uriComponentsBuilder) {
         URI location = uriComponentsBuilder.path("/api/v1/population/{id}")
-                .buildAndExpand(populationService.createPopulation(population).getId())
+                .buildAndExpand(populationService.createPopulation(populationDTO).getId())
                 .toUri();
         return ResponseEntity.created(location).build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PopulationDTO> updatePopulation(@PathVariable("id") Long id,@Valid @RequestBody Population population) {
-        return ResponseEntity.ok(populationService.updatePopulation(id, population));
+    public ResponseEntity<PopulationDTO> updatePopulation(@PathVariable("id") Long id,@Valid @RequestBody PopulationDTO populationDTO) {
+        return ResponseEntity.ok(populationService.updatePopulation(id, populationDTO));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<PopulationDTO> deletePopulationById(@PathVariable("id") Long id) {
-        int rowsAffected = populationService.deletePopulationById(id);
-        if (rowsAffected > 0) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<String> deletePopulationById(@PathVariable("id") Long id) {
+        populationService.deletePopulationById(id);
+        return new ResponseEntity<>("Population with id: " + id + " has been deleted successfully!!", HttpStatus.OK);
     }
 }
