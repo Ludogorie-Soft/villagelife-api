@@ -40,7 +40,7 @@ public class VillageControllerIntegrationTest {
 
     @Test
     public void testGetAllVillages() throws Exception {
-        // Arrange
+
         VillageDTO villageDTO1 = new VillageDTO();
         villageDTO1.setId(1L);
         VillageDTO villageDTO2 = new VillageDTO();
@@ -49,7 +49,7 @@ public class VillageControllerIntegrationTest {
 
         when(villageService.getAllVillages()).thenReturn(villageDTOList);
 
-        // Act
+
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villages")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -57,40 +57,40 @@ public class VillageControllerIntegrationTest {
                 .andExpect(jsonPath("$.[1].id").value(2))
                 .andReturn();
 
-        // Assert
+
         String response = mvcResult.getResponse().getContentAsString();
         assertNotNull(response);
     }
 
     @Test
     public void testGetVillageById() throws Exception {
-        // Arrange
+
         VillageDTO villageDTO = new VillageDTO();
         villageDTO.setId(1L);
 
         when(villageService.getVillageById(anyLong())).thenReturn(villageDTO);
 
-        // Act
+
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villages/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
                 .andReturn();
 
-        // Assert
+
         String response = mvcResult.getResponse().getContentAsString();
         assertNotNull(response);
     }
 
     @Test
     public void testCreateVillage() throws Exception {
-        // Arrange
+
         VillageDTO villageDTO = new VillageDTO();
         villageDTO.setId(1L);
 
         when(villageService.createVillage(any(VillageDTO.class))).thenReturn(villageDTO);
 
-        // Act
+
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/villages")
                         .content("{\"id\": 1}")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -98,20 +98,19 @@ public class VillageControllerIntegrationTest {
                 .andExpect(jsonPath("$.id").value(1))
                 .andReturn();
 
-        // Assert
         String response = mvcResult.getResponse().getContentAsString();
         assertNotNull(response);
     }
 
     @Test
     public void testUpdateVillage() throws Exception {
-        // Arrange
+
         VillageDTO villageDTO = new VillageDTO();
         villageDTO.setId(1L);
 
         when(villageService.updateVillage(anyLong(), any(VillageDTO.class))).thenReturn(villageDTO);
 
-        // Act
+
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/villages/{id}", 1)
                         .content("{\"id\": 1}")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -119,16 +118,14 @@ public class VillageControllerIntegrationTest {
                 .andExpect(jsonPath("$.id").value(1))
                 .andReturn();
 
-        // Assert
+
         String response = mvcResult.getResponse().getContentAsString();
         assertNotNull(response);
     }
 
     @Test
     public void testDeleteVillage() throws Exception {
-        // Arrange
 
-        // Act
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/villages/{id}", 1))
                 .andExpect(status().isNoContent());
     }
