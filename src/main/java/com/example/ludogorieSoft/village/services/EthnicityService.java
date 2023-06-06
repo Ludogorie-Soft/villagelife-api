@@ -16,7 +16,7 @@ import java.util.Optional;
 public class EthnicityService {
     private final EthnicityRepository ethnicityRepository;
     private final ModelMapper modelMapper;
-    private  final  String errorMessage="Ethnicity not found";
+    private final  static String errorMessage= "Ethnicity not found";
 
     public EthnicityDTO ethnicityToEthnicityDTO(Ethnicity ethnicity){
         return modelMapper.map(ethnicity, EthnicityDTO.class);
