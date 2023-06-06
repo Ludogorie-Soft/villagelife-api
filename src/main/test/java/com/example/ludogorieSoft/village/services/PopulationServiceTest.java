@@ -97,35 +97,36 @@ class PopulationServiceTest {
     }
 
 
-//    @Test
-//    void testCreatePopulation() {
-//        PopulationDTO populationDTO = new PopulationDTO();
-//        populationDTO.setNumberOfPopulation(NumberOfPopulation.UP_TO_10_PEOPLE);
-//        populationDTO.setResidents(Residents.UP_TO_2_PERCENT);
-//        populationDTO.setChildren(Children.BELOW_10_YEARS);
-//        populationDTO.setForeigners(Foreigners.YES);
-//
-//        Population population = new Population();
-//        population.setNumberOfPopulation(populationDTO.getNumberOfPopulation());
-//        population.setResidents(populationDTO.getResidents());
-//        population.setChildren(populationDTO.getChildren());
-//        population.setForeigners(populationDTO.getForeigners());
-//
-//        when(populationRepository.save(any(Population.class))).thenReturn(population);
-//
-//        PopulationDTO result = populationService.createPopulation(populationDTO);
-//
-//        assertNotNull(result);
-//        assertEquals(populationDTO.getNumberOfPopulation(), result.getNumberOfPopulation());
-//        assertEquals(populationDTO.getResidents(), result.getResidents());
-//        assertEquals(populationDTO.getChildren(), result.getChildren());
-//        assertEquals(populationDTO.getForeigners(), result.getForeigners());
-//
-//        verify(populationRepository, times(1)).save(any(Population.class));
-//    }
+    @Test
+    void testCreatePopulation() {
+        PopulationDTO populationDTO = new PopulationDTO();
+        populationDTO.setNumberOfPopulation(NumberOfPopulation.UP_TO_10_PEOPLE);
+        populationDTO.setResidents(Residents.UP_TO_2_PERCENT);
+        populationDTO.setChildren(Children.BELOW_10_YEARS);
+        populationDTO.setForeigners(Foreigners.YES);
+
+        Population population = new Population();
+        population.setNumberOfPopulation(populationDTO.getNumberOfPopulation());
+        population.setResidents(populationDTO.getResidents());
+        population.setChildren(populationDTO.getChildren());
+        population.setForeigners(populationDTO.getForeigners());
+
+        when(populationRepository.save(any(Population.class))).thenReturn(population);
+        when(populationService.populationDTOtoPopulation(populationDTO)).thenReturn(population);
+
+        PopulationDTO result = populationService.createPopulation(populationDTO);
+
+        assertNotNull(result);
+        assertEquals(populationDTO.getNumberOfPopulation(), result.getNumberOfPopulation());
+        assertEquals(populationDTO.getResidents(), result.getResidents());
+        assertEquals(populationDTO.getChildren(), result.getChildren());
+        assertEquals(populationDTO.getForeigners(), result.getForeigners());
+
+        verify(populationRepository, times(1)).save(any(Population.class));
+    }
 
     @Test
-    public void testGetPopulationByIdNotFound() {
+    void testGetPopulationByIdNotFound() {
         Long populationId = 1L;
         when(populationRepository.findById(populationId)).thenReturn(Optional.empty());
 

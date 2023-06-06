@@ -33,7 +33,6 @@ public class PopulationService {
     }
 
     public PopulationDTO createPopulation(PopulationDTO populationDTO) {
-
         populationRepository.save(populationDTOtoPopulation(populationDTO));
         return populationDTO;
     }

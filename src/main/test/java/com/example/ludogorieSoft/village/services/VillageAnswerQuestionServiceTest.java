@@ -48,43 +48,46 @@ class VillageAnswerQuestionServiceTest {
         MockitoAnnotations.openMocks(this);
     }
 
-//    @Test
-//    public void testCreateVillageAnswerQuestion_ValidInput_ReturnsDTO() {
-//        // Arrange
-//        VillageAnswerQuestionDTO inputDTO = new VillageAnswerQuestionDTO();
-//        inputDTO.setVillageId(1L);
-//        inputDTO.setQuestionId(1L);
-//        inputDTO.setAnswer("Sample answer");
-//
-//        Village village = new Village();
-//        when(villageService.checkVillage(1L)).thenReturn(village);
-//
-//        Question question = new Question();
-//        when(questionService.checkQuestion(1L)).thenReturn(question);
-//
-//        VillageAnswerQuestion savedVillageAnswerQuestion = new VillageAnswerQuestion();
-//        when(villageAnswerQuestionRepository.save(any(VillageAnswerQuestion.class))).thenReturn(savedVillageAnswerQuestion);
-//
-//        VillageAnswerQuestionDTO expectedDTO = new VillageAnswerQuestionDTO();
-//        expectedDTO.setId(savedVillageAnswerQuestion.getId());
-//        expectedDTO.setVillageId(village.getId());
-//        expectedDTO.setQuestionId(question.getId());
-//        expectedDTO.setAnswer(inputDTO.getAnswer());
-//
-//        // Act
-//        VillageAnswerQuestionDTO resultDTO = villageAnswerQuestionService.createVillageAnswerQuestion(inputDTO);
-//
-//        // Assert
-//        assertNotNull(resultDTO);
-//        assertEquals(expectedDTO.getId(), resultDTO.getId());
-//        assertEquals(expectedDTO.getVillageId(), resultDTO.getVillageId());
-//        assertEquals(expectedDTO.getQuestionId(), resultDTO.getQuestionId());
-//        assertEquals(expectedDTO.getAnswer(), resultDTO.getAnswer());
-//
-//        verify(villageService, times(1)).checkVillage(1L);
-//        verify(questionService, times(1)).checkQuestion(1L);
-//        verify(villageAnswerQuestionRepository, times(1)).save(any(VillageAnswerQuestion.class));
-//    }
+    @Test
+    void testCreateVillageAnswerQuestionWithValidInputThenReturnsDTO() {
+        VillageAnswerQuestionDTO inputDTO = new VillageAnswerQuestionDTO();
+        inputDTO.setVillageId(1L);
+        inputDTO.setQuestionId(1L);
+        inputDTO.setAnswer("Sample answer");
+        VillageAnswerQuestion savedVillageAnswerQuestion = new VillageAnswerQuestion();
+
+        Village village = new Village();
+        village.setId(1L);
+        when(villageService.checkVillage(1L)).thenReturn(village);
+        savedVillageAnswerQuestion.setVillage(villageService.checkVillage(1L));
+
+        Question question = new Question();
+        question.setId(1L);
+        when(questionService.checkQuestion(1L)).thenReturn(question);
+        savedVillageAnswerQuestion.setQuestion(questionService.checkQuestion(1L));
+        savedVillageAnswerQuestion.setAnswer(inputDTO.getAnswer());
+
+        when(villageAnswerQuestionRepository.save(any(VillageAnswerQuestion.class))).thenReturn(savedVillageAnswerQuestion);
+        when(villageAnswerQuestionService.toDTO(savedVillageAnswerQuestion)).thenReturn(inputDTO);
+
+        VillageAnswerQuestionDTO expectedDTO = new VillageAnswerQuestionDTO();
+        expectedDTO.setId(savedVillageAnswerQuestion.getId());
+        expectedDTO.setVillageId(savedVillageAnswerQuestion.getVillage().getId());
+        expectedDTO.setQuestionId(savedVillageAnswerQuestion.getQuestion().getId());
+        expectedDTO.setAnswer(inputDTO.getAnswer());
+
+        VillageAnswerQuestionDTO resultDTO = villageAnswerQuestionService.createVillageAnswerQuestion(inputDTO);
+
+        assertNotNull(resultDTO);
+        assertEquals(expectedDTO.getId(), resultDTO.getId());
+        assertEquals(expectedDTO.getVillageId(), resultDTO.getVillageId());
+        assertEquals(expectedDTO.getQuestionId(), resultDTO.getQuestionId());
+        assertEquals(expectedDTO.getAnswer(), resultDTO.getAnswer());
+
+        verify(villageService, times(2)).checkVillage(1L);
+        verify(questionService, times(2)).checkQuestion(1L);
+        verify(villageAnswerQuestionRepository, times(1)).save(any(VillageAnswerQuestion.class));
+    }
 
 
 
