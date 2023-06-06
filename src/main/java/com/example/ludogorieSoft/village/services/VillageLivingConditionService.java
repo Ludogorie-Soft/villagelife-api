@@ -52,7 +52,7 @@ public class VillageLivingConditionService {
         Village village = villageService.checkVillage(villageLivingConditionsDTO.getVillageId());
         villageLivingConditions.setVillage(village);
 
-        LivingCondition livingCondition = livingConditionService.checkLandscape(villageLivingConditionsDTO.getLivingConditionId());
+        LivingCondition livingCondition = livingConditionService.checkLivingCondition(villageLivingConditionsDTO.getLivingConditionId());
         villageLivingConditions.setLivingCondition(livingCondition);
 
         villageLivingConditions.setConsents(villageLivingConditionsDTO.getConsents());
@@ -68,7 +68,7 @@ public class VillageLivingConditionService {
         Village village = villageService.checkVillage(villageLivingConditionDTO.getVillageId());
         villageLivingConditions.get().setVillage(village);
 
-        LivingCondition livingCondition = livingConditionService.checkLandscape(villageLivingConditionDTO.getLivingConditionId());
+        LivingCondition livingCondition = livingConditionService.checkLivingCondition(villageLivingConditionDTO.getLivingConditionId());
         villageLivingConditions.get().setLivingCondition(livingCondition);
 
         villageLivingConditions.get().setConsents(villageLivingConditionDTO.getConsents());

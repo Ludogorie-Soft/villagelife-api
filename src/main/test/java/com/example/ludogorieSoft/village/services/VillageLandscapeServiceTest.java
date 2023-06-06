@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 
 import java.util.ArrayList;
@@ -28,6 +29,8 @@ class VillageLandscapeServiceTest {
     private VillageService villageService;
     @Mock
     private LandscapeService landscapeService;
+    @Mock
+    private ModelMapper modelMapper;
     @InjectMocks
     private VillageLandscapeService villageLandscapeService;
 
