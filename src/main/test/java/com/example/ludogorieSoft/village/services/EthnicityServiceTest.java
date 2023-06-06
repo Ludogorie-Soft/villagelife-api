@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertThrows;
 
@@ -183,6 +185,44 @@ class EthnicityServiceTest {
         Assertions.assertThrows(ApiRequestException.class, () -> ethnicityService.deleteEthnicityById(ethnicityId));
         verify(ethnicityRepository, times(1)).existsById(ethnicityId);
         verify(ethnicityRepository, never()).deleteById(ethnicityId);
+    }
+
+    @Test
+    void testCheckEthnicityWhenEthnicityExists() {
+        Long id = 1L;
+        Ethnicity ethnicity = new Ethnicity();
+        Mockito.when(ethnicityRepository.findById(id)).thenReturn(Optional.of(ethnicity));
+
+        Ethnicity result = ethnicityService.checkEthnicity(id);
+
+        Assertions.assertEquals(ethnicity, result);
+        Mockito.verify(ethnicityRepository).findById(id);
+    }
+
+    @Test
+    void testCheckEthnicityWhenEthnicityDoesNotExist() {
+        Long id = 1L;
+        Mockito.when(ethnicityRepository.findById(id)).thenReturn(Optional.empty());
+
+        ApiRequestException exception = Assertions.assertThrows(ApiRequestException.class,
+                () -> ethnicityService.checkEthnicity(id));
+        Assertions.assertEquals("Ethnicity not found", exception.getMessage());
+        Mockito.verify(ethnicityRepository).findById(id);
+    }
+
+    @Test
+    void testEthnicityToEthnicityDTO() {
+        Ethnicity ethnicity = new Ethnicity();
+        ethnicity.setId(1L);
+
+        EthnicityDTO expectedDTO = new EthnicityDTO();
+        expectedDTO.setId(1L);
+
+        when(modelMapper.map(ethnicity, EthnicityDTO.class)).thenReturn(expectedDTO);
+
+        EthnicityDTO resultDTO = ethnicityService.ethnicityToEthnicityDTO(ethnicity);
+
+        assertEquals(expectedDTO.getId(), resultDTO.getId());
     }
 
 }
