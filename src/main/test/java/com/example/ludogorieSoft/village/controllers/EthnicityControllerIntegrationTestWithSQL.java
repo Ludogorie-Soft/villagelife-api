@@ -94,7 +94,7 @@ class EthnicityControllerIntegrationTestWithSQL {
     }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(statements = "DELETE FROM ethnicities", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void updateEthnicity() {
-        long ethnicityId = 1L; // ID of the ethnicity to update
+        long ethnicityId = 1L;
         EthnicityDTO updatedEthnicityDTO = new EthnicityDTO();
         updatedEthnicityDTO.setEthnicityName("Updated Ethnicity");
 

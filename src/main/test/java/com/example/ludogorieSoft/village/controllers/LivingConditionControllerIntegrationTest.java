@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(LivingConditionController.class)
 @AutoConfigureMockMvc
-public class LivingConditionControllerIntegrationTest {
+class LivingConditionControllerIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -39,7 +39,7 @@ public class LivingConditionControllerIntegrationTest {
     }
 
     @Test
-    public void testGetAllLivingConditions() throws Exception {
+    void testGetAllLivingConditions() throws Exception {
 
         LivingConditionDTO livingConditionDTO1 = new LivingConditionDTO();
         livingConditionDTO1.setId(1L);
@@ -63,7 +63,7 @@ public class LivingConditionControllerIntegrationTest {
     }
 
     @Test
-    public void testGetLivingConditionById() throws Exception {
+    void testGetLivingConditionById() throws Exception {
 
         LivingConditionDTO livingConditionDTO = new LivingConditionDTO();
         livingConditionDTO.setId(1L);
@@ -83,7 +83,7 @@ public class LivingConditionControllerIntegrationTest {
     }
 
     @Test
-    public void testCreateLivingCondition() throws Exception {
+    void testCreateLivingCondition() throws Exception {
 
         LivingConditionDTO livingConditionDTO = new LivingConditionDTO();
         livingConditionDTO.setId(1L);
@@ -103,7 +103,7 @@ public class LivingConditionControllerIntegrationTest {
     }
 
     @Test
-    public void testUpdateLivingCondition() throws Exception {
+    void testUpdateLivingCondition() throws Exception {
 
         LivingConditionDTO livingConditionDTO = new LivingConditionDTO();
         livingConditionDTO.setId(1L);
@@ -124,7 +124,7 @@ public class LivingConditionControllerIntegrationTest {
     }
 
     @Test
-    public void testDeleteLivingConditionById() throws Exception {
+    void testDeleteLivingConditionById() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/livingConditions/{id}", 1))
                 .andExpect(status().isOk())

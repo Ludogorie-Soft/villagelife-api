@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(VillageLandscapeController.class)
 @AutoConfigureMockMvc
-public class VillageLandscapeControllerIntegrationTest {
+class VillageLandscapeControllerIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -42,7 +42,7 @@ public class VillageLandscapeControllerIntegrationTest {
     }
 
     @Test
-    public void testGetAllVillageLandscapes() throws Exception {
+    void testGetAllVillageLandscapes() throws Exception {
 
         VillageLandscapeDTO villageLandscapeDTO1 = new VillageLandscapeDTO();
         villageLandscapeDTO1.setId(1L);
@@ -66,7 +66,7 @@ public class VillageLandscapeControllerIntegrationTest {
     }
 
     @Test
-    public void testGetVillageLandscapeById() throws Exception {
+    void testGetVillageLandscapeById() throws Exception {
 
         VillageLandscapeDTO villageLandscapeDTO = new VillageLandscapeDTO();
         villageLandscapeDTO.setId(1L);
@@ -86,7 +86,7 @@ public class VillageLandscapeControllerIntegrationTest {
     }
 
     @Test
-    public void testCreateVillageLandscape() throws Exception {
+    void testCreateVillageLandscape() throws Exception {
 
         VillageLandscapeDTO villageLandscapeDTO = new VillageLandscapeDTO();
         villageLandscapeDTO.setId(1L);
@@ -109,7 +109,7 @@ public class VillageLandscapeControllerIntegrationTest {
     }
 
     @Test
-    public void testUpdateVillageLandscape() throws Exception {
+    void testUpdateVillageLandscape() throws Exception {
 
         VillageLandscapeDTO villageLandscapeDTO = new VillageLandscapeDTO();
         villageLandscapeDTO.setId(1L);
@@ -130,7 +130,7 @@ public class VillageLandscapeControllerIntegrationTest {
     }
 
     @Test
-    public void testDeleteVillageLandscapeById() throws Exception {
+    void testDeleteVillageLandscapeById() throws Exception {
 
         when(villageLandscapeService.deleteVillageLandscapeById(anyLong())).thenReturn(1);
 

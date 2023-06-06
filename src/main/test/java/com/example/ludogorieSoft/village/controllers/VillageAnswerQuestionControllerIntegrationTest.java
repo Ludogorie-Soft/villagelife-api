@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(VillageAnswerQuestionController.class)
 @AutoConfigureMockMvc
-public class VillageAnswerQuestionControllerIntegrationTest {
+class VillageAnswerQuestionControllerIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -41,7 +41,7 @@ public class VillageAnswerQuestionControllerIntegrationTest {
     }
 
     @Test
-    public void testGetAllVillageAnswerQuestions() throws Exception {
+    void testGetAllVillageAnswerQuestions() throws Exception {
 
         VillageAnswerQuestionDTO villageAnswerQuestionDTO1 = new VillageAnswerQuestionDTO();
         villageAnswerQuestionDTO1.setId(1L);
@@ -65,7 +65,7 @@ public class VillageAnswerQuestionControllerIntegrationTest {
     }
 
     @Test
-    public void testGetVillageAnswerQuestionById() throws Exception {
+    void testGetVillageAnswerQuestionById() throws Exception {
 
         VillageAnswerQuestionDTO villageAnswerQuestionDTO = new VillageAnswerQuestionDTO();
         villageAnswerQuestionDTO.setId(1L);
@@ -85,7 +85,7 @@ public class VillageAnswerQuestionControllerIntegrationTest {
     }
 
     @Test
-    public void testCreateVillageAnswerQuestion() throws Exception {
+    void testCreateVillageAnswerQuestion() throws Exception {
 
         VillageAnswerQuestionDTO villageAnswerQuestionDTO = new VillageAnswerQuestionDTO();
         villageAnswerQuestionDTO.setId(1L);
@@ -105,7 +105,7 @@ public class VillageAnswerQuestionControllerIntegrationTest {
     }
 
     @Test
-    public void testUpdateVillageAnswerQuestion() throws Exception {
+    void testUpdateVillageAnswerQuestion() throws Exception {
 
         VillageAnswerQuestionDTO villageAnswerQuestionDTO = new VillageAnswerQuestionDTO();
         villageAnswerQuestionDTO.setId(1L);
@@ -126,19 +126,19 @@ public class VillageAnswerQuestionControllerIntegrationTest {
     }
 
 
-@Test
-public void testDeleteVillageAnswerQuestionById() throws Exception {
+    @Test
+    void testDeleteVillageAnswerQuestionById() throws Exception {
 
-    int rowsAffected = 1;
-    when(villageAnswerQuestionService.deleteVillageAnswerQuestionById(anyLong())).thenReturn(rowsAffected);
+        int rowsAffected = 1;
+        when(villageAnswerQuestionService.deleteVillageAnswerQuestionById(anyLong())).thenReturn(rowsAffected);
 
 
-    mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/villageAnswerQuestion/{id}", 1))
-            .andExpect(status().isNoContent());
-}
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/villageAnswerQuestion/{id}", 1))
+                .andExpect(status().isNoContent());
+    }
 
     @Test
-    public void testDeleteVillageAnswerQuestionById_NotFound() throws Exception {
+    void testDeleteVillageAnswerQuestionById_NotFound() throws Exception {
 
         int rowsAffected = 0;
         when(villageAnswerQuestionService.deleteVillageAnswerQuestionById(anyLong())).thenReturn(rowsAffected);

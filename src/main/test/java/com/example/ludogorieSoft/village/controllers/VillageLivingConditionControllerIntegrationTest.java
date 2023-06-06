@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(VillageLivingConditionController.class)
 @AutoConfigureMockMvc
-public class VillageLivingConditionControllerIntegrationTest {
+class VillageLivingConditionControllerIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -42,7 +42,7 @@ public class VillageLivingConditionControllerIntegrationTest {
     }
 
     @Test
-    public void testGetAllVillageLivingConditions() throws Exception {
+    void testGetAllVillageLivingConditions() throws Exception {
 
         VillageLivingConditionDTO villageLivingConditionDTO1 = new VillageLivingConditionDTO();
         villageLivingConditionDTO1.setId(1L);
@@ -66,7 +66,7 @@ public class VillageLivingConditionControllerIntegrationTest {
     }
 
     @Test
-    public void testGetVillageLivingConditionsById() throws Exception {
+    void testGetVillageLivingConditionsById() throws Exception {
 
         VillageLivingConditionDTO villageLivingConditionDTO = new VillageLivingConditionDTO();
         villageLivingConditionDTO.setId(1L);
@@ -86,7 +86,7 @@ public class VillageLivingConditionControllerIntegrationTest {
     }
 
     @Test
-    public void testCreateVillageLivingConditions() throws Exception {
+    void testCreateVillageLivingConditions() throws Exception {
 
         VillageLivingConditionDTO villageLivingConditionDTO = new VillageLivingConditionDTO();
         villageLivingConditionDTO.setId(1L);
@@ -108,7 +108,7 @@ public class VillageLivingConditionControllerIntegrationTest {
     }
 
     @Test
-    public void testUpdateVillageLivingConditions() throws Exception {
+    void testUpdateVillageLivingConditions() throws Exception {
 
         VillageLivingConditionDTO villageLivingConditionDTO = new VillageLivingConditionDTO();
         villageLivingConditionDTO.setId(1L);
@@ -129,7 +129,7 @@ public class VillageLivingConditionControllerIntegrationTest {
     }
 
     @Test
-    public void testDeleteVillageLivingConditionsById() throws Exception {
+    void testDeleteVillageLivingConditionsById() throws Exception {
 
         when(villageLivingConditionService.deleteVillageLivingConditions(anyLong())).thenReturn(1);
 

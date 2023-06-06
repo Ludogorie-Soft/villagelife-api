@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(LandscapeController.class)
 @AutoConfigureMockMvc
-public class LandscapeControllerIntegrationTest {
+class LandscapeControllerIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -39,7 +39,7 @@ public class LandscapeControllerIntegrationTest {
     }
 
     @Test
-    public void testGetAllLandscapes() throws Exception {
+    void testGetAllLandscapes() throws Exception {
 
         LandscapeDTO landscapeDTO1 = new LandscapeDTO();
         landscapeDTO1.setId(1L);
@@ -63,7 +63,7 @@ public class LandscapeControllerIntegrationTest {
     }
 
     @Test
-    public void testGetLandscapeById() throws Exception {
+    void testGetLandscapeById() throws Exception {
 
         LandscapeDTO landscapeDTO = new LandscapeDTO();
         landscapeDTO.setId(1L);
@@ -83,7 +83,7 @@ public class LandscapeControllerIntegrationTest {
     }
 
     @Test
-    public void testCreateLandscape() throws Exception {
+    void testCreateLandscape() throws Exception {
 
         LandscapeDTO landscapeDTO = new LandscapeDTO();
         landscapeDTO.setId(1L);
@@ -103,7 +103,7 @@ public class LandscapeControllerIntegrationTest {
     }
 
     @Test
-    public void testUpdateLandscape() throws Exception {
+    void testUpdateLandscape() throws Exception {
 
         LandscapeDTO landscapeDTO = new LandscapeDTO();
         landscapeDTO.setId(1L);
@@ -124,7 +124,7 @@ public class LandscapeControllerIntegrationTest {
     }
 
     @Test
-    public void testDeleteLandscapeById() throws Exception {
+    void testDeleteLandscapeById() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/landscapes/{id}", 1))
                 .andExpect(status().isOk())
