@@ -1,2 +1,22 @@
-# Project exclude paths
-/target/
+# Intellij
+*.iml
+!.idea/
+.idea/*
+!.idea/runConfigurations/
+*.ipr
+*.iws
+/out/
+/files/
+.idea_modules/
+atlassian-ide-plugin.xml
+
+# Maven
+build/
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
