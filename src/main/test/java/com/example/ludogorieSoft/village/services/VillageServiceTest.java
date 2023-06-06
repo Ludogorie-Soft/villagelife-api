@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.*;
 
@@ -181,6 +182,32 @@ class VillageServiceTest {
         when(villageRepository.existsById(villageId)).thenReturn(false);
 
         assertThrows(ApiRequestException.class, () -> villageService.deleteVillage(villageId));
+    }
+    @Test
+    void checkVillageShouldReturnExistingVillage() {
+        Long villageId = 1L;
+        Village existingVillage = new Village();
+        existingVillage.setId(villageId);
+        Optional<Village> optionalVillage = Optional.of(existingVillage);
+
+        when(villageRepository.findById(villageId)).thenReturn(optionalVillage);
+
+        Village result = villageService.checkVillage(villageId);
+
+        verify(villageRepository, times(1)).findById(villageId);
+        Assertions.assertEquals(existingVillage, result);
+    }
+
+    @Test
+    void checkVillageShouldThrowExceptionWhenVillageNotFound() {
+        Long villageId = 1L;
+        Optional<Village> optionalVillage = Optional.empty();
+
+        when(villageRepository.findById(villageId)).thenReturn(optionalVillage);
+
+        Assertions.assertThrows(ApiRequestException.class, () -> villageService.checkVillage(villageId));
+
+        verify(villageRepository, times(1)).findById(villageId);
     }
 
 }

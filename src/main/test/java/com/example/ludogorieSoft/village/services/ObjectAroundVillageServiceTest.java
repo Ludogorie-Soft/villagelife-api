@@ -232,4 +232,30 @@ class ObjectAroundVillageServiceTest {
         verify(objectAroundVillageRepository, times(1)).findById(objectId);
         verify(objectAroundVillageRepository, never()).delete(any(ObjectAroundVillage.class));
     }
+    @Test
+    void checkObjectShouldReturnExistingObject() {
+        Long objectId = 1L;
+        ObjectAroundVillage existingObject = new ObjectAroundVillage();
+        existingObject.setId(objectId);
+        Optional<ObjectAroundVillage> optionalObject = Optional.of(existingObject);
+
+        when(objectAroundVillageRepository.findById(objectId)).thenReturn(optionalObject);
+
+        ObjectAroundVillage result = objectAroundVillageService.checkObject(objectId);
+
+        verify(objectAroundVillageRepository, times(1)).findById(objectId);
+        assertEquals(existingObject, result);
+    }
+
+    @Test
+    void checkObjectShouldThrowExceptionWhenObjectNotFound() {
+        Long objectId = 1L;
+        Optional<ObjectAroundVillage> optionalObject = Optional.empty();
+
+        when(objectAroundVillageRepository.findById(objectId)).thenReturn(optionalObject);
+
+        Assertions.assertThrows(ApiRequestException.class, () -> objectAroundVillageService.checkObject(objectId));
+
+        verify(objectAroundVillageRepository, times(1)).findById(objectId);
+    }
 }

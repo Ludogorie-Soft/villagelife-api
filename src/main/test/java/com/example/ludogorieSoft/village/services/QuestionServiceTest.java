@@ -229,5 +229,31 @@ class QuestionServiceTest {
         verify(questionRepository, times(1)).findById(questionId);
         verify(questionRepository, never()).delete(any(Question.class));
     }
+    @Test
+    void checkQuestionShouldReturnExistingQuestion() {
+        Long questionId = 1L;
+        Question existingQuestion = new Question();
+        existingQuestion.setId(questionId);
+        Optional<Question> optionalQuestion = Optional.of(existingQuestion);
+
+        when(questionRepository.findById(questionId)).thenReturn(optionalQuestion);
+
+        Question result = questionService.checkQuestion(questionId);
+
+        verify(questionRepository, times(1)).findById(questionId);
+        assertEquals(existingQuestion, result);
+    }
+
+    @Test
+    void checkQuestionShouldThrowExceptionWhenQuestionNotFound() {
+        Long questionId = 1L;
+        Optional<Question> optionalQuestion = Optional.empty();
+
+        when(questionRepository.findById(questionId)).thenReturn(optionalQuestion);
+
+        Assertions.assertThrows(ApiRequestException.class, () -> questionService.checkQuestion(questionId));
+
+        verify(questionRepository, times(1)).findById(questionId);
+    }
 
 }

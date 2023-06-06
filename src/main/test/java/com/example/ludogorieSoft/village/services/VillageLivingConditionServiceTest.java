@@ -109,6 +109,7 @@ class VillageLivingConditionServiceTest {
         villageLivingCondition.setVillage(villageService.checkVillage(1L));
         villageLivingCondition.setLivingCondition(livingConditionService.checkLivingCondition(2L));
         villageLivingCondition.setConsents(Consents.CANT_DECIDE);
+
         VillageLivingConditionDTO result = villageLivingConditionService.createVillageLivingCondition(villageLivingConditionDTO);
 
         verify(villageService, times(2)).checkVillage(villageLivingConditionDTO.getVillageId());

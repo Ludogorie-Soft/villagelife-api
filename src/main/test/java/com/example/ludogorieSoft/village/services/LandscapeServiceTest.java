@@ -159,7 +159,6 @@ class LandscapeServiceTest {
 
     @Test
     void testUpdateLandscapeExistingNameThrowsApiRequestException() {
-        // Arrange
         Long id = 1L;
         LandscapeDTO landscapeDTO = new LandscapeDTO();
         landscapeDTO.setLandscapeName("Mountain");
@@ -192,5 +191,31 @@ class LandscapeServiceTest {
         Assertions.assertThrows(ApiRequestException.class, () -> landscapeService.deleteLandscape(landscapeId));
         verify(landscapeRepository, times(1)).findById(landscapeId);
         verify(landscapeRepository, never()).delete(any(Landscape.class));
+    }
+    @Test
+    void checkLandscapeShouldReturnExistingLandscape() {
+        Long landscapeId = 1L;
+        Landscape existingLandscape = new Landscape();
+        existingLandscape.setId(landscapeId);
+        Optional<Landscape> optionalLandscape = Optional.of(existingLandscape);
+
+        when(landscapeRepository.findById(landscapeId)).thenReturn(optionalLandscape);
+
+        Landscape result = landscapeService.checkLandscape(landscapeId);
+
+        verify(landscapeRepository, times(1)).findById(landscapeId);
+        assertEquals(existingLandscape, result);
+    }
+
+    @Test
+    void checkLandscapeShouldThrowExceptionWhenLandscapeNotFound() {
+        Long landscapeId = 1L;
+        Optional<Landscape> optionalLandscape = Optional.empty();
+
+        when(landscapeRepository.findById(landscapeId)).thenReturn(optionalLandscape);
+
+        Assertions.assertThrows(ApiRequestException.class, () -> landscapeService.checkLandscape(landscapeId));
+
+        verify(landscapeRepository, times(1)).findById(landscapeId);
     }
 }
