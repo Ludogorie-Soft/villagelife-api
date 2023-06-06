@@ -4,7 +4,6 @@ import com.example.ludogorieSoft.village.dtos.QuestionDTO;
 import com.example.ludogorieSoft.village.services.QuestionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -14,8 +13,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
-import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
 
@@ -41,7 +38,7 @@ public class QuestionControllerIntegrationTest {
 
     @Test
     public void testGetAllQuestions() throws Exception {
-        // Arrange
+
         QuestionDTO questionDTO1 = new QuestionDTO();
         questionDTO1.setId(1L);
         QuestionDTO questionDTO2 = new QuestionDTO();
@@ -50,7 +47,7 @@ public class QuestionControllerIntegrationTest {
 
         when(questionService.getAllQuestions()).thenReturn(questionDTOList);
 
-        // Act
+
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/questions")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -58,40 +55,40 @@ public class QuestionControllerIntegrationTest {
                 .andExpect(jsonPath("$.[1].id").value(2))
                 .andReturn();
 
-        // Assert
+
         String response = mvcResult.getResponse().getContentAsString();
         assertNotNull(response);
     }
 
     @Test
     public void testGetQuestionById() throws Exception {
-        // Arrange
+
         QuestionDTO questionDTO = new QuestionDTO();
         questionDTO.setId(1L);
 
         when(questionService.getQuestionById(anyLong())).thenReturn(questionDTO);
 
-        // Act
+
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/questions/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
                 .andReturn();
 
-        // Assert
+
         String response = mvcResult.getResponse().getContentAsString();
         assertNotNull(response);
     }
 
     @Test
     public void testCreateQuestion() throws Exception {
-        // Arrange
+
         QuestionDTO questionDTO = new QuestionDTO();
         questionDTO.setId(1L);
 
         when(questionService.createQuestion(any(QuestionDTO.class))).thenReturn(questionDTO);
 
-        // Act
+
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/questions")
                         .content("{\"id\": 1}")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -99,20 +96,19 @@ public class QuestionControllerIntegrationTest {
                 .andExpect(jsonPath("$.id").value(1))
                 .andReturn();
 
-        // Assert
+
         String response = mvcResult.getResponse().getContentAsString();
         assertNotNull(response);
     }
 
     @Test
     public void testUpdateQuestion() throws Exception {
-        // Arrange
         QuestionDTO questionDTO = new QuestionDTO();
         questionDTO.setId(1L);
 
         when(questionService.updateQuestion(anyLong(), any(QuestionDTO.class))).thenReturn(questionDTO);
 
-        // Act
+
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/questions/{id}", 1)
                         .content("{\"id\": 1}")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -120,16 +116,14 @@ public class QuestionControllerIntegrationTest {
                 .andExpect(jsonPath("$.id").value(1))
                 .andReturn();
 
-        // Assert
+
         String response = mvcResult.getResponse().getContentAsString();
         assertNotNull(response);
     }
 
     @Test
     public void testDeleteQuestionById() throws Exception {
-        // Arrange
 
-        // Act
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/questions/{id}", 1))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Question with id: 1 has been deleted successfully!!"));
