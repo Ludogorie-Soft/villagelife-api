@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class AdministratorControllerIntegrationTest {
+class AdministratorControllerIntegrationTestWithSQL {
 
     @LocalServerPort
     private int port;
@@ -33,8 +33,6 @@ class AdministratorControllerIntegrationTest {
     @Autowired
     private AdministratorService administratorService;
 
-    AdministratorControllerIntegrationTest() {
-    }
 
     private String createURL(String uri) {
         return "http://localhost:" + port + uri;
@@ -135,6 +133,7 @@ class AdministratorControllerIntegrationTest {
         assertNotNull(responseBody);
         assertEquals("Administrator with id: 1 has been deleted successfully!!", responseBody);
     }
+
 
 
 }
