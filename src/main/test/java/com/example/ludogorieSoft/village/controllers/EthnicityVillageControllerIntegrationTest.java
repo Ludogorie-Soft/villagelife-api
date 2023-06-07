@@ -99,6 +99,28 @@ class EthnicityVillageControllerIntegrationTest {
     }
 
     @Test
+    void createEthnicityVillageShouldReturnCreatedEthnicityVillage() throws Exception {
+        EthnicityVillageDTO newEthnicity = new EthnicityVillageDTO();
+        newEthnicity.setId(1L);
+        newEthnicity.setVillageId(1L);
+        newEthnicity.setEthnicityId(1L);
+
+        EthnicityVillageDTO createdEthnicity = new EthnicityVillageDTO();
+        createdEthnicity.setId(1L);
+        createdEthnicity.setVillageId(1L);
+        createdEthnicity.setEthnicityId(1L);
+
+        when(ethnicityVillageService.createEthnicityVillage(newEthnicity)).thenReturn(createdEthnicity);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/villageEthnicities")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(newEthnicity)))
+                .andExpect(status().isCreated())
+                .andExpect(MockMvcResultMatchers.header().string("Location", "http://localhost/api/v1/villageEthnicities/1"));
+    }
+
+
+    @Test
     void updateEthnicityVillageByIdWithValidIdShouldReturnUpdatedEthnicityVillage() throws Exception {
         EthnicityVillageDTO existingEthnicity = new EthnicityVillageDTO();
         existingEthnicity.setId(1L);
@@ -121,26 +143,6 @@ class EthnicityVillageControllerIntegrationTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.ethnicityId").value(1L));
     }
 
-    @Test
-    void createEthnicityVillageShouldReturnCreatedEthnicityVillage() throws Exception {
-        EthnicityVillageDTO newEthnicity = new EthnicityVillageDTO();
-        newEthnicity.setId(1L);
-        newEthnicity.setVillageId(1L);
-        newEthnicity.setEthnicityId(1L);
-
-        EthnicityVillageDTO createdEthnicity = new EthnicityVillageDTO();
-        createdEthnicity.setId(1L);
-        createdEthnicity.setVillageId(1L);
-        createdEthnicity.setEthnicityId(1L);
-
-        when(ethnicityVillageService.createEthnicityVillage(newEthnicity)).thenReturn(createdEthnicity);
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/villageEthnicities")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(newEthnicity)))
-                .andExpect(status().isCreated())
-                .andExpect(MockMvcResultMatchers.header().string("Location", "http://localhost/api/v1/villageEthnicities/1"));
-    }
 
     @Test
     void deleteEthnicityVillageByIdWithValidIdShouldReturnSuccessMessage() throws Exception {
@@ -166,6 +168,9 @@ class EthnicityVillageControllerIntegrationTest {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.writeValueAsString(obj);
     }
+
+
+
 
 
 }

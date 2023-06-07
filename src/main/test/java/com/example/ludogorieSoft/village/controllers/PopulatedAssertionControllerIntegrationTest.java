@@ -1,9 +1,9 @@
 package com.example.ludogorieSoft.village.controllers;
+
 import com.example.ludogorieSoft.village.dtos.PopulatedAssertionDTO;
 import com.example.ludogorieSoft.village.services.PopulatedAssertionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -14,8 +14,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import javax.validation.Valid;
-import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 
@@ -41,23 +39,26 @@ class PopulatedAssertionControllerIntegrationTest {
 
     @Test
     void testGetAllPopulatedAssertion() throws Exception {
-
         PopulatedAssertionDTO populatedAssertionDTO1 = new PopulatedAssertionDTO();
         populatedAssertionDTO1.setId(1L);
+        populatedAssertionDTO1.setPopulatedAssertionName("Populated Assertion 1");
         PopulatedAssertionDTO populatedAssertionDTO2 = new PopulatedAssertionDTO();
         populatedAssertionDTO2.setId(2L);
+        populatedAssertionDTO2.setPopulatedAssertionName("Populated Assertion 2");
+
         List<PopulatedAssertionDTO> populatedAssertionDTOList = Arrays.asList(populatedAssertionDTO1, populatedAssertionDTO2);
 
         when(populatedAssertionService.getAllPopulatedAssertion()).thenReturn(populatedAssertionDTOList);
 
-
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/populated_assertions")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.[0].id").value(1))
-                .andExpect(jsonPath("$.[1].id").value(2))
+                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].populatedAssertionName").value("Populated Assertion 1"))
+                .andExpect(jsonPath("$[1].id").value(2))
+                .andExpect(jsonPath("$[1].populatedAssertionName").value("Populated Assertion 2"))
                 .andReturn();
-
 
         String response = mvcResult.getResponse().getContentAsString();
         assertNotNull(response);
@@ -65,19 +66,18 @@ class PopulatedAssertionControllerIntegrationTest {
 
     @Test
     void testGetPopulatedAssertionById() throws Exception {
-
         PopulatedAssertionDTO populatedAssertionDTO = new PopulatedAssertionDTO();
         populatedAssertionDTO.setId(1L);
+        populatedAssertionDTO.setPopulatedAssertionName("Populated Assertion 1");
 
         when(populatedAssertionService.getPopulatedAssertionById(anyLong())).thenReturn(populatedAssertionDTO);
-
 
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/populated_assertions/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.populatedAssertionName").value("Populated Assertion 1"))
                 .andReturn();
-
 
         String response = mvcResult.getResponse().getContentAsString();
         assertNotNull(response);
@@ -85,20 +85,19 @@ class PopulatedAssertionControllerIntegrationTest {
 
     @Test
     void testCreatePopulatedAssertion() throws Exception {
-
         PopulatedAssertionDTO populatedAssertionDTO = new PopulatedAssertionDTO();
         populatedAssertionDTO.setId(1L);
+        populatedAssertionDTO.setPopulatedAssertionName("New Populated Assertion");
 
         when(populatedAssertionService.createPopulatedAssertion(any(PopulatedAssertionDTO.class))).thenReturn(populatedAssertionDTO);
 
-
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/populated_assertions")
-                        .content("{\"id\": 1}")
-                        .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"id\": 1, \"populatedAssertionName\": \"New Populated Assertion\"}"))
                 .andExpect(status().isCreated())
-
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.populatedAssertionName").value("New Populated Assertion"))
                 .andReturn();
-
 
         String response = mvcResult.getResponse().getContentAsString();
         assertNotNull(response);
@@ -106,20 +105,19 @@ class PopulatedAssertionControllerIntegrationTest {
 
     @Test
     void testUpdatePopulatedAssertionById() throws Exception {
-
         PopulatedAssertionDTO populatedAssertionDTO = new PopulatedAssertionDTO();
         populatedAssertionDTO.setId(1L);
+        populatedAssertionDTO.setPopulatedAssertionName("Updated Populated Assertion");
 
         when(populatedAssertionService.updatePopulatedAssertion(anyLong(), any(PopulatedAssertionDTO.class))).thenReturn(populatedAssertionDTO);
 
-
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/populated_assertions/{id}", 1)
-                        .content("{\"id\": 1}")
+                        .content("{\"id\": 1, \"populatedAssertionName\": \"Updated Populated Assertion\"}")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.populatedAssertionName").value("Updated Populated Assertion"))
                 .andReturn();
-
 
         String response = mvcResult.getResponse().getContentAsString();
         assertNotNull(response);

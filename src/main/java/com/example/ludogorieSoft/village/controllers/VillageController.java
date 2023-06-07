@@ -30,7 +30,7 @@ public class VillageController {
     }
 
     @PostMapping
-    public ResponseEntity<VillageDTO> createVillage(@RequestBody VillageDTO villageDTO) {
+    public ResponseEntity<VillageDTO> createVillage(@Valid @RequestBody VillageDTO villageDTO) {
         VillageDTO createdVillage = villageService.createVillage(villageDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdVillage);
     }

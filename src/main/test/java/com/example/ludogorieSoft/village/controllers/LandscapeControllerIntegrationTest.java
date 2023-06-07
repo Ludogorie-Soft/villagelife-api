@@ -1,10 +1,10 @@
 package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.dtos.LandscapeDTO;
+import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.services.LandscapeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
@@ -40,84 +41,89 @@ class LandscapeControllerIntegrationTest {
 
     @Test
     void testGetAllLandscapes() throws Exception {
-
         LandscapeDTO landscapeDTO1 = new LandscapeDTO();
         landscapeDTO1.setId(1L);
+        landscapeDTO1.setLandscapeName("Landscape 1");
         LandscapeDTO landscapeDTO2 = new LandscapeDTO();
         landscapeDTO2.setId(2L);
+        landscapeDTO2.setLandscapeName("Landscape 2");
         List<LandscapeDTO> landscapeDTOList = Arrays.asList(landscapeDTO1, landscapeDTO2);
 
         when(landscapeService.getAllLandscapes()).thenReturn(landscapeDTOList);
 
-
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/landscapes")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.[0].id").value(1))
-                .andExpect(jsonPath("$.[1].id").value(2))
+                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].landscapeName").value("Landscape 1"))
+                .andExpect(jsonPath("$[1].id").value(2))
+                .andExpect(jsonPath("$[1].landscapeName").value("Landscape 2"))
                 .andReturn();
-
 
         String response = mvcResult.getResponse().getContentAsString();
         assertNotNull(response);
     }
 
+
     @Test
     void testGetLandscapeById() throws Exception {
-
         LandscapeDTO landscapeDTO = new LandscapeDTO();
         landscapeDTO.setId(1L);
+        landscapeDTO.setLandscapeName("Landscape 1");
 
         when(landscapeService.getLandscapeById(anyLong())).thenReturn(landscapeDTO);
-
 
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/landscapes/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.landscapeName").value("Landscape 1"))
                 .andReturn();
-
 
         String response = mvcResult.getResponse().getContentAsString();
         assertNotNull(response);
     }
+
 
     @Test
     void testCreateLandscape() throws Exception {
-
+        long landscapeId = 1L;
         LandscapeDTO landscapeDTO = new LandscapeDTO();
-        landscapeDTO.setId(1L);
+        landscapeDTO.setId(landscapeId);
+        landscapeDTO.setLandscapeName("New Landscape");
 
         when(landscapeService.createLandscape(any(LandscapeDTO.class))).thenReturn(landscapeDTO);
 
-
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/landscapes")
-                        .content("{\"id\": 1}")
-                        .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"id\": 1, \"landscapeName\": \"New Landscape\"}"))
                 .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.landscapeName").value("New Landscape"))
                 .andReturn();
-
 
         String response = mvcResult.getResponse().getContentAsString();
         assertNotNull(response);
     }
 
+
     @Test
     void testUpdateLandscape() throws Exception {
+        long landscapeId = 1L;
+        LandscapeDTO ethnicityDTO = new LandscapeDTO();
+        ethnicityDTO.setId(landscapeId);
+        ethnicityDTO.setLandscapeName("Updated Landscape");
 
-        LandscapeDTO landscapeDTO = new LandscapeDTO();
-        landscapeDTO.setId(1L);
+        when(landscapeService.updateLandscape(anyLong(), any(LandscapeDTO.class))).thenReturn(ethnicityDTO);
 
-        when(landscapeService.updateLandscape(anyLong(), any(LandscapeDTO.class))).thenReturn(landscapeDTO);
-
-
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/landscapes/{id}", 1)
-                        .content("{\"id\": 1}")
-                        .contentType(MediaType.APPLICATION_JSON))
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/landscapes/{id}", landscapeId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"id\": 1, \"landscapeName\": \"Updated Landscape\"}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.landscapeName").value("Updated Landscape"))
                 .andReturn();
-
 
         String response = mvcResult.getResponse().getContentAsString();
         assertNotNull(response);
@@ -130,5 +136,19 @@ class LandscapeControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string("Landscape with id: 1 has been deleted successfully!!"));
     }
+
+
+    @Test
+    void testGetLandscapeByIdWhenLandscapeDoesNotExist() throws Exception {
+        long landscapeId = 1L;
+        when(landscapeService.getLandscapeById(landscapeId))
+                .thenThrow(new ApiRequestException("Landscape with id: " + landscapeId + " not found"));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/landscapes/{id}", landscapeId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(containsString("Landscape with id: " + landscapeId + " not found")));
+    }
+
 }
 

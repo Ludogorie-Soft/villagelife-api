@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -29,18 +30,17 @@ public class EthnicityVillageController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<EthnicityVillageDTO> updateEthnicityVillageById(@PathVariable Long id, @RequestBody EthnicityVillageDTO ethnicityVillageDTO) {
+    public ResponseEntity<EthnicityVillageDTO> updateEthnicityVillageById(@PathVariable Long id, @Valid  @RequestBody EthnicityVillageDTO ethnicityVillageDTO) {
         return ResponseEntity.ok(ethnicityVillageService.updateEthnicityVillageById(id, ethnicityVillageDTO));
     }
 
     @PostMapping
-    public ResponseEntity<EthnicityVillageDTO> createEthnicityVillage(@RequestBody EthnicityVillageDTO ethnicityVillageDTO, UriComponentsBuilder uriComponentsBuilder) {
+    public ResponseEntity<EthnicityVillageDTO> createEthnicityVillage(@Valid @RequestBody EthnicityVillageDTO ethnicityVillageDTO, UriComponentsBuilder uriComponentsBuilder) {
         URI location = uriComponentsBuilder.path("/api/v1/villageEthnicities/{id}")
                 .buildAndExpand(ethnicityVillageService.createEthnicityVillage(ethnicityVillageDTO).getId())
                 .toUri();
         return ResponseEntity.created(location).build();
     }
-
 
 
     @DeleteMapping("/{id}")

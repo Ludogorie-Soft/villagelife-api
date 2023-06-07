@@ -33,7 +33,7 @@ public class LivingConditionController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<LivingConditionDTO> updateLivingCondition(@Valid @PathVariable("id") Long id, @RequestBody LivingConditionDTO livingConditionDTO) {
+    public ResponseEntity<LivingConditionDTO> updateLivingCondition(@PathVariable("id") Long id, @Valid @RequestBody LivingConditionDTO livingConditionDTO) {
         return ResponseEntity.ok(livingConditionService.updateLivingCondition(id, livingConditionDTO));
     }
 

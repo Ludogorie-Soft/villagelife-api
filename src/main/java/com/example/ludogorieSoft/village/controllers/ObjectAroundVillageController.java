@@ -1,7 +1,6 @@
 package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.dtos.ObjectAroundVillageDTO;
-import com.example.ludogorieSoft.village.model.ObjectAroundVillage;
 import com.example.ludogorieSoft.village.services.ObjectAroundVillageService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;

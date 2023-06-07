@@ -6,9 +6,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import java.net.URI;
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -28,16 +27,14 @@ public class ObjectVillageController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ObjectVillageDTO> updateObjectVillageByID(@PathVariable Long id, @RequestBody ObjectVillageDTO objectVillageDTO) {
+    public ResponseEntity<ObjectVillageDTO> updateObjectVillageByID(@PathVariable Long id, @Valid @RequestBody ObjectVillageDTO objectVillageDTO) {
         return ResponseEntity.ok(objectVillageService.updateObjectVillageById(id, objectVillageDTO));
     }
 
     @PostMapping
-    public ResponseEntity<ObjectVillageDTO> createObjectVillage(@RequestBody ObjectVillageDTO objectVillageDTO, UriComponentsBuilder uriComponentsBuilder) {
-        URI location = uriComponentsBuilder.path("/api/v1/objectVillages/{id}")
-                .buildAndExpand(objectVillageService.createObjectVillage(objectVillageDTO).getId())
-                .toUri();
-        return ResponseEntity.created(location).build();
+    public ResponseEntity<ObjectVillageDTO> createObjectVillage(@Valid @RequestBody ObjectVillageDTO objectVillageDTO) {
+        ObjectVillageDTO createdObjectVillage = objectVillageService.createObjectVillage(objectVillageDTO);
+        return new ResponseEntity<>(createdObjectVillage, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")

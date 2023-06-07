@@ -28,7 +28,7 @@ class VillagePopulationAssertionControllerIntegrationTest {
     private VillagePopulationAssertionService villagePopulationAssertionService;
 
     @Test
-    void getAllVillagePopulationAssertions_ShouldReturnListOfAssertions() throws Exception {
+    void getAllVillagePopulationAssertionsShouldReturnListOfAssertions() throws Exception {
         VillagePopulationAssertionDTO assertion1 = new VillagePopulationAssertionDTO();
         assertion1.setId(1L);
         assertion1.setVillageId(1L);
@@ -61,7 +61,7 @@ class VillagePopulationAssertionControllerIntegrationTest {
     }
 
     @Test
-    void getVillagePopulationAssertionById_ShouldReturnAssertion() throws Exception {
+    void getVillagePopulationAssertionByIdShouldReturnAssertion() throws Exception {
         VillagePopulationAssertionDTO assertion = new VillagePopulationAssertionDTO();
         assertion.setId(1L);
         assertion.setVillageId(1L);
@@ -81,7 +81,7 @@ class VillagePopulationAssertionControllerIntegrationTest {
     }
 
     @Test
-    void updateVillagePopulationAssertionById_ShouldReturnUpdatedAssertion() throws Exception {
+    void updateVillagePopulationAssertionByIdShouldReturnUpdatedAssertion() throws Exception {
         VillagePopulationAssertionDTO assertion = new VillagePopulationAssertionDTO();
         assertion.setId(1L);
         assertion.setVillageId(1L);
@@ -103,7 +103,7 @@ class VillagePopulationAssertionControllerIntegrationTest {
     }
 
     @Test
-    void createVillagePopulationAssertion_ShouldReturnCreatedAssertion() throws Exception {
+    void createVillagePopulationAssertionShouldReturnCreatedAssertion() throws Exception {
         VillagePopulationAssertionDTO assertion = new VillagePopulationAssertionDTO();
         assertion.setId(1L);
         assertion.setVillageId(1L);
@@ -120,7 +120,7 @@ class VillagePopulationAssertionControllerIntegrationTest {
     }
 
     @Test
-    void deleteVillagePopulationAssertionById_ShouldReturnNoContentWhenDeleted() throws Exception {
+    void deleteVillagePopulationAssertionByIdShouldReturnNoContentWhenDeleted() throws Exception {
         when(villagePopulationAssertionService.deleteVillagePopulationAssertion(1L))
                 .thenReturn(1);
 
@@ -129,7 +129,7 @@ class VillagePopulationAssertionControllerIntegrationTest {
     }
 
     @Test
-    void deleteVillagePopulationAssertionById_ShouldReturnNotFoundWhenNotDeleted() throws Exception {
+    void deleteVillagePopulationAssertionByIdShouldReturnNotFoundWhenNotDeleted() throws Exception {
         when(villagePopulationAssertionService.deleteVillagePopulationAssertion(1L))
                 .thenReturn(0);
 

@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 @Data
@@ -16,6 +17,7 @@ public class Ethnicity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
-    @Column(unique = true)
+    @NotBlank
+    @Column(unique = true, nullable = false)
     private String ethnicityName;
 }

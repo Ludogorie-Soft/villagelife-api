@@ -1,15 +1,14 @@
 package com.example.ludogorieSoft.village.controllers;
 
-
 import com.example.ludogorieSoft.village.dtos.VillageLandscapeDTO;
 import com.example.ludogorieSoft.village.model.VillageLandscape;
 import com.example.ludogorieSoft.village.services.VillageLandscapeService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import java.net.URI;
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -23,21 +22,21 @@ public class VillageLandscapeController {
         return ResponseEntity.ok(villageLandscapeService.getAllVillageLandscapes());
     }
 
+
     @GetMapping("/{id}")
     public ResponseEntity<VillageLandscapeDTO> getVillageLandscapeById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(villageLandscapeService.getVillageLandscapeById(id));
     }
 
+
     @PostMapping
-    public ResponseEntity<VillageLandscapeDTO> createVillageLandscape(@RequestBody VillageLandscapeDTO villageLandscapeDTO, UriComponentsBuilder uriComponentsBuilder) {
-        URI location = uriComponentsBuilder.path("/api/v1/villageLandscape/{id}")
-                .buildAndExpand(villageLandscapeService.createVillageLandscape(villageLandscapeDTO).getId())
-                .toUri();
-        return ResponseEntity.created(location).build();
+    public ResponseEntity<VillageLandscapeDTO> createVillageLandscape(@Valid @RequestBody VillageLandscapeDTO villageLandscapeDTO) {
+        VillageLandscapeDTO createdVillageLandscape = villageLandscapeService.createVillageLandscape(villageLandscapeDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdVillageLandscape);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<VillageLandscapeDTO> updateVillageLandscape(@PathVariable("id") Long id, @RequestBody VillageLandscapeDTO villageLandscapeDTO) {
+    public ResponseEntity<VillageLandscapeDTO> updateVillageLandscape(@PathVariable("id") Long id, @Valid @RequestBody VillageLandscapeDTO villageLandscapeDTO) {
         return ResponseEntity.ok(villageLandscapeService.updateVillageLandscape(id, villageLandscapeDTO));
     }
 
