@@ -1,7 +1,7 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.model.Village;
-import com.example.ludogorieSoft.village.repositories.VillageRepository;
+import com.example.ludogorieSoft.village.repositories.*;
 import lombok.AllArgsConstructor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -23,6 +23,22 @@ import java.util.Objects;
 
 public class ExcelToDBService {
     private final VillageRepository villageRepository;
+    private final AdministratorRepository administratorRepository;
+    private final EthnicityRepository ethnicityRepository;
+    private final EthnicityVillageRepository ethnicityVillageRepository;
+    private final GroundCategoryRepository groundCategoryRepository;
+    private final LandscapeRepository landscapeRepository;
+    private final LivingConditionRepository livingConditionRepository;
+    private final ObjectAroundVillageRepository objectAroundVillageRepository;
+    private final ObjectVillageRepository objectVillageRepository;
+    private final PopulatedAssertionRepository populatedAssertionRepository;
+    private final PopulationRepository populationRepository;
+    private final QuestionRepository questionRepository;
+    private final VillageAnswerQuestionRepository villageAnswerQuestionRepository;
+    private final VillageGroundCategoryRepository villageGroundCategoryRepository;
+    private final VillageLandscapeRepository villageLandscapeRepository;
+    private final VillageLivingConditionRepository villageLivingConditionRepository;
+    private final VillagePopulationAssertionRepository villagePopulationAssertionRepository;
 
     public static boolean isValidExcelFile(MultipartFile file) {
         return Objects.equals(file.getContentType(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
