@@ -48,7 +48,7 @@ public class ExcelToDBService {
         List<Village> villages = new ArrayList<>();
         try {
             XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
-            XSSFSheet sheet = workbook.getSheet("vilage");
+            XSSFSheet sheet = workbook.getSheet("Sheet1");
             int rowIndex = 0;
             for (Row row : sheet) {
                 if (rowIndex == 0) {
@@ -62,10 +62,12 @@ public class ExcelToDBService {
                     Cell cell = cellIterator.next();
                     switch (cellIndex) {
                         case 0 -> village.setId((long) cell.getNumericCellValue());
-                        case 1 -> village.setName(cell.getStringCellValue());
-//                            case 2 -> village.setPopulation((int) cell.getNumericCellValue());
-//                            case 3 -> village.setDateUpload(cell.getLocalDateTimeCellValue());
-//                            case 4 -> village.setStatus( cell.getBooleanCellValue());
+
+
+                        case 1 -> village.setDateUpload(cell.getLocalDateTimeCellValue());
+//                        case 2 -> village.setPopulation((int) cell.getNumericCellValue());
+                        case 3 -> village.setName(cell.getStringCellValue());
+//                        case 4 -> village.setStatus( cell.getBooleanCellValue());
                         default -> {
                         }
                     }
