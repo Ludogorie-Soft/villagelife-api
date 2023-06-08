@@ -1,22 +1,17 @@
 package com.example.ludogorieSoft.village.controllers;
 
-
-
 import com.example.ludogorieSoft.village.dtos.PopulatedAssertionDTO;
-import com.example.ludogorieSoft.village.model.PopulatedAssertion;
 import com.example.ludogorieSoft.village.services.PopulatedAssertionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
-import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/populated_assertions")
+@RequestMapping("/api/v1/populatedAssertions")
 @RequiredArgsConstructor
 public class PopulatedAssertionController {
 
@@ -32,12 +27,12 @@ public class PopulatedAssertionController {
         return ResponseEntity.ok(populatedAssertionService.getPopulatedAssertionById(id));
     }
 
+
+
     @PostMapping
-    public ResponseEntity<PopulatedAssertionDTO> createPopulatedAssertion(@RequestBody @Valid PopulatedAssertionDTO populatedAssertionDTO, UriComponentsBuilder uriComponentsBuilder) {
-        URI location = uriComponentsBuilder.path("/api/v1/population/{id}")
-                .buildAndExpand(populatedAssertionService.createPopulatedAssertion(populatedAssertionDTO).getId())
-                .toUri();
-        return ResponseEntity.created(location).build();
+    public ResponseEntity<PopulatedAssertionDTO> createPopulatedAssertion(@Valid @RequestBody PopulatedAssertionDTO populatedAssertionDTO) {
+        PopulatedAssertionDTO createdPopulation = populatedAssertionService.createPopulatedAssertion(populatedAssertionDTO);
+        return new ResponseEntity<>(createdPopulation, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")

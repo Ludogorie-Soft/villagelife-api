@@ -31,7 +31,7 @@ public class LandscapeController {
         return new ResponseEntity<>(createdLandscape, HttpStatus.CREATED);
     }
     @PutMapping("/{id}")
-    public ResponseEntity<LandscapeDTO> updateLandscape(@Valid @PathVariable("id") Long id, @RequestBody LandscapeDTO landscapeDTO) {
+    public ResponseEntity<LandscapeDTO> updateLandscape(@PathVariable("id") Long id, @Valid @RequestBody LandscapeDTO landscapeDTO) {
         return ResponseEntity.ok(landscapeService.updateLandscape(id, landscapeDTO));
     }
 

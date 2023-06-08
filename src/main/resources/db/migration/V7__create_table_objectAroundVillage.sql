@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS objects (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    type VARCHAR(255),
+    type VARCHAR(255) NOT NULL,
     UNIQUE (type)
 );

@@ -4,11 +4,11 @@ import com.example.ludogorieSoft.village.dtos.VillagePopulationAssertionDTO;
 import com.example.ludogorieSoft.village.model.VillagePopulationAssertion;
 import com.example.ludogorieSoft.village.services.VillagePopulationAssertionService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import java.net.URI;
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -26,16 +26,15 @@ public class VillagePopulationAssertionController {
         return ResponseEntity.ok(villagePopulationAssertionService.getByID(id));
     }
     @PutMapping("/{id}")
-    public ResponseEntity<VillagePopulationAssertionDTO> updateVillagePopulationAssertionById(@PathVariable("id") Long id, @RequestBody VillagePopulationAssertionDTO villagePopulationAssertionDTO) {
+    public ResponseEntity<VillagePopulationAssertionDTO> updateVillagePopulationAssertionById(@PathVariable("id") Long id, @Valid @RequestBody VillagePopulationAssertionDTO villagePopulationAssertionDTO) {
         return ResponseEntity.ok(villagePopulationAssertionService.updateVillagePopulationAssertion(id, villagePopulationAssertionDTO));
     }
 
+
     @PostMapping
-    public ResponseEntity<VillagePopulationAssertionDTO> createVillagePopulationAssertion(@RequestBody VillagePopulationAssertionDTO villagePopulationAssertionDTO, UriComponentsBuilder uriComponentsBuilder) {
-        URI location = uriComponentsBuilder.path("/api/v1/villagePopulationAssertions/{id}")
-                .buildAndExpand(villagePopulationAssertionService.createVillagePopulationAssertionDTO(villagePopulationAssertionDTO).getId())
-                .toUri();
-        return ResponseEntity.created(location).build();
+    public ResponseEntity<VillagePopulationAssertionDTO> createVillagePopulationAssertion(@Valid @RequestBody VillagePopulationAssertionDTO villageLandscapeDTO) {
+        VillagePopulationAssertionDTO createdVillagePopulationAssertion = villagePopulationAssertionService.createVillagePopulationAssertionDTO(villageLandscapeDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdVillagePopulationAssertion);
     }
 
     @DeleteMapping("/{id}")

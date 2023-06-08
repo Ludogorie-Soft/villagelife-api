@@ -14,7 +14,7 @@ public class Question {
     @Column(name = "id", nullable = false)
     private Long id;
     @NotBlank
-    @Column(name = "question_name", nullable = false)
+    @Column(name = "question_name", unique = true, nullable = false)
     private String questionName;
 
 }
