@@ -18,6 +18,7 @@ import lombok.AllArgsConstructor;
 //import org.apache.poi.ss.usermodel.Row;
 //import org.apache.poi.xssf.usermodel.XSSFSheet;
 //import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -26,6 +27,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -96,12 +98,13 @@ public class VillageService {
             return Objects.equals(file.getContentType(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         }
 
-        public  List<Village> getVillageDataFromExcel(InputStream inputStream) {
+        public  List<Village> getVillageDataFromExcel() {
+            File excelFile = new File("C:/Users/ACER/Desktop/VL surveys/Village_Life_Listing2023-05-19_13_26_13");
             List<Village> villages = new ArrayList<>();
             List<ObjectAroundVillage> objectList =objectAroundVillageRepository.findAll();
 
             try {
-                XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
+                XSSFWorkbook workbook = new XSSFWorkbook(excelFile);
                 XSSFSheet sheet = workbook.getSheet("vilage");
                 int rowIndex = 0;
                 for (Row row : sheet) {
@@ -199,19 +202,21 @@ public class VillageService {
                 }
             } catch (IOException e) {
                 e.getStackTrace();
+            } catch (InvalidFormatException e) {
+                throw new RuntimeException(e);
             }
             return villages;
         }
 
 
-    public void saveVillagesToDatabase(MultipartFile file){
-        if(isValidExcelFile(file)){
-            try {
-                List<Village> customers = getVillageDataFromExcel(file.getInputStream());
-                this.villageRepository.saveAll(customers);
-            } catch (IOException e) {
-                throw new IllegalArgumentException("The file is not a valid excel file");
-            }
-        }
-    }
+//    public void saveVillagesToDatabase(MultipartFile file){
+//        if(isValidExcelFile(file)){
+//            try {
+//                List<Village> customers = getVillageDataFromExcel(file.getInputStream());
+//                this.villageRepository.saveAll(customers);
+//            } catch (IOException e) {
+//                throw new IllegalArgumentException("The file is not a valid excel file");
+//            }
+//        }
+//    }
 }
