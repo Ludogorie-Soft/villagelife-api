@@ -1,10 +1,19 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.VillageDTO;
-import com.example.ludogorieSoft.village.model.Village;
-import com.example.ludogorieSoft.village.repositories.VillageRepository;
+import com.example.ludogorieSoft.village.enums.Distance;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
+import com.example.ludogorieSoft.village.model.ObjectAroundVillage;
+import com.example.ludogorieSoft.village.model.ObjectVillage;
+import com.example.ludogorieSoft.village.model.Village;
+import com.example.ludogorieSoft.village.repositories.ObjectAroundVillageRepository;
+import com.example.ludogorieSoft.village.repositories.ObjectVillageRepository;
+import com.example.ludogorieSoft.village.repositories.VillageRepository;
 import lombok.AllArgsConstructor;
+//import org.apache.poi.ss.usermodel.Cell;
+//import org.apache.poi.ss.usermodel.Row;
+//import org.apache.poi.xssf.usermodel.XSSFSheet;
+//import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -23,6 +32,8 @@ import java.util.stream.Collectors;
 public class VillageService {
 
     private final VillageRepository villageRepository;
+    private final ObjectVillageRepository objectVillageRepository;
+    private final ObjectAroundVillageRepository objectAroundVillageRepository;
     private final ModelMapper modelMapper;
 
 
@@ -81,8 +92,10 @@ public class VillageService {
             return Objects.equals(file.getContentType(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         }
 
-        public static List<Village> getVillageDataFromExcel(InputStream inputStream) {
+        public  List<Village> getVillageDataFromExcel(InputStream inputStream) {
             List<Village> villages = new ArrayList<>();
+            List<ObjectAroundVillage> objectList =objectAroundVillageRepository.findAll();
+
             try {
                 XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
                 XSSFSheet sheet = workbook.getSheet("vilage");
@@ -95,15 +108,85 @@ public class VillageService {
                     Iterator<Cell> cellIterator = row.iterator();
                     int cellIndex = 0;
                     Village village = new Village();
+                    ObjectVillage objectVillage=new ObjectVillage();
                     while (cellIterator.hasNext()) {
                         Cell cell = cellIterator.next();
                         switch (cellIndex) {
-                            case 0 -> village.setId((long) cell.getNumericCellValue());
-                            case 1 -> village.setName(cell.getStringCellValue());
-//                            case 2 -> village.setPopulation((int) cell.getNumericCellValue());
-//                            case 3 -> village.setDateUpload(cell.getLocalDateTimeCellValue());
-//                            case 4 -> village.setStatus( cell.getBooleanCellValue());
+//                            case 1 -> village.setName(cell.getStringCellValue());
+//                            case 2 -> {
+//                                objectVillage.setObject(objectList.get(1));
+//                                objectVillage.setDistance(Distance.valueOf(cell.getStringCellValue()));
+//                                objectVillageRepository.save(objectVillage);
+//                            }
+//                            case 3 -> {
+//                                objectVillage.setObject(objectList.get(2));
+//                                objectVillage.setDistance(Distance.valueOf(cell.getStringCellValue()));
+//                                objectVillageRepository.save(objectVillage);
+//                            }
+//                            case 4 -> {
+//                                objectVillage.setObject(objectList.get(3));
+//                                objectVillage.setDistance(Distance.valueOf(cell.getStringCellValue()));
+//                                objectVillageRepository.save(objectVillage);
+//                            }
+//                            case 5 -> {
+//                                objectVillage.setObject(objectList.get(4));
+//                                objectVillage.setDistance(Distance.valueOf(cell.getStringCellValue()));
+//                                objectVillageRepository.save(objectVillage);
+//                            }
+//                            case 6 -> {
+//                                objectVillage.setObject(objectList.get(5));
+//                                objectVillage.setDistance(Distance.valueOf(cell.getStringCellValue()));
+//                                objectVillageRepository.save(objectVillage);
+//                            }
+//                            case 7 -> {
+//                                objectVillage.setObject(objectList.get(6));
+//                                objectVillage.setDistance(Distance.valueOf(cell.getStringCellValue()));
+//                                objectVillageRepository.save(objectVillage);
+//                            }
+//                            case 8 -> {
+//                                objectVillage.setObject(objectList.get(7));
+//                                objectVillage.setDistance(Distance.valueOf(cell.getStringCellValue()));
+//                                objectVillageRepository.save(objectVillage);
+//                            }
+//                            case 9 -> {
+//                                objectVillage.setObject(objectList.get(8));
+//                                objectVillage.setDistance(Distance.valueOf(cell.getStringCellValue()));
+//                                objectVillageRepository.save(objectVillage);
+//                            }
+//                            case 10 -> {
+//                                objectVillage.setObject(objectList.get(9));
+//                                objectVillage.setDistance(Distance.valueOf(cell.getStringCellValue()));
+//                                objectVillageRepository.save(objectVillage);
+//                            }
+//                            case 11 -> {
+//                                objectVillage.setObject(objectList.get(10));
+//                                objectVillage.setDistance(Distance.valueOf(cell.getStringCellValue()));
+//                                objectVillageRepository.save(objectVillage);
+//                            }
+//                            case 12 -> {
+//                                objectVillage.setObject(objectList.get(11));
+//                                objectVillage.setDistance(Distance.valueOf(cell.getStringCellValue()));
+//                                objectVillageRepository.save(objectVillage);
+//                            }
+//                            case 13 -> {
+//                                objectVillage.setObject(objectList.get(12));
+//                                objectVillage.setDistance(Distance.valueOf(cell.getStringCellValue()));
+//                                objectVillageRepository.save(objectVillage);
+//                            }
+//                            case 14 -> {
+//                                objectVillage.setObject(objectList.get(13));
+//                                objectVillage.setDistance(Distance.valueOf(cell.getStringCellValue()));
+//                                objectVillageRepository.save(objectVillage);
+//                            }
+//                            case 15 -> {
+//                                objectVillage.setObject(objectList.get(14));
+//                                objectVillage.setDistance(Distance.valueOf(cell.getStringCellValue()));
+//                                objectVillageRepository.save(objectVillage);
+//                            }
                             default -> {
+                                for (int i = 0; i <44 ; i++) {
+                                    System.out.println(cell.getStringCellValue());
+                                }
                             }
                         }
                         cellIndex++;
