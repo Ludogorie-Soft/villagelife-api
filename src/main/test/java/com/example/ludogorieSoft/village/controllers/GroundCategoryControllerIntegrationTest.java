@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.Matchers.containsString;
@@ -134,16 +135,47 @@ class GroundCategoryControllerIntegrationTest {
                 .andExpect(content().string("Ground Category with id: 1 has been deleted successfully!!"));
     }
 
+    @Test
+    void testGetAllGroundCategoriesWhenNoGroundCategoryExist() throws Exception {
+        when(groundCategoryService.getAllGroundCategories()).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/groundCategory")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(0))
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isEmpty())
+                .andReturn();
+    }
+
+    @Test
+    void testGetGroundCategoryByIdWhenGroundCategoryDoesNotExist() throws Exception {
+        Long invalidId = 100000L;
+
+        when(groundCategoryService.getByID(invalidId))
+                .thenThrow(new ApiRequestException("Ground Category with id: " + invalidId + " Not Found"));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/groundCategory/{id}", invalidId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Ground Category with id: " + invalidId + " Not Found"))
+                .andReturn();
+    }
 
 
     @Test
-    void testCreateGroundCategoryWithInvalidDataShouldReturnBadRequest() throws Exception {
-        GroundCategoryDTO newGroundCategory = new GroundCategoryDTO();
+    void testShouldNotCreateGroundCategoryWithBlankGroundCategory() throws Exception {
+        String blankGroundCategoryName = "";
+
+        doThrow(new ApiRequestException("Ground Category is blank"))
+                .when(groundCategoryService).createGroundCategoryDTO(any(GroundCategoryDTO.class));
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/groundCategory")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(newGroundCategory)))
-                .andExpect(status().isCreated());
+                        .content("{\"id\": 1, \"groundCategoryName\": \"" + blankGroundCategoryName + "\"}")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Ground Category is blank"))
+                .andReturn();
     }
 
 
@@ -164,7 +196,7 @@ class GroundCategoryControllerIntegrationTest {
 
 
     @Test
-    void testDeleteGroundCategoryWithInvalidIdShouldReturnNotFound() throws Exception {
+    void testDeleteGroundCategoryWithInvalidIdShouldReturnBadRequest() throws Exception {
         Long id = 1L;
 
         doThrow(new ApiRequestException("Ground Category with id " + id + " not found"))

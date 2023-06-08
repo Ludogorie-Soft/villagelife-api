@@ -3,6 +3,7 @@ package com.example.ludogorieSoft.village.controllers;
 import com.example.ludogorieSoft.village.dtos.LandscapeDTO;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.services.LandscapeService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
@@ -16,11 +17,13 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -137,6 +140,18 @@ class LandscapeControllerIntegrationTest {
                 .andExpect(content().string("Landscape with id: 1 has been deleted successfully!!"));
     }
 
+    @Test
+    void testGetAllLandscapesWhenNoLandscapeExist() throws Exception {
+        when(landscapeService.getAllLandscapes()).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/landscapes")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(0))
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isEmpty())
+                .andReturn();
+    }
 
     @Test
     void testGetLandscapeByIdWhenLandscapeDoesNotExist() throws Exception {
@@ -150,5 +165,56 @@ class LandscapeControllerIntegrationTest {
                 .andExpect(content().string(containsString("Landscape with id: " + landscapeId + " not found")));
     }
 
+    @Test
+    void testShouldNotCreateLandscapeWithBlankLandscapeName() throws Exception {
+        String blankLandscapeName = "";
+
+        doThrow(new ApiRequestException("Landscape is blank"))
+                .when(landscapeService).createLandscape(any(LandscapeDTO.class));
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/landscapes")
+                        .content("{\"id\": 1, \"landscapeName\": \"" + blankLandscapeName + "\"}")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Landscape is blank"))
+                .andReturn();
+    }
+
+    @Test
+    void testUpdateLandscapeWithInvalidIdShouldReturnNotFound() throws Exception {
+        Long id = 1L;
+
+        LandscapeDTO updatedLandscape = new LandscapeDTO();
+
+        when(landscapeService.updateLandscape(id, updatedLandscape))
+                .thenThrow(new ApiRequestException("Landscape with id: " + id + " not found"));
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/landscapes/{id}", id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(updatedLandscape)))
+                .andExpect(status().isBadRequest());
+    }
+
+
+    @Test
+    void testDeleteLandscapeWithInvalidIdShouldReturnBadRequest() throws Exception {
+        Long id = 1L;
+
+        doThrow(new ApiRequestException("Landscape with id " + id + " not found"))
+                .when(landscapeService).deleteLandscape(id);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/landscapes/{id}", id))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(containsString("Landscape with id " + id + " not found")));
+    }
+
+
+    private static String asJsonString(final Object obj) {
+        try {
+            return new ObjectMapper().writeValueAsString(obj);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
 

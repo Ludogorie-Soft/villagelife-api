@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
@@ -153,6 +154,20 @@ class VillageAnswerQuestionControllerIntegrationTest {
     }
 
     @Test
+    void testGetAllVillageAnswerQuestionsWhenNoneExist() throws Exception {
+        when(villageAnswerQuestionService.getAllVillageAnswerQuestions()).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageAnswerQuestion")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(0))
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isEmpty())
+                .andReturn();
+    }
+
+
+    @Test
     void testDeleteVillageAnswerQuestionByIdNotFound() throws Exception {
         int rowsAffected = 0;
         when(villageAnswerQuestionService.deleteVillageAnswerQuestionById(anyLong())).thenReturn(rowsAffected);
@@ -160,4 +175,8 @@ class VillageAnswerQuestionControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/villageAnswerQuestion/{id}", 1))
                 .andExpect(status().isNotFound());
     }
+
+
+
+
 }

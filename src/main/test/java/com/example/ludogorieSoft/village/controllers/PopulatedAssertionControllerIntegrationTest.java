@@ -1,6 +1,7 @@
 package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.dtos.PopulatedAssertionDTO;
+import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.services.PopulatedAssertionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,10 +16,12 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -50,7 +53,7 @@ class PopulatedAssertionControllerIntegrationTest {
 
         when(populatedAssertionService.getAllPopulatedAssertion()).thenReturn(populatedAssertionDTOList);
 
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/populated_assertions")
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/populatedAssertions")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(2))
@@ -72,7 +75,7 @@ class PopulatedAssertionControllerIntegrationTest {
 
         when(populatedAssertionService.getPopulatedAssertionById(anyLong())).thenReturn(populatedAssertionDTO);
 
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/populated_assertions/{id}", 1)
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/populatedAssertions/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
@@ -91,7 +94,7 @@ class PopulatedAssertionControllerIntegrationTest {
 
         when(populatedAssertionService.createPopulatedAssertion(any(PopulatedAssertionDTO.class))).thenReturn(populatedAssertionDTO);
 
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/populated_assertions")
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/populatedAssertions")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"id\": 1, \"populatedAssertionName\": \"New Populated Assertion\"}"))
                 .andExpect(status().isCreated())
@@ -111,7 +114,7 @@ class PopulatedAssertionControllerIntegrationTest {
 
         when(populatedAssertionService.updatePopulatedAssertion(anyLong(), any(PopulatedAssertionDTO.class))).thenReturn(populatedAssertionDTO);
 
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/populated_assertions/{id}", 1)
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/populatedAssertions/{id}", 1)
                         .content("{\"id\": 1, \"populatedAssertionName\": \"Updated Populated Assertion\"}")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -126,8 +129,70 @@ class PopulatedAssertionControllerIntegrationTest {
     @Test
     void testDeletePopulatedAssertionById() throws Exception {
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/populated_assertions/{id}", 1))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/populatedAssertions/{id}", 1))
                 .andExpect(status().isOk())
                 .andExpect(content().string("PopulatedAssertion with id: 1 has been deleted successfully!!"));
     }
+
+
+    @Test
+    void testGetAllPopulatedAssertionWhenNoPopulatedAssertionExists() throws Exception {
+        when(populatedAssertionService.getAllPopulatedAssertion()).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/populatedAssertions")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(0))
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isEmpty())
+                .andReturn();
+    }
+
+    @Test
+    void testGetPopulatedAssertionByIdWhenPopulatedAssertionNotFound() throws Exception {
+        Long invalidId = 100000L;
+
+        when(populatedAssertionService.getPopulatedAssertionById(invalidId))
+                .thenThrow(new ApiRequestException("Populated Assertion with id: " + invalidId + " Not Found"));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/populatedAssertions/{id}", invalidId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Populated Assertion with id: " + invalidId + " Not Found"))
+                .andReturn();
+    }
+
+
+    @Test
+    void testShouldNotCreatePopulatedAssertionWithBlankPopulatedAssertionName() throws Exception {
+        String blankPopulatedAssertionName = "";
+
+        doThrow(new ApiRequestException("Populated Assertion is blank"))
+                .when(populatedAssertionService).createPopulatedAssertion(any(PopulatedAssertionDTO.class));
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/populatedAssertions")
+                        .content("{\"id\": 1, \"populatedAssertionName\": \"" + blankPopulatedAssertionName + "\"}")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Populated Assertion is blank"))
+                .andReturn();
+    }
+
+    @Test
+    void testUpdatePopulatedAssertionByIdWhenPopulatedAssertionNotFound() throws Exception {
+        Long invalidId = 100000L;
+
+        when(populatedAssertionService.updatePopulatedAssertion(eq(invalidId), any(PopulatedAssertionDTO.class)))
+                .thenThrow(new ApiRequestException("Populated Assertion with id: " + invalidId + " Not Found"));
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/populatedAssertions/{id}", invalidId)
+                        .content("{\"id\": 1}")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Populated Assertion with id: " + invalidId + " Not Found"))
+                .andReturn();
+    }
+
+
+
 }

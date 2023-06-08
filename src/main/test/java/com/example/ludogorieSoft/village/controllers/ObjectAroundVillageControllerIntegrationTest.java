@@ -3,6 +3,7 @@ package com.example.ludogorieSoft.village.controllers;
 import com.example.ludogorieSoft.village.dtos.ObjectAroundVillageDTO;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.services.ObjectAroundVillageService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
@@ -16,6 +17,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.Matchers.containsString;
@@ -135,6 +137,19 @@ class ObjectAroundVillageControllerIntegrationTest {
     }
 
     @Test
+    void testGetAllLObjectsAroundVillageWhenNoObjectAroundVillageExist() throws Exception {
+        when(objectAroundVillageService.getAllObjectsAroundVillage()).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/objectAroundVillage")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(0))
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isEmpty())
+                .andReturn();
+    }
+
+    @Test
     void testGetObjectAroundVillageByIdWhenObjectDoesNotExist() throws Exception {
         long objectId = 1L;
         when(objectAroundVillageService.getObjectAroundVillageById(objectId))
@@ -146,14 +161,24 @@ class ObjectAroundVillageControllerIntegrationTest {
                 .andExpect(content().string(containsString("ObjectAroundVillage with id: " + objectId + " not found")));
     }
 
+
+
     @Test
-    void testCreateObjectAroundVillageWithInvalidData() throws Exception {
-        String invalidData = "";
+    void testShouldNotCreateObjectAroundWithBlankObjectAround() throws Exception {
+        String blankObjectAroundVillage = "";
+
+        doThrow(new ApiRequestException("Object Around Village is blank"))
+                .when(objectAroundVillageService).createObjectAroundVillage(any(ObjectAroundVillageDTO.class));
+
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/objectAroundVillage")
-                        .content("{\"id\": 1, \"type\": }" + invalidData)
+                        .content("{\"id\": 1, \"type\": \"" + blankObjectAroundVillage + "\"}")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Object Around Village is blank"))
+                .andReturn();
     }
+
+
 
     @Test
     void testGetObjectAroundVillageWithInvalidId() throws Exception {
@@ -177,6 +202,29 @@ class ObjectAroundVillageControllerIntegrationTest {
                         .content("{\"id\": 1, \"type\": }" + invalidData)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void testUpdateObjectAroundVillageWithInvalidIdShouldReturnNotFound() throws Exception {
+        Long id = 1L;
+
+        ObjectAroundVillageDTO updatedObjectAroundVillage = new ObjectAroundVillageDTO();
+
+        when(objectAroundVillageService.updateObjectAroundVillage(id, updatedObjectAroundVillage))
+                .thenThrow(new ApiRequestException("Object Around Village id: " + id + " not found"));
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/objectAroundVillage/{id}", id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(updatedObjectAroundVillage)))
+                .andExpect(status().isBadRequest());
+    }
+
+    private static String asJsonString(final Object obj) {
+        try {
+            return new ObjectMapper().writeValueAsString(obj);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test

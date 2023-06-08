@@ -18,10 +18,12 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -151,6 +153,19 @@ class EthnicityVillageControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/villageEthnicities/{id}", id))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string("Ethnicity in Village with id: " + id + " has been deleted successfully!!"));
+    }
+
+    @Test
+    void testGetAllEthnicityVillagesWhenNoneExist() throws Exception {
+        when(ethnicityVillageService.getAllEthnicityVillages()).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageEthnicities")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(0))
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isEmpty())
+                .andReturn();
     }
 
     @Test

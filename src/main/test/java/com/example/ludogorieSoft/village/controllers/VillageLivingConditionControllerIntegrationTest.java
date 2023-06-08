@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
@@ -141,6 +142,19 @@ class VillageLivingConditionControllerIntegrationTest {
 
         String response = mvcResult.getResponse().getContentAsString();
         assertNotNull(response);
+    }
+
+    @Test
+    void testGetAllVillageLivingConditionsWhenNoneExist() throws Exception {
+        when(villageLivingConditionService.getAllVillageLivingConditions()).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageLivingConditions")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(0))
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isEmpty())
+                .andReturn();
     }
 
     @Test

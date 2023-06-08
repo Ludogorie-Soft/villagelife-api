@@ -5,6 +5,7 @@ import com.example.ludogorieSoft.village.enums.Children;
 import com.example.ludogorieSoft.village.enums.Foreigners;
 import com.example.ludogorieSoft.village.enums.NumberOfPopulation;
 import com.example.ludogorieSoft.village.enums.Residents;
+import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.services.PopulationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,10 +20,12 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -161,5 +164,77 @@ class PopulationControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string("Population with id: 1 has been deleted successfully!!"));
     }
+
+
+    @Test
+    void testGetAllPopulationWhenNoPopulationExists() throws Exception {
+        when(populationService.getAllPopulation()).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/populations")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(0))
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isEmpty())
+                .andReturn();
+    }
+
+    @Test
+    void testGetPopulationByIdWhenPopulationDoesNotExist() throws Exception {
+        Long invalidId = 100000L;
+
+        when(populationService.getPopulationById(invalidId))
+                .thenThrow(new ApiRequestException("Population with id: " + invalidId + " Not Found"));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/populations/{id}", invalidId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Population with id: " + invalidId + " Not Found"))
+                .andReturn();
+    }
+
+
+    @Test
+    void testCreatePopulationWithInvalidData() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/populations")
+                        .content("{\"id\": }")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+    }
+
+
+    @Test
+    void testUpdatePopulationWhenPopulationDoesNotExist() throws Exception {
+        Long invalidId = 100000L;
+
+        when(populationService.updatePopulation(eq(invalidId), any(PopulationDTO.class)))
+                .thenThrow(new ApiRequestException("Population with id: " + invalidId + " Not Found"));
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/populations/{id}", invalidId)
+                        .content("{\"id\": 1}")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Population with id: " + invalidId + " Not Found"))
+                .andReturn();
+    }
+
+    @Test
+    void testDeletePopulationByIdWhenPopulationDoesNotExist() throws Exception {
+        Long invalidId = 10L;
+        String errorMessage = "Population not found for id " + invalidId;
+
+        doThrow(new ApiRequestException(errorMessage))
+                .when(populationService).deletePopulationById(invalidId);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/populations/{id}", invalidId))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(errorMessage))
+                .andReturn();
+    }
+
+
+
+
 }
 

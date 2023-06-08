@@ -1,6 +1,8 @@
 package com.example.ludogorieSoft.village.controllers;
+
 import com.example.ludogorieSoft.village.dtos.ObjectVillageDTO;
 import com.example.ludogorieSoft.village.enums.Distance;
+import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.services.ObjectVillageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,10 +18,12 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -149,4 +153,75 @@ class ObjectVillageControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string("ObjectVillage with id: 1 has been deleted successfully!!"));
     }
+
+
+    @Test
+    void testGetObjectVillageByIdWhenObjectVillageNotFound() throws Exception {
+        Long invalidId = 100000L;
+
+        when(objectVillageService.getObjectVillageById(invalidId))
+                .thenThrow(new ApiRequestException("Object Village with id: " + invalidId + " Not Found"));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/objectVillages/{id}", invalidId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Object Village with id: " + invalidId + " Not Found"))
+                .andReturn();
+    }
+
+    @Test
+    void testCreateObjectVillageWithInvalidData() throws Exception {
+        String invalidData = "";
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/objectVillages")
+                        .content("{\"id\": 1, }" + invalidData)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+    }
+
+
+
+    @Test
+    void testUpdateObjectVillageByIdWhenObjectVillageNotFound() throws Exception {
+        Long invalidId = 1L;
+
+        when(objectVillageService.updateObjectVillageById(eq(invalidId), any(ObjectVillageDTO.class)))
+                .thenThrow(new ApiRequestException("Object Village with id: " + invalidId + " Not Found"));
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/objectVillages/{id}", invalidId)
+                        .content("{\"id\": 1}")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Object Village with id: " + invalidId + " Not Found"))
+                .andReturn();
+    }
+
+    @Test
+    void testGetAllObjectVillagesWhenNoObjectVillageExists() throws Exception {
+        when(objectVillageService.getAllObjectVillages()).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/objectVillages")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(0))
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isEmpty())
+                .andReturn();
+    }
+
+
+    @Test
+    void testDeleteObjectVillageByIdWhenObjectVillageDoesNotExist() throws Exception {
+        Long invalidId = 100000L;
+        String errorMessage = "Object Village not found for id " + invalidId;
+
+        doThrow(new ApiRequestException(errorMessage))
+                .when(objectVillageService).deleteObjectVillageById(invalidId);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/objectVillages/{id}", invalidId))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(errorMessage))
+                .andReturn();
+    }
+
 }

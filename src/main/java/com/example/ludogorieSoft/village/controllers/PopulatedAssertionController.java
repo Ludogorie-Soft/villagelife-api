@@ -11,7 +11,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/populated_assertions")
+@RequestMapping("/api/v1/populatedAssertions")
 @RequiredArgsConstructor
 public class PopulatedAssertionController {
 
@@ -26,6 +26,8 @@ public class PopulatedAssertionController {
     public ResponseEntity<PopulatedAssertionDTO> getPopulatedAssertionById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(populatedAssertionService.getPopulatedAssertionById(id));
     }
+
+
 
     @PostMapping
     public ResponseEntity<PopulatedAssertionDTO> createPopulatedAssertion(@Valid @RequestBody PopulatedAssertionDTO populatedAssertionDTO) {

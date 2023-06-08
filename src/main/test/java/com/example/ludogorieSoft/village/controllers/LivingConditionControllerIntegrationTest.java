@@ -3,6 +3,7 @@ package com.example.ludogorieSoft.village.controllers;
 import com.example.ludogorieSoft.village.dtos.LivingConditionDTO;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.services.LivingConditionService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
@@ -16,6 +17,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.Matchers.containsString;
@@ -137,39 +139,83 @@ class LivingConditionControllerIntegrationTest {
                 .andExpect(content().string("LivingCondition with id: 1 has been deleted successfully!!"));
     }
 
+    @Test
+    void testGetAllLivingConditionsWhenNoLivingConditionExist() throws Exception {
+        when(livingConditionService.getAllLivingConditions()).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/livingConditions")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(0))
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isEmpty())
+                .andReturn();
+    }
 
     @Test
     void testGetLivingConditionByIdWhenLivingConditionDoesNotExist() throws Exception {
         long livingConditionId = 1L;
         when(livingConditionService.getLivingConditionById(livingConditionId))
-                .thenThrow(new ApiRequestException("LivingCondition with id: " + livingConditionId + " not found"));
+                .thenThrow(new ApiRequestException("Living Condition with id: " + livingConditionId + " not found"));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/livingConditions/{id}", livingConditionId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string(containsString("LivingCondition with id: " + livingConditionId + " not found")));
+                .andExpect(content().string(containsString("Living Condition with id: " + livingConditionId + " not found")));
 
     }
 
 
     @Test
-    void testCreateLivingConditionWithInvalidData() throws Exception {
+    void testShouldNotCreateLivingConditionWithBlankLivingConditionName() throws Exception {
+        String blankLivingConditionName = "";
+
+        doThrow(new ApiRequestException("Living Condition is blank"))
+                .when(livingConditionService).createLivingCondition(any(LivingConditionDTO.class));
+
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/livingConditions")
-                        .content("{\"id\": 1, \"livingConditionName\": null}")
+                        .content("{\"id\": 1, \"livingConditionName\": \"" + blankLivingConditionName + "\"}")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated());
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Living Condition is blank"))
+                .andReturn();
+    }
+
+
+    @Test
+    void testUpdateLivingConditionWithInvalidIdShouldReturnNotFound() throws Exception {
+        Long id = 1L;
+
+        LivingConditionDTO updatedLivingCondition = new LivingConditionDTO();
+
+        when(livingConditionService.updateLivingCondition(id, updatedLivingCondition))
+                .thenThrow(new ApiRequestException("Living Condition id: " + id + " not found"));
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/livingConditions/{id}", id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(updatedLivingCondition)))
+                .andExpect(status().isBadRequest());
+    }
+
+
+    private static String asJsonString(final Object obj) {
+        try {
+            return new ObjectMapper().writeValueAsString(obj);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
     @Test
     void testDeleteLivingConditionByIdWhenLivingConditionDoesNotExist() throws Exception {
         long livingConditionId = 1L;
-        doThrow(new ApiRequestException("LivingCondition with id: " + livingConditionId + " not found"))
+        doThrow(new ApiRequestException("Living Condition with id: " + livingConditionId + " not found"))
                 .when(livingConditionService).deleteLivingCondition(livingConditionId);
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/livingConditions/{id}", livingConditionId))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string(containsString("LivingCondition with id: " + livingConditionId + " not found")));
+                .andExpect(content().string(containsString("Living Condition with id: " + livingConditionId + " not found")));
     }
 
 }

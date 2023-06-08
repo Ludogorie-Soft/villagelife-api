@@ -8,8 +8,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static com.example.ludogorieSoft.village.enums.Consents.*;
@@ -126,6 +128,19 @@ class VillagePopulationAssertionControllerIntegrationTest {
 
         mockMvc.perform(delete("/api/v1/villagePopulationAssertions/1"))
                 .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void testGetAllVillagePopulationAssertionsWhenNoneExist() throws Exception {
+        when(villagePopulationAssertionService.getAllVillagePopulationAssertion()).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villagePopulationAssertions")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(0))
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isEmpty())
+                .andReturn();
     }
 
     @Test

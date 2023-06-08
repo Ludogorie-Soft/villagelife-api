@@ -1,4 +1,5 @@
 package com.example.ludogorieSoft.village.controllers;
+
 import com.example.ludogorieSoft.village.dtos.VillageDTO;
 import com.example.ludogorieSoft.village.model.Population;
 import com.example.ludogorieSoft.village.services.VillageService;
@@ -15,6 +16,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -153,6 +155,20 @@ class VillageControllerIntegrationTest {
         String response = mvcResult.getResponse().getContentAsString();
         assertNotNull(response);
     }
+
+    @Test
+    void testGetAllVillagesWhenNoneExist() throws Exception {
+        when(villageService.getAllVillages()).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villages")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(0))
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isEmpty())
+                .andReturn();
+    }
+
 
     @Test
     void testDeleteVillage() throws Exception {

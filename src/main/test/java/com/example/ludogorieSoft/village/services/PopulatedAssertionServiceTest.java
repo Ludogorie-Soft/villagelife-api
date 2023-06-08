@@ -115,7 +115,7 @@ class PopulatedAssertionServiceTest {
         PopulatedAssertionDTO result = populatedAssertionService.getPopulatedAssertionById(populationId);
 
         verify(populatedAssertionRepository, times(1)).findById(populationId);
-        Assertions.assertEquals(populatedAssertionService.toPopulatedAssertionDTO(population), result);
+        Assertions.assertEquals(populatedAssertionService.populatedAssertionToPopulatedAssertionDTO(population), result);
     }
 
     @Test

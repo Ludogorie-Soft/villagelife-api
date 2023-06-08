@@ -9,7 +9,7 @@ import javax.validation.constraints.NotBlank;
 
 @Entity
 @Data
-@Table(name ="populated_assertion" )
+@Table(name = "populated_assertion")
 @AllArgsConstructor
 @NoArgsConstructor
 public class PopulatedAssertion {
@@ -18,7 +18,7 @@ public class PopulatedAssertion {
     @Column(name = "id", nullable = false)
     private Long id;
     @NotBlank
-    @Column(name = "populated_assertion_name",unique = true, nullable = false)
+    @Column(name = "populated_assertion_name", unique = true, nullable = false)
     private String populatedAssertionName;
 
 }

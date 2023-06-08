@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
@@ -131,6 +132,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         String response = mvcResult.getResponse().getContentAsString();
         assertNotNull(response);
     }
+
+    @Test
+    void testGetAllVillageGroundCategoriesWhenNoneExist() throws Exception {
+        when(villageGroundCategoryService.getAllVillageGroundCategories()).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageGroundCategory")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(0))
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isEmpty())
+                .andReturn();
+    }
+
 
     @Test
     void testDeleteVillageGroundCategoryById() throws Exception {
