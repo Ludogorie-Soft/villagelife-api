@@ -1,6 +1,7 @@
 package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.dtos.VillageDTO;
+import com.example.ludogorieSoft.village.services.ExcelToDBService;
 import com.example.ludogorieSoft.village.services.VillageService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ import java.util.Map;
 public class VillageController {
 
     private final VillageService villageService;
+    private final ExcelToDBService excelToDBService;
 
     @GetMapping
     public ResponseEntity<List<VillageDTO>> getAllVillages() {
@@ -50,8 +52,8 @@ public class VillageController {
         return ResponseEntity.noContent().build();
     }
     @PostMapping("/upload-villages-data")
-    public ResponseEntity<?> uploadVillagessData(@RequestParam("file") MultipartFile file){
-        this.villageService.saveVillagesToDatabase(file);
+    public ResponseEntity<?> uploadVillagesData(@RequestParam("file") MultipartFile file){
+        this.excelToDBService.saveVillagesToDatabase(file);
         return ResponseEntity
                 .ok(Map.of("Message", " Customers data uploaded and saved to database successfully"));
     }
