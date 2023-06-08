@@ -1,7 +1,6 @@
-package com.example.ludogorieSoft.village.controllers;
+package com.example.ludogoriesoft.village.controllers;
 
-import com.example.ludogorieSoft.village.dtos.EthnicityDTO;
-import com.example.ludogorieSoft.village.services.EthnicityService;
+import com.example.ludogoriesoft.village.dtos.EthnicityDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class EthnicityControllerIntegrationTestWithSQL {
+class EthnicityControllerIntegrationSqlTest {
 
     @LocalServerPort
     private int port;
@@ -28,8 +27,9 @@ class EthnicityControllerIntegrationTestWithSQL {
     @Autowired
     private TestRestTemplate restTemplate;
 
-    @Autowired
-    private EthnicityService ethnicityService;
+
+    EthnicityControllerIntegrationSqlTest() {
+    }
 
     private String createURL(String uri) {
         return "http://localhost:" + port + uri;
@@ -44,7 +44,8 @@ class EthnicityControllerIntegrationTestWithSQL {
     void getAllEthnicities() {
         ResponseEntity<List<EthnicityDTO>> response = restTemplate.exchange(
                 createURL("/api/v1/ethnicities"), HttpMethod.GET, null,
-                new ParameterizedTypeReference<List<EthnicityDTO>>() {});
+                new ParameterizedTypeReference<>() {
+                });
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         List<EthnicityDTO> ethnicities = response.getBody();
@@ -90,11 +91,11 @@ class EthnicityControllerIntegrationTestWithSQL {
 
     @Test
     @Sql(statements = {
-            "INSERT INTO ethnicities (id, ethnicity_name) VALUES (1, 'Ethnicity 1')"
+            "INSERT INTO ethnicities (id, ethnicity_name) VALUES (2, 'Ethnicity 1')"
     }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(statements = "DELETE FROM ethnicities", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void updateEthnicity() {
-        long ethnicityId = 1L;
+        long ethnicityId = 2L;
         EthnicityDTO updatedEthnicityDTO = new EthnicityDTO();
         updatedEthnicityDTO.setEthnicityName("Updated Ethnicity");
 

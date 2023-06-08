@@ -1,9 +1,9 @@
-package com.example.ludogorieSoft.village.services;
+package com.example.ludogoriesoft.village.services;
 
-import com.example.ludogorieSoft.village.dtos.GroundCategoryDTO;
-import com.example.ludogorieSoft.village.model.GroundCategory;
-import com.example.ludogorieSoft.village.repositories.GroundCategoryRepository;
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
+import com.example.ludogoriesoft.village.dtos.GroundCategoryDTO;
+import com.example.ludogoriesoft.village.model.GroundCategory;
+import com.example.ludogoriesoft.village.repositories.GroundCategoryRepository;
+import com.example.ludogoriesoft.village.exeptions.ApiRequestException;
 import lombok.AllArgsConstructor;
 
 import org.apache.commons.lang.StringUtils;

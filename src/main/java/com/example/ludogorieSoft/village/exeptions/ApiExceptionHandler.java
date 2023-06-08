@@ -1,4 +1,4 @@
-package com.example.ludogorieSoft.village.exeptions;
+package com.example.ludogoriesoft.village.exeptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +10,7 @@ import java.time.ZonedDateTime;
 @ControllerAdvice
 public class ApiExceptionHandler {
     @ExceptionHandler(value = {ApiRequestException.class})
-    public ResponseEntity<Object> handleApiRequestException(com.example.ludogorieSoft.village.exeptions.ApiRequestException e){
+    public ResponseEntity<Object> handleApiRequestException(ApiRequestException e){
         HttpStatus badRequest = HttpStatus.BAD_REQUEST;
         ApiVillageNotFound apiException = new ApiVillageNotFound(
                 e.getMessage(),

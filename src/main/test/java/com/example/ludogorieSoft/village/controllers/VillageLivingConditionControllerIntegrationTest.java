@@ -1,8 +1,8 @@
-package com.example.ludogorieSoft.village.controllers;
+package com.example.ludogoriesoft.village.controllers;
 
-import com.example.ludogorieSoft.village.dtos.VillageLivingConditionDTO;
-import com.example.ludogorieSoft.village.enums.Consents;
-import com.example.ludogorieSoft.village.services.VillageLivingConditionService;
+import com.example.ludogoriesoft.village.dtos.VillageLivingConditionDTO;
+import com.example.ludogoriesoft.village.enums.Consents;
+import com.example.ludogoriesoft.village.services.VillageLivingConditionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;

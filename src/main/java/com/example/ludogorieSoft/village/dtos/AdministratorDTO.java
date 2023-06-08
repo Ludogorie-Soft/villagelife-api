@@ -1,4 +1,4 @@
-package com.example.ludogorieSoft.village.dtos;
+package com.example.ludogoriesoft.village.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,6 +16,6 @@ public class AdministratorDTO {
     private String username;
     private String mobile;
     private LocalDateTime createdAt;
-    private final boolean enabled = true;
+    private static final boolean ENABLED = true;
 
 }

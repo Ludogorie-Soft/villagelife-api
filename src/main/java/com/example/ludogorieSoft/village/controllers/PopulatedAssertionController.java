@@ -1,7 +1,7 @@
-package com.example.ludogorieSoft.village.controllers;
+package com.example.ludogoriesoft.village.controllers;
 
-import com.example.ludogorieSoft.village.dtos.PopulatedAssertionDTO;
-import com.example.ludogorieSoft.village.services.PopulatedAssertionService;
+import com.example.ludogoriesoft.village.dtos.PopulatedAssertionDTO;
+import com.example.ludogoriesoft.village.services.PopulatedAssertionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,8 +1,6 @@
-package com.example.ludogorieSoft.village.model;
+package com.example.ludogoriesoft.village.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.validator.constraints.Length;
 
@@ -12,7 +10,8 @@ import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "admins")
@@ -49,6 +48,7 @@ public class Administrator {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    private  final  boolean enabled = true;
+    private static final  boolean ENABLED = true;
+
 
 }

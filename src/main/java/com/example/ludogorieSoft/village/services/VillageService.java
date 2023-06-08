@@ -1,9 +1,9 @@
-package com.example.ludogorieSoft.village.services;
+package com.example.ludogoriesoft.village.services;
 
-import com.example.ludogorieSoft.village.dtos.VillageDTO;
-import com.example.ludogorieSoft.village.model.Village;
-import com.example.ludogorieSoft.village.repositories.VillageRepository;
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
+import com.example.ludogoriesoft.village.dtos.VillageDTO;
+import com.example.ludogoriesoft.village.model.Village;
+import com.example.ludogoriesoft.village.repositories.VillageRepository;
+import com.example.ludogoriesoft.village.exeptions.ApiRequestException;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -17,11 +17,10 @@ public class VillageService {
 
     private final VillageRepository villageRepository;
     private final ModelMapper modelMapper;
-    private final String errorMessage1="Village with id ";
-    private final String errorMessage2=" not found  ";
+    private static final String MESSAGE = "Village with id ";
+    private static final String ERROR_MESSAGE = " not found  ";
 
-
-    public VillageDTO villageToVillageDTO(Village village){
+    public VillageDTO villageToVillageDTO(Village village) {
         return modelMapper.map(village, VillageDTO.class);
     }
 
@@ -38,7 +37,7 @@ public class VillageService {
         if (optionalVillage.isPresent()) {
             return villageToVillageDTO(optionalVillage.get());
         } else {
-            throw new ApiRequestException(errorMessage1 + id + errorMessage2);
+            throw new ApiRequestException(MESSAGE + id + ERROR_MESSAGE);
         }
     }
 
@@ -59,7 +58,7 @@ public class VillageService {
             villageRepository.save(village);
             return modelMapper.map(village, VillageDTO.class);
         } else {
-            throw new ApiRequestException(errorMessage1 + id + errorMessage2);
+            throw new ApiRequestException(MESSAGE + id + ERROR_MESSAGE);
         }
     }
 
@@ -68,14 +67,15 @@ public class VillageService {
         if (villageRepository.existsById(id)) {
             villageRepository.deleteById(id);
         } else {
-            throw new ApiRequestException(errorMessage1 + id + errorMessage2);
+            throw new ApiRequestException(MESSAGE + id + ERROR_MESSAGE);
         }
     }
-    public Village checkVillage(Long id){
+
+    public Village checkVillage(Long id) {
         Optional<Village> village = villageRepository.findById(id);
-        if (village.isPresent()){
+        if (village.isPresent()) {
             return village.get();
-        }else {
+        } else {
             throw new ApiRequestException("Village not found");
         }
     }

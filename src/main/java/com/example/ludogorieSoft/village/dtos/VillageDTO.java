@@ -1,6 +1,6 @@
-package com.example.ludogorieSoft.village.dtos;
+package com.example.ludogoriesoft.village.dtos;
 
-import com.example.ludogorieSoft.village.model.Population;
+import com.example.ludogoriesoft.village.model.Population;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

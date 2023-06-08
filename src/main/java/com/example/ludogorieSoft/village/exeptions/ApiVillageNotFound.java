@@ -1,7 +1,4 @@
-package com.example.ludogorieSoft.village.exeptions;
-
-import lombok.Data;
-import org.springframework.http.HttpStatus;
+package com.example.ludogoriesoft.village.exeptions;
 
 import java.time.ZonedDateTime;
 
