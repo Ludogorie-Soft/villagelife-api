@@ -18,8 +18,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
-import static org.testng.Assert.assertThrows;
 
 class EthnicityServiceTest {
     @BeforeEach
@@ -100,7 +100,7 @@ class EthnicityServiceTest {
         Long ethnicityId = 123L;
         when(ethnicityRepository.findById(ethnicityId)).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(ApiRequestException.class, () -> ethnicityService.getEthnicityById(ethnicityId));
+        assertThrows(ApiRequestException.class, () -> ethnicityService.getEthnicityById(ethnicityId));
         verify(ethnicityRepository, times(1)).findById(ethnicityId);
         verify(modelMapper, never()).map(any(), eq(EthnicityDTO.class));
     }
@@ -163,7 +163,7 @@ class EthnicityServiceTest {
         Ethnicity updatedEthnicity = new Ethnicity();
         updatedEthnicity.setEthnicityName("Updated Ethnicity");
         when(ethnicityRepository.findById(ethnicityId)).thenReturn(Optional.empty());
-        Assertions.assertThrows(ApiRequestException.class, () -> ethnicityService.updateEthnicity(ethnicityId, updatedEthnicity));
+        assertThrows(ApiRequestException.class, () -> ethnicityService.updateEthnicity(ethnicityId, updatedEthnicity));
         verify(ethnicityRepository, times(1)).findById(ethnicityId);
         verify(ethnicityRepository, never()).save(any(Ethnicity.class));
     }
@@ -182,7 +182,7 @@ class EthnicityServiceTest {
     void testDeleteEthnicityByIdWithNonExistingEthnicityIdThenThrowsApiRequestException() {
         Long ethnicityId = 123L;
         when(ethnicityRepository.existsById(ethnicityId)).thenReturn(false);
-        Assertions.assertThrows(ApiRequestException.class, () -> ethnicityService.deleteEthnicityById(ethnicityId));
+        assertThrows(ApiRequestException.class, () -> ethnicityService.deleteEthnicityById(ethnicityId));
         verify(ethnicityRepository, times(1)).existsById(ethnicityId);
         verify(ethnicityRepository, never()).deleteById(ethnicityId);
     }
@@ -204,7 +204,7 @@ class EthnicityServiceTest {
         Long id = 1L;
         Mockito.when(ethnicityRepository.findById(id)).thenReturn(Optional.empty());
 
-        ApiRequestException exception = Assertions.assertThrows(ApiRequestException.class,
+        ApiRequestException exception = assertThrows(ApiRequestException.class,
                 () -> ethnicityService.checkEthnicity(id));
         Assertions.assertEquals("Ethnicity not found", exception.getMessage());
         Mockito.verify(ethnicityRepository).findById(id);
