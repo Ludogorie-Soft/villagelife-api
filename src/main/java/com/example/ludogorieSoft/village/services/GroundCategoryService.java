@@ -26,7 +26,7 @@ public class GroundCategoryService {
 
 
     public List<GroundCategoryDTO> getAllGroundCategories() {
-        List<GroundCategory> groundCategories = groundCategoryRepository.findAll();
+        List<GroundCategory> groundCategories = groundCategoryRepository.findAllByOrderByIdAsc();
         return groundCategories.stream()
                 .map(this::toDTO)
                 .toList();
@@ -38,6 +38,13 @@ public class GroundCategoryService {
             throw new ApiRequestException("Ground Category with id: " + id + " Not Found");
         }
         return toDTO(optionalGroundCategory.get());
+    }
+    public GroundCategoryDTO getByGroundCategoryName(String name) {
+        GroundCategory groundCategory = groundCategoryRepository.findByGroundCategoryName(name);
+        if (groundCategory == null) {
+            throw new ApiRequestException("Ground Category with name: " + name + " Not Found");
+        }
+        return toDTO(groundCategory);
     }
 
 

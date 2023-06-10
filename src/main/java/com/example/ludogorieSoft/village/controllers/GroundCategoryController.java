@@ -11,7 +11,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/groundCategory")
+@RequestMapping("/api/v1/groundCategories")
 @AllArgsConstructor
 public class GroundCategoryController {
     private final GroundCategoryService groundCategoryService;
@@ -24,6 +24,10 @@ public class GroundCategoryController {
     @GetMapping("/{id}")
     public ResponseEntity<GroundCategoryDTO> getGroundCategoryByID(@PathVariable("id") Long id) {
         return ResponseEntity.ok(groundCategoryService.getByID(id));
+    }
+    @GetMapping("/name/{name}")
+    public ResponseEntity<GroundCategoryDTO> getGroundCategoryByName(@PathVariable("name") String name) {
+        return ResponseEntity.ok(groundCategoryService.getByGroundCategoryName(name));
     }
 
     @PostMapping
