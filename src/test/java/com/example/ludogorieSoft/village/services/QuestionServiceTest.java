@@ -17,9 +17,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
-import static org.testng.Assert.assertThrows;
-import static org.junit.jupiter.api.Assertions.*;
 
 class QuestionServiceTest {
 
@@ -47,7 +48,7 @@ class QuestionServiceTest {
         List<QuestionDTO> result = questionService.getAllQuestions();
 
         verify(questionRepository, times(1)).findAll();
-        Assertions.assertEquals(questions.size(), result.size());
+        assertEquals(questions.size(), result.size());
     }
 
     @Test
@@ -58,7 +59,7 @@ class QuestionServiceTest {
         List<QuestionDTO> result = questionService.getAllQuestions();
 
         verify(questionRepository, times(1)).findAll();
-        Assertions.assertEquals(0, result.size());
+        assertEquals(0, result.size());
     }
 
     @Test
@@ -77,7 +78,7 @@ class QuestionServiceTest {
 
 
         verify(questionRepository, times(1)).findById(questionId);
-        Assertions.assertEquals(questionService.questionToQuestionDTO(question), result);
+        assertEquals(questionService.questionToQuestionDTO(question), result);
     }
 
     @Test
@@ -86,7 +87,7 @@ class QuestionServiceTest {
 
         when(questionRepository.findById(questionId)).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(ApiRequestException.class, () -> {
+        assertThrows(ApiRequestException.class, () -> {
             questionService.getQuestionById(questionId);
         });
 
@@ -119,7 +120,7 @@ class QuestionServiceTest {
 
         when(questionRepository.existsByQuestionName(questionDTO.getQuestion())).thenReturn(true);
 
-        Assertions.assertThrows(ApiRequestException.class, () -> {
+        assertThrows(ApiRequestException.class, () -> {
             questionService.createQuestion(questionDTO);
         });
 
@@ -154,7 +155,7 @@ class QuestionServiceTest {
 
         when(questionRepository.findById(id)).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(ApiRequestException.class, () -> {
+        assertThrows(ApiRequestException.class, () -> {
             questionService.updateQuestion(id, questionDTO);
         });
 
@@ -178,7 +179,7 @@ class QuestionServiceTest {
         when(questionRepository.findById(id)).thenReturn(optionalQuestion);
         when(questionRepository.existsByQuestionName(questionDTO.getQuestion())).thenReturn(true);
 
-        Assertions.assertThrows(ApiRequestException.class, () -> {
+        assertThrows(ApiRequestException.class, () -> {
             questionService.updateQuestion(id, questionDTO);
         });
 
@@ -222,7 +223,7 @@ class QuestionServiceTest {
 
         when(questionRepository.findById(questionId)).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(ApiRequestException.class, () -> {
+        assertThrows(ApiRequestException.class, () -> {
             questionService.deleteQuestionById(questionId);
         });
 
@@ -251,7 +252,7 @@ class QuestionServiceTest {
 
         when(questionRepository.findById(questionId)).thenReturn(optionalQuestion);
 
-        Assertions.assertThrows(ApiRequestException.class, () -> questionService.checkQuestion(questionId));
+        assertThrows(ApiRequestException.class, () -> questionService.checkQuestion(questionId));
 
         verify(questionRepository, times(1)).findById(questionId);
     }
