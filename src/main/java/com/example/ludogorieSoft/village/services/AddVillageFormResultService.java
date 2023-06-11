@@ -15,6 +15,8 @@ public class AddVillageFormResultService {
     private final EthnicityVillageService ethnicityVillageService;
     private final EthnicityService ethnicityService;
     private final GroundCategoryService groundCategoryService;
+    private QuestionService questionService;
+    private VillageAnswerQuestionService villageAnswerQuestionService;
 
     public AddVillageFormResult create(AddVillageFormResult addVillageFormResult){
         PopulationDTO populationDTO = addVillageFormResult.getPopulationDTO();
@@ -34,6 +36,13 @@ public class AddVillageFormResultService {
         for (Long id : ethnicityDTOIds) {
             EthnicityVillageDTO ethnicityVillageDTO = new EthnicityVillageDTO(null, villageDTO.getId(), id);
             ethnicityVillageService.createEthnicityVillage(ethnicityVillageDTO);
+        }
+
+        List<String> questionResponses = addVillageFormResult.getQuestionResponses();
+        List<QuestionDTO> questionsDTO = questionService.getAllQuestions();
+        for (int i = 0; i < questionResponses.size(); i++) {
+            VillageAnswerQuestionDTO villageAnswerQuestionDTO = new VillageAnswerQuestionDTO(null, villageDTO.getId(), questionsDTO.get(i).getId(), addVillageFormResult.getQuestionResponses().get(i));
+            villageAnswerQuestionService.createVillageAnswerQuestion(villageAnswerQuestionDTO);
         }
 
         return addVillageFormResult;

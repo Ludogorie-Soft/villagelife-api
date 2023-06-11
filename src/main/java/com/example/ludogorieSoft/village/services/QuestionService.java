@@ -24,7 +24,7 @@ public class QuestionService {
     }
 
     public List<QuestionDTO> getAllQuestions() {
-        List<Question> questions = questionRepository.findAll();
+        List<Question> questions = questionRepository.findAllByOrderByIdAsc();
         return questions.stream()
                 .map(this::questionToQuestionDTO)
                 .toList();
