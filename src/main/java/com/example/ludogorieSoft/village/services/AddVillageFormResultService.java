@@ -1,9 +1,10 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.*;
-import com.example.ludogorieSoft.village.model.GroundCategory;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -11,6 +12,8 @@ public class AddVillageFormResultService {
     private final PopulationService populationService;
     private final VillageService villageService;
     private final VillageGroundCategoryService villageGroundCategoryService;
+    private final EthnicityVillageService ethnicityVillageService;
+    private final EthnicityService ethnicityService;
     private final GroundCategoryService groundCategoryService;
 
     public AddVillageFormResult create(AddVillageFormResult addVillageFormResult){
@@ -26,6 +29,12 @@ public class AddVillageFormResultService {
         GroundCategoryDTO groundCategoryDTO = groundCategoryService.getByGroundCategoryName(addVillageFormResult.getGroundCategoryName());
         villageGroundCategoryDTO.setGroundCategoryId(groundCategoryDTO.getId());
         villageGroundCategoryService.createVillageGroundCategoryDTO(villageGroundCategoryDTO);
+
+        List<Long> ethnicityDTOIds = addVillageFormResult.getEthnicityDTOIds();
+        for (Long id : ethnicityDTOIds) {
+            EthnicityVillageDTO ethnicityVillageDTO = new EthnicityVillageDTO(null, villageDTO.getId(), id);
+            ethnicityVillageService.createEthnicityVillage(ethnicityVillageDTO);
+        }
 
         return addVillageFormResult;
     }
