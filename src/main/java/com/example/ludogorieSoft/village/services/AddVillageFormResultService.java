@@ -16,6 +16,7 @@ public class AddVillageFormResultService {
     private final GroundCategoryService groundCategoryService;
     private QuestionService questionService;
     private VillageAnswerQuestionService villageAnswerQuestionService;
+    private final VillagePopulationAssertionService villagePopulationAssertionService;
     private final ObjectVillageService objectVillageService;
 
     public AddVillageFormResult create(AddVillageFormResult addVillageFormResult){
@@ -50,6 +51,14 @@ public class AddVillageFormResultService {
             ObjectVillageDTO objectVillageToSave = new ObjectVillageDTO(null, savedVillage.getId(), objectVillageDTOS.get(i).getObjectAroundVillageId(), objectVillageDTOS.get(i).getDistance());
             if(objectVillageToSave.getDistance() != null){
                 objectVillageService.createObjectVillage(objectVillageToSave);
+            }
+        }
+
+        List<VillagePopulationAssertionDTO> villagePopulationAssertionDTOS = addVillageFormResult.getVillagePopulationAssertionDTOS();
+        for (int i = 1; i < villagePopulationAssertionDTOS.size(); i++) {
+            VillagePopulationAssertionDTO villagePopulationAssertionDTO = new VillagePopulationAssertionDTO(null, savedVillage.getId(), villagePopulationAssertionDTOS.get(i).getPopulatedAssertionId(), villagePopulationAssertionDTOS.get(i).getAnswer());
+            if(villagePopulationAssertionDTO.getAnswer() != null){
+                villagePopulationAssertionService.createVillagePopulationAssertionDTO(villagePopulationAssertionDTO);
             }
         }
 

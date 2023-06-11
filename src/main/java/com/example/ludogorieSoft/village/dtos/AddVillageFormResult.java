@@ -1,5 +1,6 @@
 package com.example.ludogorieSoft.village.dtos;
 
+import com.example.ludogorieSoft.village.model.VillagePopulationAssertion;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,4 +17,5 @@ public class AddVillageFormResult {
     private List<Long> ethnicityDTOIds;
     private List<String> questionResponses;
     private List<ObjectVillageDTO> objectVillageDTOS;
+    private List<VillagePopulationAssertionDTO> villagePopulationAssertionDTOS;
 }
