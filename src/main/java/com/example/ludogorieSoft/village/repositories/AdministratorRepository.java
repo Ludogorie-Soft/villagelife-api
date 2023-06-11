@@ -1,6 +1,6 @@
-package com.example.ludogorieSoft.village.repositories;
+package com.example.ludogoriesoft.village.repositories;
 
-import com.example.ludogorieSoft.village.model.Administrator;
+import com.example.ludogoriesoft.village.model.Administrator;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AdministratorRepository extends JpaRepository<Administrator, Long> {

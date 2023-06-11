@@ -1,16 +1,13 @@
-package com.example.ludogorieSoft.village.controllers;
+package com.example.ludogoriesoft.village.controllers;
 
-import com.example.ludogorieSoft.village.dtos.PopulationDTO;
-import com.example.ludogorieSoft.village.model.Population;
-import com.example.ludogorieSoft.village.services.PopulationService;
+import com.example.ludogoriesoft.village.dtos.PopulationDTO;
+import com.example.ludogoriesoft.village.services.PopulationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
-import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -28,12 +25,11 @@ public class PopulationController {
     public ResponseEntity<PopulationDTO> getPopulationById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(populationService.getPopulationById(id));
     }
+
     @PostMapping
-    public ResponseEntity<PopulationDTO> createPopulation(@RequestBody @Valid PopulationDTO populationDTO, UriComponentsBuilder uriComponentsBuilder) {
-        URI location = uriComponentsBuilder.path("/api/v1/population/{id}")
-                .buildAndExpand(populationService.createPopulation(populationDTO).getId())
-                .toUri();
-        return ResponseEntity.created(location).build();
+    public ResponseEntity<PopulationDTO> createPopulation(@Valid @RequestBody PopulationDTO populationDTO) {
+        PopulationDTO createdPopulation = populationService.createPopulation(populationDTO);
+        return new ResponseEntity<>(createdPopulation, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")

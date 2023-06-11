@@ -1,10 +1,11 @@
-package com.example.ludogorieSoft.village.services;
+package com.example.ludogoriesoft.village.services;
 
-import com.example.ludogorieSoft.village.dtos.LandscapeDTO;
-import com.example.ludogorieSoft.village.model.Landscape;
-import com.example.ludogorieSoft.village.repositories.LandscapeRepository;
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
+import com.example.ludogoriesoft.village.dtos.LandscapeDTO;
+import com.example.ludogoriesoft.village.model.Landscape;
+import com.example.ludogoriesoft.village.repositories.LandscapeRepository;
+import com.example.ludogoriesoft.village.exeptions.ApiRequestException;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +36,11 @@ public class LandscapeService {
         }
         return landscapeToLandscapeDTO(optionalLandscape.get());
     }
+
     public LandscapeDTO createLandscape(LandscapeDTO landscapeDTO) {
+        if (StringUtils.isBlank(landscapeDTO.getLandscapeName())) {
+            throw new ApiRequestException("Landscape is blank");
+        }
         if (landscapeRepository.existsByLandscapeName(landscapeDTO.getLandscapeName())) {
             throw new ApiRequestException("Landscape with name: " + landscapeDTO.getLandscapeName() + " already exists");
         }
@@ -44,18 +49,26 @@ public class LandscapeService {
         landscapeRepository.save(landscape);
         return landscapeDTO;
     }
+
+
     public LandscapeDTO updateLandscape(Long id, LandscapeDTO landscapeDTO) {
         Optional<Landscape> foundLandscape = landscapeRepository.findById(id);
-        if (foundLandscape.isEmpty()) {
-            throw new ApiRequestException("Landscape with id: " + id + " Not Found");
-        }
-        if (landscapeRepository.existsByLandscapeName(landscapeDTO.getLandscapeName())) {
-            throw new ApiRequestException("Landscape with name: " + landscapeDTO.getLandscapeName() + " already exists");
-        }
-        foundLandscape.get().setLandscapeName(landscapeDTO.getLandscapeName());
+        Landscape landscape = foundLandscape.orElseThrow(() -> new ApiRequestException("Landscape not found"));
 
-        landscapeRepository.save(foundLandscape.get());
-        return landscapeToLandscapeDTO(foundLandscape.get());
+        if (landscapeDTO == null || landscapeDTO.getLandscapeName() == null || landscapeDTO.getLandscapeName().isEmpty()) {
+            throw new ApiRequestException("Invalid Landscape data");
+        }
+
+        String newLandscapeName = landscapeDTO.getLandscapeName();
+        if (!newLandscapeName.equals(landscape.getLandscapeName())) {
+            if (landscapeRepository.existsByLandscapeName(newLandscapeName)) {
+                throw new ApiRequestException("Landscape with name: " + newLandscapeName + " already exists");
+            }
+            landscape.setLandscapeName(newLandscapeName);
+            landscapeRepository.save(landscape);
+        }
+
+        return landscapeToLandscapeDTO(landscape);
     }
 
     public void deleteLandscape(Long id) {
@@ -74,4 +87,5 @@ public class LandscapeService {
             throw new ApiRequestException("Landscape not found");
         }
     }
+
 }

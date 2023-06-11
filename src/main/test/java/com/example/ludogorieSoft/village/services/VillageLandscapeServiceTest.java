@@ -1,11 +1,11 @@
-package com.example.ludogorieSoft.village.services;
+package com.example.ludogoriesoft.village.services;
 
-import com.example.ludogorieSoft.village.dtos.VillageLandscapeDTO;
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
-import com.example.ludogorieSoft.village.model.Landscape;
-import com.example.ludogorieSoft.village.model.Village;
-import com.example.ludogorieSoft.village.model.VillageLandscape;
-import com.example.ludogorieSoft.village.repositories.VillageLandscapeRepository;
+import com.example.ludogoriesoft.village.dtos.VillageLandscapeDTO;
+import com.example.ludogoriesoft.village.exeptions.ApiRequestException;
+import com.example.ludogoriesoft.village.model.Landscape;
+import com.example.ludogoriesoft.village.model.Village;
+import com.example.ludogoriesoft.village.model.VillageLandscape;
+import com.example.ludogoriesoft.village.repositories.VillageLandscapeRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

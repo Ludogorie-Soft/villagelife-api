@@ -1,4 +1,4 @@
-package com.example.ludogorieSoft.village.dtos;
+package com.example.ludogoriesoft.village.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

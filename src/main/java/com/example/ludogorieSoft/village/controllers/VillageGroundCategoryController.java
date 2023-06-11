@@ -1,15 +1,14 @@
-package com.example.ludogorieSoft.village.controllers;
+package com.example.ludogoriesoft.village.controllers;
 
-import com.example.ludogorieSoft.village.dtos.VillageGroundCategoryDTO;
-import com.example.ludogorieSoft.village.model.VillageGroundCategory;
-import com.example.ludogorieSoft.village.services.VillageGroundCategoryService;
+import com.example.ludogoriesoft.village.dtos.VillageGroundCategoryDTO;
+import com.example.ludogoriesoft.village.model.VillageGroundCategory;
+import com.example.ludogoriesoft.village.services.VillageGroundCategoryService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
-import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -29,12 +28,11 @@ public class VillageGroundCategoryController {
         return ResponseEntity.ok(villageGroundCategoryService.getByID(id));
     }
 
+
     @PostMapping
-    public ResponseEntity<VillageGroundCategoryDTO> createVillageGroundCategories(@Valid @RequestBody VillageGroundCategoryDTO villageGroundCategoryDTO, UriComponentsBuilder uriComponentsBuilder) {
-        URI location = uriComponentsBuilder.path("/api/v1/villageGroundCategory/{id}")
-                .buildAndExpand(villageGroundCategoryService.createVillageGroundCategoryDTO(villageGroundCategoryDTO).getId())
-                .toUri();
-        return ResponseEntity.created(location).build();
+    public ResponseEntity<VillageGroundCategoryDTO> createVillageGroundCategories(@Valid @RequestBody VillageGroundCategoryDTO villageGroundCategoryDTO) {
+        VillageGroundCategoryDTO createdVillageGroundCategory = villageGroundCategoryService.createVillageGroundCategoryDTO(villageGroundCategoryDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdVillageGroundCategory);
     }
 
     @PutMapping("/{id}")

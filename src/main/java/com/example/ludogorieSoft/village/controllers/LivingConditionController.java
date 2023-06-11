@@ -1,7 +1,7 @@
-package com.example.ludogorieSoft.village.controllers;
+package com.example.ludogoriesoft.village.controllers;
 
-import com.example.ludogorieSoft.village.dtos.LivingConditionDTO;
-import com.example.ludogorieSoft.village.services.LivingConditionService;
+import com.example.ludogoriesoft.village.dtos.LivingConditionDTO;
+import com.example.ludogoriesoft.village.services.LivingConditionService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +33,7 @@ public class LivingConditionController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<LivingConditionDTO> updateLivingCondition(@Valid @PathVariable("id") Long id, @RequestBody LivingConditionDTO livingConditionDTO) {
+    public ResponseEntity<LivingConditionDTO> updateLivingCondition(@PathVariable("id") Long id, @Valid @RequestBody LivingConditionDTO livingConditionDTO) {
         return ResponseEntity.ok(livingConditionService.updateLivingCondition(id, livingConditionDTO));
     }
 

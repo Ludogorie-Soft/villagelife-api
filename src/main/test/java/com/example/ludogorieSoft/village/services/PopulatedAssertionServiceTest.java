@@ -1,9 +1,9 @@
-package com.example.ludogorieSoft.village.services;
+package com.example.ludogoriesoft.village.services;
 
-import com.example.ludogorieSoft.village.dtos.PopulatedAssertionDTO;
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
-import com.example.ludogorieSoft.village.model.PopulatedAssertion;
-import com.example.ludogorieSoft.village.repositories.PopulatedAssertionRepository;
+import com.example.ludogoriesoft.village.dtos.PopulatedAssertionDTO;
+import com.example.ludogoriesoft.village.exeptions.ApiRequestException;
+import com.example.ludogoriesoft.village.model.PopulatedAssertion;
+import com.example.ludogoriesoft.village.repositories.PopulatedAssertionRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -115,7 +115,7 @@ class PopulatedAssertionServiceTest {
         PopulatedAssertionDTO result = populatedAssertionService.getPopulatedAssertionById(populationId);
 
         verify(populatedAssertionRepository, times(1)).findById(populationId);
-        Assertions.assertEquals(populatedAssertionService.toPopulatedAssertionDTO(population), result);
+        Assertions.assertEquals(populatedAssertionService.populatedAssertionToPopulatedAssertionDTO(population), result);
     }
 
     @Test

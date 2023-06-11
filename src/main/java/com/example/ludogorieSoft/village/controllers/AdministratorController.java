@@ -1,14 +1,15 @@
-package com.example.ludogorieSoft.village.controllers;
+package com.example.ludogoriesoft.village.controllers;
 
-import com.example.ludogorieSoft.village.dtos.AdministratorDTO;
-import com.example.ludogorieSoft.village.dtos.AdministratorRequest;
-import com.example.ludogorieSoft.village.services.AdministratorService;
+import com.example.ludogoriesoft.village.dtos.AdministratorDTO;
+import com.example.ludogoriesoft.village.dtos.AdministratorRequest;
+import com.example.ludogoriesoft.village.services.AdministratorService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class AdministratorController {
     }
 
     @PostMapping
-    public ResponseEntity<AdministratorDTO> createAdministrator(@RequestBody AdministratorRequest administratorRequest, UriComponentsBuilder uriComponentsBuilder) {
+    public ResponseEntity<AdministratorDTO> createAdministrator(@Valid @RequestBody AdministratorRequest administratorRequest, UriComponentsBuilder uriComponentsBuilder) {
         URI location = uriComponentsBuilder.path("/api/v1/admins/{id}")
                 .buildAndExpand(administratorService.createAdministrator(administratorRequest).getId())
                 .toUri();
@@ -37,7 +38,7 @@ public class AdministratorController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<AdministratorDTO> updateAdministrator(@PathVariable("id") Long id, @RequestBody AdministratorRequest administratorRequest) {
+    public ResponseEntity<AdministratorDTO> updateAdministrator(@PathVariable("id") Long id, @Valid @RequestBody AdministratorRequest administratorRequest) {
         return ResponseEntity.ok(administratorService.updateAdministrator(id, administratorRequest));
     }
     @DeleteMapping("/{id}")

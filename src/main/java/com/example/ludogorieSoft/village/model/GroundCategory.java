@@ -1,9 +1,9 @@
-package com.example.ludogorieSoft.village.model;
+package com.example.ludogoriesoft.village.model;
 
 import lombok.Data;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 @Data
@@ -13,8 +13,8 @@ public class GroundCategory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
-    @NotNull
-    @Column(name = "ground_category_name", unique = true)
+    @NotBlank
+    @Column(name = "ground_category_name", unique = true, nullable = false)
     private String groundCategoryName;
 
 

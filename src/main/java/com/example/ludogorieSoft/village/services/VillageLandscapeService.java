@@ -1,13 +1,13 @@
-package com.example.ludogorieSoft.village.services;
+package com.example.ludogoriesoft.village.services;
 
-import com.example.ludogorieSoft.village.dtos.VillageLandscapeDTO;
-import com.example.ludogorieSoft.village.model.Landscape;
-import com.example.ludogorieSoft.village.model.Village;
-import com.example.ludogorieSoft.village.model.VillageLandscape;
-import com.example.ludogorieSoft.village.repositories.LandscapeRepository;
-import com.example.ludogorieSoft.village.repositories.VillageLandscapeRepository;
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
-import com.example.ludogorieSoft.village.repositories.VillageRepository;
+import com.example.ludogoriesoft.village.dtos.VillageLandscapeDTO;
+import com.example.ludogoriesoft.village.model.Landscape;
+import com.example.ludogoriesoft.village.model.Village;
+import com.example.ludogoriesoft.village.model.VillageLandscape;
+import com.example.ludogoriesoft.village.repositories.LandscapeRepository;
+import com.example.ludogoriesoft.village.repositories.VillageLandscapeRepository;
+import com.example.ludogoriesoft.village.exeptions.ApiRequestException;
+import com.example.ludogoriesoft.village.repositories.VillageRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;

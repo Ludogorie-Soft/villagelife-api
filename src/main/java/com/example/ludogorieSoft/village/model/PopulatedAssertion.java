@@ -1,14 +1,15 @@
-package com.example.ludogorieSoft.village.model;
+package com.example.ludogoriesoft.village.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 @Data
-@Table(name ="populated_assertion" )
+@Table(name = "populated_assertion")
 @AllArgsConstructor
 @NoArgsConstructor
 public class PopulatedAssertion {
@@ -16,7 +17,8 @@ public class PopulatedAssertion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
-    @Column(name = "populated_assertion_name",unique = true)
+    @NotBlank
+    @Column(name = "populated_assertion_name", unique = true, nullable = false)
     private String populatedAssertionName;
 
 }

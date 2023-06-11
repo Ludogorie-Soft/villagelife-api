@@ -1,14 +1,14 @@
-package com.example.ludogorieSoft.village.controllers;
+package com.example.ludogoriesoft.village.controllers;
 
-import com.example.ludogorieSoft.village.dtos.VillageAnswerQuestionDTO;
-import com.example.ludogorieSoft.village.model.VillageAnswerQuestion;
-import com.example.ludogorieSoft.village.services.VillageAnswerQuestionService;
+import com.example.ludogoriesoft.village.dtos.VillageAnswerQuestionDTO;
+import com.example.ludogoriesoft.village.model.VillageAnswerQuestion;
+import com.example.ludogoriesoft.village.services.VillageAnswerQuestionService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import java.net.URI;
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -28,15 +28,13 @@ public class VillageAnswerQuestionController {
     }
 
     @PostMapping
-    public ResponseEntity<VillageAnswerQuestionDTO> createVillageAnswerQuestion(@RequestBody VillageAnswerQuestionDTO villageAnswerQuestionDTO, UriComponentsBuilder uriComponentsBuilder) {
-        URI location = uriComponentsBuilder.path("/api/v1/villageAnswerQuestion/{id}")
-                .buildAndExpand(villageAnswerQuestionService.createVillageAnswerQuestion(villageAnswerQuestionDTO).getId())
-                .toUri();
-        return ResponseEntity.created(location).build();
+    public ResponseEntity<VillageAnswerQuestionDTO> createVillageAnswerQuestion(@Valid @RequestBody VillageAnswerQuestionDTO villageAnswerQuestionDTO) {
+        VillageAnswerQuestionDTO createdVillageAnswerQuestion = villageAnswerQuestionService.createVillageAnswerQuestion(villageAnswerQuestionDTO);
+        return new ResponseEntity<>(createdVillageAnswerQuestion, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<VillageAnswerQuestionDTO> updateVillageAnswerQuestion(@PathVariable("id") Long id, @RequestBody VillageAnswerQuestionDTO villageAnswerQuestionDTO) {
+    public ResponseEntity<VillageAnswerQuestionDTO> updateVillageAnswerQuestion(@PathVariable("id") Long id, @Valid @RequestBody VillageAnswerQuestionDTO villageAnswerQuestionDTO) {
         return ResponseEntity.ok(villageAnswerQuestionService.updateVillageAnswerQuestion(id, villageAnswerQuestionDTO));
     }
 
@@ -49,4 +47,5 @@ public class VillageAnswerQuestionController {
             return ResponseEntity.notFound().build();
         }
     }
+
 }
