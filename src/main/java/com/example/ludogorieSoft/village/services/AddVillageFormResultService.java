@@ -13,10 +13,10 @@ public class AddVillageFormResultService {
     private final VillageService villageService;
     private final VillageGroundCategoryService villageGroundCategoryService;
     private final EthnicityVillageService ethnicityVillageService;
-    private final EthnicityService ethnicityService;
     private final GroundCategoryService groundCategoryService;
     private QuestionService questionService;
     private VillageAnswerQuestionService villageAnswerQuestionService;
+    private final ObjectVillageService objectVillageService;
 
     public AddVillageFormResult create(AddVillageFormResult addVillageFormResult){
         PopulationDTO populationDTO = addVillageFormResult.getPopulationDTO();
@@ -43,6 +43,14 @@ public class AddVillageFormResultService {
         for (int i = 0; i < questionResponses.size(); i++) {
             VillageAnswerQuestionDTO villageAnswerQuestionDTO = new VillageAnswerQuestionDTO(null, villageDTO.getId(), questionsDTO.get(i).getId(), addVillageFormResult.getQuestionResponses().get(i));
             villageAnswerQuestionService.createVillageAnswerQuestion(villageAnswerQuestionDTO);
+        }
+
+        List<ObjectVillageDTO> objectVillageDTOS = addVillageFormResult.getObjectVillageDTOS();
+        for (int i = 1; i < objectVillageDTOS.size(); i++) {
+            ObjectVillageDTO objectVillageToSave = new ObjectVillageDTO(null, savedVillage.getId(), objectVillageDTOS.get(i).getObjectAroundVillageId(), objectVillageDTOS.get(i).getDistance());
+            if(objectVillageToSave.getDistance() != null){
+                objectVillageService.createObjectVillage(objectVillageToSave);
+            }
         }
 
         return addVillageFormResult;

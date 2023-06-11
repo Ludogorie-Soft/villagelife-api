@@ -15,5 +15,5 @@ public class AddVillageFormResult {
     private String groundCategoryName;
     private List<Long> ethnicityDTOIds;
     private List<String> questionResponses;
-    private List<ObjectAroundVillageDTO> objectAroundVillageDTOS;
+    private List<ObjectVillageDTO> objectVillageDTOS;
 }
