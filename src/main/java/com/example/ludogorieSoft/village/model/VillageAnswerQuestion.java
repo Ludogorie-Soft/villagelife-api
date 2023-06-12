@@ -1,4 +1,4 @@
-package com.example.ludogorieSoft.village.model;
+package com.example.ludogoriesoft.village.model;
 
 import lombok.Data;
 

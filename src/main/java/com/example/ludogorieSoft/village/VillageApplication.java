@@ -1,4 +1,4 @@
-package com.example.ludogorieSoft.village;
+package com.example.ludogoriesoft.village;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,13 +1,13 @@
-package com.example.ludogorieSoft.village.services;
+package com.example.ludogoriesoft.village.services;
 
-import com.example.ludogorieSoft.village.dtos.PopulationDTO;
-import com.example.ludogorieSoft.village.enums.Children;
-import com.example.ludogorieSoft.village.enums.Foreigners;
-import com.example.ludogorieSoft.village.enums.NumberOfPopulation;
-import com.example.ludogorieSoft.village.enums.Residents;
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
-import com.example.ludogorieSoft.village.model.Population;
-import com.example.ludogorieSoft.village.repositories.PopulationRepository;
+import com.example.ludogoriesoft.village.dtos.PopulationDTO;
+import com.example.ludogoriesoft.village.enums.Children;
+import com.example.ludogoriesoft.village.enums.Foreigners;
+import com.example.ludogoriesoft.village.enums.NumberOfPopulation;
+import com.example.ludogoriesoft.village.enums.Residents;
+import com.example.ludogoriesoft.village.exeptions.ApiRequestException;
+import com.example.ludogoriesoft.village.model.Population;
+import com.example.ludogoriesoft.village.repositories.PopulationRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -102,7 +102,7 @@ class PopulationServiceTest {
         PopulationDTO populationDTO = new PopulationDTO();
         populationDTO.setNumberOfPopulation(NumberOfPopulation.UP_TO_10_PEOPLE);
         populationDTO.setResidents(Residents.UP_TO_2_PERCENT);
-        populationDTO.setChildren(Children.BELOW_10_YEARS);
+        populationDTO.setChildren(Children.BELOW_10);
         populationDTO.setForeigners(Foreigners.YES);
 
         Population population = new Population();
@@ -187,7 +187,7 @@ class PopulationServiceTest {
     void testDeletePopulationById() {
         Long populationId = 123L;
 
-        Population population = new Population(populationId, NumberOfPopulation.FROM_11_TO_50_PEOPLE, Residents.FROM_21_TO_30_PERCENT, Children.BELOW_10_YEARS, Foreigners.NO);
+        Population population = new Population(populationId, NumberOfPopulation.FROM_11_TO_50_PEOPLE, Residents.FROM_21_TO_30_PERCENT, Children.BELOW_10, Foreigners.NO);
         Optional<Population> optionalPopulation = Optional.of(population);
         when(populationRepository.findById(populationId)).thenReturn(optionalPopulation);
 

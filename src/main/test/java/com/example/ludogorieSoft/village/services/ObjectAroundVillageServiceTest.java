@@ -1,9 +1,9 @@
-package com.example.ludogorieSoft.village.services;
+package com.example.ludogoriesoft.village.services;
 
-import com.example.ludogorieSoft.village.dtos.ObjectAroundVillageDTO;
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
-import com.example.ludogorieSoft.village.model.ObjectAroundVillage;
-import com.example.ludogorieSoft.village.repositories.ObjectAroundVillageRepository;
+import com.example.ludogoriesoft.village.dtos.ObjectAroundVillageDTO;
+import com.example.ludogoriesoft.village.exeptions.ApiRequestException;
+import com.example.ludogoriesoft.village.model.ObjectAroundVillage;
+import com.example.ludogoriesoft.village.repositories.ObjectAroundVillageRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,20 +42,20 @@ class ObjectAroundVillageServiceTest {
         objectAroundVillages.add(new ObjectAroundVillage(1L, "Object 1"));
         objectAroundVillages.add(new ObjectAroundVillage(2L, "Object 2"));
 
-        when(objectAroundVillageRepository.findAll()).thenReturn(objectAroundVillages);
+        when(objectAroundVillageRepository.findAllByOrderByIdAsc()).thenReturn(objectAroundVillages);
 
         List<ObjectAroundVillageDTO> result = objectAroundVillageService.getAllObjectsAroundVillage();
 
-        verify(objectAroundVillageRepository, times(1)).findAll();
+        verify(objectAroundVillageRepository, times(1)).findAllByOrderByIdAsc();
         Assertions.assertEquals(objectAroundVillages.size(), result.size());
     }
 
     @Test
     void testGetAllObjectsAroundVillageWithNoObjects() {
         List<ObjectAroundVillage> objectAroundVillages = new ArrayList<>();
-        when(objectAroundVillageRepository.findAll()).thenReturn(objectAroundVillages);
+        when(objectAroundVillageRepository.findAllByOrderByIdAsc()).thenReturn(objectAroundVillages);
         List<ObjectAroundVillageDTO> result = objectAroundVillageService.getAllObjectsAroundVillage();
-        verify(objectAroundVillageRepository, times(1)).findAll();
+        verify(objectAroundVillageRepository, times(1)).findAllByOrderByIdAsc();
         Assertions.assertTrue(result.isEmpty());
     }
 

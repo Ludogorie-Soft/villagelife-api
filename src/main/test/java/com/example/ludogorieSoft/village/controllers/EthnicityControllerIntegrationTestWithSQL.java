@@ -1,7 +1,7 @@
-package com.example.ludogorieSoft.village.controllers;
+package com.example.ludogoriesoft.village.controllers;
 
-import com.example.ludogorieSoft.village.dtos.EthnicityDTO;
-import com.example.ludogorieSoft.village.services.EthnicityService;
+import com.example.ludogoriesoft.village.dtos.EthnicityDTO;
+import com.example.ludogoriesoft.village.services.EthnicityService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

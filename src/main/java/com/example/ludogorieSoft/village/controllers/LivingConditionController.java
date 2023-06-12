@@ -1,7 +1,7 @@
-package com.example.ludogorieSoft.village.controllers;
+package com.example.ludogoriesoft.village.controllers;
 
-import com.example.ludogorieSoft.village.dtos.LivingConditionDTO;
-import com.example.ludogorieSoft.village.services.LivingConditionService;
+import com.example.ludogoriesoft.village.dtos.LivingConditionDTO;
+import com.example.ludogoriesoft.village.services.LivingConditionService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

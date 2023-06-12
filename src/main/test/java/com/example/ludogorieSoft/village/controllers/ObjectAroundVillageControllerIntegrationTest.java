@@ -1,8 +1,8 @@
-package com.example.ludogorieSoft.village.controllers;
+package com.example.ludogoriesoft.village.controllers;
 
-import com.example.ludogorieSoft.village.dtos.ObjectAroundVillageDTO;
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
-import com.example.ludogorieSoft.village.services.ObjectAroundVillageService;
+import com.example.ludogoriesoft.village.dtos.ObjectAroundVillageDTO;
+import com.example.ludogoriesoft.village.exeptions.ApiRequestException;
+import com.example.ludogoriesoft.village.services.ObjectAroundVillageService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -54,7 +54,7 @@ class ObjectAroundVillageControllerIntegrationTest {
 
         when(objectAroundVillageService.getAllObjectsAroundVillage()).thenReturn(objectAroundVillageDTOList);
 
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/objectAroundVillage")
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/objectsAroundVillage")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(2))
@@ -76,7 +76,7 @@ class ObjectAroundVillageControllerIntegrationTest {
 
         when(objectAroundVillageService.getObjectAroundVillageById(anyLong())).thenReturn(objectAroundVillageDTO);
 
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/objectAroundVillage/{id}", 1)
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/objectsAroundVillage/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
@@ -95,7 +95,7 @@ class ObjectAroundVillageControllerIntegrationTest {
 
         when(objectAroundVillageService.createObjectAroundVillage(any(ObjectAroundVillageDTO.class))).thenReturn(objectAroundVillageDTO);
 
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/objectAroundVillage")
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/objectsAroundVillage")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"id\": 1, \"type\": \"New Object\"}"))
                 .andExpect(status().isCreated())
@@ -116,7 +116,7 @@ class ObjectAroundVillageControllerIntegrationTest {
 
         when(objectAroundVillageService.updateObjectAroundVillage(anyLong(), any(ObjectAroundVillageDTO.class))).thenReturn(objectAroundVillageDTO);
 
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/objectAroundVillage/{id}", 1)
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/objectsAroundVillage/{id}", 1)
                         .content("{\"id\": 1, \"type\": \"Updated Object\"}")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -131,7 +131,7 @@ class ObjectAroundVillageControllerIntegrationTest {
     @Test
     void testDeleteObjectAroundVillageById() throws Exception {
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/objectAroundVillage/{id}", 1))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/objectsAroundVillage/{id}", 1))
                 .andExpect(status().isOk())
                 .andExpect(content().string("ObjectAroundVillage with id: 1 has been deleted successfully!!"));
     }
@@ -140,7 +140,7 @@ class ObjectAroundVillageControllerIntegrationTest {
     void testGetAllLObjectsAroundVillageWhenNoObjectAroundVillageExist() throws Exception {
         when(objectAroundVillageService.getAllObjectsAroundVillage()).thenReturn(Collections.emptyList());
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/objectAroundVillage")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/objectsAroundVillage")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(0))
@@ -155,7 +155,7 @@ class ObjectAroundVillageControllerIntegrationTest {
         when(objectAroundVillageService.getObjectAroundVillageById(objectId))
                 .thenThrow(new ApiRequestException("ObjectAroundVillage with id: " + objectId + " not found"));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/objectAroundVillage/{id}", objectId)
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/objectsAroundVillage/{id}", objectId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(containsString("ObjectAroundVillage with id: " + objectId + " not found")));
@@ -170,7 +170,7 @@ class ObjectAroundVillageControllerIntegrationTest {
         doThrow(new ApiRequestException("Object Around Village is blank"))
                 .when(objectAroundVillageService).createObjectAroundVillage(any(ObjectAroundVillageDTO.class));
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/objectAroundVillage")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/objectsAroundVillage")
                         .content("{\"id\": 1, \"type\": \"" + blankObjectAroundVillage + "\"}")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
@@ -187,7 +187,7 @@ class ObjectAroundVillageControllerIntegrationTest {
         when(objectAroundVillageService.getObjectAroundVillageById(invalidId))
                 .thenThrow(new ApiRequestException("Object Around Village with id: " + invalidId + " Not Found"));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/objectAroundVillage/{id}", invalidId)
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/objectsAroundVillage/{id}", invalidId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("Object Around Village with id: " + invalidId + " Not Found"))
@@ -198,7 +198,7 @@ class ObjectAroundVillageControllerIntegrationTest {
     @Test
     void testUpdateObjectAroundVillageWithInvalidData() throws Exception {
         String invalidData = "";
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/objectAroundVillage/{id}", 1)
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/objectsAroundVillage/{id}", 1)
                         .content("{\"id\": 1, \"type\": }" + invalidData)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
@@ -213,7 +213,7 @@ class ObjectAroundVillageControllerIntegrationTest {
         when(objectAroundVillageService.updateObjectAroundVillage(id, updatedObjectAroundVillage))
                 .thenThrow(new ApiRequestException("Object Around Village id: " + id + " not found"));
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/objectAroundVillage/{id}", id)
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/objectsAroundVillage/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(updatedObjectAroundVillage)))
                 .andExpect(status().isBadRequest());
@@ -233,7 +233,7 @@ class ObjectAroundVillageControllerIntegrationTest {
         doThrow(new ApiRequestException("ObjectAroundVillage with id: " + objectId + " not found"))
                 .when(objectAroundVillageService).deleteObjectAroundVillageById(objectId);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/objectAroundVillage/{id}", objectId))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/objectsAroundVillage/{id}", objectId))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(containsString("ObjectAroundVillage with id: " + objectId + " not found")));
     }

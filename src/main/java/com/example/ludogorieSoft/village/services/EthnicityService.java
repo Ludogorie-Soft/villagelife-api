@@ -1,9 +1,9 @@
-package com.example.ludogorieSoft.village.services;
+package com.example.ludogoriesoft.village.services;
 
-import com.example.ludogorieSoft.village.dtos.EthnicityDTO;
-import com.example.ludogorieSoft.village.model.Ethnicity;
-import com.example.ludogorieSoft.village.repositories.EthnicityRepository;
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
+import com.example.ludogoriesoft.village.dtos.EthnicityDTO;
+import com.example.ludogoriesoft.village.model.Ethnicity;
+import com.example.ludogoriesoft.village.repositories.EthnicityRepository;
+import com.example.ludogoriesoft.village.exeptions.ApiRequestException;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang.StringUtils;
 import org.modelmapper.ModelMapper;
@@ -17,7 +17,7 @@ import java.util.Optional;
 public class EthnicityService {
     private final EthnicityRepository ethnicityRepository;
     private final ModelMapper modelMapper;
-    private final  static String errorMessage= "Ethnicity not found";
+    private final  static String ERROR_MESSAGE= "Ethnicity not found";
 
     public EthnicityDTO ethnicityToEthnicityDTO(Ethnicity ethnicity){
         return modelMapper.map(ethnicity, EthnicityDTO.class);
@@ -27,7 +27,7 @@ public class EthnicityService {
         if (ethnicity.isPresent()){
             return ethnicity.get();
         }else {
-            throw new ApiRequestException(errorMessage);
+            throw new ApiRequestException(ERROR_MESSAGE);
         }
     }
     public List<EthnicityDTO> getAllEthnicities() {
@@ -42,7 +42,7 @@ public class EthnicityService {
     public EthnicityDTO getEthnicityById(Long id) {
         Optional<Ethnicity> ethnicity = ethnicityRepository.findById(id);
         if (ethnicity.isEmpty()) {
-            throw new ApiRequestException(errorMessage);
+            throw new ApiRequestException(ERROR_MESSAGE);
         }
         return ethnicityToEthnicityDTO(ethnicity.get());
     }
@@ -63,7 +63,7 @@ public class EthnicityService {
 
     public EthnicityDTO updateEthnicity(Long id, EthnicityDTO ethnicityDTO) {
         Optional<Ethnicity> findEthnicity = ethnicityRepository.findById(id);
-        Ethnicity ethnicity = findEthnicity.orElseThrow(() -> new ApiRequestException(errorMessage));
+        Ethnicity ethnicity = findEthnicity.orElseThrow(() -> new ApiRequestException(ERROR_MESSAGE));
 
         if (ethnicityDTO == null || ethnicityDTO.getEthnicityName() == null || ethnicityDTO.getEthnicityName().isEmpty()) {
             throw new ApiRequestException("Invalid ethnicity data");

@@ -1,9 +1,9 @@
-package com.example.ludogorieSoft.village.services;
+package com.example.ludogoriesoft.village.services;
 
-import com.example.ludogorieSoft.village.dtos.GroundCategoryDTO;
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
-import com.example.ludogorieSoft.village.model.GroundCategory;
-import com.example.ludogorieSoft.village.repositories.GroundCategoryRepository;
+import com.example.ludogoriesoft.village.dtos.GroundCategoryDTO;
+import com.example.ludogoriesoft.village.exeptions.ApiRequestException;
+import com.example.ludogoriesoft.village.model.GroundCategory;
+import com.example.ludogoriesoft.village.repositories.GroundCategoryRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,18 +39,18 @@ class GroundCategoryServiceTest {
         groundCategories.add(new GroundCategory());
         groundCategories.add(new GroundCategory());
         groundCategories.add(new GroundCategory());
-        when(groundCategoryRepository.findAll()).thenReturn(groundCategories);
+        when(groundCategoryRepository.findAllByOrderByIdAsc()).thenReturn(groundCategories);
         List<GroundCategoryDTO> result = groundCategoryService.getAllGroundCategories();
-        verify(groundCategoryRepository, times(1)).findAll();
+        verify(groundCategoryRepository, times(1)).findAllByOrderByIdAsc();
         Assertions.assertEquals(groundCategories.size(), result.size());
     }
 
     @Test
     void getAllGroundCategoriesShouldReturnEmptyListWhenNoGroundCategoriesFound() {
         List<GroundCategory> groundCategories = new ArrayList<>();
-        when(groundCategoryRepository.findAll()).thenReturn(groundCategories);
+        when(groundCategoryRepository.findAllByOrderByIdAsc()).thenReturn(groundCategories);
         List<GroundCategoryDTO> result = groundCategoryService.getAllGroundCategories();
-        verify(groundCategoryRepository, times(1)).findAll();
+        verify(groundCategoryRepository, times(1)).findAllByOrderByIdAsc();
         Assertions.assertTrue(result.isEmpty());
     }
     @Test

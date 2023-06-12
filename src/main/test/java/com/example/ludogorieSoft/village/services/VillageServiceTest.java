@@ -1,9 +1,12 @@
-package com.example.ludogorieSoft.village.services;
+package com.example.ludogoriesoft.village.services;
 
-import com.example.ludogorieSoft.village.dtos.VillageDTO;
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
-import com.example.ludogorieSoft.village.model.Village;
-import com.example.ludogorieSoft.village.repositories.VillageRepository;
+import com.example.ludogoriesoft.village.dtos.PopulationDTO;
+import com.example.ludogoriesoft.village.dtos.VillageDTO;
+import com.example.ludogoriesoft.village.enums.NumberOfPopulation;
+import com.example.ludogoriesoft.village.exeptions.ApiRequestException;
+import com.example.ludogoriesoft.village.model.Population;
+import com.example.ludogoriesoft.village.model.Village;
+import com.example.ludogoriesoft.village.repositories.VillageRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -102,24 +105,33 @@ class VillageServiceTest {
     }
 
     @Test
-    void testCreateVillage() {
-
+    void createVillageValidVillageDTOReturnsCreatedVillageDTO() {
         VillageDTO villageDTO = new VillageDTO();
         villageDTO.setName("Test Village");
+        PopulationDTO populationDTO = new PopulationDTO();
+        populationDTO.setNumberOfPopulation(NumberOfPopulation.UP_TO_10_PEOPLE);
+        villageDTO.setPopulationDTO(populationDTO);
 
         Village village = new Village();
-        village.setId(1L);
         village.setName("Test Village");
+        Population population = new Population();
+        population.setNumberOfPopulation(NumberOfPopulation.UP_TO_10_PEOPLE);
+        village.setPopulation(population);
 
-        when(modelMapper.map(villageDTO, Village.class)).thenReturn(village);
+        Village savedVillage = new Village();
+        savedVillage.setId(1L);
+        when(modelMapper.map(villageDTO.getPopulationDTO(), Population.class)).thenReturn(population);
+        when(villageRepository.save(any(Village.class))).thenReturn(savedVillage);
         when(modelMapper.map(village, VillageDTO.class)).thenReturn(villageDTO);
 
-        VillageDTO createdVillageDTO = villageService.createVillage(villageDTO);
+        VillageDTO result = villageService.createVillage(villageDTO);
 
-        Assertions.assertEquals(villageDTO.getId(), createdVillageDTO.getId());
-        Assertions.assertEquals(villageDTO.getName(), createdVillageDTO.getName());
-
-        verify(villageRepository, times(1)).save(village);
+        verify(modelMapper, times(1)).map(villageDTO.getPopulationDTO(), Population.class);
+        verify(villageRepository, times(1)).save(any(Village.class));
+        verify(modelMapper, times(1)).map(village, VillageDTO.class);
+        Assertions.assertEquals(savedVillage.getId(), result.getId());
+        Assertions.assertEquals(villageDTO.getName(), result.getName());
+        Assertions.assertEquals(villageDTO.getPopulationDTO(), result.getPopulationDTO());
     }
 
     @Test

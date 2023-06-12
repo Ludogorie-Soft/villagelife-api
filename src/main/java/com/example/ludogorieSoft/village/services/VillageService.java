@@ -1,10 +1,10 @@
-package com.example.ludogorieSoft.village.services;
+package com.example.ludogoriesoft.village.services;
 
-import com.example.ludogorieSoft.village.dtos.VillageDTO;
-import com.example.ludogorieSoft.village.model.Population;
-import com.example.ludogorieSoft.village.model.Village;
-import com.example.ludogorieSoft.village.repositories.VillageRepository;
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
+import com.example.ludogoriesoft.village.dtos.VillageDTO;
+import com.example.ludogoriesoft.village.model.Population;
+import com.example.ludogoriesoft.village.model.Village;
+import com.example.ludogoriesoft.village.repositories.VillageRepository;
+import com.example.ludogoriesoft.village.exeptions.ApiRequestException;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -43,16 +43,6 @@ public class VillageService {
             throw new ApiRequestException(errorMessage1 + id + errorMessage2);
         }
     }
-
-
-    //public VillageDTO createVillage(VillageDTO villageDTO) {
-    //    Village village = new Village();
-    //    village.setPopulation(modelMapper.map(villageDTO.getPopulationDTO(), Population.class));
-    //    village.setName(villageDTO.getName());
-    //    //Village village = modelMapper.map(villageDTO, Village.class);
-    //    villageRepository.save(village);
-    //    return modelMapper.map(village, VillageDTO.class);
-    //}
     public VillageDTO createVillage(VillageDTO villageDTO) {
         Village village = new Village();
         village.setPopulation(modelMapper.map(villageDTO.getPopulationDTO(), Population.class));
@@ -68,7 +58,6 @@ public class VillageService {
         if (optionalVillage.isPresent()) {
             Village village = optionalVillage.get();
             village.setName(villageDTO.getName());
-            //village.setPopulation(villageDTO.getPopulation());
             village.setPopulation(modelMapper.map(villageDTO.getPopulationDTO(), Population.class));
             villageRepository.save(village);
             return modelMapper.map(village, VillageDTO.class);

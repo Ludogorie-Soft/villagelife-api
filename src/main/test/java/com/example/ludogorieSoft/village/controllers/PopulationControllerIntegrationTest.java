@@ -1,12 +1,12 @@
-package com.example.ludogorieSoft.village.controllers;
+package com.example.ludogoriesoft.village.controllers;
 
-import com.example.ludogorieSoft.village.dtos.PopulationDTO;
-import com.example.ludogorieSoft.village.enums.Children;
-import com.example.ludogorieSoft.village.enums.Foreigners;
-import com.example.ludogorieSoft.village.enums.NumberOfPopulation;
-import com.example.ludogorieSoft.village.enums.Residents;
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
-import com.example.ludogorieSoft.village.services.PopulationService;
+import com.example.ludogoriesoft.village.dtos.PopulationDTO;
+import com.example.ludogoriesoft.village.enums.Children;
+import com.example.ludogoriesoft.village.enums.Foreigners;
+import com.example.ludogoriesoft.village.enums.NumberOfPopulation;
+import com.example.ludogoriesoft.village.enums.Residents;
+import com.example.ludogoriesoft.village.exeptions.ApiRequestException;
+import com.example.ludogoriesoft.village.services.PopulationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
@@ -50,13 +50,13 @@ class PopulationControllerIntegrationTest {
         populationDTO1.setId(1L);
         populationDTO1.setNumberOfPopulation(NumberOfPopulation.UP_TO_10_PEOPLE);
         populationDTO1.setResidents(Residents.FROM_21_TO_30_PERCENT);
-        populationDTO1.setChildren(Children.FROM_21_TO_50_YEARS);
+        populationDTO1.setChildren(Children.FROM_21_TO_50);
         populationDTO1.setForeigners(Foreigners.I_DONT_KNOW);
         PopulationDTO populationDTO2 = new PopulationDTO();
         populationDTO2.setId(2L);
         populationDTO2.setNumberOfPopulation(NumberOfPopulation.FROM_2000_PEOPLE);
         populationDTO2.setResidents(Residents.UP_TO_2_PERCENT);
-        populationDTO2.setChildren(Children.OVER_50_YEARS);
+        populationDTO2.setChildren(Children.OVER_50);
         populationDTO2.setForeigners(Foreigners.NO);
         List<PopulationDTO> populationDTOList = Arrays.asList(populationDTO1, populationDTO2);
 
@@ -68,12 +68,12 @@ class PopulationControllerIntegrationTest {
                 .andExpect(jsonPath("$.[0].id").value(1))
                 .andExpect(jsonPath("$.[0].numberOfPopulation").value("UP_TO_10_PEOPLE"))
                 .andExpect(jsonPath("$.[0].residents").value("FROM_21_TO_30_PERCENT"))
-                .andExpect(jsonPath("$.[0].children").value("FROM_21_TO_50_YEARS"))
+                .andExpect(jsonPath("$.[0].children").value("FROM_21_TO_50"))
                 .andExpect(jsonPath("$.[0].foreigners").value("I_DONT_KNOW"))
                 .andExpect(jsonPath("$.[1].id").value(2))
                 .andExpect(jsonPath("$.[1].numberOfPopulation").value("FROM_2000_PEOPLE"))
                 .andExpect(jsonPath("$.[1].residents").value("UP_TO_2_PERCENT"))
-                .andExpect(jsonPath("$.[1].children").value("OVER_50_YEARS"))
+                .andExpect(jsonPath("$.[1].children").value("OVER_50"))
                 .andExpect(jsonPath("$.[1].foreigners").value("NO"))
                 .andReturn();
 
@@ -87,7 +87,7 @@ class PopulationControllerIntegrationTest {
         populationDTO.setId(1L);
         populationDTO.setNumberOfPopulation(NumberOfPopulation.UP_TO_10_PEOPLE);
         populationDTO.setResidents(Residents.FROM_21_TO_30_PERCENT);
-        populationDTO.setChildren(Children.FROM_21_TO_50_YEARS);
+        populationDTO.setChildren(Children.FROM_21_TO_50);
         populationDTO.setForeigners(Foreigners.I_DONT_KNOW);
 
         when(populationService.getPopulationById(anyLong())).thenReturn(populationDTO);
@@ -98,7 +98,7 @@ class PopulationControllerIntegrationTest {
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.numberOfPopulation").value("UP_TO_10_PEOPLE"))
                 .andExpect(jsonPath("$.residents").value("FROM_21_TO_30_PERCENT"))
-                .andExpect(jsonPath("$.children").value("FROM_21_TO_50_YEARS"))
+                .andExpect(jsonPath("$.children").value("FROM_21_TO_50"))
                 .andExpect(jsonPath("$.foreigners").value("I_DONT_KNOW"))
                 .andReturn();
 
@@ -112,7 +112,7 @@ class PopulationControllerIntegrationTest {
         populationDTO.setId(1L);
         populationDTO.setNumberOfPopulation(NumberOfPopulation.FROM_11_TO_50_PEOPLE);
         populationDTO.setResidents(Residents.FROM_2_TO_5_PERCENT);
-        populationDTO.setChildren(Children.BELOW_10_YEARS);
+        populationDTO.setChildren(Children.BELOW_10);
         populationDTO.setForeigners(Foreigners.YES);
         when(populationService.createPopulation(any(PopulationDTO.class))).thenReturn(populationDTO);
 
@@ -123,7 +123,7 @@ class PopulationControllerIntegrationTest {
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.numberOfPopulation").value("FROM_11_TO_50_PEOPLE"))
                 .andExpect(jsonPath("$.residents").value("FROM_2_TO_5_PERCENT"))
-                .andExpect(jsonPath("$.children").value("BELOW_10_YEARS"))
+                .andExpect(jsonPath("$.children").value("BELOW_10"))
                 .andExpect(jsonPath("$.foreigners").value("YES"))
                 .andReturn();
 
@@ -137,7 +137,7 @@ class PopulationControllerIntegrationTest {
         populationDTO.setId(1L);
         populationDTO.setNumberOfPopulation(NumberOfPopulation.UP_TO_10_PEOPLE);
         populationDTO.setResidents(Residents.FROM_2_TO_5_PERCENT);
-        populationDTO.setChildren(Children.BELOW_10_YEARS);
+        populationDTO.setChildren(Children.BELOW_10);
         populationDTO.setForeigners(Foreigners.I_DONT_KNOW);
 
         when(populationService.updatePopulation(anyLong(), any(PopulationDTO.class))).thenReturn(populationDTO);
@@ -149,7 +149,7 @@ class PopulationControllerIntegrationTest {
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.numberOfPopulation").value("UP_TO_10_PEOPLE"))
                 .andExpect(jsonPath("$.residents").value("FROM_2_TO_5_PERCENT"))
-                .andExpect(jsonPath("$.children").value("BELOW_10_YEARS"))
+                .andExpect(jsonPath("$.children").value("BELOW_10"))
                 .andExpect(jsonPath("$.foreigners").value("I_DONT_KNOW"))
                 .andReturn();
 
@@ -232,9 +232,6 @@ class PopulationControllerIntegrationTest {
                 .andExpect(jsonPath("$.message").value(errorMessage))
                 .andReturn();
     }
-
-
-
 
 }
 

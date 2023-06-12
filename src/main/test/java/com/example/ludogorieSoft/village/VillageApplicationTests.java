@@ -1,10 +1,10 @@
-package com.example.ludogorieSoft.village;
+package com.example.ludogoriesoft.village;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-public class VillageApplicationTests {
+class VillageApplicationTests {
     @Test
     void contextLoads() {
     }

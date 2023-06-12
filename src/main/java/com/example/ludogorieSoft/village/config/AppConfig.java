@@ -1,4 +1,4 @@
-package com.example.ludogorieSoft.village.config;
+package com.example.ludogoriesoft.village.config;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;

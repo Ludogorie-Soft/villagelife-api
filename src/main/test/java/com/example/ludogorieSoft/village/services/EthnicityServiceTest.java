@@ -1,9 +1,9 @@
-package com.example.ludogorieSoft.village.services;
+package com.example.ludogoriesoft.village.services;
 
-import com.example.ludogorieSoft.village.dtos.EthnicityDTO;
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
-import com.example.ludogorieSoft.village.model.Ethnicity;
-import com.example.ludogorieSoft.village.repositories.EthnicityRepository;
+import com.example.ludogoriesoft.village.dtos.EthnicityDTO;
+import com.example.ludogoriesoft.village.exeptions.ApiRequestException;
+import com.example.ludogoriesoft.village.model.Ethnicity;
+import com.example.ludogoriesoft.village.repositories.EthnicityRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -52,13 +52,13 @@ class EthnicityServiceTest {
         expectedEthnicityDTOs.add(ethnicityDTO1);
         expectedEthnicityDTOs.add(ethnicityDTO2);
 
-        when(ethnicityRepository.findAll()).thenReturn(ethnicities);
+        when(ethnicityRepository.findAllByOrderByIdAsc()).thenReturn(ethnicities);
         when(modelMapper.map(ethnicity1, EthnicityDTO.class)).thenReturn(ethnicityDTO1);
         when(modelMapper.map(ethnicity2, EthnicityDTO.class)).thenReturn(ethnicityDTO2);
 
         List<EthnicityDTO> result = ethnicityService.getAllEthnicities();
 
-        verify(ethnicityRepository, times(1)).findAll();
+        verify(ethnicityRepository, times(1)).findAllByOrderByIdAsc();
         verify(modelMapper, times(1)).map(ethnicity1, EthnicityDTO.class);
         verify(modelMapper, times(1)).map(ethnicity2, EthnicityDTO.class);
         Assertions.assertEquals(expectedEthnicityDTOs, result);
@@ -70,11 +70,11 @@ class EthnicityServiceTest {
         List<Ethnicity> ethnicities = new ArrayList<>();
         List<EthnicityDTO> expectedEthnicityDTOs = new ArrayList<>();
 
-        when(ethnicityRepository.findAll()).thenReturn(ethnicities);
+        when(ethnicityRepository.findAllByOrderByIdAsc()).thenReturn(ethnicities);
 
         List<EthnicityDTO> result = ethnicityService.getAllEthnicities();
 
-        verify(ethnicityRepository, times(1)).findAll();
+        verify(ethnicityRepository, times(1)).findAllByOrderByIdAsc();
         Assertions.assertEquals(expectedEthnicityDTOs, result);
     }
 

@@ -1,9 +1,9 @@
-package com.example.ludogorieSoft.village.services;
+package com.example.ludogoriesoft.village.services;
 
-import com.example.ludogorieSoft.village.dtos.QuestionDTO;
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
-import com.example.ludogorieSoft.village.model.Question;
-import com.example.ludogorieSoft.village.repositories.QuestionRepository;
+import com.example.ludogoriesoft.village.dtos.QuestionDTO;
+import com.example.ludogoriesoft.village.exeptions.ApiRequestException;
+import com.example.ludogoriesoft.village.model.Question;
+import com.example.ludogoriesoft.village.repositories.QuestionRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,11 +42,11 @@ class QuestionServiceTest {
         List<Question> questions = new ArrayList<>();
         questions.add(new Question());
         questions.add(new Question());
-        when(questionRepository.findAll()).thenReturn(questions);
+        when(questionRepository.findAllByOrderByIdAsc()).thenReturn(questions);
 
         List<QuestionDTO> result = questionService.getAllQuestions();
 
-        verify(questionRepository, times(1)).findAll();
+        verify(questionRepository, times(1)).findAllByOrderByIdAsc();
         Assertions.assertEquals(questions.size(), result.size());
     }
 
@@ -57,7 +57,7 @@ class QuestionServiceTest {
 
         List<QuestionDTO> result = questionService.getAllQuestions();
 
-        verify(questionRepository, times(1)).findAll();
+        verify(questionRepository, times(1)).findAllByOrderByIdAsc();
         Assertions.assertEquals(0, result.size());
     }
 

@@ -1,8 +1,8 @@
-package com.example.ludogorieSoft.village.controllers;
+package com.example.ludogoriesoft.village.controllers;
 
-import com.example.ludogorieSoft.village.dtos.GroundCategoryDTO;
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
-import com.example.ludogorieSoft.village.services.GroundCategoryService;
+import com.example.ludogoriesoft.village.dtos.GroundCategoryDTO;
+import com.example.ludogoriesoft.village.exeptions.ApiRequestException;
+import com.example.ludogoriesoft.village.services.GroundCategoryService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -55,7 +55,7 @@ class GroundCategoryControllerIntegrationTest {
         when(groundCategoryService.getAllGroundCategories()).thenReturn(groundCategoryDTOList);
 
 
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/groundCategory")
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/groundCategories")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.[0].id").value(1))
@@ -76,7 +76,7 @@ class GroundCategoryControllerIntegrationTest {
 
         when(groundCategoryService.getByID(anyLong())).thenReturn(groundCategoryDTO);
 
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/groundCategory/{id}", 1)
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/groundCategories/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
@@ -95,7 +95,7 @@ class GroundCategoryControllerIntegrationTest {
 
         when(groundCategoryService.createGroundCategoryDTO(any(GroundCategoryDTO.class))).thenReturn(groundCategoryDTO);
 
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/groundCategory")
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/groundCategories")
                         .content("{\"id\": 1, \"groundCategoryName\": \"New Ground Category\"}")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
@@ -115,7 +115,7 @@ class GroundCategoryControllerIntegrationTest {
 
         when(groundCategoryService.updateGroundCategory(anyLong(), any(GroundCategoryDTO.class))).thenReturn(groundCategoryDTO);
 
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/groundCategory/{id}", 1)
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/groundCategories/{id}", 1)
                         .content("{\"id\": 1, \"groundCategoryName\": \"Updated Ground Category\"}")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -130,7 +130,7 @@ class GroundCategoryControllerIntegrationTest {
     @Test
     void testDeleteGroundCategoryById() throws Exception {
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/groundCategory/{id}", 1))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/groundCategories/{id}", 1))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Ground Category with id: 1 has been deleted successfully!!"));
     }
@@ -139,7 +139,7 @@ class GroundCategoryControllerIntegrationTest {
     void testGetAllGroundCategoriesWhenNoGroundCategoryExist() throws Exception {
         when(groundCategoryService.getAllGroundCategories()).thenReturn(Collections.emptyList());
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/groundCategory")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/groundCategories")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(0))
@@ -155,7 +155,7 @@ class GroundCategoryControllerIntegrationTest {
         when(groundCategoryService.getByID(invalidId))
                 .thenThrow(new ApiRequestException("Ground Category with id: " + invalidId + " Not Found"));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/groundCategory/{id}", invalidId)
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/groundCategories/{id}", invalidId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("Ground Category with id: " + invalidId + " Not Found"))
@@ -170,7 +170,7 @@ class GroundCategoryControllerIntegrationTest {
         doThrow(new ApiRequestException("Ground Category is blank"))
                 .when(groundCategoryService).createGroundCategoryDTO(any(GroundCategoryDTO.class));
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/groundCategory")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/groundCategories")
                         .content("{\"id\": 1, \"groundCategoryName\": \"" + blankGroundCategoryName + "\"}")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
@@ -188,7 +188,7 @@ class GroundCategoryControllerIntegrationTest {
         when(groundCategoryService.updateGroundCategory(id, updatedGroundCategory))
                 .thenThrow(new ApiRequestException("Ground Category with id: " + id + " not found"));
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/groundCategory/{id}", id)
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/groundCategories/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(updatedGroundCategory)))
                 .andExpect(status().isBadRequest());
@@ -202,7 +202,7 @@ class GroundCategoryControllerIntegrationTest {
         doThrow(new ApiRequestException("Ground Category with id " + id + " not found"))
                 .when(groundCategoryService).deleteGroundCategory(id);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/groundCategory/{id}", id))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/groundCategories/{id}", id))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(containsString("Ground Category with id " + id + " not found")));
     }

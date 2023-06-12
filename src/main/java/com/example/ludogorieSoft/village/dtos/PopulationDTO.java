@@ -1,9 +1,9 @@
-package com.example.ludogorieSoft.village.dtos;
+package com.example.ludogoriesoft.village.dtos;
 
-import com.example.ludogorieSoft.village.enums.Children;
-import com.example.ludogorieSoft.village.enums.Foreigners;
-import com.example.ludogorieSoft.village.enums.NumberOfPopulation;
-import com.example.ludogorieSoft.village.enums.Residents;
+import com.example.ludogoriesoft.village.enums.Children;
+import com.example.ludogoriesoft.village.enums.Foreigners;
+import com.example.ludogoriesoft.village.enums.NumberOfPopulation;
+import com.example.ludogoriesoft.village.enums.Residents;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
