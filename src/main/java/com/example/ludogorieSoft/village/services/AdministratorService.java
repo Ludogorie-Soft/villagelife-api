@@ -7,14 +7,17 @@ import com.example.ludogoriesoft.village.exeptions.ApiRequestException;
 import com.example.ludogoriesoft.village.model.Administrator;
 import com.example.ludogoriesoft.village.repositories.AdministratorRepository;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AdministratorService {
     private final AdministratorRepository administratorRepository;
     private final ModelMapper modelMapper;
@@ -36,6 +39,8 @@ public class AdministratorService {
             throw new ApiRequestException("Administrator already exists");
         }
         Administrator administrator = administratorRequestToAdministrator(administratorRequest);
+        String hashedPassword = BCrypt.hashpw(administrator.getPassword(), BCrypt.gensalt());
+        administrator.setPassword(hashedPassword);
         administratorRepository.save(administrator);
         administrator = administratorRepository.findByUsername(administratorRequest.getUsername());
         return administratorToAdministratorDTO(administrator);
@@ -68,5 +73,10 @@ public class AdministratorService {
         administratorRepository.save(foundAdministrator.get());
         return administratorToAdministratorDTO(foundAdministrator.get());
     }
-    
+
+    public Administrator findAdminByUsername(String username){
+        Administrator administrator =  administratorRepository.findByUsername(username);
+        return administrator; //administratorToAdministratorDTO(administrator);
+    }
+
 }

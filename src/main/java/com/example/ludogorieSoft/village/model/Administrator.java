@@ -1,5 +1,6 @@
 package com.example.ludogoriesoft.village.model;
 
+import com.example.ludogoriesoft.village.enums.Role;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.validator.constraints.Length;
@@ -49,6 +50,9 @@ public class Administrator {
     private LocalDateTime createdAt;
 
     private static final  boolean ENABLED = true;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
 
 }

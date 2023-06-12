@@ -2,6 +2,7 @@ package com.example.ludogoriesoft.village.controllers;
 
 import com.example.ludogoriesoft.village.dtos.AdministratorDTO;
 import com.example.ludogoriesoft.village.dtos.AdministratorRequest;
+import com.example.ludogoriesoft.village.model.Administrator;
 import com.example.ludogoriesoft.village.services.AdministratorService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -45,5 +46,10 @@ public class AdministratorController {
     public ResponseEntity<String> deleteAdministratorById(@PathVariable("id") Long id) {
         administratorService.deleteAdministratorById(id);
         return new ResponseEntity<>("Administrator with id: " + id + " has been deleted successfully!!", HttpStatus.OK);
+    }
+    @GetMapping("/{username}")
+    public Administrator getAdministratorByUsername(@PathVariable("username") String username){
+
+        return  administratorService.findAdminByUsername(username);
     }
 }
