@@ -18,6 +18,7 @@ public class AddVillageFormResultService {
     private VillageAnswerQuestionService villageAnswerQuestionService;
     private final VillagePopulationAssertionService villagePopulationAssertionService;
     private final ObjectVillageService objectVillageService;
+    private VillageLivingConditionService villageLivingConditionService;
 
     public AddVillageFormResult create(AddVillageFormResult addVillageFormResult){
         PopulationDTO populationDTO = addVillageFormResult.getPopulationDTO();
@@ -43,7 +44,10 @@ public class AddVillageFormResultService {
         List<QuestionDTO> questionsDTO = questionService.getAllQuestions();
         for (int i = 0; i < questionResponses.size(); i++) {
             VillageAnswerQuestionDTO villageAnswerQuestionDTO = new VillageAnswerQuestionDTO(null, villageDTO.getId(), questionsDTO.get(i).getId(), addVillageFormResult.getQuestionResponses().get(i));
-            villageAnswerQuestionService.createVillageAnswerQuestion(villageAnswerQuestionDTO);
+            if(villageAnswerQuestionDTO.getAnswer() != null){
+                villageAnswerQuestionService.createVillageAnswerQuestion(villageAnswerQuestionDTO);
+            }
+
         }
 
         List<ObjectVillageDTO> objectVillageDTOS = addVillageFormResult.getObjectVillageDTOS();
@@ -59,6 +63,14 @@ public class AddVillageFormResultService {
             VillagePopulationAssertionDTO villagePopulationAssertionDTO = new VillagePopulationAssertionDTO(null, savedVillage.getId(), villagePopulationAssertionDTOS.get(i).getPopulatedAssertionId(), villagePopulationAssertionDTOS.get(i).getAnswer());
             if(villagePopulationAssertionDTO.getAnswer() != null){
                 villagePopulationAssertionService.createVillagePopulationAssertionDTO(villagePopulationAssertionDTO);
+            }
+        }
+
+        List<VillageLivingConditionDTO> villageLivingConditionDTOS = addVillageFormResult.getVillageLivingConditionDTOS();
+        for (int i = 1; i < villageLivingConditionDTOS.size(); i++) {
+            VillageLivingConditionDTO villageLivingConditionDTO = new VillageLivingConditionDTO(null, savedVillage.getId(), villageLivingConditionDTOS.get(i).getLivingConditionId(), villageLivingConditionDTOS.get(i).getConsents());
+            if(villageLivingConditionDTO.getConsents() != null){
+                villageLivingConditionService.createVillageLivingCondition(villageLivingConditionDTO);
             }
         }
 
