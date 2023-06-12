@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 
@@ -204,7 +204,7 @@ class VillageServiceTest {
 
         when(villageRepository.findById(villageId)).thenReturn(optionalVillage);
 
-        Assertions.assertThrows(ApiRequestException.class, () -> villageService.checkVillage(villageId));
+        assertThrows(ApiRequestException.class, () -> villageService.checkVillage(villageId));
 
         verify(villageRepository, times(1)).findById(villageId);
     }
