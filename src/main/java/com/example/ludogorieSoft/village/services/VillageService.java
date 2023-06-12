@@ -1,6 +1,7 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.VillageDTO;
+import com.example.ludogorieSoft.village.model.Population;
 import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.repositories.VillageRepository;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
@@ -17,6 +18,7 @@ public class VillageService {
 
     private final VillageRepository villageRepository;
     private final ModelMapper modelMapper;
+    private final PopulationService populationService;
     private final String errorMessage1="Village with id ";
     private final String errorMessage2=" not found  ";
 
@@ -43,9 +45,20 @@ public class VillageService {
     }
 
 
+    //public VillageDTO createVillage(VillageDTO villageDTO) {
+    //    Village village = new Village();
+    //    village.setPopulation(modelMapper.map(villageDTO.getPopulationDTO(), Population.class));
+    //    village.setName(villageDTO.getName());
+    //    //Village village = modelMapper.map(villageDTO, Village.class);
+    //    villageRepository.save(village);
+    //    return modelMapper.map(village, VillageDTO.class);
+    //}
     public VillageDTO createVillage(VillageDTO villageDTO) {
-        Village village = modelMapper.map(villageDTO, Village.class);
-        villageRepository.save(village);
+        Village village = new Village();
+        village.setPopulation(modelMapper.map(villageDTO.getPopulationDTO(), Population.class));
+        village.setName(villageDTO.getName());
+        Village savedVillage = villageRepository.save(village);
+        villageDTO.setId(savedVillage.getId());
         return modelMapper.map(village, VillageDTO.class);
     }
 
@@ -55,7 +68,8 @@ public class VillageService {
         if (optionalVillage.isPresent()) {
             Village village = optionalVillage.get();
             village.setName(villageDTO.getName());
-            village.setPopulation(villageDTO.getPopulation());
+            //village.setPopulation(villageDTO.getPopulation());
+            village.setPopulation(modelMapper.map(villageDTO.getPopulationDTO(), Population.class));
             villageRepository.save(village);
             return modelMapper.map(village, VillageDTO.class);
         } else {

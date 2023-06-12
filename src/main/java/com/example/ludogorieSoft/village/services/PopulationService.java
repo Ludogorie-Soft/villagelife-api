@@ -32,8 +32,14 @@ public class PopulationService {
                 .toList();
     }
 
+    //public PopulationDTO createPopulation(PopulationDTO populationDTO) {
+    //    populationRepository.save(populationDTOtoPopulation(populationDTO));
+    //    return populationDTO;
+    //}
     public PopulationDTO createPopulation(PopulationDTO populationDTO) {
-        populationRepository.save(populationDTOtoPopulation(populationDTO));
+        Population population = populationDTOtoPopulation(populationDTO);
+        Population savedPopulation = populationRepository.save(population);
+        populationDTO.setId(savedPopulation.getId());
         return populationDTO;
     }
 

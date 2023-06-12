@@ -24,7 +24,7 @@ public class ObjectAroundVillageService {
     }
 
     public List<ObjectAroundVillageDTO> getAllObjectsAroundVillage() {
-        List<ObjectAroundVillage> objectAroundVillages = objectAroundVillageRepository.findAll();
+        List<ObjectAroundVillage> objectAroundVillages = objectAroundVillageRepository.findAllByOrderByIdAsc();
         return objectAroundVillages.stream()
                 .map(this::convertToDTO)
                 .toList();

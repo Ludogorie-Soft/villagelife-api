@@ -31,7 +31,7 @@ public class EthnicityService {
         }
     }
     public List<EthnicityDTO> getAllEthnicities() {
-        List<Ethnicity> ethnicities = ethnicityRepository.findAll();
+        List<Ethnicity> ethnicities = ethnicityRepository.findAllByOrderByIdAsc();
         return ethnicities
                 .stream()
                 .map(this::ethnicityToEthnicityDTO)
