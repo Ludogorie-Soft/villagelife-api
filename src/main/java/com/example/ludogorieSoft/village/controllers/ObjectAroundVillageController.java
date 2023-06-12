@@ -11,7 +11,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/objectAroundVillage")
+@RequestMapping("/api/v1/objectsAroundVillage")
 @AllArgsConstructor
 public class ObjectAroundVillageController {
 
