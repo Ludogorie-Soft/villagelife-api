@@ -1,6 +1,7 @@
 package com.example.ludogoriesoft.village.services;
 
 import com.example.ludogoriesoft.village.dtos.VillageLivingConditionDTO;
+import com.example.ludogoriesoft.village.dtos.VillagePopulationAssertionDTO;
 import com.example.ludogoriesoft.village.model.*;
 import com.example.ludogoriesoft.village.repositories.LivingConditionRepository;
 import com.example.ludogoriesoft.village.repositories.VillageLivingConditionRepository;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -84,6 +86,18 @@ public class VillageLivingConditionService {
         } catch (EmptyResultDataAccessException e) {
             return 0;
         }
+    }
+
+    public List<VillageLivingConditionDTO> getVillagePopulationAssertionByVillageId(Long id) {
+        List<VillageLivingConditions> villageLivingConditionsList = villageLivingConditionRepository.findAll();
+        if (id != null) {
+            villageLivingConditionsList = villageLivingConditionsList.stream()
+                    .filter(assertion -> id.equals(assertion.getVillage().getId()))
+                    .collect(Collectors.toList());
+        }
+        return villageLivingConditionsList.stream()
+                .map(this::toDTO)
+                .toList();
     }
 
 

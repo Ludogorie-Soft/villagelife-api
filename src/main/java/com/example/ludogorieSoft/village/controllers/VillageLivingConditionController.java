@@ -1,6 +1,7 @@
 package com.example.ludogoriesoft.village.controllers;
 
 import com.example.ludogoriesoft.village.dtos.VillageLivingConditionDTO;
+import com.example.ludogoriesoft.village.dtos.VillagePopulationAssertionDTO;
 import com.example.ludogoriesoft.village.model.VillageLivingConditions;
 import com.example.ludogoriesoft.village.services.VillageLivingConditionService;
 import lombok.AllArgsConstructor;
@@ -26,6 +27,12 @@ public class VillageLivingConditionController {
     public ResponseEntity<VillageLivingConditionDTO> getVillageLivingConditionsById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(villageLivingConditionService.getByID(id));
     }
+
+    @GetMapping("/village/{id}")
+    public ResponseEntity<List<VillageLivingConditionDTO>> getVillageLivingConditionsByVillageId(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(villageLivingConditionService.getVillagePopulationAssertionByVillageId(id));
+    }
+
 
 
     @PostMapping
