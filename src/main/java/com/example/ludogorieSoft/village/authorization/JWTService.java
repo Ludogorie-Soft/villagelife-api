@@ -16,7 +16,7 @@ import java.util.function.Function;
 
 @Service
 public class JWTService {
-    private static final String SECRET_kEY = "eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTY4NjU5NzQ1NywiaWF0IjoxNjg2NTk3NDU3fQ.sv6mxO7LQ_9FeVQt9bWERUsIyhuwY2Wr_5fp4ECMoDc";
+    private static final String SECRET_kEY = "yvKlZIBeMDUA3s6saNgBpWHX65tJ+0WVs6Nqv9qhycYMVb4vZ0LqDtp6uMiI5gFv";
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -43,7 +43,7 @@ return Jwts
         .setClaims(extraClaims)
         .setSubject(userDetails.getUsername())
         .setIssuedAt(new Date(System.currentTimeMillis()))
-        .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
+        .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
         .signWith(getSignInKey(), SignatureAlgorithm.HS256)
         .compact();
     }
