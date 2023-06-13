@@ -1,4 +1,4 @@
-//package com.example.ludogoriesoft.village.authorization;
+package com.example.ludogoriesoft.village.authorization;//package com.ludogoriesoft.villagelifefrontend.authorization;
 //
 //import org.springframework.context.annotation.Bean;
 //import org.springframework.context.annotation.Configuration;
@@ -25,9 +25,12 @@
 //
 //    @Bean
 //    public DaoAuthenticationProvider authenticationProvider() {
+//        System.out.println("4");
+//
 //        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
 //        authProvider.setUserDetailsService(userDetailsService());
 //        authProvider.setPasswordEncoder(passwordEncoder());
+//        System.out.println("5");
 //
 //        return authProvider;
 //    }
@@ -41,12 +44,12 @@
 //    protected void configure(HttpSecurity http) throws Exception {
 //
 //        http.authorizeRequests()
-//                .antMatchers( "/villages").permitAll()
-//                .antMatchers( "/admins/home").hasAuthority("true")
+//                .antMatchers( "/villages","/images/**","/admins/register","/admins/save").permitAll()
+//                .antMatchers( "/admins/home").hasAuthority("ADMIN")
 //                .anyRequest().authenticated()
 //                .and()
 //                .formLogin().loginPage("/admins/login")
-//                .usernameParameter("username")
+////                .usernameParameter("username")
 //                .defaultSuccessUrl("/admins/menu", true)
 //                .permitAll()
 //
