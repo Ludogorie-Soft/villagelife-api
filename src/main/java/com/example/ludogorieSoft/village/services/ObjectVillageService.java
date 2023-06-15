@@ -83,4 +83,17 @@ public class ObjectVillageService {
         }
         objectVillageRepository.delete(objectVillage.get());
     }
+
+    public List<ObjectVillageDTO> getObjectVillageByVillageId(Long id) {
+        List<ObjectVillage> objectVillage = objectVillageRepository.findAll();
+        List<ObjectVillage> filteredList = objectVillage.stream()
+                .filter(obj -> obj.getVillage().getId().equals(id)).
+                toList();
+
+        return filteredList
+                .stream()
+                .map(this::objectVillageToObjectVillageDTO)
+                .toList();
+    }
+
 }

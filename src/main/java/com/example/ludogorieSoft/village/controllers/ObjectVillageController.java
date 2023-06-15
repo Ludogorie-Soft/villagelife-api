@@ -26,6 +26,11 @@ public class ObjectVillageController {
         return ResponseEntity.ok(objectVillageService.getObjectVillageById(id));
     }
 
+    @GetMapping("/village/{id}")
+    public ResponseEntity<List<ObjectVillageDTO>> getObjectVillageByVillageID(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(objectVillageService.getObjectVillageByVillageId(id));
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<ObjectVillageDTO> updateObjectVillageByID(@PathVariable Long id, @Valid @RequestBody ObjectVillageDTO objectVillageDTO) {
         return ResponseEntity.ok(objectVillageService.updateObjectVillageById(id, objectVillageDTO));
