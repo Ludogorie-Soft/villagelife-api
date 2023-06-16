@@ -1,9 +1,11 @@
 package com.example.ludogoriesoft.village.services;
 
 import com.example.ludogoriesoft.village.dtos.EthnicityVillageDTO;
+import com.example.ludogoriesoft.village.dtos.VillagePopulationAssertionDTO;
 import com.example.ludogoriesoft.village.model.Ethnicity;
 import com.example.ludogoriesoft.village.model.EthnicityVillage;
 import com.example.ludogoriesoft.village.model.Village;
+import com.example.ludogoriesoft.village.model.VillagePopulationAssertion;
 import com.example.ludogoriesoft.village.repositories.EthnicityRepository;
 import com.example.ludogoriesoft.village.repositories.EthnicityVillageRepository;
 import com.example.ludogoriesoft.village.repositories.VillageRepository;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -21,8 +24,6 @@ import java.util.Optional;
 public class EthnicityVillageService {
     private final ModelMapper modelMapper;
     private final EthnicityVillageRepository ethnicityVillageRepository;
-    private final EthnicityRepository ethnicityRepository;
-    private final VillageRepository villageRepository;
     private final VillageService villageService;
     private final EthnicityService ethnicityService;
 
@@ -81,6 +82,16 @@ public class EthnicityVillageService {
         } else {
             throw new ApiRequestException("Ethnicity in Village with id " + id + " not found");
         }
+    }
+    public EthnicityVillageDTO getVillageEthnicityByVillageId(Long villageId) {
+        List<EthnicityVillage> ethnicityVillages = ethnicityVillageRepository.findAll();
+
+        for (EthnicityVillage ethnicityVillage : ethnicityVillages) {
+            if (ethnicityVillage.getVillage().getId().equals(villageId)) {
+                return getEthnicityVillageById(ethnicityVillage.getId());
+            }
+        }
+        return new EthnicityVillageDTO();
     }
 
 
