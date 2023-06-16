@@ -1,5 +1,6 @@
 package com.example.ludogoriesoft.village.services;
 
+import com.example.ludogoriesoft.village.dtos.RegionDTO;
 import com.example.ludogoriesoft.village.dtos.VillageDTO;
 import com.example.ludogoriesoft.village.model.Population;
 import com.example.ludogoriesoft.village.model.Village;
@@ -19,6 +20,7 @@ public class VillageService {
     private final VillageRepository villageRepository;
     private final ModelMapper modelMapper;
     private final PopulationService populationService;
+    private final RegionService regionService;
     private final String errorMessage1="Village with id ";
     private final String errorMessage2=" not found  ";
 
@@ -47,6 +49,8 @@ public class VillageService {
         Village village = new Village();
         village.setPopulation(modelMapper.map(villageDTO.getPopulationDTO(), Population.class));
         village.setName(villageDTO.getName());
+        RegionDTO regionDTO = regionService.findRegionByName(villageDTO.getRegion());
+        village.setRegion(regionService.checkRegion(regionDTO.getId()));
         Village savedVillage = villageRepository.save(village);
         villageDTO.setId(savedVillage.getId());
         return modelMapper.map(village, VillageDTO.class);
@@ -58,6 +62,8 @@ public class VillageService {
         if (optionalVillage.isPresent()) {
             Village village = optionalVillage.get();
             village.setName(villageDTO.getName());
+            RegionDTO regionDTO = regionService.findRegionByName(villageDTO.getRegion());
+            village.setRegion(regionService.checkRegion(regionDTO.getId()));
             village.setPopulation(modelMapper.map(villageDTO.getPopulationDTO(), Population.class));
             villageRepository.save(village);
             return modelMapper.map(village, VillageDTO.class);

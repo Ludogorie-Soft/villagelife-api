@@ -22,6 +22,9 @@ public class Village {
     @NotBlank
     @Column(nullable = false)
     private String name;
+    @ManyToOne
+    @JoinColumn(name = "region_id")
+    private Region region;
     @OneToOne
     private Population population;
     @CreationTimestamp

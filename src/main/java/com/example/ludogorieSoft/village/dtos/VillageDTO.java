@@ -14,6 +14,7 @@ public class VillageDTO {
 
     private Long id;
     private String name;
+    private String region;
     private PopulationDTO populationDTO;
     @DateTimeFormat(pattern = "yyyy-mm-dd")
     private Date dateUpload;

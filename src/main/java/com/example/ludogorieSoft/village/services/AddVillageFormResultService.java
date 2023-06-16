@@ -27,6 +27,7 @@ public class AddVillageFormResultService {
 
         VillageDTO villageDTO = addVillageFormResult.getVillageDTO();
         villageDTO.setPopulationDTO(savedPopulation);
+        villageDTO.setRegion(addVillageFormResult.getVillageDTO().getRegion());
         VillageDTO savedVillage = villageService.createVillage(villageDTO);
 
         createVillageGroundCategoryFromAddVillageFormResult(savedVillage.getId(), addVillageFormResult);
@@ -38,7 +39,7 @@ public class AddVillageFormResultService {
 
         return addVillageFormResult;
     }
-    public void createVillageGroundCategoryFromAddVillageFormResult(Long villageId, AddVillageFormResult addVillageFormResult){
+    public void createVillageGroundCategoryFromAddVillageFormResult(Long villageId, AddVillageFormResult addVillageFormResult) {
         VillageGroundCategoryDTO villageGroundCategoryDTO = new VillageGroundCategoryDTO();
         villageGroundCategoryDTO.setVillageId(villageId);
         GroundCategoryDTO groundCategoryDTO = groundCategoryService.getByGroundCategoryName(addVillageFormResult.getGroundCategoryName());
