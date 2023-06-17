@@ -7,12 +7,9 @@ import com.example.ludogoriesoft.village.services.AdministratorService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
-import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -46,9 +43,8 @@ public class AdministratorController {
         administratorService.deleteAdministratorById(id);
         return new ResponseEntity<>("Administrator with id: " + id + " has been deleted successfully!!", HttpStatus.OK);
     }
-    @GetMapping("/{username}")
-    public Administrator getAdministratorByUsername(@PathVariable("username") String username) {
-
+    @GetMapping("/username/{username}")
+    public Administrator getAdministratorByUsername(@PathVariable("username") String username,@RequestHeader("Authorization") String token) {
         return administratorService.findAdminByUsername(username);
     }
 }
