@@ -73,8 +73,7 @@ public class AdministratorService {
     }
 
     public Administrator findAdminByUsername(String username){
-        Administrator administrator =  administratorRepository.findByUsername(username);
-        return administrator; //administratorToAdministratorDTO(administrator);
+        return administratorRepository.findByUsername(username);
     }
 
 }

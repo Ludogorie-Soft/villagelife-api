@@ -7,6 +7,7 @@ import com.example.ludogoriesoft.village.services.AdministratorService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -21,21 +22,19 @@ public class AdministratorController {
     private final AdministratorService administratorService;
 
     @GetMapping
-    public ResponseEntity<List<AdministratorDTO>> getAllAdministrators() {
+    public ResponseEntity<List<AdministratorDTO>> getAllAdministrators(@RequestHeader("Authorization") String token) {
         return ResponseEntity.ok(administratorService.getAllAdministrators());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AdministratorDTO> getAdministratorById(@PathVariable("id") Long id) {
+    public ResponseEntity<AdministratorDTO> getAdministratorById(@PathVariable("id") Long id, @RequestHeader("Authorization") String token) {
         return ResponseEntity.ok(administratorService.getAdministratorById(id));
     }
 
+
     @PostMapping
-    public ResponseEntity<AdministratorDTO> createAdministrator(@Valid @RequestBody AdministratorRequest administratorRequest, UriComponentsBuilder uriComponentsBuilder) {
-        URI location = uriComponentsBuilder.path("/api/v1/admins/{id}")
-                .buildAndExpand(administratorService.createAdministrator(administratorRequest).getId())
-                .toUri();
-        return ResponseEntity.created(location).build();
+    public ResponseEntity<AdministratorDTO> createAdministrator(@Valid @RequestBody AdministratorRequest administratorRequest, @RequestHeader("Authorization") String token) {
+        return ResponseEntity.ok(administratorService.createAdministrator(administratorRequest));
     }
 
     @PutMapping("/{id}")
@@ -48,8 +47,8 @@ public class AdministratorController {
         return new ResponseEntity<>("Administrator with id: " + id + " has been deleted successfully!!", HttpStatus.OK);
     }
     @GetMapping("/{username}")
-    public Administrator getAdministratorByUsername(@PathVariable("username") String username){
+    public Administrator getAdministratorByUsername(@PathVariable("username") String username) {
 
-        return  administratorService.findAdminByUsername(username);
+        return administratorService.findAdminByUsername(username);
     }
 }

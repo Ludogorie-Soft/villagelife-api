@@ -17,8 +17,7 @@ public class AdministratorDTO {
     private String username;
     private String mobile;
     private LocalDateTime createdAt;
-    private static final boolean ENABLED = true;
-
+    private boolean enabled = true;
     private Role role;
 
 }
