@@ -2,8 +2,10 @@ package com.example.ludogoriesoft.village.controllers;
 
 import com.example.ludogoriesoft.village.dtos.AdministratorDTO;
 import com.example.ludogoriesoft.village.dtos.AdministratorRequest;
+import com.example.ludogoriesoft.village.dtos.VillageDTO;
 import com.example.ludogoriesoft.village.model.Administrator;
 import com.example.ludogoriesoft.village.services.AdministratorService;
+import com.example.ludogoriesoft.village.services.VillageService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 public class AdministratorController {
     private final AdministratorService administratorService;
+    private final VillageService villageService;
 
     @GetMapping
     public ResponseEntity<List<AdministratorDTO>> getAllAdministrators(@RequestHeader("Authorization") String token) {
@@ -46,5 +49,9 @@ public class AdministratorController {
     @GetMapping("/username/{username}")
     public Administrator getAdministratorByUsername(@PathVariable("username") String username,@RequestHeader("Authorization") String token) {
         return administratorService.findAdminByUsername(username);
+    }
+    @GetMapping("village")
+    public List<VillageDTO> getAllVillages(@RequestHeader("Authorization") String token){
+       return villageService.getAllVillages();
     }
 }

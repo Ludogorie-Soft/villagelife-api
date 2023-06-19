@@ -68,7 +68,8 @@ public class AdministratorService {
         foundAdministrator.get().setPassword(administratorRequest.getPassword());
         foundAdministrator.get().setMobile(administratorRequest.getMobile());
         foundAdministrator.get().setCreatedAt(foundAdministrator.get().getCreatedAt());
-        administratorRepository.save(foundAdministrator.get());
+        Administrator administrator = foundAdministrator.get();
+        administratorRepository.save(administrator);
         return administratorToAdministratorDTO(foundAdministrator.get());
     }
 
