@@ -32,6 +32,20 @@ public class VillageLivingConditionController {
     public ResponseEntity<List<VillageLivingConditionDTO>> getVillageLivingConditionsByVillageId(@PathVariable("id") Long id) {
         return ResponseEntity.ok(villageLivingConditionService.getVillagePopulationAssertionByVillageId(id));
     }
+    @GetMapping("/village/value/{id}")
+    public ResponseEntity<Double> getVillagePopulationAssertionByVillageIdValue(@PathVariable("id") Long id){
+        return ResponseEntity.ok(villageLivingConditionService.getVillagePopulationAssertionByVillageIdValue(id));
+    }
+    //getVillagePopulationAssertionByVillageIdDelinquencyValue
+    @GetMapping("/village/delinquencyValue/{id}")
+    public ResponseEntity<Double> getVillagePopulationAssertionByVillageIdDelinquencyValue(@PathVariable("id") Long id){
+        return ResponseEntity.ok(villageLivingConditionService.getVillagePopulationAssertionByVillageIdDelinquencyValue(id));
+    }
+
+    @GetMapping("/village/ecoValue/{id}")
+    public ResponseEntity<Double> getVillagePopulationAssertionByVillageIdEcoValue(@PathVariable("id") Long id){
+        return ResponseEntity.ok(villageLivingConditionService.getVillagePopulationAssertionByVillageIdEcoValue(id));
+    }
 
 
 
