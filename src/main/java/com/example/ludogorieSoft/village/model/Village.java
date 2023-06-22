@@ -8,6 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Data
@@ -32,5 +33,18 @@ public class Village {
     private Administrator admin;
     @CreationTimestamp
     private LocalDateTime dateApproved;
+
+
+
+
+    @OneToMany(mappedBy = "village")
+    private List<ObjectVillage> objectVillages;
+
+
+    @OneToMany(mappedBy = "village")
+    private List<VillageLivingConditions> villageLivingConditions;
+
+
+
 
 }
