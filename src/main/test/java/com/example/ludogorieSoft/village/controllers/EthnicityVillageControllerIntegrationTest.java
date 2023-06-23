@@ -71,7 +71,6 @@ class EthnicityVillageControllerIntegrationTest {
 
     @Test
     void getEthnicityVillageByIdWithValidIdShouldReturnEthnicityVillage() throws Exception {
-        // Arrange
         Long id = 1L;
 
         EthnicityVillageDTO ethnicityVillage = new EthnicityVillageDTO();
@@ -81,7 +80,6 @@ class EthnicityVillageControllerIntegrationTest {
 
         when(ethnicityVillageService.getEthnicityVillageById(id)).thenReturn(ethnicityVillage);
 
-        // Act & Assert
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageEthnicities/{id}", id))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(id))
@@ -183,10 +181,5 @@ class EthnicityVillageControllerIntegrationTest {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.writeValueAsString(obj);
     }
-
-
-
-
-
 }
 

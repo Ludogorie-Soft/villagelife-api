@@ -61,6 +61,7 @@ public class VillageService {
         village.setName(villageDTO.getName());
         RegionDTO regionDTO = regionService.findRegionByName(villageDTO.getRegion());
         village.setRegion(regionService.checkRegion(regionDTO.getId()));
+        village.setPopulationCount(villageDTO.getPopulationCount());
         Village savedVillage = villageRepository.save(village);
         villageDTO.setId(savedVillage.getId());
         return modelMapper.map(village, VillageDTO.class);
@@ -74,6 +75,7 @@ public class VillageService {
             village.setName(villageDTO.getName());
             RegionDTO regionDTO = regionService.findRegionByName(villageDTO.getRegion());
             village.setRegion(regionService.checkRegion(regionDTO.getId()));
+            village.setPopulationCount(villageDTO.getPopulationCount());
             village.setPopulation(modelMapper.map(villageDTO.getPopulationDTO(), Population.class));
             villageRepository.save(village);
             return modelMapper.map(village, VillageDTO.class);

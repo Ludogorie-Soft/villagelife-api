@@ -57,31 +57,6 @@ class RegionServiceTest {
 
         Assertions.assertEquals("Region not found", exception.getMessage());
     }
-    //@Test
-    //void testGetAllRegionsReturnsRegionDTOList() {
-    //    List<Region> regions = new ArrayList<>();
-    //    regions.add(new Region(1L, "Region 1"));
-    //    regions.add(new Region(2L, "Region 2"));
-//
-    //    // Initialize RegionDTO objects with non-null values
-    //    List<RegionDTO> regionDTOs = new ArrayList<>();
-    //    regionDTOs.add(new RegionDTO(1L, "Region 1"));
-    //    regionDTOs.add(new RegionDTO(2L, "Region 2"));
-//
-    //    Mockito.when(regionRepository.findAllByOrderByIdAsc()).thenReturn(regions);
-//
-    //    List<RegionDTO> result = regionService.getAllRegions();
-//
-    //    Mockito.verify(regionRepository, Mockito.times(1)).findAllByOrderByIdAsc();
-    //    Assertions.assertEquals(regions.size(), result.size());
-//
-    //    // Verify the values of RegionDTO objects
-    //    Assertions.assertEquals(regionDTOs.get(0).getRegionName(), result.get(0).getRegionName());
-    //    Assertions.assertEquals(regionDTOs.get(1).getRegionName(), result.get(1).getRegionName());
-    //}
-
-
-
     @Test
     void testGetAllRegionsReturnsEmptyList() {
         when(regionRepository.findAllByOrderByIdAsc()).thenReturn(new ArrayList<>());
