@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertThrows;
@@ -223,6 +224,30 @@ class EthnicityServiceTest {
         EthnicityDTO resultDTO = ethnicityService.ethnicityToEthnicityDTO(ethnicity);
 
         assertEquals(expectedDTO.getId(), resultDTO.getId());
+    }
+    @Test
+    void testFindEthnicityByNameExistingEthnicityReturnsEthnicityDTO() {
+        Ethnicity existingEthnicity = new Ethnicity();
+        existingEthnicity.setEthnicityName("Existing Ethnicity");
+        EthnicityDTO ethnicityDTO = new EthnicityDTO();
+        ethnicityDTO.setEthnicityName("Existing Ethnicity");
+
+        Mockito.when(ethnicityRepository.findByEthnicityName(anyString())).thenReturn(existingEthnicity);
+        when(modelMapper.map(existingEthnicity, EthnicityDTO.class)).thenReturn(ethnicityDTO);
+        EthnicityDTO result = ethnicityService.findEthnicityByName("Existing Ethnicity");
+
+        Assertions.assertNotNull(result);
+        assertEquals("Existing Ethnicity", result.getEthnicityName());
+    }
+
+
+    @Test
+    void testFindEthnicityByNameNonExistingEthnicityThrowsApiRequestException() {
+        Mockito.when(ethnicityRepository.findByEthnicityName(anyString())).thenReturn(null);
+
+        assertThrows(ApiRequestException.class, () -> {
+            ethnicityService.findEthnicityByName("Non-existing Ethnicity");
+        });
     }
 
 }

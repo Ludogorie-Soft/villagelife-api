@@ -27,6 +27,11 @@ public class ObjectAroundVillageController {
         return ResponseEntity.ok(objectAroundVillageService.getObjectAroundVillageById(id));
     }
 
+    @GetMapping("/village/{id}")
+    public ResponseEntity<ObjectAroundVillageDTO> getObjectAroundVillageByVillageID(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(objectAroundVillageService.getObjectAroundVillageById(id));
+    }
+
     @PostMapping
     public ResponseEntity<ObjectAroundVillageDTO> createObjectAroundVillage(@Valid @RequestBody ObjectAroundVillageDTO objectAroundVillageDTO) {
         ObjectAroundVillageDTO createdObjectAroundVillage = objectAroundVillageService.createObjectAroundVillage(objectAroundVillageDTO);
@@ -44,3 +49,4 @@ public class ObjectAroundVillageController {
         return new ResponseEntity<>("ObjectAroundVillage with id: " + id + " has been deleted successfully!!", HttpStatus.OK);
     }
 }
+

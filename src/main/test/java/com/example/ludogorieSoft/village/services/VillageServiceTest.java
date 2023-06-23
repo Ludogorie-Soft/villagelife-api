@@ -1,10 +1,12 @@
 package com.example.ludogoriesoft.village.services;
 
 import com.example.ludogoriesoft.village.dtos.PopulationDTO;
+import com.example.ludogoriesoft.village.dtos.RegionDTO;
 import com.example.ludogoriesoft.village.dtos.VillageDTO;
 import com.example.ludogoriesoft.village.enums.NumberOfPopulation;
 import com.example.ludogoriesoft.village.exeptions.ApiRequestException;
 import com.example.ludogoriesoft.village.model.Population;
+import com.example.ludogoriesoft.village.model.Region;
 import com.example.ludogoriesoft.village.model.Village;
 import com.example.ludogoriesoft.village.repositories.VillageRepository;
 import org.junit.jupiter.api.Assertions;
@@ -35,6 +37,8 @@ class VillageServiceTest {
     private VillageRepository villageRepository;
     @Mock
     private ModelMapper modelMapper;
+    @Mock
+    private RegionService regionService;
 
 
     @Test
@@ -108,22 +112,27 @@ class VillageServiceTest {
     void createVillageValidVillageDTOReturnsCreatedVillageDTO() {
         VillageDTO villageDTO = new VillageDTO();
         villageDTO.setName("Test Village");
+        Region region = new Region(1L, "testRegion");
+        RegionDTO regionDTO = new RegionDTO(region.getId(), region.getRegionName());
         PopulationDTO populationDTO = new PopulationDTO();
         populationDTO.setNumberOfPopulation(NumberOfPopulation.UP_TO_10_PEOPLE);
         villageDTO.setPopulationDTO(populationDTO);
+        villageDTO.setRegion(region.getRegionName());
 
         Village village = new Village();
         village.setName("Test Village");
         Population population = new Population();
         population.setNumberOfPopulation(NumberOfPopulation.UP_TO_10_PEOPLE);
         village.setPopulation(population);
+        village.setRegion(region);
 
         Village savedVillage = new Village();
         savedVillage.setId(1L);
         when(modelMapper.map(villageDTO.getPopulationDTO(), Population.class)).thenReturn(population);
         when(villageRepository.save(any(Village.class))).thenReturn(savedVillage);
         when(modelMapper.map(village, VillageDTO.class)).thenReturn(villageDTO);
-
+        when(regionService.findRegionByName(region.getRegionName())).thenReturn(regionDTO);
+        when(regionService.checkRegion(region.getId())).thenReturn(region);
         VillageDTO result = villageService.createVillage(villageDTO);
 
         verify(modelMapper, times(1)).map(villageDTO.getPopulationDTO(), Population.class);
@@ -138,18 +147,25 @@ class VillageServiceTest {
     void testUpdateVillageWithExistingVillageId() {
         Long villageId = 123L;
         Village existingVillage = new Village();
+        Region region = new Region(1L, "testRegion");
+        RegionDTO regionDTO = new RegionDTO(region.getId(), region.getRegionName());
         existingVillage.setId(villageId);
         existingVillage.setName("Existing Village");
 
+
         VillageDTO updatedVillage = new VillageDTO();
         updatedVillage.setName("Updated Village");
+        updatedVillage.setRegion(region.getRegionName());
 
         VillageDTO expectedVillageDTO = new VillageDTO();
         expectedVillageDTO.setId(villageId);
         expectedVillageDTO.setName("Updated Village");
+        updatedVillage.setRegion(region.getRegionName());
 
         when(villageRepository.findById(villageId)).thenReturn(Optional.of(existingVillage));
         when(modelMapper.map(existingVillage, VillageDTO.class)).thenReturn(expectedVillageDTO);
+        when(regionService.findRegionByName(region.getRegionName())).thenReturn(regionDTO);
+        when(regionService.checkRegion(region.getId())).thenReturn(region);
 
         VillageDTO result = villageService.updateVillage(villageId, updatedVillage);
 
