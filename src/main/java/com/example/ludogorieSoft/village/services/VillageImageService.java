@@ -1,7 +1,6 @@
 package com.example.ludogoriesoft.village.services;
 
 import com.example.ludogoriesoft.village.dtos.VillageImageDTO;
-import com.example.ludogoriesoft.village.exeptions.ApiRequestException;
 import com.example.ludogoriesoft.village.model.Village;
 import com.example.ludogoriesoft.village.model.VillageImage;
 import com.example.ludogoriesoft.village.repositories.VillageImageRepository;
@@ -33,7 +32,8 @@ public class VillageImageService {
                     Tika tika = new Tika();
                     String mimeType = tika.detect(image);
                     if (!mimeType.startsWith("image/")) {
-                        throw new ApiRequestException("Invalid file format. Only images are allowed.");
+                        imagePaths.add("Invalid file format. Only images are allowed.");
+                        continue;
                     }
                     String fileName = UUID.randomUUID() + ".jpg";
                     String filePath = getUploadDirectoryPath();
@@ -56,7 +56,6 @@ public class VillageImageService {
         }
         return imagePaths;
     }
-
     private String getUploadDirectoryPath() {
         String currentPath = System.getProperty("user.dir");
         return currentPath + File.separator + UPLOAD_DIRECTORY;

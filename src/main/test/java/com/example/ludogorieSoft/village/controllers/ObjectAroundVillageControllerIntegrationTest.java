@@ -177,9 +177,6 @@ class ObjectAroundVillageControllerIntegrationTest {
                 .andExpect(jsonPath("$.message").value("Object Around Village is blank"))
                 .andReturn();
     }
-
-
-
     @Test
     void testGetObjectAroundVillageWithInvalidId() throws Exception {
         Long invalidId = 100000L;
