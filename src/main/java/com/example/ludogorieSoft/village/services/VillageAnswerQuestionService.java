@@ -95,13 +95,13 @@ public class VillageAnswerQuestionService {
         if (id != null) {
             villageAnswerQuestionList = villageAnswerQuestionList.stream()
                     .filter(assertion -> id.equals(assertion.getVillage().getId()))
-                    .collect(Collectors.toList());
+                    .toList();
         }
 
 
         villageAnswerQuestionList = villageAnswerQuestionList.stream()
                 .filter(assertion -> assertion.getAnswer() != null && !assertion.getAnswer().equals(""))
-                .collect(Collectors.toList());
+                .toList();
 
         return villageAnswerQuestionList.stream()
                 .map(this::toDTO)
