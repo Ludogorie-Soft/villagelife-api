@@ -6,7 +6,11 @@ import com.example.ludogoriesoft.village.dtos.ObjectAroundVillageDTO;
 import com.example.ludogoriesoft.village.dtos.PopulationDTO;
 import com.example.ludogoriesoft.village.dtos.VillageDTO;
 import com.example.ludogoriesoft.village.enums.Children;
-import com.example.ludogoriesoft.village.model.*;
+
+import com.example.ludogoriesoft.village.model.ObjectVillage;
+import com.example.ludogoriesoft.village.model.Population;
+import com.example.ludogoriesoft.village.model.Village;
+import com.example.ludogoriesoft.village.model.VillageLivingConditions;
 import com.example.ludogoriesoft.village.repositories.VillageRepository;
 import com.example.ludogoriesoft.village.exeptions.ApiRequestException;
 import lombok.AllArgsConstructor;
@@ -24,13 +28,10 @@ public class VillageService {
 
     private final VillageRepository villageRepository;
     private final ModelMapper modelMapper;
-    private final PopulationService populationService;
     private final RegionService regionService;
     private final String errorMessage1="Village with id ";
     private final String errorMessage2=" not found  ";
 
-    private final String errorMessage1 = "Village with id ";
-    private final String errorMessage2 = " not found  ";
 
 
     public VillageDTO villageToVillageDTO(Village village) {
