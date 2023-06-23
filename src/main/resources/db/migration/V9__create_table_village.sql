@@ -2,6 +2,7 @@ CREATE TABLE IF NOT EXISTS villages (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
     region_id BIGINT,
+    population_count INT NOT NULL,
     population_id BIGINT,
     date_upload DATETIME DEFAULT CURRENT_TIMESTAMP,
     status TINYINT(1) NOT NULL,
