@@ -3,6 +3,7 @@ package com.example.ludogoriesoft.village.dtos;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -18,4 +19,5 @@ public class AddVillageFormResult {
     private List<VillageLivingConditionDTO> villageLivingConditionDTOS;
     private List<ObjectVillageDTO> objectVillageDTOS;
     private List<VillagePopulationAssertionDTO> villagePopulationAssertionDTOS;
+    private List<byte[]> imageBytes;
 }

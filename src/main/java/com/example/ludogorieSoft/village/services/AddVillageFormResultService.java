@@ -20,6 +20,7 @@ public class AddVillageFormResultService {
     private final ObjectVillageService objectVillageService;
     private VillageLivingConditionService villageLivingConditionService;
     private EthnicityService ethnicityService;
+    private VillageImageService villageImageService;
 
     public AddVillageFormResult create(AddVillageFormResult addVillageFormResult){
         PopulationDTO populationDTO = addVillageFormResult.getPopulationDTO();
@@ -37,6 +38,7 @@ public class AddVillageFormResultService {
         createVillagePopulationAssertionsFromAddVillageFormResult(savedVillage.getId(), addVillageFormResult);
         createVillageLivingConditionFromAddVillageFormResult(savedVillage.getId(), addVillageFormResult);
 
+        villageImageService.createImagePaths(addVillageFormResult.getImageBytes(), savedVillage.getId());
         return addVillageFormResult;
     }
     public void createVillageGroundCategoryFromAddVillageFormResult(Long villageId, AddVillageFormResult addVillageFormResult) {
