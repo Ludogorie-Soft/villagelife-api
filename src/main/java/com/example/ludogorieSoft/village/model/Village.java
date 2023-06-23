@@ -6,7 +6,9 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
@@ -25,6 +27,9 @@ public class Village {
     @ManyToOne
     @JoinColumn(name = "region_id")
     private Region region;
+    @Min(0)
+    @NotNull
+    private int populationCount;
     @OneToOne
     private Population population;
     @CreationTimestamp

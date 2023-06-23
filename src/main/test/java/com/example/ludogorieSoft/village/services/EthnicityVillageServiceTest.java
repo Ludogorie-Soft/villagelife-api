@@ -45,8 +45,7 @@ class EthnicityVillageServiceTest {
         villageService = mock(VillageService.class);
         ethnicityService = mock(EthnicityService.class);
         modelMapper = mock(ModelMapper.class);
-        ethnicityVillageService = new EthnicityVillageService(modelMapper, ethnicityVillageRepository, ethnicityRepository,
-                villageRepository, villageService, ethnicityService);
+        ethnicityVillageService = new EthnicityVillageService(modelMapper, ethnicityVillageRepository, villageService, ethnicityService);
     }
 
     @Test
