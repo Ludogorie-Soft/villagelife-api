@@ -24,11 +24,12 @@ public interface VillageRepository extends JpaRepository<Village, Long> {
             "WHERE o.type IN :objectTypes " +
             "AND lc.livingConditionName IN :livingConditionNames " +
             "AND p.children = :childrenCount " +
+            "AND ov.distance = 'IN_THE_VILLAGE' " +
+            "AND vl.consents = 'COMPLETELY_AGREED' " +
             "GROUP BY v.name")
     List<Village> searchVillages(@Param("objectTypes") List<String> objectAroundVillageDTOS,
                                  @Param("livingConditionNames") List<String> livingConditionDTOS,
                                  @Param("childrenCount") Children children);
-
 
 
 }
