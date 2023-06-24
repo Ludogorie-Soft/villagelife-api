@@ -5,11 +5,13 @@ import com.example.ludogoriesoft.village.model.Village;
 import com.example.ludogoriesoft.village.model.VillageImage;
 import com.example.ludogoriesoft.village.repositories.VillageImageRepository;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.apache.tika.Tika;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -57,7 +59,7 @@ public class VillageImageService {
         }
         return imagePaths;
     }
-    private String getUploadDirectoryPath() {
+    public String getUploadDirectoryPath() {
         String currentPath = System.getProperty("user.dir");
         return currentPath + File.separator + UPLOAD_DIRECTORY;
     }
