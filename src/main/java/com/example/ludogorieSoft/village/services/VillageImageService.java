@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.apache.tika.Tika;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -68,8 +69,19 @@ public class VillageImageService {
         villageImageRepository.save(villageImage);
         return villageImageDTO;
     }
-
     public VillageImage villageImageDTOToVillageImage(VillageImageDTO villageImageDTO) {
         return modelMapper.map(villageImageDTO, VillageImage.class);
+    }
+    public List<byte[]> getImageBytesFromMultipartFile(List<MultipartFile> images){
+        List<byte[]> imageBytes = new ArrayList<>();
+        for (MultipartFile image : images) {
+            try {
+                byte[] imageData = image.getBytes();
+                imageBytes.add(imageData);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return imageBytes;
     }
 }
