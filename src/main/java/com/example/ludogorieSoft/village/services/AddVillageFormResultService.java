@@ -67,7 +67,6 @@ public class AddVillageFormResultService {
             if(villageAnswerQuestionDTO.getAnswer() != null){
                 villageAnswerQuestionService.createVillageAnswerQuestion(villageAnswerQuestionDTO);
             }
-
         }
     }
     public void createObjectVillagesFromAddVillageFormResult(Long villageId, AddVillageFormResult addVillageFormResult){
