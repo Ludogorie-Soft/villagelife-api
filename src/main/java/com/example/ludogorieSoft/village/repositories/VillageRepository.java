@@ -15,6 +15,15 @@ public interface VillageRepository extends JpaRepository<Village, Long> {
     @Query("SELECT v FROM Village v WHERE v.name LIKE %:keyword%")
     List<Village> findByName(@Param("keyword") String keyword);
 
+
+    @Query("SELECT v FROM Village v JOIN v.region r WHERE r.regionName = :regionName")
+    List<Village> findByRegionName(@Param("regionName") String regionName);
+
+
+    @Query("SELECT v FROM Village v JOIN v.region r WHERE r.regionName = :regionName AND v.name LIKE %:keyword%")
+    List<Village> findByNameAndRegionName(@Param("keyword") String keyword, @Param("regionName") String regionName);
+
+
     @Query(value = "SELECT DISTINCT v FROM Village v " +
             "JOIN v.objectVillages ov " +
             "JOIN ov.object o " +
@@ -30,6 +39,44 @@ public interface VillageRepository extends JpaRepository<Village, Long> {
     List<Village> searchVillages(@Param("objectTypes") List<String> objectAroundVillageDTOS,
                                  @Param("livingConditionNames") List<String> livingConditionDTOS,
                                  @Param("childrenCount") Children children);
+
+
+    @Query(value = "SELECT DISTINCT v FROM Village v " +
+            "JOIN v.villageLivingConditions vl " +
+            "JOIN vl.livingCondition lc " +
+            "JOIN v.population p " +
+            "WHERE lc.livingConditionName IN :livingConditionNames " +
+            "AND p.children = :childrenCount " +
+            "AND vl.consents = 'COMPLETELY_AGREED' " +
+            "GROUP BY v.name")
+    List<Village> searchVillagesByLivingConditionAndChildren(@Param("livingConditionNames") List<String> livingConditionDTOS,
+                                                             @Param("childrenCount") Children children);
+
+
+    @Query(value = "SELECT DISTINCT v FROM Village v " +
+            "JOIN v.objectVillages ov " +
+            "JOIN ov.object o " +
+            "JOIN v.population p " +
+            "WHERE o.type IN :objectTypes " +
+            "AND p.children = :childrenCount " +
+            "AND ov.distance = 'IN_THE_VILLAGE' " +
+            "GROUP BY v.name")
+    List<Village> searchVillagesByObjectAndChildren(@Param("objectTypes") List<String> objectAroundVillageDTOS,
+                                                    @Param("childrenCount") Children children);
+
+
+    @Query(value = "SELECT DISTINCT v FROM Village v " +
+            "JOIN v.objectVillages ov " +
+            "JOIN ov.object o " +
+            "JOIN v.villageLivingConditions vl " +
+            "JOIN vl.livingCondition lc " +
+            "WHERE o.type IN :objectTypes " +
+            "AND lc.livingConditionName IN :livingConditionNames " +
+            "AND ov.distance = 'IN_THE_VILLAGE' " +
+            "AND vl.consents = 'COMPLETELY_AGREED' " +
+            "GROUP BY v.name")
+    List<Village> searchVillagesByObjectAndLivingCondition(@Param("objectTypes") List<String> objectAroundVillageDTOS,
+                                                           @Param("livingConditionNames") List<String> livingConditionDTOS);
 
 
 }
