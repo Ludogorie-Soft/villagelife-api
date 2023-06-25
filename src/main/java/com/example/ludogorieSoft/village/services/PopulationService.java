@@ -1,6 +1,7 @@
 package com.example.ludogoriesoft.village.services;
 
 import com.example.ludogoriesoft.village.dtos.PopulationDTO;
+import com.example.ludogoriesoft.village.enums.NumberOfPopulation;
 import com.example.ludogoriesoft.village.model.Population;
 import com.example.ludogoriesoft.village.repositories.PopulationRepository;
 import com.example.ludogoriesoft.village.exeptions.ApiRequestException;
@@ -36,6 +37,12 @@ public class PopulationService {
         Population savedPopulation = populationRepository.save(population);
         populationDTO.setId(savedPopulation.getId());
         return populationDTO;
+    }
+    public Long createPopulationWhitNullValues() {
+        Population population=new Population();
+        population.setNumberOfPopulation(NumberOfPopulation.UP_TO_10_PEOPLE);
+        populationRepository.save(population);
+        return population.getId();
     }
 
     public PopulationDTO getPopulationById(Long id) {

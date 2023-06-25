@@ -32,6 +32,12 @@ public class PopulationController {
         return new ResponseEntity<>(createdPopulation, HttpStatus.CREATED);
     }
 
+    @PostMapping("/null")
+    public ResponseEntity<Long> createPopulationWhitNullValues() {
+        Long populationID=populationService.createPopulationWhitNullValues();
+        return ResponseEntity.status(HttpStatus.OK).body(populationID);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<PopulationDTO> updatePopulation(@PathVariable("id") Long id,@Valid @RequestBody PopulationDTO populationDTO) {
         return ResponseEntity.ok(populationService.updatePopulation(id, populationDTO));
