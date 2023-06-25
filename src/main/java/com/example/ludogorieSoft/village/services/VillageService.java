@@ -57,6 +57,15 @@ public class VillageService {
         return modelMapper.map(village, VillageDTO.class);
     }
 
+    public Long createVillageWhitNullValues() {
+        Village village = new Village();
+        village.setName("null");
+        village.setPopulationCount(0);
+        village.setStatus(false);
+        villageRepository.save(village);
+        return village.getId();
+    }
+
 
     public VillageDTO updateVillage(Long id, VillageDTO villageDTO) {
         Optional<Village> optionalVillage = villageRepository.findById(id);

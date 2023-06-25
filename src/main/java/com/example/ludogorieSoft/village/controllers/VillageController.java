@@ -35,6 +35,12 @@ public class VillageController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdVillage);
     }
 
+    @PostMapping("/null")
+    public ResponseEntity<Long> createVillageWithNullValues() {
+         Long villageID= villageService.createVillageWhitNullValues();
+        return ResponseEntity.status(HttpStatus.OK).body(villageID);
+    }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<VillageDTO> updateVillage(@PathVariable("id") Long id, @Valid @RequestBody VillageDTO villageDTO) {
