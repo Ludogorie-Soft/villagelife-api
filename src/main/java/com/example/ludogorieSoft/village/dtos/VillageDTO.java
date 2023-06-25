@@ -1,12 +1,13 @@
 package com.example.ludogoriesoft.village.dtos;
 
-import com.example.ludogoriesoft.village.model.Population;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,8 +18,15 @@ public class VillageDTO {
     private String region;
     private int populationCount;
     private PopulationDTO populationDTO;
+
     @DateTimeFormat(pattern = "yyyy-mm-dd")
     private Date dateUpload;
     private boolean status;
+
+    private List<LivingConditionDTO> livingConditions;
+    private List<ObjectAroundVillageDTO> object;
+
+
+
 
 }

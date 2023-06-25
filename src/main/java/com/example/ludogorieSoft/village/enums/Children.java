@@ -3,6 +3,9 @@ package com.example.ludogoriesoft.village.enums;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Getter
 @AllArgsConstructor
 public enum Children {
@@ -14,5 +17,9 @@ public enum Children {
 
     private final String name;
     private final int valueAsNumber;
+
+    public Children getEnumValue() {
+        return this;
+    }
 
 }

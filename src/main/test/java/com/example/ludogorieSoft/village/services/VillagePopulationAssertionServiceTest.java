@@ -1,14 +1,10 @@
 package com.example.ludogoriesoft.village.services;
-
-import com.example.ludogoriesoft.village.dtos.VillageLivingConditionDTO;
 import com.example.ludogoriesoft.village.dtos.VillagePopulationAssertionDTO;
-import com.example.ludogoriesoft.village.enums.Consents;
 import com.example.ludogoriesoft.village.exeptions.ApiRequestException;
 import com.example.ludogoriesoft.village.model.*;
 import com.example.ludogoriesoft.village.repositories.PopulatedAssertionRepository;
 import com.example.ludogoriesoft.village.repositories.VillagePopulationAssertionRepository;
 import com.example.ludogoriesoft.village.repositories.VillageRepository;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,15 +13,11 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.mockito.Mockito.*;
-
 class VillagePopulationAssertionServiceTest {
-
     private VillagePopulationAssertionRepository villagePopulationAssertionRepository;
     private VillageRepository villageRepository;
     private PopulatedAssertionRepository populatedAssertionRepository;
@@ -33,10 +25,8 @@ class VillagePopulationAssertionServiceTest {
     private VillageService villageService;
     @Mock
     private ModelMapper modelMapper;
-
     @InjectMocks
     private VillagePopulationAssertionService villagePopulationAssertionService;
-
     @BeforeEach
     void setUp() {
         villagePopulationAssertionRepository = Mockito.mock(VillagePopulationAssertionRepository.class);
@@ -54,20 +44,16 @@ class VillagePopulationAssertionServiceTest {
                 modelMapper
         );
     }
-
     @Test
     void testGetAllVillagePopulationAssertion() {
         List<VillagePopulationAssertion> populationAssertions = new ArrayList<>();
         populationAssertions.add(new VillagePopulationAssertion());
         populationAssertions.add(new VillagePopulationAssertion());
         Mockito.when(villagePopulationAssertionRepository.findAll()).thenReturn(populationAssertions);
-
         List<VillagePopulationAssertionDTO> result = villagePopulationAssertionService.getAllVillagePopulationAssertion();
-
         Assertions.assertEquals(2, result.size());
     }
-
-//    @Test
+    //    @Test
 //    void testCreateVillagePopulationAssertionDTO() {
 //        VillagePopulationAssertionDTO inputDTO = new VillagePopulationAssertionDTO();
 //        inputDTO.setVillageId(1L);
@@ -96,7 +82,6 @@ class VillagePopulationAssertionServiceTest {
 //        Mockito.verify(populatedAssertionRepository).findById(inputDTO.getPopulatedAssertionId());
 //        Mockito.verify(villagePopulationAssertionRepository).save(Mockito.any());
 //    }
-
     @Test
     void testGetByIDWhenIdExists() {
         Long id = 1L;
@@ -104,47 +89,36 @@ class VillagePopulationAssertionServiceTest {
         VillagePopulationAssertionDTO expectedDTO = new VillagePopulationAssertionDTO();
         Mockito.when(villagePopulationAssertionRepository.findById(id)).thenReturn(Optional.of(populationAssertion));
         Mockito.when(villagePopulationAssertionService.toDTO(populationAssertion)).thenReturn(expectedDTO);
-
         VillagePopulationAssertionDTO result = villagePopulationAssertionService.getByID(id);
-
         Assertions.assertEquals(expectedDTO, result);
         Mockito.verify(villagePopulationAssertionRepository).findById(id);
     }
-
     @Test
     void testGetByIDWhenIdDoesNotExist() {
         Long id = 1L;
         Mockito.when(villagePopulationAssertionRepository.findById(id)).thenReturn(Optional.empty());
-
         Assertions.assertThrows(ApiRequestException.class, () -> {
             villagePopulationAssertionService.getByID(id);
         });
         Mockito.verify(villagePopulationAssertionRepository).findById(id);
     }
-
     @Test
     void testDeleteVillagePopulationAssertionWhenIdExists() {
         Long id = 1L;
         Mockito.doNothing().when(villagePopulationAssertionRepository).deleteById(id);
-
         int result = villagePopulationAssertionService.deleteVillagePopulationAssertion(id);
-
         Assertions.assertEquals(1, result);
         Mockito.verify(villagePopulationAssertionRepository).deleteById(id);
     }
-
     @Test
     void testDeleteVillagePopulationAssertionWhenIdDoesNotExist() {
         Long id = 1L;
         Mockito.doThrow(EmptyResultDataAccessException.class).when(villagePopulationAssertionRepository).deleteById(id);
-
         int result = villagePopulationAssertionService.deleteVillagePopulationAssertion(id);
-
         Assertions.assertEquals(0, result);
         Mockito.verify(villagePopulationAssertionRepository).deleteById(id);
     }
-
-//    @Test
+    //    @Test
 //    void testUpdateVillagePopulationAssertionWhenIdExists() {
 //        Long id = 1L;
 //        VillagePopulationAssertionDTO inputDTO = new VillagePopulationAssertionDTO();
@@ -170,14 +144,11 @@ class VillagePopulationAssertionServiceTest {
 //        Mockito.verify(populatedAssertionService).checkPopulatedAssertion(inputDTO.getPopulatedAssertionId());
 //        Mockito.verify(villagePopulationAssertionRepository).save(Mockito.any(VillagePopulationAssertion.class));
 //    }
-
-
     @Test
     void testUpdateVillagePopulationAssertionWhenIdDoesNotExist() {
         Long id = 1L;
         VillagePopulationAssertionDTO inputDTO = new VillagePopulationAssertionDTO();
         Mockito.when(villagePopulationAssertionRepository.findById(id)).thenReturn(Optional.empty());
-
         Assertions.assertThrows(ApiRequestException.class, () -> {
             villagePopulationAssertionService.updateVillagePopulationAssertion(id, inputDTO);
         });

@@ -10,6 +10,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Data
@@ -40,5 +41,18 @@ public class Village {
     private Administrator admin;
     @CreationTimestamp
     private LocalDateTime dateApproved;
+
+
+
+
+    @OneToMany(mappedBy = "village")
+    private List<ObjectVillage> objectVillages;
+
+
+    @OneToMany(mappedBy = "village")
+    private List<VillageLivingConditions> villageLivingConditions;
+
+
+
 
 }
