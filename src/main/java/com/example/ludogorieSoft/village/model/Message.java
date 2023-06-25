@@ -14,7 +14,7 @@ import javax.validation.constraints.NotBlank;
 @Table(name = "messages")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Messages {
+public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,5 +25,5 @@ public class Messages {
     @Email(message = "Please enter a valid email address!")
     private String email;
     @NotBlank
-    private String message;
+    private String userMessage;
 }
