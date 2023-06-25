@@ -137,23 +137,27 @@ public class VillageService {
 
     public List<VillageDTO> getSearchVillages(List<String> objectAroundVillageDTOS, List<String> livingConditionDTOS, Children children) {
         List<Village> villages = villageRepository.searchVillages(objectAroundVillageDTOS, livingConditionDTOS, children.getEnumValue());
-        return convertToDTO(villages);
+        List<VillageDTO> villageDTOs = convertToDTO(villages);
+        return villageDTOs;
     }
 
     public List<VillageDTO> getSearchVillagesByLivingConditionAndChildren(List<String> livingConditionDTOS, Children children) {
         List<Village> villages = villageRepository.searchVillagesByLivingConditionAndChildren(livingConditionDTOS, children.getEnumValue());
-        return convertToDTOWithoutObject(villages);
+        List<VillageDTO> villageDTOs = convertToDTOWithoutObject(villages);
+        return villageDTOs;
     }
 
     public List<VillageDTO> getSearchVillagesByObjectAndChildren(List<String> objectAroundVillageDTOS, Children children) {
         List<Village> villages = villageRepository.searchVillagesByObjectAndChildren(objectAroundVillageDTOS, children.getEnumValue());
-        return convertToDTOWithoutLivingCondition(villages);
+        List<VillageDTO> villageDTOs = convertToDTOWithoutLivingCondition(villages);
+        return villageDTOs;
     }
 
 
     public List<VillageDTO> getSearchVillagesByObjectAndLivingCondition(List<String> objectAroundVillageDTOS, List<String> livingConditionDTOS) {
         List<Village> villages = villageRepository.searchVillagesByObjectAndLivingCondition(objectAroundVillageDTOS, livingConditionDTOS);
-        return convertToDTOWithoutChildren(villages);
+        List<VillageDTO> villageDTOs = convertToDTOWithoutChildren(villages);
+        return villageDTOs;
     }
 
     private List<VillageDTO> convertToDTOWithoutChildren(List<Village> villages) {
