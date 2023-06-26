@@ -120,8 +120,8 @@ public class VillageService {
     }
 
 
-    public List<VillageDTO> getAllSearchVillagesByNameAndRegionName(String name, String regionName) {
-        List<Village> villages = villageRepository.findByNameAndRegionName(name, regionName);
+    public List<VillageDTO> getAllSearchVillagesByNameAndRegionName(String regionName, String name) {
+        List<Village> villages = villageRepository.findByNameAndRegionName(regionName, name);
         return villages.stream()
                 .map(this::villageToVillageDTO)
                 .toList();
