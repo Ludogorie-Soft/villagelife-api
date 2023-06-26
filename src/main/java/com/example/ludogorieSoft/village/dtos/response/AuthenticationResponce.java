@@ -1,4 +1,4 @@
-package com.example.ludogoriesoft.village.auth;
+package com.example.ludogoriesoft.village.dtos.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

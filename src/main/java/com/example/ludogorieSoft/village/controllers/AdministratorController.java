@@ -2,7 +2,7 @@ package com.example.ludogoriesoft.village.controllers;
 
 import com.example.ludogoriesoft.village.dtos.AdministratorDTO;
 import com.example.ludogoriesoft.village.dtos.AdministratorRequest;
-import com.example.ludogoriesoft.village.dtos.VillageDTO;
+import com.example.ludogoriesoft.village.dtos.response.VillageResponse;
 import com.example.ludogoriesoft.village.model.Administrator;
 import com.example.ludogoriesoft.village.services.AdministratorService;
 import com.example.ludogoriesoft.village.services.VillageService;
@@ -36,8 +36,7 @@ public class AdministratorController {
     public ResponseEntity<AdministratorDTO> createAdministrator(@Valid @RequestBody AdministratorRequest administratorRequest, @RequestHeader("Authorization") String token) {
         return ResponseEntity.ok(administratorService.createAdministrator(administratorRequest));
     }
-
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<AdministratorDTO> updateAdministrator(@PathVariable("id") Long id, @Valid @RequestBody AdministratorRequest administratorRequest) {
         return ResponseEntity.ok(administratorService.updateAdministrator(id, administratorRequest));
     }
@@ -51,7 +50,7 @@ public class AdministratorController {
         return administratorService.findAdminByUsername(username);
     }
     @GetMapping("village")
-    public List<VillageDTO> getAllVillages(@RequestHeader("Authorization") String token){
-       return villageService.getAllVillages();
+    public List<VillageResponse> getAllVillages(@RequestHeader("Authorization") String token){
+       return administratorService.getAllVillagesWithPopulation();
     }
 }

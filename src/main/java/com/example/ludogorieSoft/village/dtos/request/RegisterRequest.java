@@ -1,4 +1,4 @@
-package com.example.ludogoriesoft.village.auth;
+package com.example.ludogoriesoft.village.dtos.request;
 
 import com.example.ludogoriesoft.village.enums.Role;
 import lombok.AllArgsConstructor;

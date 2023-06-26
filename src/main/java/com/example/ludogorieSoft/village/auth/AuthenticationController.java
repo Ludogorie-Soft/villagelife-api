@@ -1,5 +1,8 @@
 package com.example.ludogoriesoft.village.auth;
 
+import com.example.ludogoriesoft.village.dtos.request.AuthenticationRequest;
+import com.example.ludogoriesoft.village.dtos.request.RegisterRequest;
+import com.example.ludogoriesoft.village.dtos.response.AuthenticationResponce;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,15 +18,11 @@ public class AuthenticationController {
     private final AuthenticationService service;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponce> register(
-            @RequestBody RegisterRequest request
-    ){
+    public ResponseEntity<AuthenticationResponce> register(@RequestBody RegisterRequest request){
        return ResponseEntity.ok(service.register(request));
     }
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponce> authenticate(
-            @RequestBody AuthenticationRequest request
-    ){
+    public ResponseEntity<AuthenticationResponce> authenticate(@RequestBody AuthenticationRequest request){
         return ResponseEntity.ok(service.authenticate(request));
     }
 
