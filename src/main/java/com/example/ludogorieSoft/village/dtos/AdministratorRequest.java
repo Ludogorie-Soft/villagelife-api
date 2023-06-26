@@ -16,4 +16,6 @@ public class AdministratorRequest {
     private String password;
     private String mobile;
     private Role role;
+
+    private boolean enabled = true;
 }
