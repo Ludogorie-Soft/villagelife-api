@@ -79,4 +79,26 @@ public interface VillageRepository extends JpaRepository<Village, Long> {
                                                            @Param("livingConditionNames") List<String> livingConditionDTOS);
 
 
+    @Query(value = "SELECT DISTINCT v FROM Village v " +
+            "JOIN v.population p " +
+            "WHERE p.children = :childrenCount " +
+            "GROUP BY v.name")
+    List<Village> searchVillagesByChildrenCount(@Param("childrenCount") Children children);
+
+
+    @Query(value = "SELECT DISTINCT v FROM Village v " +
+            "JOIN v.objectVillages ov " +
+            "JOIN ov.object o " +
+            "WHERE o.type IN :objectTypes " +
+            "AND ov.distance = 'IN_THE_VILLAGE' " +
+            "GROUP BY v.name")
+    List<Village> searchVillagesByObject(@Param("objectTypes") List<String> objectAroundVillageDTOS);
+
+    @Query(value = "SELECT DISTINCT v FROM Village v " +
+            "JOIN v.villageLivingConditions vl " +
+            "JOIN vl.livingCondition lc " +
+            "WHERE lc.livingConditionName IN :livingConditionNames " +
+            "AND vl.consents = 'COMPLETELY_AGREED' " +
+            "GROUP BY v.name")
+    List<Village> searchVillagesByLivingCondition(@Param("livingConditionNames") List<String> livingConditionDTOS);
 }

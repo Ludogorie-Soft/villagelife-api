@@ -77,4 +77,24 @@ public class FilterController {
         return ResponseEntity.ok(villages);
     }
 
+    @GetMapping("/searchVillagesByChildrenCount")
+    public ResponseEntity<List<VillageDTO>> searchVillagesByChildrenCount(@RequestParam("children") String children) {
+        Children childrenEnum = Children.valueOf(children);
+        List<VillageDTO> villages = villageSearchService.getSearchVillagesByChildrenCount(childrenEnum);
+        return ResponseEntity.ok(villages);
+    }
+
+    @GetMapping("/searchVillagesByObject")
+    public ResponseEntity<List<VillageDTO>> searchVillagesByObject(
+            @RequestParam("objectAroundVillageDTOS") List<String> objectAroundVillageDTOS) {
+        List<VillageDTO> villages = villageSearchService.getSearchVillagesByObject(objectAroundVillageDTOS);
+        return ResponseEntity.ok(villages);
+    }
+
+    @GetMapping("/searchVillagesByLivingCondition")
+    public ResponseEntity<List<VillageDTO>> searchVillagesByLivingCondition(@RequestParam("livingConditionDTOS") List<String> livingConditionDTOS) {
+        List<VillageDTO> villages = villageSearchService.getSearchVillagesByLivingCondition(livingConditionDTOS);
+        return ResponseEntity.ok(villages);
+    }
+
 }

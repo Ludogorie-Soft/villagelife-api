@@ -160,6 +160,74 @@ public class VillageService {
         return villageDTOs;
     }
 
+    public List<VillageDTO> getSearchVillagesByChildrenCount(Children children) {
+        List<Village> villages = villageRepository.searchVillagesByChildrenCount(children.getEnumValue());
+        List<VillageDTO> villageDTOs = convertToDTOChildren(villages);
+        return villageDTOs;
+    }
+
+    public List<VillageDTO> getSearchVillagesByObject(List<String> objectAroundVillageDTOS) {
+        List<Village> villages = villageRepository.searchVillagesByObject(objectAroundVillageDTOS);
+        List<VillageDTO> villageDTOs = convertToDTOObject(villages);
+        return villageDTOs;
+    }
+
+    public List<VillageDTO> getSearchVillagesByLivingCondition(List<String> livingConditionDTOS) {
+        List<Village> villages = villageRepository.searchVillagesByLivingCondition(livingConditionDTOS);
+        List<VillageDTO> villageDTOs = convertToDTOLivingCondition(villages);
+        return villageDTOs;
+    }
+
+
+    private List<VillageDTO> convertToDTOObject(List<Village> villages) {
+        List<VillageDTO> villageDTOs = new ArrayList<>();
+
+        for (Village village : villages) {
+            VillageDTO villageDTO = new VillageDTO();
+            villageDTO.setId(village.getId());
+            villageDTO.setName(village.getName());
+            villageDTO.setRegion(String.valueOf(village.getRegion().getRegionName()));
+
+            villageDTO.setObject(convertToObjectAroundVillageDTOList(village.getObjectVillages()));
+
+            villageDTOs.add(villageDTO);
+        }
+
+        return villageDTOs;
+    }
+
+    private List<VillageDTO> convertToDTOLivingCondition(List<Village> villages) {
+        List<VillageDTO> villageDTOs = new ArrayList<>();
+
+        for (Village village : villages) {
+            VillageDTO villageDTO = new VillageDTO();
+            villageDTO.setId(village.getId());
+            villageDTO.setName(village.getName());
+            villageDTO.setRegion(String.valueOf(village.getRegion().getRegionName()));
+
+            villageDTO.setLivingConditions(convertToLivingConditionDTOList(village.getVillageLivingConditions()));
+
+            villageDTOs.add(villageDTO);
+        }
+
+        return villageDTOs;
+    }
+    private List<VillageDTO> convertToDTOChildren(List<Village> villages) {
+        List<VillageDTO> villageDTOs = new ArrayList<>();
+
+        for (Village village : villages) {
+            VillageDTO villageDTO = new VillageDTO();
+            villageDTO.setId(village.getId());
+            villageDTO.setName(village.getName());
+            villageDTO.setRegion(String.valueOf(village.getRegion().getRegionName()));
+
+            villageDTO.setPopulationDTO(convertToPopulationDTO(village.getPopulation().getChildren().getEnumValue()));
+
+            villageDTOs.add(villageDTO);
+        }
+
+        return villageDTOs;
+    }
     private List<VillageDTO> convertToDTOWithoutChildren(List<Village> villages) {
         List<VillageDTO> villageDTOs = new ArrayList<>();
 
