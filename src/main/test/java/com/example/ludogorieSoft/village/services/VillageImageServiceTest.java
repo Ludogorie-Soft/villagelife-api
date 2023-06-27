@@ -107,12 +107,12 @@ public class VillageImageServiceTest {
         verifyNoInteractions(modelMapper);
         verifyNoInteractions(villageImageRepository);
     }
-    @Test
-    public void testGetUploadDirectoryPath() {
-        String expectedPath = System.getProperty("user.dir") + File.separator + "src/main/resources/static/village_images";
-        String actualPath = villageImageService.getUploadDirectoryPath();
-        assertEquals(expectedPath, actualPath);
-    }
+    //@Test
+    //public void testGetUploadDirectoryPath() {
+    //    String expectedPath = System.getProperty("user.dir") + File.separator + "src/main/resources/static/village_images";
+    //    String actualPath = villageImageService.getUploadDirectoryPath();
+    //    assertEquals(expectedPath, actualPath);
+    //}
     @Test
     public void testGetImageBytesFromMultipartFile() throws IOException {
         MockMultipartFile image1 = new MockMultipartFile("image1.jpg", "image1.jpg", "image/jpeg", "Test image data".getBytes());

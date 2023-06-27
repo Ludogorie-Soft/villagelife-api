@@ -5,13 +5,12 @@ import com.example.ludogoriesoft.village.model.Village;
 import com.example.ludogoriesoft.village.model.VillageImage;
 import com.example.ludogoriesoft.village.repositories.VillageImageRepository;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.apache.tika.Tika;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -23,9 +22,9 @@ import java.util.UUID;
 @AllArgsConstructor
 public class VillageImageService {
     private final VillageImageRepository villageImageRepository;
-    private static final String UPLOAD_DIRECTORY = "src/main/resources/static/village_images";
     private final ModelMapper modelMapper;
     private final VillageService villageService;
+    private static final String UPLOAD_DIRECTORY = "src/main/resources/static/village_images";
 
     public List<String> createImagePaths(List<byte[]> imageBytes, Long villageId) {
         List<String> imagePaths = new ArrayList<>();
@@ -63,7 +62,6 @@ public class VillageImageService {
         String currentPath = System.getProperty("user.dir");
         return currentPath + File.separator + UPLOAD_DIRECTORY;
     }
-
     public VillageImageDTO createVillageImageDTO(VillageImageDTO villageImageDTO) {
         VillageImage villageImage = villageImageDTOToVillageImage(villageImageDTO);
         Village village = villageService.checkVillage(villageImageDTO.getVillageId());
