@@ -1,6 +1,6 @@
-package com.example.ludogorieSoft.village.model;
+package com.example.ludogoriesoft.village.model;
 
-import com.example.ludogorieSoft.village.enums.Consents;
+import com.example.ludogoriesoft.village.enums.Consents;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -1,14 +1,17 @@
-package com.example.ludogorieSoft.village.services;
+package com.example.ludogoriesoft.village.services;
 
-import com.example.ludogorieSoft.village.dtos.VillageLivingConditionDTO;
-import com.example.ludogorieSoft.village.dtos.VillagePopulationAssertionDTO;
-import com.example.ludogorieSoft.village.enums.Consents;
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
-import com.example.ludogorieSoft.village.model.*;
-import com.example.ludogorieSoft.village.repositories.PopulatedAssertionRepository;
-import com.example.ludogorieSoft.village.repositories.VillagePopulationAssertionRepository;
-import com.example.ludogorieSoft.village.repositories.VillageRepository;
+import com.example.ludogoriesoft.village.dtos.VillageLivingConditionDTO;
+import com.example.ludogoriesoft.village.dtos.VillagePopulationAssertionDTO;
+import com.example.ludogoriesoft.village.enums.Consents;
+import com.example.ludogoriesoft.village.exeptions.ApiRequestException;
+import com.example.ludogoriesoft.village.model.*;
+import com.example.ludogoriesoft.village.repositories.PopulatedAssertionRepository;
+import com.example.ludogoriesoft.village.repositories.VillagePopulationAssertionRepository;
+import com.example.ludogoriesoft.village.repositories.VillageRepository;
 
+import com.example.ludogoriesoft.village.services.PopulatedAssertionService;
+import com.example.ludogoriesoft.village.services.VillagePopulationAssertionService;
+import com.example.ludogoriesoft.village.services.VillageService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

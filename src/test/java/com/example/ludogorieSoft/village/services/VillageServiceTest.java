@@ -1,9 +1,10 @@
-package com.example.ludogorieSoft.village.services;
+package com.example.ludogoriesoft.village.services;
 
-import com.example.ludogorieSoft.village.dtos.VillageDTO;
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
-import com.example.ludogorieSoft.village.model.Village;
-import com.example.ludogorieSoft.village.repositories.VillageRepository;
+import com.example.ludogoriesoft.village.dtos.VillageDTO;
+import com.example.ludogoriesoft.village.exeptions.ApiRequestException;
+import com.example.ludogoriesoft.village.model.Village;
+import com.example.ludogoriesoft.village.repositories.VillageRepository;
+import com.example.ludogoriesoft.village.dtos.VillageDTO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,7 +28,7 @@ class VillageServiceTest {
     }
 
     @InjectMocks
-    private VillageService villageService;
+    private com.example.ludogoriesoft.village.services.VillageService villageService;
     @Mock
     private VillageRepository villageRepository;
     @Mock

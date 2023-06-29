@@ -1,8 +1,8 @@
-package com.example.ludogorieSoft.village.controllers;
+package com.example.ludogoriesoft.village.controllers;
 
-import com.example.ludogorieSoft.village.dtos.GroundCategoryDTO;
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
-import com.example.ludogorieSoft.village.services.GroundCategoryService;
+import com.example.ludogoriesoft.village.dtos.GroundCategoryDTO;
+import com.example.ludogoriesoft.village.exeptions.ApiRequestException;
+import com.example.ludogoriesoft.village.services.GroundCategoryService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

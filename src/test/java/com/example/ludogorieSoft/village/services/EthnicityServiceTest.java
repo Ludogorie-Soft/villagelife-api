@@ -1,9 +1,9 @@
-package com.example.ludogorieSoft.village.services;
+package com.example.ludogoriesoft.village.services;
 
-import com.example.ludogorieSoft.village.dtos.EthnicityDTO;
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
-import com.example.ludogorieSoft.village.model.Ethnicity;
-import com.example.ludogorieSoft.village.repositories.EthnicityRepository;
+import com.example.ludogoriesoft.village.dtos.EthnicityDTO;
+import com.example.ludogoriesoft.village.exeptions.ApiRequestException;
+import com.example.ludogoriesoft.village.model.Ethnicity;
+import com.example.ludogoriesoft.village.repositories.EthnicityRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,7 +34,7 @@ class EthnicityServiceTest {
     private ModelMapper modelMapper;
 
     @InjectMocks
-    private com.example.ludogorieSoft.village.services.EthnicityService ethnicityService;
+    private com.example.ludogoriesoft.village.services.EthnicityService ethnicityService;
 
 //    @Test
 //    void testGetAllEthnicities() {

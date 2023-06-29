@@ -1,8 +1,8 @@
-package com.example.ludogorieSoft.village.controllers;
+package com.example.ludogoriesoft.village.controllers;
 
-import com.example.ludogorieSoft.village.dtos.EthnicityVillageDTO;
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
-import com.example.ludogorieSoft.village.services.EthnicityVillageService;
+import com.example.ludogoriesoft.village.dtos.EthnicityVillageDTO;
+import com.example.ludogoriesoft.village.exeptions.ApiRequestException;
+import com.example.ludogoriesoft.village.services.EthnicityVillageService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;

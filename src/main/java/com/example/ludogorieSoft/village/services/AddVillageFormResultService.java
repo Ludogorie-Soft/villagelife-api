@@ -1,6 +1,6 @@
-package com.example.ludogorieSoft.village.services;
+package com.example.ludogoriesoft.village.services;
 
-import com.example.ludogorieSoft.village.dtos.*;
+import com.example.ludogoriesoft.village.dtos.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +25,7 @@ public class AddVillageFormResultService {
         PopulationDTO savedPopulation = populationService.createPopulation(populationDTO);
 
         VillageDTO villageDTO = addVillageFormResult.getVillageDTO();
-        villageDTO.setPopulationDTO(savedPopulation);
+//        villageDTO.setPopulationDTO(savedPopulation);
         VillageDTO savedVillage = villageService.createVillage(villageDTO);
 
         VillageGroundCategoryDTO villageGroundCategoryDTO = new VillageGroundCategoryDTO();

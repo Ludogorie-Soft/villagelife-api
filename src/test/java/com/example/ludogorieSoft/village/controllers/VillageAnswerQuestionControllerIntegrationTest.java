@@ -1,7 +1,8 @@
-package com.example.ludogorieSoft.village.controllers;
+package com.example.ludogoriesoft.village.controllers;
 
-import com.example.ludogorieSoft.village.dtos.VillageAnswerQuestionDTO;
-import com.example.ludogorieSoft.village.services.VillageAnswerQuestionService;
+import com.example.ludogoriesoft.village.dtos.VillageAnswerQuestionDTO;
+import com.example.ludogoriesoft.village.services.VillageAnswerQuestionService;
+import com.example.ludogoriesoft.village.controllers.VillageAnswerQuestionController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;

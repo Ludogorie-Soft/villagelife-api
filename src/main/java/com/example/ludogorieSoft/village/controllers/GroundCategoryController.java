@@ -1,7 +1,7 @@
-package com.example.ludogorieSoft.village.controllers;
+package com.example.ludogoriesoft.village.controllers;
 
-import com.example.ludogorieSoft.village.dtos.GroundCategoryDTO;
-import com.example.ludogorieSoft.village.services.GroundCategoryService;
+import com.example.ludogoriesoft.village.dtos.GroundCategoryDTO;
+import com.example.ludogoriesoft.village.services.GroundCategoryService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

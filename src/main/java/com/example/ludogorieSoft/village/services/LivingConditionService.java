@@ -1,9 +1,9 @@
-package com.example.ludogorieSoft.village.services;
+package com.example.ludogoriesoft.village.services;
 
-import com.example.ludogorieSoft.village.dtos.LivingConditionDTO;
-import com.example.ludogorieSoft.village.model.LivingCondition;
-import com.example.ludogorieSoft.village.repositories.LivingConditionRepository;
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
+import com.example.ludogoriesoft.village.dtos.LivingConditionDTO;
+import com.example.ludogoriesoft.village.model.LivingCondition;
+import com.example.ludogoriesoft.village.repositories.LivingConditionRepository;
+import com.example.ludogoriesoft.village.exeptions.ApiRequestException;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang.StringUtils;
 import org.modelmapper.ModelMapper;

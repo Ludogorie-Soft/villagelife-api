@@ -1,8 +1,9 @@
-package com.example.ludogorieSoft.village.controllers;
+package com.example.ludogoriesoft.village.controllers;
 
-import com.example.ludogorieSoft.village.dtos.PopulatedAssertionDTO;
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
-import com.example.ludogorieSoft.village.services.PopulatedAssertionService;
+import com.example.ludogoriesoft.village.dtos.PopulatedAssertionDTO;
+import com.example.ludogoriesoft.village.exeptions.ApiRequestException;
+import com.example.ludogoriesoft.village.services.PopulatedAssertionService;
+import com.example.ludogoriesoft.village.controllers.PopulatedAssertionController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
