@@ -1,29 +1,38 @@
 package com.example.ludogoriesoft.village.services;
 
-import com.example.ludogoriesoft.village.dtos.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+
+import com.example.ludogoriesoft.village.dtos.AddVillageFormResult;
+import com.example.ludogoriesoft.village.dtos.EthnicityVillageDTO;
+import com.example.ludogoriesoft.village.dtos.GroundCategoryDTO;
+import com.example.ludogoriesoft.village.dtos.ObjectVillageDTO;
+import com.example.ludogoriesoft.village.dtos.QuestionDTO;
+import com.example.ludogoriesoft.village.dtos.VillageAnswerQuestionDTO;
+import com.example.ludogoriesoft.village.dtos.VillageGroundCategoryDTO;
+import com.example.ludogoriesoft.village.dtos.VillageLivingConditionDTO;
+import com.example.ludogoriesoft.village.dtos.VillagePopulationAssertionDTO;
 import com.example.ludogoriesoft.village.enums.Consents;
 import com.example.ludogoriesoft.village.enums.Distance;
-import org.junit.Test;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.runner.RunWith;
-import org.mockito.*;
-import org.mockito.junit.MockitoJUnitRunner;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-@RunWith(MockitoJUnitRunner.class)
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+@ExtendWith(MockitoExtension.class)
 public class AddVillageFormResultServiceTest {
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
     @InjectMocks
     AddVillageFormResultService addVillageFormResultService;
     @Mock
