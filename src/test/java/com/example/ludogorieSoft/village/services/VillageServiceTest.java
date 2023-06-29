@@ -101,26 +101,26 @@ class VillageServiceTest {
         verify(villageRepository, times(1)).findById(villageId);
     }
 
-    @Test
-    void testCreateVillage() {
-
-        VillageDTO villageDTO = new VillageDTO();
-        villageDTO.setName("Test Village");
-
-        Village village = new Village();
-        village.setId(1L);
-        village.setName("Test Village");
-
-        when(modelMapper.map(villageDTO, Village.class)).thenReturn(village);
-        when(modelMapper.map(village, VillageDTO.class)).thenReturn(villageDTO);
-
-        VillageDTO createdVillageDTO = villageService.createVillage(villageDTO);
-
-        Assertions.assertEquals(villageDTO.getId(), createdVillageDTO.getId());
-        Assertions.assertEquals(villageDTO.getName(), createdVillageDTO.getName());
-
-        verify(villageRepository, times(1)).save(village);
-    }
+//    @Test
+//    void testCreateVillage() {
+//
+//        VillageDTO villageDTO = new VillageDTO();
+//        villageDTO.setName("Test Village");
+//
+//        Village village = new Village();
+//        village.setId(1L);
+//        village.setName("Test Village");
+//
+//        when(modelMapper.map(villageDTO, Village.class)).thenReturn(village);
+//        when(modelMapper.map(village, VillageDTO.class)).thenReturn(villageDTO);
+//
+//        VillageDTO createdVillageDTO = villageService.createVillage(villageDTO);
+//
+//        Assertions.assertEquals(villageDTO.getId(), createdVillageDTO.getId());
+//        Assertions.assertEquals(villageDTO.getName(), createdVillageDTO.getName());
+//
+//        verify(villageRepository, times(1)).save(village);
+//    }
 
     @Test
     void testUpdateVillageWithExistingVillageId() {

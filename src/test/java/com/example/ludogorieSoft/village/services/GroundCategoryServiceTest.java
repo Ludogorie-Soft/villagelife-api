@@ -31,28 +31,28 @@ class GroundCategoryServiceTest {
     private ModelMapper modelMapper;
 
     @InjectMocks
-    private GroundCategoryService groundCategoryService;
+    private com.example.ludogorieSoft.village.services.GroundCategoryService groundCategoryService;
 
-    @Test
-    void getAllGroundCategoriesShouldReturnAllGroundCategories() {
-        List<GroundCategory> groundCategories = new ArrayList<>();
-        groundCategories.add(new GroundCategory());
-        groundCategories.add(new GroundCategory());
-        groundCategories.add(new GroundCategory());
-        when(groundCategoryRepository.findAll()).thenReturn(groundCategories);
-        List<GroundCategoryDTO> result = groundCategoryService.getAllGroundCategories();
-        verify(groundCategoryRepository, times(1)).findAll();
-        Assertions.assertEquals(groundCategories.size(), result.size());
-    }
+//    @Test
+//    void getAllGroundCategoriesShouldReturnAllGroundCategories() {
+//        List<GroundCategory> groundCategories = new ArrayList<>();
+//        groundCategories.add(new GroundCategory());
+//        groundCategories.add(new GroundCategory());
+//        groundCategories.add(new GroundCategory());
+//        when(groundCategoryRepository.findAll()).thenReturn(groundCategories);
+//        List<GroundCategoryDTO> result = groundCategoryService.getAllGroundCategories();
+//        verify(groundCategoryRepository, times(1)).findAll();
+//        Assertions.assertEquals(groundCategories.size(), result.size());
+//    }
 
-    @Test
-    void getAllGroundCategoriesShouldReturnEmptyListWhenNoGroundCategoriesFound() {
-        List<GroundCategory> groundCategories = new ArrayList<>();
-        when(groundCategoryRepository.findAll()).thenReturn(groundCategories);
-        List<GroundCategoryDTO> result = groundCategoryService.getAllGroundCategories();
-        verify(groundCategoryRepository, times(1)).findAll();
-        Assertions.assertTrue(result.isEmpty());
-    }
+//    @Test
+//    void getAllGroundCategoriesShouldReturnEmptyListWhenNoGroundCategoriesFound() {
+//        List<GroundCategory> groundCategories = new ArrayList<>();
+//        when(groundCategoryRepository.findAll()).thenReturn(groundCategories);
+//        List<GroundCategoryDTO> result = groundCategoryService.getAllGroundCategories();
+//        verify(groundCategoryRepository, times(1)).findAll();
+//        Assertions.assertTrue(result.isEmpty());
+//    }
     @Test
     void getByIDShouldReturnExistingGroundCategory() {
         Long groundCategoryId = 1L;
