@@ -1,29 +1,8 @@
-package com.example.ludogoriesoft.village.controllers;
+package com.example.ludogorieSoft.village.controllers;
 
-import com.example.ludogoriesoft.village.dtos.VillageDTO;
-import com.example.ludogoriesoft.village.model.Population;
-import com.example.ludogoriesoft.village.services.VillageService;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 //@WebMvcTest(VillageController.class)
 @AutoConfigureMockMvc

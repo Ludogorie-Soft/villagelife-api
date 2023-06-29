@@ -1,9 +1,9 @@
-package com.example.ludogoriesoft.village.services;
+package com.example.ludogorieSoft.village.services;
 
-import com.example.ludogoriesoft.village.dtos.GroundCategoryDTO;
-import com.example.ludogoriesoft.village.exeptions.ApiRequestException;
-import com.example.ludogoriesoft.village.model.GroundCategory;
-import com.example.ludogoriesoft.village.repositories.GroundCategoryRepository;
+import com.example.ludogorieSoft.village.dtos.GroundCategoryDTO;
+import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
+import com.example.ludogorieSoft.village.model.GroundCategory;
+import com.example.ludogorieSoft.village.repositories.GroundCategoryRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,8 +12,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
@@ -31,7 +29,7 @@ class GroundCategoryServiceTest {
     private ModelMapper modelMapper;
 
     @InjectMocks
-    private com.example.ludogoriesoft.village.services.GroundCategoryService groundCategoryService;
+    private com.example.ludogorieSoft.village.services.GroundCategoryService groundCategoryService;
 
 //    @Test
 //    void getAllGroundCategoriesShouldReturnAllGroundCategories() {

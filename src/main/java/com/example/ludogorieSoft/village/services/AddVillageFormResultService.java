@@ -1,6 +1,6 @@
-package com.example.ludogoriesoft.village.services;
+package com.example.ludogorieSoft.village.services;
 
-import com.example.ludogoriesoft.village.dtos.*;
+import com.example.ludogorieSoft.village.dtos.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -1,9 +1,9 @@
-package com.example.ludogoriesoft.village.services;
+package com.example.ludogorieSoft.village.services;
 
-import com.example.ludogoriesoft.village.dtos.ObjectAroundVillageDTO;
-import com.example.ludogoriesoft.village.exeptions.ApiRequestException;
-import com.example.ludogoriesoft.village.model.ObjectAroundVillage;
-import com.example.ludogoriesoft.village.repositories.ObjectAroundVillageRepository;
+import com.example.ludogorieSoft.village.dtos.ObjectAroundVillageDTO;
+import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
+import com.example.ludogorieSoft.village.model.ObjectAroundVillage;
+import com.example.ludogorieSoft.village.repositories.ObjectAroundVillageRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,8 +12,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -24,7 +22,7 @@ class ObjectAroundVillageServiceTest {
     private ObjectAroundVillageRepository objectAroundVillageRepository;
 
     @InjectMocks
-    private com.example.ludogoriesoft.village.services.ObjectAroundVillageService objectAroundVillageService;
+    private com.example.ludogorieSoft.village.services.ObjectAroundVillageService objectAroundVillageService;
     @Mock
     private ModelMapper modelMapper;
 
@@ -33,7 +31,7 @@ class ObjectAroundVillageServiceTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         ModelMapper modelMapper = new ModelMapper();
-        objectAroundVillageService = new com.example.ludogoriesoft.village.services.ObjectAroundVillageService(objectAroundVillageRepository, modelMapper);
+        objectAroundVillageService = new com.example.ludogorieSoft.village.services.ObjectAroundVillageService(objectAroundVillageRepository, modelMapper);
     }
 
 //    @Test

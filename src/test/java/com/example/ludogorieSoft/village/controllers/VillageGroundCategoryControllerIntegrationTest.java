@@ -1,8 +1,7 @@
-package com.example.ludogoriesoft.village.controllers;
+package com.example.ludogorieSoft.village.controllers;
 
-import com.example.ludogoriesoft.village.dtos.VillageGroundCategoryDTO;
-import com.example.ludogoriesoft.village.services.VillageGroundCategoryService;
-import com.example.ludogoriesoft.village.controllers.VillageGroundCategoryController;
+import com.example.ludogorieSoft.village.dtos.VillageGroundCategoryDTO;
+import com.example.ludogorieSoft.village.services.VillageGroundCategoryService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;

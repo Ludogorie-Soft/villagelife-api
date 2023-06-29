@@ -1,15 +1,12 @@
-package com.example.ludogoriesoft.village.services;
+package com.example.ludogorieSoft.village.services;
 
-import com.example.ludogoriesoft.village.dtos.VillageLivingConditionDTO;
-import com.example.ludogoriesoft.village.enums.Consents;
-import com.example.ludogoriesoft.village.exeptions.ApiRequestException;
-import com.example.ludogoriesoft.village.model.LivingCondition;
-import com.example.ludogoriesoft.village.model.Village;
-import com.example.ludogoriesoft.village.model.VillageLivingConditions;
-import com.example.ludogoriesoft.village.repositories.VillageLivingConditionRepository;
-import com.example.ludogoriesoft.village.services.LivingConditionService;
-import com.example.ludogoriesoft.village.services.VillageLivingConditionService;
-import com.example.ludogoriesoft.village.services.VillageService;
+import com.example.ludogorieSoft.village.dtos.VillageLivingConditionDTO;
+import com.example.ludogorieSoft.village.enums.Consents;
+import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
+import com.example.ludogorieSoft.village.model.LivingCondition;
+import com.example.ludogorieSoft.village.model.Village;
+import com.example.ludogorieSoft.village.model.VillageLivingConditions;
+import com.example.ludogorieSoft.village.repositories.VillageLivingConditionRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

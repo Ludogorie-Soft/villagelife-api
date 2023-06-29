@@ -1,9 +1,9 @@
-package com.example.ludogoriesoft.village.services;
+package com.example.ludogorieSoft.village.services;
 
-import com.example.ludogoriesoft.village.dtos.EthnicityDTO;
-import com.example.ludogoriesoft.village.model.Ethnicity;
-import com.example.ludogoriesoft.village.repositories.EthnicityRepository;
-import com.example.ludogoriesoft.village.exeptions.ApiRequestException;
+import com.example.ludogorieSoft.village.dtos.EthnicityDTO;
+import com.example.ludogorieSoft.village.model.Ethnicity;
+import com.example.ludogorieSoft.village.repositories.EthnicityRepository;
+import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang.StringUtils;
 import org.modelmapper.ModelMapper;

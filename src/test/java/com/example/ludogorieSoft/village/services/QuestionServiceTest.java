@@ -1,11 +1,9 @@
-package com.example.ludogoriesoft.village.services;
+package com.example.ludogorieSoft.village.services;
 
-import com.example.ludogoriesoft.village.dtos.QuestionDTO;
-import com.example.ludogoriesoft.village.exeptions.ApiRequestException;
-import com.example.ludogoriesoft.village.model.Question;
-import com.example.ludogoriesoft.village.repositories.QuestionRepository;
-import com.example.ludogoriesoft.village.services.QuestionService;
-import org.junit.jupiter.api.Assertions;
+import com.example.ludogorieSoft.village.dtos.QuestionDTO;
+import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
+import com.example.ludogorieSoft.village.model.Question;
+import com.example.ludogorieSoft.village.repositories.QuestionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -14,8 +12,6 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -29,7 +25,7 @@ class QuestionServiceTest {
     private QuestionRepository questionRepository;
 
     @InjectMocks
-    private com.example.ludogoriesoft.village.services.QuestionService questionService;
+    private com.example.ludogorieSoft.village.services.QuestionService questionService;
 
     @Mock
     private ModelMapper modelMapper;
@@ -100,7 +96,7 @@ class QuestionServiceTest {
     void createQuestionWhenQuestionDoesNotExistShouldCreateQuestion() {
         QuestionRepository questionRepository = Mockito.mock(QuestionRepository.class);
         ModelMapper modelMapper = new ModelMapper();
-        com.example.ludogoriesoft.village.services.QuestionService questionService = new QuestionService(questionRepository, modelMapper);
+        com.example.ludogorieSoft.village.services.QuestionService questionService = new QuestionService(questionRepository, modelMapper);
         String createdQuestion = "New question?";
         QuestionDTO questionDTO = new QuestionDTO();
         questionDTO.setQuestion(createdQuestion);

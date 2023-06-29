@@ -1,9 +1,9 @@
-package com.example.ludogoriesoft.village.services;
+package com.example.ludogorieSoft.village.services;
 
-import com.example.ludogoriesoft.village.dtos.EthnicityDTO;
-import com.example.ludogoriesoft.village.exeptions.ApiRequestException;
-import com.example.ludogoriesoft.village.model.Ethnicity;
-import com.example.ludogoriesoft.village.repositories.EthnicityRepository;
+import com.example.ludogorieSoft.village.dtos.EthnicityDTO;
+import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
+import com.example.ludogorieSoft.village.model.Ethnicity;
+import com.example.ludogorieSoft.village.repositories.EthnicityRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,8 +13,6 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -34,7 +32,7 @@ class EthnicityServiceTest {
     private ModelMapper modelMapper;
 
     @InjectMocks
-    private com.example.ludogoriesoft.village.services.EthnicityService ethnicityService;
+    private com.example.ludogorieSoft.village.services.EthnicityService ethnicityService;
 
 //    @Test
 //    void testGetAllEthnicities() {

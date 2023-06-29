@@ -1,16 +1,13 @@
-package com.example.ludogoriesoft.village.services;
+package com.example.ludogorieSoft.village.services;
 
-import com.example.ludogoriesoft.village.dtos.VillageAnswerQuestionDTO;
-import com.example.ludogoriesoft.village.exeptions.ApiRequestException;
-import com.example.ludogoriesoft.village.model.Question;
-import com.example.ludogoriesoft.village.model.Village;
-import com.example.ludogoriesoft.village.model.VillageAnswerQuestion;
-import com.example.ludogoriesoft.village.repositories.QuestionRepository;
-import com.example.ludogoriesoft.village.repositories.VillageAnswerQuestionRepository;
-import com.example.ludogoriesoft.village.repositories.VillageRepository;
-import com.example.ludogoriesoft.village.services.QuestionService;
-import com.example.ludogoriesoft.village.services.VillageAnswerQuestionService;
-import com.example.ludogoriesoft.village.services.VillageService;
+import com.example.ludogorieSoft.village.dtos.VillageAnswerQuestionDTO;
+import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
+import com.example.ludogorieSoft.village.model.Question;
+import com.example.ludogorieSoft.village.model.Village;
+import com.example.ludogorieSoft.village.model.VillageAnswerQuestion;
+import com.example.ludogorieSoft.village.repositories.QuestionRepository;
+import com.example.ludogorieSoft.village.repositories.VillageAnswerQuestionRepository;
+import com.example.ludogorieSoft.village.repositories.VillageRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

@@ -1,8 +1,7 @@
-package com.example.ludogoriesoft.village.controllers;
+package com.example.ludogorieSoft.village.controllers;
 
-import com.example.ludogoriesoft.village.dtos.VillagePopulationAssertionDTO;
-import com.example.ludogoriesoft.village.services.VillagePopulationAssertionService;
-import com.example.ludogoriesoft.village.controllers.VillagePopulationAssertionController;
+import com.example.ludogorieSoft.village.dtos.VillagePopulationAssertionDTO;
+import com.example.ludogorieSoft.village.services.VillagePopulationAssertionService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -15,7 +14,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static com.example.ludogoriesoft.village.enums.Consents.*;
+import static com.example.ludogorieSoft.village.enums.Consents.COMPLETELY_AGREED;
+import static com.example.ludogorieSoft.village.enums.Consents.DISAGREE;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
