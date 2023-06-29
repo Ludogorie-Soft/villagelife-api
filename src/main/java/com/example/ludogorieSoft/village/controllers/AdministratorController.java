@@ -1,7 +1,7 @@
 package com.example.ludogoriesoft.village.controllers;
 
 import com.example.ludogoriesoft.village.dtos.AdministratorDTO;
-import com.example.ludogoriesoft.village.dtos.AdministratorRequest;
+import com.example.ludogoriesoft.village.dtos.request.AdministratorRequest;
 import com.example.ludogoriesoft.village.dtos.response.VillageResponse;
 import com.example.ludogoriesoft.village.model.Administrator;
 import com.example.ludogoriesoft.village.services.AdministratorService;

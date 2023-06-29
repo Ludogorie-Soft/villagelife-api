@@ -2,7 +2,7 @@ package com.example.ludogoriesoft.village.services;
 
 
 import com.example.ludogoriesoft.village.dtos.AdministratorDTO;
-import com.example.ludogoriesoft.village.dtos.AdministratorRequest;
+import com.example.ludogoriesoft.village.dtos.request.AdministratorRequest;
 import com.example.ludogoriesoft.village.dtos.response.VillageResponse;
 import com.example.ludogoriesoft.village.exeptions.ApiRequestException;
 import com.example.ludogoriesoft.village.model.Administrator;
@@ -25,12 +25,15 @@ public class AdministratorService {
     private final AdministratorRepository administratorRepository;
     private final ModelMapper modelMapper;
     private final VillageRepository villageRepository;
-    public AdministratorDTO administratorToAdministratorDTO(Administrator administrator){
+
+    public AdministratorDTO administratorToAdministratorDTO(Administrator administrator) {
         return modelMapper.map(administrator, AdministratorDTO.class);
     }
-    public Administrator administratorRequestToAdministrator(AdministratorRequest administratorRequest){
+
+    public Administrator administratorRequestToAdministrator(AdministratorRequest administratorRequest) {
         return modelMapper.map(administratorRequest, Administrator.class);
     }
+
     public List<AdministratorDTO> getAllAdministrators() {
         List<Administrator> administrators = administratorRepository.findAll();
         return administrators
@@ -38,6 +41,7 @@ public class AdministratorService {
                 .map(this::administratorToAdministratorDTO)
                 .toList();
     }
+
     public AdministratorDTO createAdministrator(AdministratorRequest administratorRequest) {
         if (administratorRepository.existsByUsername(administratorRequest.getUsername())) {
             throw new ApiRequestException("Administrator already exists");
@@ -49,6 +53,7 @@ public class AdministratorService {
         administrator = administratorRepository.findByUsername(administratorRequest.getUsername());
         return administratorToAdministratorDTO(administrator);
     }
+
     public AdministratorDTO getAdministratorById(Long id) {
         Optional<Administrator> administrator = administratorRepository.findById(id);
         if (administrator.isEmpty()) {
@@ -56,6 +61,7 @@ public class AdministratorService {
         }
         return administratorToAdministratorDTO(administrator.get());
     }
+
     public void deleteAdministratorById(Long id) {
         if (administratorRepository.existsById(id)) {
             administratorRepository.deleteById(id);
@@ -63,6 +69,7 @@ public class AdministratorService {
             throw new ApiRequestException("Administrator with id " + id + " not found");
         }
     }
+
     public AdministratorDTO updateAdministrator(Long id, AdministratorRequest administratorRequest) {
         Optional<Administrator> foundAdministrator = administratorRepository.findById(id);
 
@@ -72,18 +79,21 @@ public class AdministratorService {
         foundAdministrator.get().setFullName(administratorRequest.getFullName());
         foundAdministrator.get().setEmail(administratorRequest.getEmail());
         foundAdministrator.get().setUsername(administratorRequest.getUsername());
-        foundAdministrator.get().setPassword(BCrypt.hashpw(administratorRequest.getPassword(), BCrypt.gensalt()));
-        foundAdministrator.get().setMobile(administratorRequest.getMobile());
-        foundAdministrator.get().setCreatedAt(foundAdministrator.get().getCreatedAt());
-        foundAdministrator.get().setRole(administratorRequest.getRole());
-        foundAdministrator.get().isEnabled();
+        if (administratorRequest.getPassword().isEmpty()) {
+            foundAdministrator.get().setPassword(foundAdministrator.get().getPassword());
+        } else {
+            foundAdministrator.get().setPassword(BCrypt.hashpw(administratorRequest.getPassword(), BCrypt.gensalt()));
 
-        Administrator administrator = modelMapper.map(administratorRequest, Administrator.class);
-        administratorRepository.save(administrator);
+        }
+        foundAdministrator.get().setMobile(administratorRequest.getMobile());
+        foundAdministrator.get().setCreatedAt(administratorRequest.getCreatedAt());
+        foundAdministrator.get().setRole(administratorRequest.getRole());
+
+        administratorRepository.save(foundAdministrator.get());
         return administratorToAdministratorDTO(foundAdministrator.get());
     }
 
-    public Administrator findAdminByUsername(String username){
+    public Administrator findAdminByUsername(String username) {
         return administratorRepository.findByUsername(username);
     }
 
