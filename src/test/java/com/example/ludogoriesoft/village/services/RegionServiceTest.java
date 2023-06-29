@@ -1,4 +1,4 @@
-package com.example.ludogoriesoft.village.services;
+package com.example.ludogorieSoft.village.services;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -10,10 +10,10 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.example.ludogoriesoft.village.dtos.RegionDTO;
-import com.example.ludogoriesoft.village.exeptions.ApiRequestException;
-import com.example.ludogoriesoft.village.model.Region;
-import com.example.ludogoriesoft.village.repositories.RegionRepository;
+import com.example.ludogorieSoft.village.dtos.RegionDTO;
+import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
+import com.example.ludogorieSoft.village.model.Region;
+import com.example.ludogorieSoft.village.repositories.RegionRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

@@ -1,7 +1,7 @@
-package com.example.ludogoriesoft.village.controllers;
+package com.example.ludogorieSoft.village.controllers;
 
 
-import com.example.ludogoriesoft.village.services.VillageImageService;
+import com.example.ludogorieSoft.village.services.VillageImageService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

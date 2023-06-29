@@ -1,4 +1,4 @@
-package com.example.ludogoriesoft.village.services;
+package com.example.ludogorieSoft.village.services;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -8,17 +8,17 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
-import com.example.ludogoriesoft.village.dtos.AddVillageFormResult;
-import com.example.ludogoriesoft.village.dtos.EthnicityVillageDTO;
-import com.example.ludogoriesoft.village.dtos.GroundCategoryDTO;
-import com.example.ludogoriesoft.village.dtos.ObjectVillageDTO;
-import com.example.ludogoriesoft.village.dtos.QuestionDTO;
-import com.example.ludogoriesoft.village.dtos.VillageAnswerQuestionDTO;
-import com.example.ludogoriesoft.village.dtos.VillageGroundCategoryDTO;
-import com.example.ludogoriesoft.village.dtos.VillageLivingConditionDTO;
-import com.example.ludogoriesoft.village.dtos.VillagePopulationAssertionDTO;
-import com.example.ludogoriesoft.village.enums.Consents;
-import com.example.ludogoriesoft.village.enums.Distance;
+import com.example.ludogorieSoft.village.dtos.AddVillageFormResult;
+import com.example.ludogorieSoft.village.dtos.EthnicityVillageDTO;
+import com.example.ludogorieSoft.village.dtos.GroundCategoryDTO;
+import com.example.ludogorieSoft.village.dtos.ObjectVillageDTO;
+import com.example.ludogorieSoft.village.dtos.QuestionDTO;
+import com.example.ludogorieSoft.village.dtos.VillageAnswerQuestionDTO;
+import com.example.ludogorieSoft.village.dtos.VillageGroundCategoryDTO;
+import com.example.ludogorieSoft.village.dtos.VillageLivingConditionDTO;
+import com.example.ludogorieSoft.village.dtos.VillagePopulationAssertionDTO;
+import com.example.ludogorieSoft.village.enums.Consents;
+import com.example.ludogorieSoft.village.enums.Distance;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;

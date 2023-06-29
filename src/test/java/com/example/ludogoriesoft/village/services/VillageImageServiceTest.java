@@ -1,4 +1,4 @@
-package com.example.ludogoriesoft.village.services;
+package com.example.ludogorieSoft.village.services;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -7,10 +7,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
-import com.example.ludogoriesoft.village.dtos.VillageImageDTO;
-import com.example.ludogoriesoft.village.model.Village;
-import com.example.ludogoriesoft.village.model.VillageImage;
-import com.example.ludogoriesoft.village.repositories.VillageImageRepository;
+import com.example.ludogorieSoft.village.dtos.VillageImageDTO;
+import com.example.ludogorieSoft.village.model.Village;
+import com.example.ludogorieSoft.village.model.VillageImage;
+import com.example.ludogorieSoft.village.repositories.VillageImageRepository;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
