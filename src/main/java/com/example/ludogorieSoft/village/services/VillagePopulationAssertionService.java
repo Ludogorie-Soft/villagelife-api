@@ -92,7 +92,7 @@ public class VillagePopulationAssertionService {
         if (id != null) {
             villagePopulationAssertionsList = villagePopulationAssertionsList.stream()
                     .filter(assertion -> id.equals(assertion.getVillage().getId()))
-                    .collect(Collectors.toList());
+                    .toList();
         }
 
         return villagePopulationAssertionsList.stream()
