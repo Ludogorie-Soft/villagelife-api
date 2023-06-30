@@ -9,7 +9,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
-@AllArgsConstructor
 @Data
 public class MessageDTO {
     private Long id;

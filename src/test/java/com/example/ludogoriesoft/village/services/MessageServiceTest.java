@@ -13,7 +13,7 @@ import org.modelmapper.ModelMapper;
 
 import static org.mockito.Mockito.*;
 
-public class MessageServiceTest {
+class MessageServiceTest {
     @Mock
     private MessageRepository messageRepository;
 
@@ -29,7 +29,7 @@ public class MessageServiceTest {
     }
 
     @Test
-    public void testCreateMessage() {
+    void testCreateMessage() {
         MessageDTO messageDTO = new MessageDTO();
         messageDTO.setUserName("John");
         messageDTO.setEmail("john@example.com");
@@ -44,5 +44,28 @@ public class MessageServiceTest {
         Assertions.assertEquals(messageDTO, result);
 
         verify(messageRepository, times(1)).save(any(Message.class));
+    }
+    @Test
+    void testMessageToMessageDTOWithValidMessage() {
+        Message message = new Message();
+        message.setId(123L);
+        message.setUserMessage("Hello, World!");
+
+        MessageDTO messageDTO = new MessageDTO();
+        messageDTO.setId(123L);
+        messageDTO.setUserMessage("Hello, World!");
+
+        when(modelMapper.map(message, MessageDTO.class)).thenReturn(messageDTO);
+
+        MessageDTO result = messageService.messageToMessageDTO(message);
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(123L, result.getId());
+        Assertions.assertEquals("Hello, World!", result.getUserMessage());
+    }
+
+    @Test
+    void testMessageToMessageDTOWithNullMessage() {
+        MessageDTO result = messageService.messageToMessageDTO(null);
+        Assertions.assertNull(result);
     }
 }
