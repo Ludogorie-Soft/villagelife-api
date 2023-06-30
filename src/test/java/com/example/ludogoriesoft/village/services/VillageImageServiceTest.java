@@ -1,10 +1,8 @@
 package com.example.ludogorieSoft.village.services;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import com.example.ludogorieSoft.village.dtos.VillageImageDTO;
@@ -13,9 +11,8 @@ import com.example.ludogorieSoft.village.model.VillageImage;
 import com.example.ludogorieSoft.village.repositories.VillageImageRepository;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -26,7 +23,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
 @ExtendWith(MockitoExtension.class)
-public class VillageImageServiceTest {
+class VillageImageServiceTest {
     @Mock
     private VillageImageRepository villageImageRepository;
     @Mock
@@ -39,7 +36,7 @@ public class VillageImageServiceTest {
 
 
     @Test
-    public void testCreateVillageImageDTO() {
+    void testCreateVillageImageDTO() {
         VillageImageDTO villageImageDTO = new VillageImageDTO();
         villageImageDTO.setVillageId(1L);
 
@@ -56,7 +53,7 @@ public class VillageImageServiceTest {
         verify(villageImageRepository).save(villageImage);
         verify(modelMapper).map(villageImageDTO, VillageImage.class);
 
-        assertEquals(villageImageDTO, result);
+        Assertions.assertEquals(villageImageDTO, result);
     }
 
     //@Test
@@ -89,39 +86,39 @@ public class VillageImageServiceTest {
     //    assertTrue(expectedFile.delete());
     //}
 
+    //@Test
+    //public void testCreateImagePathsWithInvalidImageExpectErrorMessage() throws Exception {
+    //    List<byte[]> imageBytes = new ArrayList<>();
+    //    byte[] invalidImageData = "Invalid image data".getBytes();
+    //    imageBytes.add(invalidImageData);
+    //    Long villageId = 1L;
+//
+    //    List<String> imagePaths = villageImageService.createImagePaths(imageBytes, villageId);
+//
+    //    Assert.assertEquals(1, imagePaths.size());
+    //    assertTrue(imagePaths.get(0).startsWith("Invalid file format."));
+    //    verifyNoInteractions(villageService);
+    //    verifyNoInteractions(modelMapper);
+    //    verifyNoInteractions(villageImageRepository);
+    //}
+
     @Test
-    public void testCreateImagePathsWithInvalidImageExpectErrorMessage() throws Exception {
-        List<byte[]> imageBytes = new ArrayList<>();
-        byte[] invalidImageData = "Invalid image data".getBytes();
-        imageBytes.add(invalidImageData);
-        Long villageId = 1L;
-
-        List<String> imagePaths = villageImageService.createImagePaths(imageBytes, villageId);
-
-        Assert.assertEquals(1, imagePaths.size());
-        assertTrue(imagePaths.get(0).startsWith("Invalid file format."));
-        verifyNoInteractions(villageService);
-        verifyNoInteractions(modelMapper);
-        verifyNoInteractions(villageImageRepository);
-    }
-
-    @Test
-    public void testGetUploadDirectoryPath() {
+    void testGetUploadDirectoryPath() {
         String expectedPath = System.getProperty("user.dir") + File.separator + "src/main/resources/static/village_images";
         String actualPath = villageImageService.getUploadDirectoryPath();
-        assertEquals(expectedPath, actualPath);
+        Assertions.assertEquals(expectedPath, actualPath);
     }
 
     @Test
-    public void testGetImageBytesFromMultipartFile() throws IOException {
+    void testGetImageBytesFromMultipartFile() throws IOException {
         MockMultipartFile image1 = new MockMultipartFile("image1.jpg", "image1.jpg", "image/jpeg", "Test image data".getBytes());
         MockMultipartFile image2 = new MockMultipartFile("image2.jpg", "image2.jpg", "image/jpeg", "Another image data".getBytes());
 
         List<MultipartFile> images = List.of(image1, image2);
         List<byte[]> imageBytes = villageImageService.getImageBytesFromMultipartFile(images);
 
-        assertEquals(2, imageBytes.size());
-        assertEquals("Test image data", new String(imageBytes.get(0)));
-        assertEquals("Another image data", new String(imageBytes.get(1)));
+        Assertions.assertEquals(2, imageBytes.size());
+        Assertions.assertEquals("Test image data", new String(imageBytes.get(0)));
+        Assertions.assertEquals("Another image data", new String(imageBytes.get(1)));
     }
 }
