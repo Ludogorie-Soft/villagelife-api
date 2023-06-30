@@ -7,6 +7,8 @@ import com.example.ludogorieSoft.village.repositories.VillageImageRepository;
 import lombok.AllArgsConstructor;
 import org.apache.tika.Tika;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,6 +26,7 @@ public class VillageImageService {
     private static final String UPLOAD_DIRECTORY = "src/main/resources/static/village_images";
     private final ModelMapper modelMapper;
     private final VillageService villageService;
+    private static final Logger logger = LoggerFactory.getLogger(VillageImageService.class);
 
     public List<String> createImagePaths(List<byte[]> imageBytes, Long villageId) {
         List<String> imagePaths = new ArrayList<>();
@@ -39,7 +42,7 @@ public class VillageImageService {
         return imagePaths;
     }
 
-    private String processImage(byte[] image) {
+    public String processImage(byte[] image) {
         try {
             Tika tika = new Tika();
             String mimeType = tika.detect(image);
@@ -53,29 +56,29 @@ public class VillageImageService {
             writeImageToFile(image, fullPath);
             return fileName;
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("An error occurred while processing the image", e);
             return null;
         }
     }
 
-    private String generateFileName() {
+    public String generateFileName() {
         return UUID.randomUUID() + ".jpg";
     }
 
-    private void createUploadDirectory(String filePath) {
+    public void createUploadDirectory(String filePath) {
         File uploadDir = new File(filePath);
         if (!uploadDir.exists()) {
             uploadDir.mkdirs();
         }
     }
 
-    private void writeImageToFile(byte[] image, String fullPath) throws IOException {
+    public void writeImageToFile(byte[] image, String fullPath) throws IOException {
         try (FileOutputStream fos = new FileOutputStream(fullPath)) {
             fos.write(image);
         }
     }
 
-    private void createVillageImageDTO(Long villageId, String fileName) {
+    public void createVillageImageDTO(Long villageId, String fileName) {
         VillageImageDTO villageImageDTO = new VillageImageDTO(null, villageId, fileName);
         createVillageImageDTO(villageImageDTO);
     }
@@ -95,14 +98,14 @@ public class VillageImageService {
     public VillageImage villageImageDTOToVillageImage(VillageImageDTO villageImageDTO) {
         return modelMapper.map(villageImageDTO, VillageImage.class);
     }
-    public List<byte[]> getImageBytesFromMultipartFile(List<MultipartFile> images){
+    public List<byte[]> getImageBytesFromMultipartFile(List<MultipartFile> images) {
         List<byte[]> imageBytes = new ArrayList<>();
         for (MultipartFile image : images) {
             try {
                 byte[] imageData = image.getBytes();
                 imageBytes.add(imageData);
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("An error occurred while getting image bytes", e);
             }
         }
         return imageBytes;
