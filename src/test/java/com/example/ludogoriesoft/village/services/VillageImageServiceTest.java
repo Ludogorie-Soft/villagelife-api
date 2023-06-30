@@ -35,8 +35,6 @@ class VillageImageServiceTest {
     private ModelMapper modelMapper;
     @Mock
     private VillageService villageService;
-    @Mock
-    private Tika mockTika;
     @InjectMocks
     private VillageImageService villageImageService;
     private static final String UPLOAD_DIRECTORY = "src/main/resources/static/village_images";
@@ -170,5 +168,27 @@ class VillageImageServiceTest {
         Mockito.verify(villageService, Mockito.times(1)).checkVillage(villageId);
         Mockito.verify(villageImageRepository, Mockito.times(1)).save(Mockito.any(VillageImage.class));
         Mockito.verify(modelMapper, Mockito.times(1)).map(villageImageDTO, VillageImage.class);
+    }
+
+    @Test
+    void testCreateImagePathsWithInvalidImages() {
+        byte[] emptyImage = {};
+        Long villageId = 123L;
+        List<String> result = villageImageService.createImagePaths(List.of(emptyImage), villageId);
+        Assertions.assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void testProcessImage_WithInvalidImage() {
+        byte[] image = {0x12, 0x34, 0x56};
+        String result = villageImageService.processImage(image);
+        Assertions.assertNull(result);
+    }
+
+    @Test
+    void testProcessImage_WithIOException() {
+        byte[] image = {0x12, 0x34, 0x56, 0x78};
+        String result = villageImageService.processImage(image);
+        Assertions.assertNull(result);
     }
 }
