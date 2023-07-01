@@ -179,6 +179,4 @@ class EthnicityVillageServiceTest {
             ethnicityVillageService.deleteEthnicityVillageById(1L);
         });
     }
-
-
 }
