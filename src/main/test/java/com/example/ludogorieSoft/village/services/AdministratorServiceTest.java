@@ -1,10 +1,11 @@
 package com.example.ludogoriesoft.village.services;
 
 import com.example.ludogoriesoft.village.dtos.AdministratorDTO;
-import com.example.ludogoriesoft.village.dtos.AdministratorRequest;
+import com.example.ludogoriesoft.village.dtos.request.AdministratorRequest;
 import com.example.ludogoriesoft.village.exeptions.ApiRequestException;
 import com.example.ludogoriesoft.village.model.Administrator;
 import com.example.ludogoriesoft.village.repositories.AdministratorRepository;
+import com.example.ludogoriesoft.village.repositories.VillageRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
@@ -15,20 +16,20 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class AdministratorServiceTest {
 
     private AdministratorService administratorService;
     private AdministratorRepository administratorRepository;
+    private VillageRepository villageRepository;
     private ModelMapper modelMapper;
 
     @BeforeEach
     public void setUp() {
         administratorRepository = mock(AdministratorRepository.class);
         modelMapper = mock(ModelMapper.class);
-        administratorService = new AdministratorService(administratorRepository, modelMapper);
+        administratorService = new AdministratorService(administratorRepository, modelMapper,villageRepository);
     }
 
     @Test
@@ -67,6 +68,8 @@ class AdministratorServiceTest {
         administratorRequest.setUsername("admin");
         Administrator administrator = new Administrator();
         administrator.setUsername("admin");
+        administrator.setPassword("123123");
+
 
         AdministratorDTO expectedDTO = new AdministratorDTO();
         expectedDTO.setUsername("admin");
@@ -81,6 +84,31 @@ class AdministratorServiceTest {
 
         assertEquals(expectedDTO.getUsername(), resultDTO.getUsername());
     }
+//@Test
+//void testCreateAdministrator_Successful() {
+//    // Mock input data
+//    AdministratorRequest request = new AdministratorRequest();
+//    request.setUsername("admin");
+//    request.setPassword("password");
+//
+//    // Mock repository behavior
+//    when(administratorRepository.existsByUsername(request.getUsername())).thenReturn(false);
+//    when(administratorRepository.findByUsername(request.getUsername())).thenReturn(null);
+//
+//    // Invoke the method
+//    AdministratorDTO result = administratorService.createAdministrator(request);
+//
+//    // Verify the repository interactions
+//    verify(administratorRepository, times(1)).existsByUsername(request.getUsername());
+//    verify(administratorRepository, times(1)).save(any(Administrator.class));
+//    verify(administratorRepository, times(1)).findByUsername(request.getUsername());
+//
+//    // Verify the result
+//    assertNotNull(result);
+//    assertEquals("admin", result.getUsername());
+//    // Add more assertions for other properties if needed
+//}
+
 
     @Test
     void testCreateAdministratorWhenUsernameExists() {

@@ -1,7 +1,7 @@
 package com.example.ludogoriesoft.village.controllers;
 
 import com.example.ludogoriesoft.village.dtos.AdministratorDTO;
-import com.example.ludogoriesoft.village.dtos.AdministratorRequest;
+import com.example.ludogoriesoft.village.dtos.request.AdministratorRequest;
 import com.example.ludogoriesoft.village.services.AdministratorService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +44,7 @@ class AdministratorControllerIntegrationSqlTest {
     void getAllAdministrators() {
         HttpEntity<String> entity = new HttpEntity<>(null);
         ResponseEntity<List<AdministratorDTO>> response = restTemplate.exchange(
-                createURL("/api/v1/admins"), HttpMethod.GET, entity, new ParameterizedTypeReference<List<AdministratorDTO>>() {
+                createURL("/api/v1/admins"), HttpMethod.GET, entity, new ParameterizedTypeReference<>() {
                 });
         List<AdministratorDTO> administratorList = response.getBody();
         assert administratorList != null;
