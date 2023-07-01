@@ -3,6 +3,7 @@ package com.example.ludogorieSoft.village.controllers;
 import com.example.ludogorieSoft.village.dtos.VillageLivingConditionDTO;
 import com.example.ludogorieSoft.village.enums.Consents;
 import com.example.ludogorieSoft.village.services.VillageLivingConditionService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
@@ -14,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -164,5 +166,96 @@ class VillageLivingConditionControllerIntegrationTest {
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/villageLivingConditions/{id}", 1))
                 .andExpect(status().isNoContent());
+    }
+    @Test
+    void testGetVillageLivingConditionsByVillageId() throws Exception {
+        Long villageId = 1L;
+
+        VillageLivingConditionDTO condition1 = new VillageLivingConditionDTO();
+        condition1.setId(1L);
+        condition1.setVillageId(villageId);
+        condition1.setLivingConditionId(1L);
+        condition1.setConsents(Consents.DISAGREE);
+
+        VillageLivingConditionDTO condition2 = new VillageLivingConditionDTO();
+        condition2.setId(2L);
+        condition2.setVillageId(villageId);
+        condition2.setLivingConditionId(2L);
+        condition2.setConsents(Consents.COMPLETELY_AGREED);
+
+        List<VillageLivingConditionDTO> conditionDTOList = Arrays.asList(condition1, condition2);
+
+        when(villageLivingConditionService.getVillagePopulationAssertionByVillageId(villageId))
+                .thenReturn(conditionDTOList);
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageLivingConditions/village/{id}", villageId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(1))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].villageId").value(villageId))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].livingConditionId").value(1))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].consents").value("DISAGREE"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(2))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].villageId").value(villageId))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].livingConditionId").value(2))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].consents").value("COMPLETELY_AGREED"))
+                .andReturn();
+
+        String response = mvcResult.getResponse().getContentAsString();
+        assertNotNull(response);
+    }
+    @Test
+    void testGetVillagePopulationAssertionByVillageIdValue() throws Exception {
+        Long villageId = 1L;
+        double populationAssertion = 12345.67;
+
+        when(villageLivingConditionService.getVillagePopulationAssertionByVillageIdValue(villageId))
+                .thenReturn(populationAssertion);
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageLivingConditions/village/value/{id}", villageId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(String.valueOf(populationAssertion)))
+                .andReturn();
+
+        String response = mvcResult.getResponse().getContentAsString();
+        assertNotNull(response);
+        Assertions.assertEquals(String.valueOf(populationAssertion), response);
+    }
+    @Test
+    void testGetVillagePopulationAssertionByVillageIdDelinquencyValue() throws Exception {
+        Long villageId = 1L;
+        double delinquencyValue = 0.123;
+
+        when(villageLivingConditionService.getVillagePopulationAssertionByVillageIdDelinquencyValue(villageId))
+                .thenReturn(delinquencyValue);
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageLivingConditions/village/delinquencyValue/{id}", villageId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(String.valueOf(delinquencyValue)))
+                .andReturn();
+
+        String response = mvcResult.getResponse().getContentAsString();
+        assertNotNull(response);
+        Assertions.assertEquals(String.valueOf(delinquencyValue), response);
+    }
+    @Test
+    void testGetVillagePopulationAssertionByVillageIdEcoValue() throws Exception {
+        Long villageId = 1L;
+        double ecoValue = 0.456;
+
+        when(villageLivingConditionService.getVillagePopulationAssertionByVillageIdEcoValue(villageId))
+                .thenReturn(ecoValue);
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageLivingConditions/village/ecoValue/{id}", villageId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(String.valueOf(ecoValue)))
+                .andReturn();
+
+        String response = mvcResult.getResponse().getContentAsString();
+        assertNotNull(response);
+        Assertions.assertEquals(String.valueOf(ecoValue), response);
     }
 }
