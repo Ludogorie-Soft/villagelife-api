@@ -1,28 +1,8 @@
 package com.example.ludogorieSoft.village.services;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-
-import com.example.ludogorieSoft.village.dtos.AddVillageFormResult;
-import com.example.ludogorieSoft.village.dtos.EthnicityVillageDTO;
-import com.example.ludogorieSoft.village.dtos.GroundCategoryDTO;
-import com.example.ludogorieSoft.village.dtos.ObjectVillageDTO;
-import com.example.ludogorieSoft.village.dtos.QuestionDTO;
-import com.example.ludogorieSoft.village.dtos.VillageAnswerQuestionDTO;
-import com.example.ludogorieSoft.village.dtos.VillageGroundCategoryDTO;
-import com.example.ludogorieSoft.village.dtos.VillageLivingConditionDTO;
-import com.example.ludogorieSoft.village.dtos.VillagePopulationAssertionDTO;
+import com.example.ludogorieSoft.village.dtos.*;
 import com.example.ludogorieSoft.village.enums.Consents;
 import com.example.ludogorieSoft.village.enums.Distance;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,8 +11,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
-public class AddVillageFormResultServiceTest {
+class AddVillageFormResultServiceTest {
     @InjectMocks
     AddVillageFormResultService addVillageFormResultService;
     @Mock
@@ -53,7 +41,7 @@ public class AddVillageFormResultServiceTest {
     VillageGroundCategoryService villageGroundCategoryService;
 
     @Test
-    public void testCreateVillageLivingConditionFromAddVillageFormResultWhenVillageLivingConditionDTOSIsEmpty() {
+    void testCreateVillageLivingConditionFromAddVillageFormResultWhenVillageLivingConditionDTOSIsEmpty() {
         Long villageId = 12345L;
         AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
         addVillageFormResult.setVillageLivingConditionDTOS(new ArrayList<>());
@@ -64,7 +52,7 @@ public class AddVillageFormResultServiceTest {
     }
 
     @Test
-    public void testCreateVillageLivingConditionFromAddVillageFormResultWhenVillageLivingConditionDTOSHasNullConsents() {
+    void testCreateVillageLivingConditionFromAddVillageFormResultWhenVillageLivingConditionDTOSHasNullConsents() {
         Long villageId = 12345L;
         AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
         List<VillageLivingConditionDTO> dtos = new ArrayList<>();
@@ -78,7 +66,7 @@ public class AddVillageFormResultServiceTest {
 
 
     @Test
-    public void testCreateVillageLivingConditionFromAddVillageFormResultWhenVillageLivingConditionDTOSHasNonNullConsents() {
+    void testCreateVillageLivingConditionFromAddVillageFormResultWhenVillageLivingConditionDTOSHasNonNullConsents() {
         Long villageId = 12345L;
         AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
         List<VillageLivingConditionDTO> dtos = new ArrayList<>();
@@ -91,7 +79,7 @@ public class AddVillageFormResultServiceTest {
         verify(villageLivingConditionService, times(1)).createVillageLivingCondition(any(VillageLivingConditionDTO.class));
     }
     @Test
-    public void testCreateVillageLivingConditionFromAddVillageFormResultWhenVillageLivingConditionDTOSHasMixedConsents() {
+    void testCreateVillageLivingConditionFromAddVillageFormResultWhenVillageLivingConditionDTOSHasMixedConsents() {
         Long villageId = 12345L;
         AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
         List<VillageLivingConditionDTO> dtos = new ArrayList<>();
@@ -117,7 +105,7 @@ public class AddVillageFormResultServiceTest {
 
 
     @Test
-    public void testCreateVillagePopulationAssertionsFromAddVillageFormResultWhenVillagePopulationAssertionDTOSIsEmpty() {
+    void testCreateVillagePopulationAssertionsFromAddVillageFormResultWhenVillagePopulationAssertionDTOSIsEmpty() {
         Long villageId = 12345L;
         AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
         addVillageFormResult.setVillagePopulationAssertionDTOS(new ArrayList<>());
@@ -127,7 +115,7 @@ public class AddVillageFormResultServiceTest {
         verifyNoInteractions(villagePopulationAssertionService);
     }
     @Test
-    public void testCreateVillagePopulationAssertionsFromAddVillageFormResultWhenVillagePopulationAssertionDTOSHasNullAnswers() {
+    void testCreateVillagePopulationAssertionsFromAddVillageFormResultWhenVillagePopulationAssertionDTOSHasNullAnswers() {
         Long villageId = 12345L;
         AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
         List<VillagePopulationAssertionDTO> dtos = new ArrayList<>();
@@ -139,7 +127,7 @@ public class AddVillageFormResultServiceTest {
         verifyNoInteractions(villagePopulationAssertionService);
     }
     @Test
-    public void testCreateVillagePopulationAssertionsFromAddVillageFormResultWhenVillagePopulationAssertionDTOSHasNonNullAnswers() {
+    void testCreateVillagePopulationAssertionsFromAddVillageFormResultWhenVillagePopulationAssertionDTOSHasNonNullAnswers() {
         Long villageId = 12345L;
         AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
         List<VillagePopulationAssertionDTO> dtos = new ArrayList<>();
@@ -161,7 +149,7 @@ public class AddVillageFormResultServiceTest {
     }
 
     @Test
-    public void testCreateVillagePopulationAssertionsFromAddVillageFormResultWhenVillagePopulationAssertionDTOSHasMixedAnswers() {
+    void testCreateVillagePopulationAssertionsFromAddVillageFormResultWhenVillagePopulationAssertionDTOSHasMixedAnswers() {
         Long villageId = 12345L;
         AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
         List<VillagePopulationAssertionDTO> dtos = new ArrayList<>();
@@ -187,7 +175,7 @@ public class AddVillageFormResultServiceTest {
 
 
     @Test
-    public void testCreateObjectVillagesFromAddVillageFormResult() {
+    void testCreateObjectVillagesFromAddVillageFormResult() {
         Long villageId = 12345L;
         AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
         List<ObjectVillageDTO> objectVillageDTOS = new ArrayList<>();
@@ -212,7 +200,7 @@ public class AddVillageFormResultServiceTest {
     }
 
     @Test
-    public void testCreateObjectVillagesFromAddVillageFormResultNoObjectVillageDTOS() {
+    void testCreateObjectVillagesFromAddVillageFormResultNoObjectVillageDTOS() {
         Long villageId = 12345L;
         AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
         addVillageFormResult.setObjectVillageDTOS(new ArrayList<>()); // Set an empty list instead of null
@@ -224,7 +212,7 @@ public class AddVillageFormResultServiceTest {
 
 
     @Test
-    public void testCreateObjectVillagesFromAddVillageFormResultEmptyObjectVillageDTOS() {
+    void testCreateObjectVillagesFromAddVillageFormResultEmptyObjectVillageDTOS() {
         Long villageId = 12345L;
         AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
         List<ObjectVillageDTO> objectVillageDTOS = new ArrayList<>();
@@ -237,7 +225,7 @@ public class AddVillageFormResultServiceTest {
     }
 
     @Test
-    public void testCreateObjectVillagesFromAddVillageFormResultNullDistance() {
+    void testCreateObjectVillagesFromAddVillageFormResultNullDistance() {
         Long villageId = 12345L;
         AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
         List<ObjectVillageDTO> objectVillageDTOS = new ArrayList<>();
@@ -257,7 +245,7 @@ public class AddVillageFormResultServiceTest {
         verify(objectVillageService, never()).createObjectVillage(dto2);
     }
     @Test
-    public void createVillageAnswerQuestionsFromAddVillageFormResultValidDataCreatesVillageAnswerQuestions() {
+    void createVillageAnswerQuestionsFromAddVillageFormResultValidDataCreatesVillageAnswerQuestions() {
         Long villageId = 1L;
         List<String> questionResponses = Arrays.asList("Answer 1", "Answer 2", "Answer 3");
         AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
@@ -287,7 +275,7 @@ public class AddVillageFormResultServiceTest {
         }
     }
     @Test
-    public void createVillageAnswerQuestionsFromAddVillageFormResultEmptyQuestionResponsesNoVillageAnswerQuestionsCreated() {
+    void createVillageAnswerQuestionsFromAddVillageFormResultEmptyQuestionResponsesNoVillageAnswerQuestionsCreated() {
         Long villageId = 1L;
         List<String> questionResponses = Collections.emptyList();
         AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
@@ -298,19 +286,8 @@ public class AddVillageFormResultServiceTest {
         Mockito.verify(villageAnswerQuestionService, Mockito.never()).createVillageAnswerQuestion(Mockito.any(VillageAnswerQuestionDTO.class));
     }
 
-    //@Test
-    //public void createVillageAnswerQuestionsFromAddVillageFormResultNullAddVillageFormResultNoVillageAnswerQuestionsCreated() {
-    //    Long villageId = 1L;
-    //    AddVillageFormResult addVillageFormResult = null;
-//
-    //    addVillageFormResultService.createVillageAnswerQuestionsFromAddVillageFormResult(villageId, addVillageFormResult);
-//
-    //    Mockito.verify(villageAnswerQuestionService, Mockito.never()).createVillageAnswerQuestion(Mockito.any(VillageAnswerQuestionDTO.class));
-    //}
-
-
     @Test
-    public void createVillageAnswerQuestionsFromAddVillageFormResultNullQuestionResponsesNoVillageAnswerQuestionsCreated() {
+    void createVillageAnswerQuestionsFromAddVillageFormResultNullQuestionResponsesNoVillageAnswerQuestionsCreated() {
         Long villageId = 1L;
         AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
         addVillageFormResult.setQuestionResponses(new ArrayList<>());
@@ -321,7 +298,7 @@ public class AddVillageFormResultServiceTest {
     }
 
     @Test
-    public void createEthnicityVillagesFromAddVillageFormResultValidDataEthnicityVillagesCreated() {
+    void createEthnicityVillagesFromAddVillageFormResultValidDataEthnicityVillagesCreated() {
         Long villageId = 1L;
         List<Long> ethnicityDTOIds = Arrays.asList(1L, 2L, 3L);
         AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
@@ -336,7 +313,7 @@ public class AddVillageFormResultServiceTest {
     }
 
     @Test
-    public void createEthnicityVillagesFromAddVillageFormResultEmptyEthnicityDTOIdsNoEthnicityVillagesCreated() {
+    void createEthnicityVillagesFromAddVillageFormResultEmptyEthnicityDTOIdsNoEthnicityVillagesCreated() {
         Long villageId = 1L;
         List<Long> ethnicityDTOIds = Collections.emptyList();
         AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
@@ -348,7 +325,7 @@ public class AddVillageFormResultServiceTest {
     }
 
     @Test
-    public void createEthnicityVillagesFromAddVillageFormResultLargeNumberOfEthnicityDTOIdsEthnicityVillagesCreated() {
+    void createEthnicityVillagesFromAddVillageFormResultLargeNumberOfEthnicityDTOIdsEthnicityVillagesCreated() {
         Long villageId = 1L;
         List<Long> ethnicityDTOIds = new ArrayList<>();
         for (long i = 1; i <= 100; i++) {
@@ -365,7 +342,7 @@ public class AddVillageFormResultServiceTest {
         }
     }
     @Test
-    public void createVillageGroundCategoryFromAddVillageFormResultTest() {
+    void createVillageGroundCategoryFromAddVillageFormResultTest() {
         Long villageId = 1L;
         AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
         addVillageFormResult.setGroundCategoryName("Ground Category Name");
@@ -380,7 +357,20 @@ public class AddVillageFormResultServiceTest {
         Mockito.verify(villageGroundCategoryService).createVillageGroundCategoryDTO(villageGroundCategoryDTOCaptor.capture());
 
         VillageGroundCategoryDTO capturedDTO = villageGroundCategoryDTOCaptor.getValue();
-        assertEquals(villageId, capturedDTO.getVillageId());
-        assertEquals(groundCategoryDTO.getId(), capturedDTO.getGroundCategoryId());
+        Assertions.assertEquals(villageId, capturedDTO.getVillageId());
+        Assertions.assertEquals(groundCategoryDTO.getId(), capturedDTO.getGroundCategoryId());
     }
+
+    @Test
+    void testCreateVillageGroundCategoryFromAddVillageFormResult() {
+        Long villageId = 1L;
+        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
+        addVillageFormResult.setGroundCategoryName("Category");
+        GroundCategoryDTO groundCategoryDTO = new GroundCategoryDTO();
+        when(groundCategoryService.getByGroundCategoryName(anyString())).thenReturn(groundCategoryDTO);
+        addVillageFormResultService.createVillageGroundCategoryFromAddVillageFormResult(villageId, addVillageFormResult);
+        verify(villageGroundCategoryService).createVillageGroundCategoryDTO(any(VillageGroundCategoryDTO.class));
+    }
+
+
 }
