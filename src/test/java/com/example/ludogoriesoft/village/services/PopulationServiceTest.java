@@ -47,23 +47,19 @@ class PopulationServiceTest {
 
     @Test
      void testCreatePopulationWithNullValues() {
-        // Arrange
         Population population = new Population();
         population.setNumberOfPopulation(NumberOfPopulation.UP_TO_10_PEOPLE);
 
         when(populationRepository.save(population)).thenReturn(population);
 
-        // Act
         Long populationId = populationService.createPopulationWhitNullValues();
 
-        // Assert
         assertEquals(population.getId(), populationId);
         verify(populationRepository).save(population);
     }
 
     @Test
-    public void testGetPopulationByVillageId_ExistingPopulation() {
-        // Arrange
+    void testGetPopulationByVillageId_ExistingPopulation() {
         Long villageId = 123L;
         Population population = new Population();
         population.setId(456L);
@@ -79,7 +75,6 @@ class PopulationServiceTest {
 
         PopulationDTO result = populationService.getPopulationByVillageId(villageId);
 
-        // Assert
         assertEquals(populationDTO.getId(), result.getId());
         assertEquals(populationDTO.getNumberOfPopulation(), result.getNumberOfPopulation());
     }
@@ -88,12 +83,8 @@ class PopulationServiceTest {
 
     @Test
      void testGetPopulationByVillageId_NonExistingPopulation() {
-        // Arrange
         Long villageId = 123L;
-
         when(populationRepository.findById(villageId)).thenReturn(Optional.empty());
-
-        // Act & Assert
         assertThrows(ApiRequestException.class, () -> populationService.getPopulationByVillageId(villageId));
     }
 

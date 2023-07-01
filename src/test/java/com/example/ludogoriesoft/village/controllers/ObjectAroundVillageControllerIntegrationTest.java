@@ -2,6 +2,7 @@ package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.dtos.ObjectAroundVillageDTO;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
+import com.example.ludogorieSoft.village.model.ObjectAroundVillage;
 import com.example.ludogorieSoft.village.services.ObjectAroundVillageService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -233,6 +234,24 @@ class ObjectAroundVillageControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/objectsAroundVillage/{id}", objectId))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(containsString("ObjectAroundVillage with id: " + objectId + " not found")));
+    }
+    @Test
+    void testGetObjectAroundVillageByVillageID() throws Exception {
+        Long villageId = 1L;
+        ObjectAroundVillageDTO objectAroundVillageDTO = new ObjectAroundVillageDTO();
+        objectAroundVillageDTO.setId(1L);
+        objectAroundVillageDTO.setType("New Object");
+
+        when(objectAroundVillageService.getObjectAroundVillageById(villageId)).thenReturn(objectAroundVillageDTO);
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/objectsAroundVillage/village/{id}", villageId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.type").value("New Object"))
+                .andReturn();
+
+        String response = mvcResult.getResponse().getContentAsString();
+        assertNotNull(response);
     }
 
 }
