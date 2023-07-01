@@ -91,7 +91,7 @@ public class EthnicityService {
     public EthnicityDTO updateEthnicity(Long id, Ethnicity ethnicity) {
         Optional<Ethnicity> foundEthnicity = ethnicityRepository.findById(id);
         if (foundEthnicity.isEmpty()) {
-            throw new ApiRequestException("Ethnicity not found");
+            throw new ApiRequestException(ERROR_MESSAGE);
         }
         foundEthnicity.get().setEthnicityName(ethnicity.getEthnicityName());
         ethnicityRepository.save(foundEthnicity.get());
@@ -100,7 +100,7 @@ public class EthnicityService {
     public EthnicityDTO findEthnicityByName(String name){
         Ethnicity ethnicity = ethnicityRepository.findByEthnicityName(name);
         if(ethnicity == null){
-            throw new ApiRequestException("Ethnicity not found");
+            throw new ApiRequestException(ERROR_MESSAGE);
         }
         return ethnicityToEthnicityDTO(ethnicity);
     }
