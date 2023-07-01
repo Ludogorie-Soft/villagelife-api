@@ -1,17 +1,22 @@
 package com.example.ludogorieSoft.village.controllers;
 
+import com.example.ludogorieSoft.village.dtos.EthnicityVillageDTO;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
+import com.example.ludogorieSoft.village.services.EthnicityVillageService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
@@ -19,24 +24,25 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
+@WebMvcTest(EthnicityVillageController.class)
 @AutoConfigureMockMvc
 class EthnicityVillageControllerIntegrationTest {
-//    @MockBean
-//    private EthnicityVillageService ethnicityVillageService;
-//
-//    @Autowired
-//    private MockMvc mockMvc;
-//
-//    @BeforeEach
-//    public void setup() {
-//        MockitoAnnotations.initMocks(this);
-//    }
+    @MockBean
+    private EthnicityVillageService ethnicityVillageService;
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @BeforeEach
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+    }
 //
 //    @Test
 //    void getAllEthnicityVillagesShouldReturnListOfEthnicityVillages() throws Exception {
@@ -178,4 +184,27 @@ class EthnicityVillageControllerIntegrationTest {
 //        ObjectMapper objectMapper = new ObjectMapper();
 //        return objectMapper.writeValueAsString(obj);
 //    }
+
+    @Test
+    void testGetEthnicityVillageByVillageId() throws Exception {
+        Long villageId = 1L;
+
+        EthnicityVillageDTO ethnicityVillageDTO = new EthnicityVillageDTO();
+        ethnicityVillageDTO.setId(1L);
+        ethnicityVillageDTO.setVillageId(villageId);
+        ethnicityVillageDTO.setEthnicityId(1L);
+
+        when(ethnicityVillageService.getVillageEthnicityByVillageId(villageId)).thenReturn(ethnicityVillageDTO);
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageEthnicities/village/{id}", villageId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.villageId").value(villageId))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.ethnicityId").value(1))
+                .andReturn();
+
+        String response = mvcResult.getResponse().getContentAsString();
+        Assertions.assertNotNull(response);
+    }
 }
