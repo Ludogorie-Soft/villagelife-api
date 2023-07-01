@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -176,7 +177,39 @@ class VillageAnswerQuestionControllerIntegrationTest {
                 .andExpect(status().isNotFound());
     }
 
+    @Test
+    void testGetVillageAnswerQuestionByVillageId() throws Exception {
+        Long villageId = 1L;
 
+        VillageAnswerQuestionDTO villageAnswerQuestionDTO1 = new VillageAnswerQuestionDTO();
+        villageAnswerQuestionDTO1.setId(1L);
+        villageAnswerQuestionDTO1.setVillageId(1L);
+        villageAnswerQuestionDTO1.setQuestionId(1L);
+        villageAnswerQuestionDTO1.setAnswer("Some answer");
+        VillageAnswerQuestionDTO villageAnswerQuestionDTO2 = new VillageAnswerQuestionDTO();
+        villageAnswerQuestionDTO2.setId(2L);
+        villageAnswerQuestionDTO2.setVillageId(1L);
+        villageAnswerQuestionDTO2.setQuestionId(2L);
+        villageAnswerQuestionDTO2.setAnswer("Another answer");
 
+        List<VillageAnswerQuestionDTO> villageAnswerQuestionDTOList = Arrays.asList(villageAnswerQuestionDTO1, villageAnswerQuestionDTO2);
 
+        when(villageAnswerQuestionService.getVillageAnswerQuestionByVillageId(villageId)).thenReturn(villageAnswerQuestionDTOList);
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageAnswerQuestion/village/{id}", villageId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(1))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].villageId").value(1L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].questionId").value(1L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].answer").value("Some answer"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(2))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].villageId").value(1L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].questionId").value(2L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].answer").value("Another answer"))
+                .andReturn();
+
+        String response = mvcResult.getResponse().getContentAsString();
+        assertNotNull(response);
+    }
 }

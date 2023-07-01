@@ -33,8 +33,8 @@ public class PopulationController {
     }
 
     @PostMapping("/null")
-    public ResponseEntity<Long> createPopulationWhitNullValues() {
-        Long populationID=populationService.createPopulationWhitNullValues();
+    public ResponseEntity<Long> createPopulationWithNullValues() {
+        Long populationID=populationService.createPopulationWithNullValues();
         return ResponseEntity.status(HttpStatus.OK).body(populationID);
     }
 
@@ -48,4 +48,5 @@ public class PopulationController {
         populationService.deletePopulationById(id);
         return new ResponseEntity<>("Population with id: " + id + " has been deleted successfully!!", HttpStatus.OK);
     }
+
 }

@@ -232,5 +232,20 @@ class PopulationControllerIntegrationTest {
                 .andExpect(jsonPath("$.message").value(errorMessage))
                 .andReturn();
     }
+    @Test
+    void testCreatePopulationWhitNullValues() throws Exception {
+        Long populationId = 1L;
+
+        when(populationService.createPopulationWithNullValues()).thenReturn(populationId);
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/populations/null"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").value(populationId))
+                .andReturn();
+
+        String response = mvcResult.getResponse().getContentAsString();
+        assertNotNull(response);
+    }
+
 
 }

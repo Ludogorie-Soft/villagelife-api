@@ -52,7 +52,7 @@ class PopulationServiceTest {
 
         when(populationRepository.save(population)).thenReturn(population);
 
-        Long populationId = populationService.createPopulationWhitNullValues();
+        Long populationId = populationService.createPopulationWithNullValues();
 
         assertEquals(population.getId(), populationId);
         verify(populationRepository).save(population);

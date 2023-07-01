@@ -38,7 +38,7 @@ public class PopulationService {
         populationDTO.setId(savedPopulation.getId());
         return populationDTO;
     }
-    public Long createPopulationWhitNullValues() {
+    public Long createPopulationWithNullValues() {
         Population population=new Population();
         population.setNumberOfPopulation(NumberOfPopulation.UP_TO_10_PEOPLE);
         populationRepository.save(population);

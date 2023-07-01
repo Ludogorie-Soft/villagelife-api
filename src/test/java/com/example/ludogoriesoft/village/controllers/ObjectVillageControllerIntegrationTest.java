@@ -223,5 +223,29 @@ class ObjectVillageControllerIntegrationTest {
                 .andExpect(jsonPath("$.message").value(errorMessage))
                 .andReturn();
     }
+    @Test
+    void testGetObjectVillageByVillageID() throws Exception {
+        Long villageId = 1L;
+        ObjectVillageDTO objectVillageDTO1 = new ObjectVillageDTO(1L, villageId, 1L, Distance.IN_THE_VILLAGE);
+        ObjectVillageDTO objectVillageDTO2 = new ObjectVillageDTO(2L, villageId, 2L, Distance.ON_10_KM);
+        List<ObjectVillageDTO> objectVillageDTOList = Arrays.asList(objectVillageDTO1, objectVillageDTO2);
+
+        when(objectVillageService.getObjectVillageByVillageId(villageId)).thenReturn(objectVillageDTOList);
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/objectVillages/village/{id}", villageId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].villageId").value(villageId))
+                .andExpect(jsonPath("$[0].objectAroundVillageId").value(1))
+                .andExpect(jsonPath("$[0].distance").value("IN_THE_VILLAGE"))
+                .andExpect(jsonPath("$[1].id").value(2))
+                .andExpect(jsonPath("$[1].villageId").value(villageId))
+                .andExpect(jsonPath("$[1].objectAroundVillageId").value(2))
+                .andExpect(jsonPath("$[1].distance").value("ON_10_KM"))
+                .andReturn();
+
+        String response = mvcResult.getResponse().getContentAsString();
+        assertNotNull(response);
+    }
 
 }
