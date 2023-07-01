@@ -1,6 +1,7 @@
 package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.dtos.VillagePopulationAssertionDTO;
+import com.example.ludogorieSoft.village.enums.Consents;
 import com.example.ludogorieSoft.village.services.VillagePopulationAssertionService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,15 +9,18 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import static com.example.ludogorieSoft.village.enums.Consents.*;
 import static org.hamcrest.Matchers.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -151,4 +155,32 @@ class VillagePopulationAssertionControllerIntegrationTest {
         mockMvc.perform(delete("/api/v1/villagePopulationAssertions/1"))
                 .andExpect(status().isNotFound());
     }
+    @Test
+    void testGetVillagePopulationAssertionByVillageIdValidVillageIDWithAssertions() throws Exception {
+        Long villageId = 1L;
+
+        VillagePopulationAssertionService villagePopulationAssertionService = mock(VillagePopulationAssertionService.class);
+        List<VillagePopulationAssertionDTO> populationAssertions = new ArrayList<>();
+        populationAssertions.add(new VillagePopulationAssertionDTO(1L, 1L, 1L, Consents.COMPLETELY_AGREED));
+        populationAssertions.add(new VillagePopulationAssertionDTO(2L, 1L, 2L, Consents.DISAGREE));
+        when(villagePopulationAssertionService.getVillagePopulationAssertionByVillageId(villageId))
+                .thenReturn(populationAssertions);
+
+        VillagePopulationAssertionController villagePopulationAssertionController = new VillagePopulationAssertionController(villagePopulationAssertionService);
+
+        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(villagePopulationAssertionController).build();
+
+        ResultMatcher expectedStatus = status().isOk();
+        ResultMatcher expectedContentType = content().contentType(MediaType.APPLICATION_JSON);
+        ResultMatcher expectedBody = jsonPath("$", hasSize(2));
+
+        mockMvc.perform(get("/api/v1/villagePopulationAssertions/village/{id}", villageId))
+                .andExpect(expectedStatus)
+                .andExpect(expectedContentType)
+                .andExpect(expectedBody);
+
+        verify(villagePopulationAssertionService).getVillagePopulationAssertionByVillageId(villageId);
+    }
+
+
 }

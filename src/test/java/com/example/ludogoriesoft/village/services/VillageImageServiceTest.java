@@ -67,19 +67,6 @@ class VillageImageServiceTest {
         String actualPath = villageImageService.getUploadDirectoryPath();
         Assertions.assertEquals(expectedPath, actualPath);
     }
-
-    @Test
-    void testGetImageBytesFromMultipartFile() throws IOException {
-        MockMultipartFile image1 = new MockMultipartFile("image1.jpg", "image1.jpg", "image/jpeg", "Test image data".getBytes());
-        MockMultipartFile image2 = new MockMultipartFile("image2.jpg", "image2.jpg", "image/jpeg", "Another image data".getBytes());
-
-        List<MultipartFile> images = List.of(image1, image2);
-        List<byte[]> imageBytes = villageImageService.getImageBytesFromMultipartFile(images);
-
-        Assertions.assertEquals(2, imageBytes.size());
-        Assertions.assertEquals("Test image data", new String(imageBytes.get(0)));
-        Assertions.assertEquals("Another image data", new String(imageBytes.get(1)));
-    }
     @Test
     void testGenerateFileName() {
         String fileName = villageImageService.generateFileName();

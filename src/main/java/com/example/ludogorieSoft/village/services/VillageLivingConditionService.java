@@ -149,9 +149,4 @@ public class VillageLivingConditionService {
         double average = sum / (count - 11);
         return Math.round(average * 100) / 100.0;
     }
-
-
-
-
-
 }
