@@ -1,6 +1,6 @@
-package com.example.ludogoriesoft.village.dtos;
+package com.example.ludogorieSoft.village.dtos;
 
-import com.example.ludogoriesoft.village.enums.Consents;
+import com.example.ludogorieSoft.village.enums.Consents;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

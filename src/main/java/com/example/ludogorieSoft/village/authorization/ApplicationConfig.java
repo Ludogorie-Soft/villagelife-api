@@ -1,6 +1,6 @@
-package com.example.ludogoriesoft.village.authorization;
+package com.example.ludogorieSoft.village.authorization;
 
-import com.example.ludogoriesoft.village.services.AdministratorService;
+import com.example.ludogorieSoft.village.services.AdministratorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

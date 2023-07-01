@@ -1,4 +1,4 @@
-package com.example.ludogoriesoft.village.enums;
+package com.example.ludogorieSoft.village.enums;
 
 public enum Role {
     USER,

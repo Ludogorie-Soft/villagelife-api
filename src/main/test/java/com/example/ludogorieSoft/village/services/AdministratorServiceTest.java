@@ -1,14 +1,14 @@
-package com.example.ludogoriesoft.village.services;
+package com.example.ludogorieSoft.village.services;
 
-import com.example.ludogoriesoft.village.dtos.AdministratorDTO;
-import com.example.ludogoriesoft.village.dtos.request.AdministratorRequest;
-import com.example.ludogoriesoft.village.dtos.response.VillageResponse;
-import com.example.ludogoriesoft.village.exeptions.ApiRequestException;
-import com.example.ludogoriesoft.village.model.Administrator;
-import com.example.ludogoriesoft.village.model.Population;
-import com.example.ludogoriesoft.village.model.Village;
-import com.example.ludogoriesoft.village.repositories.AdministratorRepository;
-import com.example.ludogoriesoft.village.repositories.VillageRepository;
+import com.example.ludogorieSoft.village.dtos.AdministratorDTO;
+import com.example.ludogorieSoft.village.dtos.request.AdministratorRequest;
+import com.example.ludogorieSoft.village.dtos.response.VillageResponse;
+import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
+import com.example.ludogorieSoft.village.model.Administrator;
+import com.example.ludogorieSoft.village.model.Population;
+import com.example.ludogorieSoft.village.model.Village;
+import com.example.ludogorieSoft.village.repositories.AdministratorRepository;
+import com.example.ludogorieSoft.village.repositories.VillageRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;

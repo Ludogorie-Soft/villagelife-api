@@ -1,4 +1,4 @@
-package com.example.ludogoriesoft.village.authorization;
+package com.example.ludogorieSoft.village.authorization;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

@@ -1,4 +1,4 @@
-package com.example.ludogoriesoft.village.exeptions;
+package com.example.ludogorieSoft.village.exeptions;
 
 import java.time.ZonedDateTime;
 

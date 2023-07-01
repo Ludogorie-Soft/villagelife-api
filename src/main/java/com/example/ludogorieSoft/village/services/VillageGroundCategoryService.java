@@ -1,13 +1,13 @@
-package com.example.ludogoriesoft.village.services;
+package com.example.ludogorieSoft.village.services;
 
-import com.example.ludogoriesoft.village.dtos.VillageGroundCategoryDTO;
-import com.example.ludogoriesoft.village.model.GroundCategory;
-import com.example.ludogoriesoft.village.model.Village;
-import com.example.ludogoriesoft.village.model.VillageGroundCategory;
-import com.example.ludogoriesoft.village.repositories.GroundCategoryRepository;
-import com.example.ludogoriesoft.village.repositories.VillageGroundCategoryRepository;
-import com.example.ludogoriesoft.village.exeptions.ApiRequestException;
-import com.example.ludogoriesoft.village.repositories.VillageRepository;
+import com.example.ludogorieSoft.village.dtos.VillageGroundCategoryDTO;
+import com.example.ludogorieSoft.village.model.GroundCategory;
+import com.example.ludogorieSoft.village.model.Village;
+import com.example.ludogorieSoft.village.model.VillageGroundCategory;
+import com.example.ludogorieSoft.village.repositories.GroundCategoryRepository;
+import com.example.ludogorieSoft.village.repositories.VillageGroundCategoryRepository;
+import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
+import com.example.ludogorieSoft.village.repositories.VillageRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;

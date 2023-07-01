@@ -1,12 +1,12 @@
-package com.example.ludogoriesoft.village.auth;
+package com.example.ludogorieSoft.village.auth;
 
-import com.example.ludogoriesoft.village.authorization.JWTService;
-import com.example.ludogoriesoft.village.dtos.request.AuthenticationRequest;
-import com.example.ludogoriesoft.village.dtos.request.RegisterRequest;
-import com.example.ludogoriesoft.village.dtos.response.AuthenticationResponce;
-import com.example.ludogoriesoft.village.enums.Role;
-import com.example.ludogoriesoft.village.model.Administrator;
-import com.example.ludogoriesoft.village.repositories.AdministratorRepository;
+import com.example.ludogorieSoft.village.authorization.JWTService;
+import com.example.ludogorieSoft.village.dtos.request.AuthenticationRequest;
+import com.example.ludogorieSoft.village.dtos.request.RegisterRequest;
+import com.example.ludogorieSoft.village.dtos.response.AuthenticationResponce;
+import com.example.ludogorieSoft.village.enums.Role;
+import com.example.ludogorieSoft.village.model.Administrator;
+import com.example.ludogorieSoft.village.repositories.AdministratorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

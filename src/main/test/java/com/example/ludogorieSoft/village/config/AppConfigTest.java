@@ -1,4 +1,4 @@
-package com.example.ludogoriesoft.village.config;
+package com.example.ludogorieSoft.village.config;
 
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;

@@ -1,8 +1,8 @@
-package com.example.ludogoriesoft.village.auth;
+package com.example.ludogorieSoft.village.auth;
 
-import com.example.ludogoriesoft.village.dtos.request.AuthenticationRequest;
-import com.example.ludogoriesoft.village.dtos.request.RegisterRequest;
-import com.example.ludogoriesoft.village.dtos.response.AuthenticationResponce;
+import com.example.ludogorieSoft.village.dtos.request.AuthenticationRequest;
+import com.example.ludogorieSoft.village.dtos.request.RegisterRequest;
+import com.example.ludogorieSoft.village.dtos.response.AuthenticationResponce;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

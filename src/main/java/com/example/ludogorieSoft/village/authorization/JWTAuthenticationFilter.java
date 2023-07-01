@@ -1,4 +1,4 @@
-package com.example.ludogoriesoft.village.authorization;
+package com.example.ludogorieSoft.village.authorization;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

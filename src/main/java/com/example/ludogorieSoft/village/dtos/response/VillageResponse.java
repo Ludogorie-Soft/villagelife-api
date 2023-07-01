@@ -1,7 +1,7 @@
-package com.example.ludogoriesoft.village.dtos.response;
+package com.example.ludogorieSoft.village.dtos.response;
 
-import com.example.ludogoriesoft.village.model.Administrator;
-import com.example.ludogoriesoft.village.model.Population;
+import com.example.ludogorieSoft.village.model.Administrator;
+import com.example.ludogorieSoft.village.model.Population;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

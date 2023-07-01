@@ -1,13 +1,13 @@
-package com.example.ludogoriesoft.village.services;
+package com.example.ludogorieSoft.village.services;
 
-import com.example.ludogoriesoft.village.dtos.EthnicityVillageDTO;
-import com.example.ludogoriesoft.village.model.Ethnicity;
-import com.example.ludogoriesoft.village.model.EthnicityVillage;
-import com.example.ludogoriesoft.village.model.Village;
-import com.example.ludogoriesoft.village.repositories.EthnicityRepository;
-import com.example.ludogoriesoft.village.repositories.EthnicityVillageRepository;
-import com.example.ludogoriesoft.village.repositories.VillageRepository;
-import com.example.ludogoriesoft.village.exeptions.ApiRequestException;
+import com.example.ludogorieSoft.village.dtos.EthnicityVillageDTO;
+import com.example.ludogorieSoft.village.model.Ethnicity;
+import com.example.ludogorieSoft.village.model.EthnicityVillage;
+import com.example.ludogorieSoft.village.model.Village;
+import com.example.ludogorieSoft.village.repositories.EthnicityRepository;
+import com.example.ludogorieSoft.village.repositories.EthnicityVillageRepository;
+import com.example.ludogorieSoft.village.repositories.VillageRepository;
+import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

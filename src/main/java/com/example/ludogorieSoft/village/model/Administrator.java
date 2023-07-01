@@ -1,6 +1,6 @@
-package com.example.ludogoriesoft.village.model;
+package com.example.ludogorieSoft.village.model;
 
-import com.example.ludogoriesoft.village.enums.Role;
+import com.example.ludogorieSoft.village.enums.Role;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.validator.constraints.Length;

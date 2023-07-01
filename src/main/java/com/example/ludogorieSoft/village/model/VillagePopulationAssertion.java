@@ -1,6 +1,6 @@
-package com.example.ludogoriesoft.village.model;
+package com.example.ludogorieSoft.village.model;
 
-import com.example.ludogoriesoft.village.enums.Consents;
+import com.example.ludogorieSoft.village.enums.Consents;
 import lombok.Data;
 
 import javax.persistence.*;
