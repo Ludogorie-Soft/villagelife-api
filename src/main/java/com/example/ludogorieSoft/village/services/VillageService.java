@@ -15,11 +15,10 @@ import com.example.ludogoriesoft.village.repositories.VillageRepository;
 import com.example.ludogoriesoft.village.exeptions.ApiRequestException;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 @Service
@@ -29,9 +28,8 @@ public class VillageService {
     private final VillageRepository villageRepository;
     private final ModelMapper modelMapper;
     private final RegionService regionService;
-    private final String errorMessage1="Village with id ";
-    private final String errorMessage2=" not found  ";
-
+    private final String errorMessage1 = "Village with id ";
+    private final String errorMessage2 = " not found  ";
 
 
     public VillageDTO villageToVillageDTO(Village village) {
@@ -113,21 +111,15 @@ public class VillageService {
 
 
     public List<VillageDTO> getAllSearchVillages(String name) {
-        List<Village> villages = villageRepository.findByName(name);
+        List<Village> villages = villageRepository.findByNameContainingIgnoreCaseOrderByRegionNameAsc(name);
         return villages.stream()
                 .map(this::villageToVillageDTO)
                 .toList();
     }
 
 
-    public List<VillageDTO> getAllSearchVillagesByNameAndRegionName(String regionName, String name) {
-        List<Village> villages = villageRepository.findByNameAndRegionName(regionName, name);
-        return villages.stream()
-                .map(this::villageToVillageDTO)
-                .toList();
-    }
 
-    public List<VillageDTO> getAllSearchVillagesByRegionName(String regionName) {
+        public List<VillageDTO> getAllSearchVillagesByRegionName(String regionName) {
         List<Village> villages = villageRepository.findByRegionName(regionName);
         return villages.stream()
                 .map(this::villageToVillageDTO)
@@ -135,51 +127,69 @@ public class VillageService {
     }
 
 
+    public List<VillageDTO> getAllSearchVillagesByNameAndRegionName(String regionName, String name) {
+        List<Village> villages = villageRepository.findByNameContainingIgnoreCaseAndRegionName(regionName, name);
+        return villages.stream()
+                .map(this::villageToVillageDTO)
+                .toList();
+    }
+
+
+
     public List<VillageDTO> getSearchVillages(List<String> objectAroundVillageDTOS, List<String> livingConditionDTOS, Children children) {
         List<Village> villages = villageRepository.searchVillages(objectAroundVillageDTOS, livingConditionDTOS, children.getEnumValue());
-        List<VillageDTO> villageDTOs = convertToDTO(villages);
-        return villageDTOs;
+        return convertToDTO(villages);
     }
+
 
     public List<VillageDTO> getSearchVillagesByLivingConditionAndChildren(List<String> livingConditionDTOS, Children children) {
         List<Village> villages = villageRepository.searchVillagesByLivingConditionAndChildren(livingConditionDTOS, children.getEnumValue());
-        List<VillageDTO> villageDTOs = convertToDTOWithoutObject(villages);
-        return villageDTOs;
+        return villageToVillageDTOWithoutObject(villages);
     }
 
     public List<VillageDTO> getSearchVillagesByObjectAndChildren(List<String> objectAroundVillageDTOS, Children children) {
         List<Village> villages = villageRepository.searchVillagesByObjectAndChildren(objectAroundVillageDTOS, children.getEnumValue());
-        List<VillageDTO> villageDTOs = convertToDTOWithoutLivingCondition(villages);
-        return villageDTOs;
+        return villageToVillageDTOWithoutLivingCondition(villages);
     }
-
 
     public List<VillageDTO> getSearchVillagesByObjectAndLivingCondition(List<String> objectAroundVillageDTOS, List<String> livingConditionDTOS) {
         List<Village> villages = villageRepository.searchVillagesByObjectAndLivingCondition(objectAroundVillageDTOS, livingConditionDTOS);
-        List<VillageDTO> villageDTOs = convertToDTOWithoutChildren(villages);
-        return villageDTOs;
+        return villageToVillageDTOWithoutChildren(villages);
     }
 
     public List<VillageDTO> getSearchVillagesByChildrenCount(Children children) {
         List<Village> villages = villageRepository.searchVillagesByChildrenCount(children.getEnumValue());
-        List<VillageDTO> villageDTOs = convertToDTOChildren(villages);
-        return villageDTOs;
+        return villageToVillageDTOChildren(villages);
     }
 
     public List<VillageDTO> getSearchVillagesByObject(List<String> objectAroundVillageDTOS) {
         List<Village> villages = villageRepository.searchVillagesByObject(objectAroundVillageDTOS);
-        List<VillageDTO> villageDTOs = convertToDTOObject(villages);
-        return villageDTOs;
+        return villageToVillageDTOObject(villages);
     }
 
     public List<VillageDTO> getSearchVillagesByLivingCondition(List<String> livingConditionDTOS) {
         List<Village> villages = villageRepository.searchVillagesByLivingCondition(livingConditionDTOS);
-        List<VillageDTO> villageDTOs = convertToDTOLivingCondition(villages);
-        return villageDTOs;
+        return villageToVillageDTOLivingCondition(villages);
     }
 
 
-    private List<VillageDTO> convertToDTOObject(List<Village> villages) {
+
+    private List<ObjectAroundVillageDTO> convertToObjectAroundVillageDTOList(List<ObjectVillage> objectVillages) {
+        List<ObjectAroundVillageDTO> objectAroundVillageDTOs = new ArrayList<>();
+
+        for (ObjectVillage ov : objectVillages) {
+            ObjectAroundVillageDTO objectAroundVillageDTO = new ObjectAroundVillageDTO();
+
+            objectAroundVillageDTO.setId(ov.getObject().getId());
+            objectAroundVillageDTO.setType(ov.getObject().getType());
+
+            objectAroundVillageDTOs.add(objectAroundVillageDTO);
+        }
+
+        return objectAroundVillageDTOs;
+    }
+
+    private List<VillageDTO> villageToVillageDTOObject(List<Village> villages) {
         List<VillageDTO> villageDTOs = new ArrayList<>();
 
         for (Village village : villages) {
@@ -196,7 +206,7 @@ public class VillageService {
         return villageDTOs;
     }
 
-    private List<VillageDTO> convertToDTOLivingCondition(List<Village> villages) {
+    private List<VillageDTO> villageToVillageDTOLivingCondition(List<Village> villages) {
         List<VillageDTO> villageDTOs = new ArrayList<>();
 
         for (Village village : villages) {
@@ -212,7 +222,8 @@ public class VillageService {
 
         return villageDTOs;
     }
-    private List<VillageDTO> convertToDTOChildren(List<Village> villages) {
+
+    private List<VillageDTO> villageToVillageDTOChildren(List<Village> villages) {
         List<VillageDTO> villageDTOs = new ArrayList<>();
 
         for (Village village : villages) {
@@ -228,7 +239,8 @@ public class VillageService {
 
         return villageDTOs;
     }
-    private List<VillageDTO> convertToDTOWithoutChildren(List<Village> villages) {
+
+    private List<VillageDTO> villageToVillageDTOWithoutChildren(List<Village> villages) {
         List<VillageDTO> villageDTOs = new ArrayList<>();
 
         for (Village village : villages) {
@@ -246,7 +258,7 @@ public class VillageService {
         return villageDTOs;
     }
 
-    private List<VillageDTO> convertToDTOWithoutObject(List<Village> villages) {
+    private List<VillageDTO> villageToVillageDTOWithoutObject(List<Village> villages) {
         List<VillageDTO> villageDTOs = new ArrayList<>();
 
         for (Village village : villages) {
@@ -264,7 +276,7 @@ public class VillageService {
         return villageDTOs;
     }
 
-    private List<VillageDTO> convertToDTOWithoutLivingCondition(List<Village> villages) {
+    private List<VillageDTO> villageToVillageDTOWithoutLivingCondition(List<Village> villages) {
         List<VillageDTO> villageDTOs = new ArrayList<>();
 
         for (Village village : villages) {
@@ -301,20 +313,6 @@ public class VillageService {
         return villageDTOs;
     }
 
-    private List<ObjectAroundVillageDTO> convertToObjectAroundVillageDTOList(List<ObjectVillage> objectVillages) {
-        List<ObjectAroundVillageDTO> objectAroundVillageDTOs = new ArrayList<>();
-
-        for (ObjectVillage ov : objectVillages) {
-            ObjectAroundVillageDTO objectAroundVillageDTO = new ObjectAroundVillageDTO();
-
-            objectAroundVillageDTO.setId(ov.getObject().getId());
-            objectAroundVillageDTO.setType(ov.getObject().getType());
-
-            objectAroundVillageDTOs.add(objectAroundVillageDTO);
-        }
-
-        return objectAroundVillageDTOs;
-    }
 
 
     private List<LivingConditionDTO> convertToLivingConditionDTOList(List<VillageLivingConditions> villageLivingConditions) {

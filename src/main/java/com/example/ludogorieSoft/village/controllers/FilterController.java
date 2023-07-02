@@ -12,7 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("api/v1/filter")
 public class FilterController {
-//test
+
     @Autowired
     private VillageService villageSearchService;
 
@@ -23,16 +23,19 @@ public class FilterController {
         return ResponseEntity.ok(villages);
     }
 
+
     @GetMapping("/byRegion")
     public ResponseEntity<List<VillageDTO>> getVillageByRegion(@RequestParam("region") String region) {
         List<VillageDTO> villages = villageSearchService.getAllSearchVillagesByRegionName(region);
         return ResponseEntity.ok(villages);
     }
 
+
     @GetMapping("/searchAll")
     public ResponseEntity<List<VillageDTO>> getVillageByNameAndRegion(@RequestParam String region, @RequestParam String keyword) {
         return ResponseEntity.ok(villageSearchService.getAllSearchVillagesByNameAndRegionName(region, keyword));
     }
+
 
 
     @GetMapping("/searchVillages")
@@ -77,12 +80,14 @@ public class FilterController {
         return ResponseEntity.ok(villages);
     }
 
+
     @GetMapping("/searchVillagesByChildrenCount")
     public ResponseEntity<List<VillageDTO>> searchVillagesByChildrenCount(@RequestParam("children") String children) {
         Children childrenEnum = Children.valueOf(children);
         List<VillageDTO> villages = villageSearchService.getSearchVillagesByChildrenCount(childrenEnum);
         return ResponseEntity.ok(villages);
     }
+
 
     @GetMapping("/searchVillagesByObject")
     public ResponseEntity<List<VillageDTO>> searchVillagesByObject(
@@ -91,10 +96,12 @@ public class FilterController {
         return ResponseEntity.ok(villages);
     }
 
+
     @GetMapping("/searchVillagesByLivingCondition")
     public ResponseEntity<List<VillageDTO>> searchVillagesByLivingCondition(@RequestParam("livingConditionDTOS") List<String> livingConditionDTOS) {
         List<VillageDTO> villages = villageSearchService.getSearchVillagesByLivingCondition(livingConditionDTOS);
         return ResponseEntity.ok(villages);
     }
+
 
 }
