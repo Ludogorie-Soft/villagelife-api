@@ -1,9 +1,11 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.VillageAnswerQuestionDTO;
+import com.example.ludogorieSoft.village.dtos.VillagePopulationAssertionDTO;
 import com.example.ludogorieSoft.village.model.Question;
 import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.model.VillageAnswerQuestion;
+import com.example.ludogorieSoft.village.model.VillagePopulationAssertion;
 import com.example.ludogorieSoft.village.repositories.QuestionRepository;
 import com.example.ludogorieSoft.village.repositories.VillageAnswerQuestionRepository;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -25,8 +28,10 @@ public class VillageAnswerQuestionService {
     private final ModelMapper modelMapper;
     private final VillageService villageService;
     private final QuestionService questionService;
-    public VillageAnswerQuestionDTO toDTO(VillageAnswerQuestion villageAnswerQuestion){
-        return modelMapper.map(villageAnswerQuestion, VillageAnswerQuestionDTO.class);}
+
+    public VillageAnswerQuestionDTO toDTO(VillageAnswerQuestion villageAnswerQuestion) {
+        return modelMapper.map(villageAnswerQuestion, VillageAnswerQuestionDTO.class);
+    }
 
 
     public List<VillageAnswerQuestionDTO> getAllVillageAnswerQuestions() {
@@ -82,5 +87,24 @@ public class VillageAnswerQuestionService {
         foundVillageAnswerQuestion.get().setAnswer(villageAnswerQuestionDTO.getAnswer());
         villageAnswerQuestionRepository.save(foundVillageAnswerQuestion.get());
         return toDTO(foundVillageAnswerQuestion.get());
+    }
+
+    public List<VillageAnswerQuestionDTO> getVillageAnswerQuestionByVillageId(Long id) {
+        List<VillageAnswerQuestion> villageAnswerQuestionList = villageAnswerQuestionRepository.findAll();
+
+        if (id != null) {
+            villageAnswerQuestionList = villageAnswerQuestionList.stream()
+                    .filter(assertion -> id.equals(assertion.getVillage().getId()))
+                    .toList();
+        }
+
+
+        villageAnswerQuestionList = villageAnswerQuestionList.stream()
+                .filter(assertion -> assertion.getAnswer() != null && !assertion.getAnswer().equals(""))
+                .toList();
+
+        return villageAnswerQuestionList.stream()
+                .map(this::toDTO)
+                .toList();
     }
 }

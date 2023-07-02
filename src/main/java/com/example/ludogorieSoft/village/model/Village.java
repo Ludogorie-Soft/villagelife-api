@@ -6,8 +6,11 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Data
@@ -22,6 +25,12 @@ public class Village {
     @NotBlank
     @Column(nullable = false)
     private String name;
+    @ManyToOne
+    @JoinColumn(name = "region_id")
+    private Region region;
+    @Min(0)
+    @NotNull
+    private int populationCount;
     @OneToOne
     private Population population;
     @CreationTimestamp
@@ -32,5 +41,18 @@ public class Village {
     private Administrator admin;
     @CreationTimestamp
     private LocalDateTime dateApproved;
+
+
+
+
+    @OneToMany(mappedBy = "village")
+    private List<ObjectVillage> objectVillages;
+
+
+    @OneToMany(mappedBy = "village")
+    private List<VillageLivingConditions> villageLivingConditions;
+
+
+
 
 }

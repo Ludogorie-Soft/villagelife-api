@@ -1,6 +1,7 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.PopulationDTO;
+import com.example.ludogorieSoft.village.enums.NumberOfPopulation;
 import com.example.ludogorieSoft.village.model.Population;
 import com.example.ludogorieSoft.village.repositories.PopulationRepository;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
@@ -31,16 +32,17 @@ public class PopulationService {
                 .map(this::populationToPopulationDTO)
                 .toList();
     }
-
-    //public PopulationDTO createPopulation(PopulationDTO populationDTO) {
-    //    populationRepository.save(populationDTOtoPopulation(populationDTO));
-    //    return populationDTO;
-    //}
     public PopulationDTO createPopulation(PopulationDTO populationDTO) {
         Population population = populationDTOtoPopulation(populationDTO);
         Population savedPopulation = populationRepository.save(population);
         populationDTO.setId(savedPopulation.getId());
         return populationDTO;
+    }
+    public Long createPopulationWithNullValues() {
+        Population population=new Population();
+        population.setNumberOfPopulation(NumberOfPopulation.UP_TO_10_PEOPLE);
+        populationRepository.save(population);
+        return population.getId();
     }
 
     public PopulationDTO getPopulationById(Long id) {
@@ -72,4 +74,13 @@ public class PopulationService {
         populationRepository.save(findPopulation.get());
         return populationToPopulationDTO(findPopulation.get());
     }
+
+    public PopulationDTO getPopulationByVillageId(Long id) {
+        Optional<Population> population = populationRepository.findById(id);
+        if (!population.isPresent()) {
+            throw new ApiRequestException("This population not found");
+        }
+        return populationToPopulationDTO(population.get());
+    }
+
 }

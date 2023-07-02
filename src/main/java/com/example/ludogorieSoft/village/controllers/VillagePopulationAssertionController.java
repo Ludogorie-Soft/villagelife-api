@@ -25,6 +25,11 @@ public class VillagePopulationAssertionController {
     public ResponseEntity<VillagePopulationAssertionDTO> getVillagePopulationAssertionById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(villagePopulationAssertionService.getByID(id));
     }
+
+    @GetMapping("/village/{id}")
+    public ResponseEntity<List<VillagePopulationAssertionDTO>> getVillagePopulationAssertionByVillageId(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(villagePopulationAssertionService.getVillagePopulationAssertionByVillageId(id));
+    }
     @PutMapping("/{id}")
     public ResponseEntity<VillagePopulationAssertionDTO> updateVillagePopulationAssertionById(@PathVariable("id") Long id, @Valid @RequestBody VillagePopulationAssertionDTO villagePopulationAssertionDTO) {
         return ResponseEntity.ok(villagePopulationAssertionService.updateVillagePopulationAssertion(id, villagePopulationAssertionDTO));

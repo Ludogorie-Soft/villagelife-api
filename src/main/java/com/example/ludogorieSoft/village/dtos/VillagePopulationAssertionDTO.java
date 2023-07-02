@@ -13,8 +13,5 @@ public class VillagePopulationAssertionDTO {
         private Long id;
         private Long villageId;
         private Long populatedAssertionId;
-        //private String answer;
         private Consents answer;
-
-
 }

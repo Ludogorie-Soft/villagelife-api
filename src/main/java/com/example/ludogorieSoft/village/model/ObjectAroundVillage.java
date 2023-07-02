@@ -18,6 +18,6 @@ public class ObjectAroundVillage {
     @Column(name = "id", nullable = false)
     private Long id;
     @NotBlank
-    @Column(unique = true, nullable = false)
+    @Column(name = "type",unique = true, nullable = false)
     private String type;
 }

@@ -4,16 +4,14 @@ import com.example.ludogorieSoft.village.dtos.EthnicityVillageDTO;
 import com.example.ludogorieSoft.village.model.Ethnicity;
 import com.example.ludogorieSoft.village.model.EthnicityVillage;
 import com.example.ludogorieSoft.village.model.Village;
-import com.example.ludogorieSoft.village.repositories.EthnicityRepository;
 import com.example.ludogorieSoft.village.repositories.EthnicityVillageRepository;
-import com.example.ludogorieSoft.village.repositories.VillageRepository;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
+
 
 
 @Service
@@ -21,8 +19,6 @@ import java.util.Optional;
 public class EthnicityVillageService {
     private final ModelMapper modelMapper;
     private final EthnicityVillageRepository ethnicityVillageRepository;
-    private final EthnicityRepository ethnicityRepository;
-    private final VillageRepository villageRepository;
     private final VillageService villageService;
     private final EthnicityService ethnicityService;
 
@@ -82,6 +78,19 @@ public class EthnicityVillageService {
             throw new ApiRequestException("Ethnicity in Village with id " + id + " not found");
         }
     }
+    public EthnicityVillageDTO getVillageEthnicityByVillageId(Long villageId) {
+        Optional<EthnicityVillage> optionalEthnicityVillage = findEthnicityVillageByVillageId(villageId);
+
+        return optionalEthnicityVillage.map(ethnicityVillage -> getEthnicityVillageById(ethnicityVillage.getId()))
+                .orElse(new EthnicityVillageDTO());
+    }
+
+    private Optional<EthnicityVillage> findEthnicityVillageByVillageId(Long villageId) {
+        return ethnicityVillageRepository.findAll().stream()
+                .filter(ethnicityVillage -> ethnicityVillage.getVillage() != null && ethnicityVillage.getVillage().getId().equals(villageId))
+                .findFirst();
+    }
+
 
 
 

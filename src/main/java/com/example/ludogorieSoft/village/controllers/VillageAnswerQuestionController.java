@@ -26,6 +26,10 @@ public class VillageAnswerQuestionController {
     public ResponseEntity<VillageAnswerQuestionDTO> getVillageAnswerQuestionById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(villageAnswerQuestionService.getVillageAnswerQuestionById(id));
     }
+    @GetMapping("/village/{id}")
+    public ResponseEntity<List<VillageAnswerQuestionDTO>> getVillageAnswerQuestionByVillageId(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(villageAnswerQuestionService.getVillageAnswerQuestionByVillageId(id));
+    }
 
     @PostMapping
     public ResponseEntity<VillageAnswerQuestionDTO> createVillageAnswerQuestion(@Valid @RequestBody VillageAnswerQuestionDTO villageAnswerQuestionDTO) {

@@ -1,0 +1,100 @@
+package com.example.ludogorieSoft.village.services;
+
+import com.example.ludogorieSoft.village.dtos.VillageImageDTO;
+import com.example.ludogorieSoft.village.model.Village;
+import com.example.ludogorieSoft.village.model.VillageImage;
+import com.example.ludogorieSoft.village.repositories.VillageImageRepository;
+import lombok.AllArgsConstructor;
+import org.apache.tika.Tika;
+import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+@Service
+@AllArgsConstructor
+public class VillageImageService {
+    private final VillageImageRepository villageImageRepository;
+    private static final String UPLOAD_DIRECTORY = "src/main/resources/static/village_images";
+    private final ModelMapper modelMapper;
+    private final VillageService villageService;
+    private static final Logger logger = LoggerFactory.getLogger(VillageImageService.class);
+
+    public List<String> createImagePaths(List<byte[]> imageBytes, Long villageId) {
+        List<String> imagePaths = new ArrayList<>();
+        for (byte[] image : imageBytes) {
+            if (image.length > 0) {
+                String imagePath = processImage(image);
+                if (imagePath != null) {
+                    imagePaths.add(imagePath);
+                    createVillageImageDTO(villageId, imagePath);
+                }
+            }
+        }
+        return imagePaths;
+    }
+
+    public String processImage(byte[] image) {
+        try {
+            Tika tika = new Tika();
+            String mimeType = tika.detect(image);
+            if (!mimeType.startsWith("image/")) {
+                return null;
+            }
+            String fileName = generateFileName();
+            String filePath = getUploadDirectoryPath();
+            createUploadDirectory(filePath);
+            String fullPath = filePath + File.separator + fileName;
+            writeImageToFile(image, fullPath);
+            return fileName;
+        } catch (IOException e) {
+            logger.error("An error occurred while processing the image", e);
+            return null;
+        }
+    }
+
+    public String generateFileName() {
+        return UUID.randomUUID() + ".jpg";
+    }
+
+    public void createUploadDirectory(String filePath) {
+        File uploadDir = new File(filePath);
+        if (!uploadDir.exists()) {
+            uploadDir.mkdirs();
+        }
+    }
+
+    public void writeImageToFile(byte[] image, String fullPath) throws IOException {
+        try (FileOutputStream fos = new FileOutputStream(fullPath)) {
+            fos.write(image);
+        }
+    }
+
+    public void createVillageImageDTO(Long villageId, String fileName) {
+        VillageImageDTO villageImageDTO = new VillageImageDTO(null, villageId, fileName);
+        createVillageImageDTO(villageImageDTO);
+    }
+
+    public String getUploadDirectoryPath() {
+        String currentPath = System.getProperty("user.dir");
+        return currentPath + File.separator + UPLOAD_DIRECTORY;
+    }
+
+    public VillageImageDTO createVillageImageDTO(VillageImageDTO villageImageDTO) {
+        VillageImage villageImage = villageImageDTOToVillageImage(villageImageDTO);
+        Village village = villageService.checkVillage(villageImageDTO.getVillageId());
+        villageImage.setVillage(village);
+        villageImageRepository.save(villageImage);
+        return villageImageDTO;
+    }
+    public VillageImage villageImageDTOToVillageImage(VillageImageDTO villageImageDTO) {
+        return modelMapper.map(villageImageDTO, VillageImage.class);
+    }
+}

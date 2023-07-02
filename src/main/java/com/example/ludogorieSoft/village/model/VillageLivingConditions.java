@@ -23,7 +23,7 @@ public class VillageLivingConditions {
     @ManyToOne
     private LivingCondition livingCondition;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private Consents consents;
 
 }

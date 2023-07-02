@@ -15,8 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-
-
+import java.util.stream.Collectors;
 
 
 @Service
@@ -28,19 +27,20 @@ public class VillagePopulationAssertionService {
     private final PopulatedAssertionService populatedAssertionService;
     private final VillageService villageService;
     private final ModelMapper modelMapper;
+
     public VillagePopulationAssertionDTO toDTO(VillagePopulationAssertion villagePopulationAssertion) {
         return modelMapper.map(villagePopulationAssertion, VillagePopulationAssertionDTO.class);
     }
 
-    public List<VillagePopulationAssertionDTO> getAllVillagePopulationAssertion(){
-        List<VillagePopulationAssertion> villagePopulationAssertions=villagePopulationAssertionRepository.findAll();
+    public List<VillagePopulationAssertionDTO> getAllVillagePopulationAssertion() {
+        List<VillagePopulationAssertion> villagePopulationAssertions = villagePopulationAssertionRepository.findAll();
         return villagePopulationAssertions
                 .stream()
                 .map(this::toDTO)
                 .toList();
     }
 
-    public VillagePopulationAssertionDTO createVillagePopulationAssertionDTO (VillagePopulationAssertionDTO villagePopulationAssertionDTO) {
+    public VillagePopulationAssertionDTO createVillagePopulationAssertionDTO(VillagePopulationAssertionDTO villagePopulationAssertionDTO) {
         VillagePopulationAssertion villagePopulationAssertion = new VillagePopulationAssertion();
         Village village = villageService.checkVillage(villagePopulationAssertionDTO.getVillageId());
         villagePopulationAssertion.setVillage(village);
@@ -53,9 +53,9 @@ public class VillagePopulationAssertionService {
         return toDTO(villagePopulationAssertion);
     }
 
-    public VillagePopulationAssertionDTO getByID(Long id){
-        Optional<VillagePopulationAssertion> optionalVillagePopulationAssertion= villagePopulationAssertionRepository.findById(id);
-        if (optionalVillagePopulationAssertion.isEmpty()){
+    public VillagePopulationAssertionDTO getByID(Long id) {
+        Optional<VillagePopulationAssertion> optionalVillagePopulationAssertion = villagePopulationAssertionRepository.findById(id);
+        if (optionalVillagePopulationAssertion.isEmpty()) {
             throw new ApiRequestException("VillagePopulationAssertion Not Found ");
         }
         return toDTO(optionalVillagePopulationAssertion.get());
@@ -86,5 +86,18 @@ public class VillagePopulationAssertionService {
         return toDTO(foundVillagePopulationAssertion.get());
     }
 
-}
+    public List<VillagePopulationAssertionDTO> getVillagePopulationAssertionByVillageId(Long id) {
+        List<VillagePopulationAssertion> villagePopulationAssertionsList = villagePopulationAssertionRepository.findAll();
 
+        if (id != null) {
+            villagePopulationAssertionsList = villagePopulationAssertionsList.stream()
+                    .filter(assertion -> id.equals(assertion.getVillage().getId()))
+                    .toList();
+        }
+
+        return villagePopulationAssertionsList.stream()
+                .map(this::toDTO)
+                .toList();
+    }
+
+}

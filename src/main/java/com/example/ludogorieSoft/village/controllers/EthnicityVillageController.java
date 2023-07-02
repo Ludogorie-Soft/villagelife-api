@@ -29,6 +29,11 @@ public class EthnicityVillageController {
         return ResponseEntity.ok(ethnicityVillageService.getEthnicityVillageById(id));
     }
 
+    @GetMapping("/village/{id}")
+    public ResponseEntity<EthnicityVillageDTO> getEthnicityVillageByVillageId(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(ethnicityVillageService.getVillageEthnicityByVillageId(id));
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<EthnicityVillageDTO> updateEthnicityVillageById(@PathVariable Long id, @Valid  @RequestBody EthnicityVillageDTO ethnicityVillageDTO) {
         return ResponseEntity.ok(ethnicityVillageService.updateEthnicityVillageById(id, ethnicityVillageDTO));
