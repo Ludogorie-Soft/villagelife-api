@@ -8,14 +8,15 @@ import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.repositories.ObjectAroundVillageRepository;
 import com.example.ludogorieSoft.village.repositories.ObjectVillageRepository;
 import com.example.ludogorieSoft.village.repositories.VillageRepository;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -173,6 +174,41 @@ class ObjectVillageServiceTest {
         assertThrows(ApiRequestException.class, () -> objectVillageService.deleteObjectVillageById(objectId));
         verify(objectVillageRepository).findById(objectId);
         verifyNoMoreInteractions(objectVillageRepository);
+    }
+
+    @Test
+    void getObjectVillageByVillageId_ValidId_ReturnsFilteredObjectVillageDTOList() {
+        // Arrange
+        Long villageId = 1L;
+        Village village = new Village();
+        village.setId(villageId);
+
+        ObjectVillage objectVillage1 = new ObjectVillage();
+        objectVillage1.setId(1L);
+        objectVillage1.setVillage(village);
+        ObjectVillage objectVillage2 = new ObjectVillage();
+        objectVillage2.setId(2L);
+        objectVillage2.setVillage(village);
+        List<ObjectVillage> objectVillageList = Arrays.asList(objectVillage1, objectVillage2);
+
+        ObjectVillageDTO objectVillageDTO1 = new ObjectVillageDTO();
+        objectVillageDTO1.setId(1L);
+        ObjectVillageDTO objectVillageDTO2 = new ObjectVillageDTO();
+        objectVillageDTO2.setId(2L);
+        List<ObjectVillageDTO> expectedObjectVillageDTOList = Arrays.asList(objectVillageDTO1, objectVillageDTO2);
+
+        when(objectVillageRepository.findAll()).thenReturn(objectVillageList);
+        when(modelMapper.map(objectVillage1, ObjectVillageDTO.class)).thenReturn(objectVillageDTO1);
+        when(modelMapper.map(objectVillage2, ObjectVillageDTO.class)).thenReturn(objectVillageDTO2);
+
+        // Act
+        List<ObjectVillageDTO> result = objectVillageService.getObjectVillageByVillageId(villageId);
+
+        // Assert
+        assertEquals(expectedObjectVillageDTOList, result);
+        verify(objectVillageRepository, times(1)).findAll();
+        verify(modelMapper, times(1)).map(objectVillage1, ObjectVillageDTO.class);
+        verify(modelMapper, times(1)).map(objectVillage2, ObjectVillageDTO.class);
     }
 
 
