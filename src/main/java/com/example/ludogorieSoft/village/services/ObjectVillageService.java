@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -84,16 +85,18 @@ public class ObjectVillageService {
         objectVillageRepository.delete(objectVillage.get());
     }
 
-    public List<ObjectVillageDTO> getObjectVillageByVillageId(Long id) {
-        List<ObjectVillage> objectVillage = objectVillageRepository.findAll();
-        List<ObjectVillage> filteredList = objectVillage.stream()
-                .filter(obj -> obj.getVillage().getId().equals(id)).
-                toList();
 
-        return filteredList
-                .stream()
+    public List<ObjectVillageDTO> getObjectVillageByVillageId(Long id) {
+        List<ObjectVillage> objectVillageList = objectVillageRepository.findAll();
+
+        List<ObjectVillage> filteredList = objectVillageList.stream()
+                .filter(obj -> obj.getVillage() != null && obj.getVillage().getId().equals(id))
+                .toList();
+
+        return filteredList.stream()
                 .map(this::objectVillageToObjectVillageDTO)
                 .toList();
     }
+
 
 }
