@@ -15,8 +15,7 @@ import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
- class RegionTest {
-
+class RegionTest {
 
 
     @Test
@@ -94,7 +93,6 @@ import static org.junit.Assert.assertTrue;
     }
 
 
-
     @Test
     void regionNameFieldHasNotBlankAnnotation() throws NoSuchFieldException {
         // Arrange
@@ -104,7 +102,6 @@ import static org.junit.Assert.assertTrue;
         // Assert
         assertNotNull(notBlankAnnotation);
     }
-
 
 
     @Test
