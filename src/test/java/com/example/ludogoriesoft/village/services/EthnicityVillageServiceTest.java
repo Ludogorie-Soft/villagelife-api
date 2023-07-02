@@ -1,14 +1,14 @@
 package com.example.ludogorieSoft.village.services;
 
-import com.example.ludogorieSoft.village.dtos.EthnicityDTO;
 import com.example.ludogorieSoft.village.dtos.EthnicityVillageDTO;
+import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.Ethnicity;
 import com.example.ludogorieSoft.village.model.EthnicityVillage;
 import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.repositories.EthnicityRepository;
 import com.example.ludogorieSoft.village.repositories.EthnicityVillageRepository;
 import com.example.ludogorieSoft.village.repositories.VillageRepository;
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,7 +25,6 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
-import static org.mockito.ArgumentMatchers.anyLong;
 
 @ExtendWith(MockitoExtension.class)
 class EthnicityVillageServiceTest {
@@ -48,9 +47,47 @@ class EthnicityVillageServiceTest {
         modelMapper = mock(ModelMapper.class);
         ethnicityVillageService = new EthnicityVillageService(modelMapper, ethnicityVillageRepository, villageService, ethnicityService);
     }
+    @Test
+    void deleteEthnicityVillageById_ShouldDeleteWhenIdExists() {
+        Long id = 1L;
+        EthnicityVillageRepository ethnicityVillageRepository = mock(EthnicityVillageRepository.class);
+
+        when(ethnicityVillageRepository.existsById(id)).thenReturn(true);
+
+        EthnicityVillageService ethnicityVillageService = new EthnicityVillageService(modelMapper, ethnicityVillageRepository, villageService, ethnicityService);
+        ethnicityVillageService.deleteEthnicityVillageById(id);
+
+        verify(ethnicityVillageRepository, times(1)).existsById(id);
+        verify(ethnicityVillageRepository, times(1)).deleteById(id);
+    }
+
+
 
     @Test
-     void testGetAllEthnicityVillages() {
+    void getVillageEthnicityByVillageId_ShouldReturnEthnicityVillageDTO_WhenMatchingVillageId() {
+        Long villageId = 1L;
+        EthnicityVillage ethnicityVillage = new EthnicityVillage();
+        ethnicityVillage.setId(1L);
+        ethnicityVillage.setVillage(new Village());
+        ethnicityVillage.setEthnicity(new Ethnicity());
+
+        // Присвояване на идентификатор на обекта Village
+        ethnicityVillage.getVillage().setId(villageId);
+
+        when(ethnicityVillageRepository.findAll()).thenReturn(List.of(ethnicityVillage));
+        when(ethnicityVillageRepository.findById(anyLong())).thenReturn(Optional.of(ethnicityVillage));
+
+        EthnicityVillageDTO result = ethnicityVillageService.getVillageEthnicityByVillageId(villageId);
+
+        Assertions.assertNotNull(result);
+
+        verify(ethnicityVillageRepository, times(1)).findAll();
+        verify(ethnicityVillageRepository, times(1)).findById(anyLong());
+    }
+
+
+    @Test
+    void testGetAllEthnicityVillages() {
         EthnicityVillage ethnicityVillage1 = new EthnicityVillage();
         ethnicityVillage1.setId(1L);
         EthnicityVillage ethnicityVillage2 = new EthnicityVillage();
@@ -80,7 +117,7 @@ class EthnicityVillageServiceTest {
     }
 
     @Test
-     void testGetEthnicityVillageByIdWhenEthnicityVillageExists() {
+    void testGetEthnicityVillageByIdWhenEthnicityVillageExists() {
         Long id = 1L;
         EthnicityVillage ethnicityVillage = new EthnicityVillage();
         ethnicityVillage.setId(id);
@@ -96,7 +133,7 @@ class EthnicityVillageServiceTest {
     }
 
     @Test
-     void testGetEthnicityVillageByIdWhenEthnicityVillageDoesNotExist() {
+    void testGetEthnicityVillageByIdWhenEthnicityVillageDoesNotExist() {
         Long id = 1L;
         when(ethnicityVillageRepository.findById(id)).thenReturn(Optional.empty());
 
@@ -104,7 +141,7 @@ class EthnicityVillageServiceTest {
     }
 
     @Test
-     void testUpdateEthnicityVillageByIdWhenEthnicityVillageExists() {
+    void testUpdateEthnicityVillageByIdWhenEthnicityVillageExists() {
         Long id = 1L;
         EthnicityVillageDTO ethnicityVillageDTO = new EthnicityVillageDTO();
         ethnicityVillageDTO.setEthnicityId(1L);
@@ -130,7 +167,7 @@ class EthnicityVillageServiceTest {
     }
 
     @Test
-     void testUpdateEthnicityVillageByIdWhenEthnicityVillageDoesNotExist() {
+    void testUpdateEthnicityVillageByIdWhenEthnicityVillageDoesNotExist() {
         Long id = 1L;
         EthnicityVillageDTO ethnicityVillageDTO = new EthnicityVillageDTO();
         when(ethnicityVillageRepository.findById(id)).thenReturn(Optional.empty());
@@ -139,7 +176,7 @@ class EthnicityVillageServiceTest {
     }
 
     @Test
-     void testCreateEthnicityVillage() {
+    void testCreateEthnicityVillage() {
         EthnicityVillageDTO ethnicityVillageDTO = new EthnicityVillageDTO();
         ethnicityVillageDTO.setEthnicityId(1L);
         ethnicityVillageDTO.setVillageId(1L);
@@ -161,7 +198,7 @@ class EthnicityVillageServiceTest {
 
 
     @Test
-     void testDeleteEthnicityVillageByIdWhenEthnicityVillageDoesNotExist() {
+    void testDeleteEthnicityVillageByIdWhenEthnicityVillageDoesNotExist() {
         Long id = 1L;
         when(ethnicityVillageRepository.existsById(anyLong())).thenReturn(false);
 
@@ -173,7 +210,7 @@ class EthnicityVillageServiceTest {
 
 
     @Test
-     void testDeleteEthnicityVillageByIdWhenEmptyResultDataAccessExceptionThrown() {
+    void testDeleteEthnicityVillageByIdWhenEmptyResultDataAccessExceptionThrown() {
         lenient().doThrow(EmptyResultDataAccessException.class).when(ethnicityVillageRepository).deleteById(anyLong());
 
         assertThrows(ApiRequestException.class, () -> {
