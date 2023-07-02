@@ -6,6 +6,8 @@ import com.example.ludogorieSoft.village.model.*;
 
 import com.example.ludogorieSoft.village.repositories.RegionRepository;
 import com.example.ludogorieSoft.village.repositories.VillageRepository;
+import com.example.ludogorieSoft.village.services.RegionService;
+import com.example.ludogorieSoft.village.services.VillageService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

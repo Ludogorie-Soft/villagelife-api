@@ -1,5 +1,6 @@
 package com.example.ludogorieSoft.village.controllers;
 
+import com.example.ludogorieSoft.village.controllers.VillageLivingConditionController;
 import com.example.ludogorieSoft.village.dtos.VillageLivingConditionDTO;
 import com.example.ludogorieSoft.village.enums.Consents;
 import com.example.ludogorieSoft.village.services.VillageLivingConditionService;

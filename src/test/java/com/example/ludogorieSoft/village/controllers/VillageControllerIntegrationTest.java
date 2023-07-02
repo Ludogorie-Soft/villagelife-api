@@ -1,5 +1,6 @@
 package com.example.ludogorieSoft.village.controllers;
 
+import com.example.ludogorieSoft.village.controllers.VillageController;
 import com.example.ludogorieSoft.village.dtos.PopulationDTO;
 import com.example.ludogorieSoft.village.dtos.VillageDTO;
 import com.example.ludogorieSoft.village.services.VillageService;

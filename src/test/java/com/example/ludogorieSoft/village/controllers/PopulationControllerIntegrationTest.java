@@ -1,5 +1,6 @@
 package com.example.ludogorieSoft.village.controllers;
 
+import com.example.ludogorieSoft.village.controllers.PopulationController;
 import com.example.ludogorieSoft.village.dtos.PopulationDTO;
 import com.example.ludogorieSoft.village.enums.Children;
 import com.example.ludogorieSoft.village.enums.Foreigners;

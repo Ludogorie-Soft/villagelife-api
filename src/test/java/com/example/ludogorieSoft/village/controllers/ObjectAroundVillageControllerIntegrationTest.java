@@ -1,5 +1,6 @@
 package com.example.ludogorieSoft.village.controllers;
 
+import com.example.ludogorieSoft.village.controllers.ObjectAroundVillageController;
 import com.example.ludogorieSoft.village.dtos.ObjectAroundVillageDTO;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.services.ObjectAroundVillageService;

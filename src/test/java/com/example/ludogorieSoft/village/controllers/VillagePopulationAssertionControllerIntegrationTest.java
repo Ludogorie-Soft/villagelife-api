@@ -1,5 +1,6 @@
 package com.example.ludogorieSoft.village.controllers;
 
+import com.example.ludogorieSoft.village.controllers.VillagePopulationAssertionController;
 import com.example.ludogorieSoft.village.dtos.VillagePopulationAssertionDTO;
 import com.example.ludogorieSoft.village.services.VillagePopulationAssertionService;
 import org.junit.jupiter.api.Test;

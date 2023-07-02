@@ -3,6 +3,7 @@ package com.example.ludogorieSoft.village.services;
 import com.example.ludogorieSoft.village.dtos.*;
 import com.example.ludogorieSoft.village.enums.Consents;
 import com.example.ludogorieSoft.village.enums.Distance;
+import com.example.ludogorieSoft.village.services.*;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
