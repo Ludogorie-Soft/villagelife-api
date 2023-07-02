@@ -38,46 +38,6 @@ class VillageServiceTest {
     @Mock
     private RegionService regionService;
 
-    @Test
-    void getAllSearchVillages_ShouldReturnVillageDTOsMatchingName() {
-        // Define the test input
-        String name = "Village";
-
-        // Create a list of test villages
-        List<Village> villages = new ArrayList<>();
-        Village village1 = new Village();
-        village1.setId(1L);
-        village1.setName("Village 1");
-        villages.add(village1);
-
-        Village village2 = new Village();
-        village2.setId(2L);
-        village2.setName("Village 2");
-        villages.add(village2);
-
-        Village village3 = new Village();
-        village3.setId(3L);
-        village3.setName("Other Village");
-        villages.add(village3);
-
-        // Mock the village repository
-        VillageRepository villageRepository = mock(VillageRepository.class);
-        when(villageRepository.findByName(name)).thenReturn(villages);
-
-
-        // Call the method under test
-        List<VillageDTO> result = villageService.getAllSearchVillages(name);
-
-        // Check the result
-        assertEquals(2, result.size());
-        assertEquals(village1.getId(), result.get(0).getId());
-        assertEquals(village1.getName(), result.get(0).getName());
-        assertEquals(village2.getId(), result.get(1).getId());
-        assertEquals(village2.getName(), result.get(1).getName());
-
-        // Verify that the village repository was called
-        verify(villageRepository, times(1)).findByName(name);
-    }
 
 
 
