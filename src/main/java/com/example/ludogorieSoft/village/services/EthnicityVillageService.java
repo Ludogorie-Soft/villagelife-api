@@ -79,15 +79,18 @@ public class EthnicityVillageService {
         }
     }
     public EthnicityVillageDTO getVillageEthnicityByVillageId(Long villageId) {
-        List<EthnicityVillage> ethnicityVillages = ethnicityVillageRepository.findAll();
+        Optional<EthnicityVillage> optionalEthnicityVillage = findEthnicityVillageByVillageId(villageId);
 
-        for (EthnicityVillage ethnicityVillage : ethnicityVillages) {
-            if (ethnicityVillage.getVillage().getId().equals(villageId)) {
-                return getEthnicityVillageById(ethnicityVillage.getId());
-            }
-        }
-        return new EthnicityVillageDTO();
+        return optionalEthnicityVillage.map(ethnicityVillage -> getEthnicityVillageById(ethnicityVillage.getId()))
+                .orElse(new EthnicityVillageDTO());
     }
+
+    private Optional<EthnicityVillage> findEthnicityVillageByVillageId(Long villageId) {
+        return ethnicityVillageRepository.findAll().stream()
+                .filter(ethnicityVillage -> ethnicityVillage.getVillage() != null && ethnicityVillage.getVillage().getId().equals(villageId))
+                .findFirst();
+    }
+
 
 
 
