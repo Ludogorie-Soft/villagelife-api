@@ -30,7 +30,7 @@ public class Administrator implements UserDetails {
 
     @NotBlank(message = "Full name cannot be empty!")
     @Length(min = 2, message = "Full name should be at least than 2 characters long!")
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String fullName;
 
     @NotBlank(message = "Email cannot be empty!")
@@ -45,7 +45,7 @@ public class Administrator implements UserDetails {
 
     @NotBlank(message = "Password cannot be empty!")
     @Length(min = 8, message = "Password should be at least 8 characters long!")
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String password;
 
     @Length(min = 10, message = "Phone number should be at least 10 numbers long!")

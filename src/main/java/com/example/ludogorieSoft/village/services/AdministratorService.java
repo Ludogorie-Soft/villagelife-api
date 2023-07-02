@@ -79,11 +79,12 @@ public class AdministratorService {
         foundAdministrator.get().setFullName(administratorRequest.getFullName());
         foundAdministrator.get().setEmail(administratorRequest.getEmail());
         foundAdministrator.get().setUsername(administratorRequest.getUsername());
-        if (administratorRequest.getPassword().isEmpty()) {
+        if (administratorRequest.getPassword() == null || administratorRequest.getPassword().isEmpty() ) {
+
             foundAdministrator.get().setPassword(foundAdministrator.get().getPassword());
         } else {
-            foundAdministrator.get().setPassword(BCrypt.hashpw(administratorRequest.getPassword(), BCrypt.gensalt()));
 
+            foundAdministrator.get().setPassword(BCrypt.hashpw(administratorRequest.getPassword(), BCrypt.gensalt()));
         }
         foundAdministrator.get().setMobile(administratorRequest.getMobile());
         foundAdministrator.get().setCreatedAt(administratorRequest.getCreatedAt());

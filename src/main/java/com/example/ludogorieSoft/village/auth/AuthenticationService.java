@@ -4,7 +4,6 @@ import com.example.ludogorieSoft.village.authorization.JWTService;
 import com.example.ludogorieSoft.village.dtos.request.AuthenticationRequest;
 import com.example.ludogorieSoft.village.dtos.request.RegisterRequest;
 import com.example.ludogorieSoft.village.dtos.response.AuthenticationResponce;
-import com.example.ludogorieSoft.village.enums.Role;
 import com.example.ludogorieSoft.village.model.Administrator;
 import com.example.ludogorieSoft.village.repositories.AdministratorRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +28,7 @@ public class AuthenticationService {
                 .mobile(request.getMobile())
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.ADMIN)
+                .role(request.getRole())//will authenticate and role user
                 .build();
         administratorRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
