@@ -6,7 +6,9 @@ import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.LivingCondition;
 import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.model.VillageLivingConditions;
+import com.example.ludogorieSoft.village.repositories.LivingConditionRepository;
 import com.example.ludogorieSoft.village.repositories.VillageLivingConditionRepository;
+import com.example.ludogorieSoft.village.repositories.VillageRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.*;
 
@@ -29,7 +32,11 @@ class VillageLivingConditionServiceTest {
     @Mock
     private VillageService villageService;
     @Mock
+    private VillageRepository villageRepository;
+    @Mock
     private LivingConditionService livingConditionService;
+    @Mock
+    private LivingConditionRepository livingConditionRepository;
     @Mock
     private ModelMapper modelMapper;
     @InjectMocks
@@ -40,6 +47,146 @@ class VillageLivingConditionServiceTest {
     public void setup() {
         MockitoAnnotations.openMocks(this);
     }
+
+
+
+
+
+
+    @Test
+    void getVillagePopulationAssertionByVillageIdEcoValue_ShouldCalculateAverage() {
+        Long villageId = 1L;
+        Village village = new Village();
+        village.setId(villageId);
+
+        // Create a mock repository
+        VillageLivingConditionRepository villageLivingConditionRepository = mock(VillageLivingConditionRepository.class);
+
+        // Create a list of test objects
+        List<VillageLivingConditions> villageLivingConditionsList = new ArrayList<>();
+        villageLivingConditionsList.add(new VillageLivingConditions(1L, village, new LivingCondition(1L, "Condition 1"), Consents.DISAGREE)); // 0
+        villageLivingConditionsList.add(new VillageLivingConditions(2L, village, new LivingCondition(2L, "Condition 2"), Consents.DISAGREE)); // 0
+        villageLivingConditionsList.add(new VillageLivingConditions(3L, village, new LivingCondition(3L, "Condition 3"), Consents.DISAGREE)); // 0
+        villageLivingConditionsList.add(new VillageLivingConditions(4L, village, new LivingCondition(4L, "Condition 4"), Consents.DISAGREE)); // 0
+
+        // Set up the behavior of the mock repository
+        when(villageLivingConditionRepository.findAll()).thenReturn(villageLivingConditionsList);
+
+        // Create an instance of the tested class
+        VillageLivingConditionService villageLivingConditionService = new VillageLivingConditionService(villageLivingConditionRepository, livingConditionRepository, villageRepository, villageService, livingConditionService, modelMapper);
+
+        // Call the method under test
+        double result = villageLivingConditionService.getVillagePopulationAssertionByVillageIdEcoValue(villageId);
+
+        // Check the result
+        assertEquals(0, result, 0.01);
+
+        // Check if the findAll method of the repository has been called exactly once
+        verify(villageLivingConditionRepository, times(1)).findAll();
+    }
+
+
+
+
+
+
+    @Test
+void getVillagePopulationAssertionByVillageIdDelinquencyValue_ShouldReturnValue() {
+    Long villageId = 1L;
+    Village village = new Village();
+    village.setId(villageId);
+
+    // Create a mock repository
+    VillageLivingConditionRepository villageLivingConditionRepository = mock(VillageLivingConditionRepository.class);
+
+    // Create a list of test objects
+    List<VillageLivingConditions> villageLivingConditionsList = new ArrayList<>();
+    villageLivingConditionsList.add(new VillageLivingConditions(1L, village, new LivingCondition(1L, "в селото няма престъпност"), Consents.DISAGREE)); // 0
+    villageLivingConditionsList.add(new VillageLivingConditions(2L, village, new LivingCondition(1L, "Some other condition"), Consents.DISAGREE)); // not relevant
+    villageLivingConditionsList.add(new VillageLivingConditions(3L, village, new LivingCondition(1L, "Some other condition"), Consents.DISAGREE)); // not relevant
+
+    // Set up the behavior of the mock repository
+    when(villageLivingConditionRepository.findAll()).thenReturn(villageLivingConditionsList);
+
+    // Create an instance of the tested class
+    VillageLivingConditionService villageLivingConditionService = new VillageLivingConditionService(villageLivingConditionRepository, livingConditionRepository, villageRepository, villageService, livingConditionService, modelMapper);
+
+    // Call the method under test
+    double result = villageLivingConditionService.getVillagePopulationAssertionByVillageIdDelinquencyValue(villageId);
+
+    // Check the result
+    assertEquals(100, result, 0.01);
+
+    // Check if the findAll method of the repository has been called exactly once
+    verify(villageLivingConditionRepository, times(1)).findAll();
+}
+
+    @Test
+    void getVillagePopulationAssertionByVillageIdDelinquencyValue_ShouldReturnExpectedValue() {
+        Long villageId = 1L;
+        Village village = new Village();
+        village.setId(villageId);
+
+        // Create a mock repository
+        VillageLivingConditionRepository villageLivingConditionRepository = mock(VillageLivingConditionRepository.class);
+
+        // Create a list of test objects
+        List<VillageLivingConditions> villageLivingConditionsList = new ArrayList<>();
+        villageLivingConditionsList.add(new VillageLivingConditions(1L, village, new LivingCondition(1L, "Some other condition"), Consents.DISAGREE)); // not relevant
+        villageLivingConditionsList.add(new VillageLivingConditions(2L, village, new LivingCondition(1L, "Some other condition"), Consents.DISAGREE)); // not relevant
+        villageLivingConditionsList.add(new VillageLivingConditions(3L, village, new LivingCondition(1L, "Some other condition"), Consents.DISAGREE)); // not relevant
+
+        // Set up the behavior of the mock repository
+        when(villageLivingConditionRepository.findAll()).thenReturn(villageLivingConditionsList);
+
+        // Create an instance of the tested class
+        VillageLivingConditionService villageLivingConditionService = new VillageLivingConditionService(villageLivingConditionRepository, livingConditionRepository, villageRepository, villageService, livingConditionService, modelMapper);
+
+        // Call the method under test
+        double result = villageLivingConditionService.getVillagePopulationAssertionByVillageIdDelinquencyValue(villageId);
+
+        // Check the result
+        assertEquals(50, result, 0.01);
+
+        // Check if the findAll method of the repository has been called exactly once
+        verify(villageLivingConditionRepository, times(1)).findAll();
+    }
+
+
+
+    @Test
+    void getVillagePopulationAssertionByVillageIdValue_ShouldCalculateAverage() {
+        Long villageId = 1L;
+        Village village=new Village();
+        village.setId(villageId);
+
+        // Create a mock repository
+        VillageLivingConditionRepository villageLivingConditionRepository = mock(VillageLivingConditionRepository.class);
+
+        // Create a list of test objects
+        List<VillageLivingConditions> villageLivingConditionsList = new ArrayList<>();
+        villageLivingConditionsList.add(new VillageLivingConditions(1L, village,new LivingCondition(1L,"Name"),Consents.DISAGREE )); //-0
+        villageLivingConditionsList.add(new VillageLivingConditions(1L, village,new LivingCondition(1L,"Name"),Consents.CANT_DECIDE ));//-50
+        villageLivingConditionsList.add(new VillageLivingConditions(1L, village,new LivingCondition(1L,"Name"),Consents.CANT_DECIDE ));//-50
+        villageLivingConditionsList.add(new VillageLivingConditions(1L, village,new LivingCondition(1L,"Name"),Consents.COMPLETELY_AGREED ));//-100
+
+        // Set up the behavior of the mock repository
+        when(villageLivingConditionRepository.findAll()).thenReturn(villageLivingConditionsList);
+
+        // Create an instance of the tested class
+        VillageLivingConditionService villageLivingConditionService = new VillageLivingConditionService(villageLivingConditionRepository,livingConditionRepository,villageRepository,villageService,livingConditionService,modelMapper);
+
+        // Call the method under test
+        double result = villageLivingConditionService.getVillagePopulationAssertionByVillageIdValue(villageId);
+
+        // Check the result
+        assertEquals(50, result, 0.01);
+        // and so on, according to the expected values
+
+        // Check if the findAll method of the repository has been called exactly once
+        verify(villageLivingConditionRepository, times(1)).findAll();
+    }
+
     @Test
     void getAllVillageLivingConditionsShouldReturnListOfVillageLivingConditionDTOs() {
         VillageLivingConditions villageLivingCondition1 = new VillageLivingConditions();
