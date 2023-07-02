@@ -1,6 +1,6 @@
-package com.example.ludogoriesoft.village.repositories;
+package com.example.ludogorieSoft.village.repositories;
 
-import com.example.ludogoriesoft.village.model.Region;
+import com.example.ludogorieSoft.village.model.Region;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

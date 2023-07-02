@@ -1,6 +1,6 @@
-package com.example.ludogoriesoft.village.dtos;
+package com.example.ludogorieSoft.village.dtos;
 
-import com.example.ludogoriesoft.village.enums.Distance;
+import com.example.ludogorieSoft.village.enums.Distance;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
