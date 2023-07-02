@@ -227,4 +227,33 @@ class VillageAnswerQuestionServiceTest {
 
         assertThrows(ApiRequestException.class, () -> villageAnswerQuestionService.updateVillageAnswerQuestion(id, villageAnswerQuestionDTO));
     }
+    @Test
+    void testGetVillageAnswerQuestionByVillageId() {
+        Village village = new Village();
+        village.setId(1L);
+
+        VillageAnswerQuestion villageAnswerQuestion1 = new VillageAnswerQuestion();
+        villageAnswerQuestion1.setAnswer("Answer 1");
+        villageAnswerQuestion1.setVillage(village);
+
+        VillageAnswerQuestion villageAnswerQuestion2 = new VillageAnswerQuestion();
+        villageAnswerQuestion2.setAnswer("Answer 2");
+        villageAnswerQuestion2.setVillage(village);
+
+        VillageAnswerQuestionDTO villageAnswerQuestionDTO1 = new VillageAnswerQuestionDTO();
+        villageAnswerQuestionDTO1.setAnswer("Answer 1");
+
+        VillageAnswerQuestionDTO villageAnswerQuestionDTO2 = new VillageAnswerQuestionDTO();
+        villageAnswerQuestionDTO2.setAnswer("Answer 2");
+
+        when(villageAnswerQuestionRepository.findAll()).thenReturn(List.of(villageAnswerQuestion1, villageAnswerQuestion2));
+        when(villageAnswerQuestionService.toDTO(villageAnswerQuestion1)).thenReturn(villageAnswerQuestionDTO1);
+        when(villageAnswerQuestionService.toDTO(villageAnswerQuestion2)).thenReturn(villageAnswerQuestionDTO2);
+
+        List<VillageAnswerQuestionDTO> result = villageAnswerQuestionService.getVillageAnswerQuestionByVillageId(1L);
+
+        assertEquals(2, result.size());
+        assertEquals("Answer 1", result.get(0).getAnswer());
+        assertEquals("Answer 2", result.get(1).getAnswer());
+    }
 }
