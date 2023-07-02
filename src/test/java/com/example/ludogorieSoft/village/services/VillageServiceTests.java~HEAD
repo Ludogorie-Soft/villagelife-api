@@ -1,11 +1,11 @@
-package com.example.ludogoriesoft.village.services;
+package com.example.ludogorieSoft.village.services;
 
-import com.example.ludogoriesoft.village.dtos.VillageDTO;
-import com.example.ludogoriesoft.village.enums.*;
-import com.example.ludogoriesoft.village.model.*;
+import com.example.ludogorieSoft.village.dtos.VillageDTO;
+import com.example.ludogorieSoft.village.enums.*;
+import com.example.ludogorieSoft.village.model.*;
 
-import com.example.ludogoriesoft.village.repositories.RegionRepository;
-import com.example.ludogoriesoft.village.repositories.VillageRepository;
+import com.example.ludogorieSoft.village.repositories.RegionRepository;
+import com.example.ludogorieSoft.village.repositories.VillageRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -216,12 +216,12 @@ class VillageServiceTests {
         village1.setId(1L);
         village1.setName("Village1");
         village1.setRegion(new Region(1L, "Region1"));
-        village1.setPopulation(new Population(1L, NumberOfPopulation.UP_TO_10_PEOPLE, Residents.FROM_21_TO_30_PERCENT, Children.FROM_21_TO_50, Foreigners.I_DONT_KNOW)); // Инициализиране на населението с валидна стойност за деца
+        village1.setPopulation(new Population(1L, NumberOfPopulation.UP_TO_10_PEOPLE, Residents.FROM_21_TO_30_PERCENT, Children.FROM_21_TO_50, Foreigners.I_DONT_KNOW)); // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ
         Village village2 = new Village();
         village2.setId(2L);
         village2.setName("Village2");
         village2.setRegion(new Region(2L, "Region2"));
-        village2.setPopulation(new Population(2L, NumberOfPopulation.UP_TO_10_PEOPLE, Residents.FROM_21_TO_30_PERCENT, Children.FROM_21_TO_50, Foreigners.I_DONT_KNOW)); // Инициализиране на населението с валидна стойност за деца
+        village2.setPopulation(new Population(2L, NumberOfPopulation.UP_TO_10_PEOPLE, Residents.FROM_21_TO_30_PERCENT, Children.FROM_21_TO_50, Foreigners.I_DONT_KNOW)); // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ
         List<Village> mockVillages = Arrays.asList(village1, village2);
 
 
