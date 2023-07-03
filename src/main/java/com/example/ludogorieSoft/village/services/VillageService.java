@@ -174,7 +174,7 @@ public class VillageService {
 
 
 
-    private List<ObjectAroundVillageDTO> convertToObjectAroundVillageDTOList(List<ObjectVillage> objectVillages) {
+    protected List<ObjectAroundVillageDTO> convertToObjectAroundVillageDTOList(List<ObjectVillage> objectVillages) {
         List<ObjectAroundVillageDTO> objectAroundVillageDTOs = new ArrayList<>();
 
         for (ObjectVillage ov : objectVillages) {
@@ -189,7 +189,7 @@ public class VillageService {
         return objectAroundVillageDTOs;
     }
 
-    private List<VillageDTO> villageToVillageDTOObject(List<Village> villages) {
+    protected List<VillageDTO> villageToVillageDTOObject(List<Village> villages) {
         List<VillageDTO> villageDTOs = new ArrayList<>();
 
         for (Village village : villages) {
@@ -206,7 +206,7 @@ public class VillageService {
         return villageDTOs;
     }
 
-    private List<VillageDTO> villageToVillageDTOLivingCondition(List<Village> villages) {
+    protected List<VillageDTO> villageToVillageDTOLivingCondition(List<Village> villages) {
         List<VillageDTO> villageDTOs = new ArrayList<>();
 
         for (Village village : villages) {
@@ -223,7 +223,7 @@ public class VillageService {
         return villageDTOs;
     }
 
-    private List<VillageDTO> villageToVillageDTOChildren(List<Village> villages) {
+    protected List<VillageDTO> villageToVillageDTOChildren(List<Village> villages) {
         List<VillageDTO> villageDTOs = new ArrayList<>();
 
         for (Village village : villages) {
@@ -240,7 +240,7 @@ public class VillageService {
         return villageDTOs;
     }
 
-    private List<VillageDTO> villageToVillageDTOWithoutChildren(List<Village> villages) {
+    protected List<VillageDTO> villageToVillageDTOWithoutChildren(List<Village> villages) {
         List<VillageDTO> villageDTOs = new ArrayList<>();
 
         for (Village village : villages) {
@@ -258,7 +258,7 @@ public class VillageService {
         return villageDTOs;
     }
 
-    private List<VillageDTO> villageToVillageDTOWithoutObject(List<Village> villages) {
+    protected List<VillageDTO> villageToVillageDTOWithoutObject(List<Village> villages) {
         List<VillageDTO> villageDTOs = new ArrayList<>();
 
         for (Village village : villages) {
@@ -276,7 +276,7 @@ public class VillageService {
         return villageDTOs;
     }
 
-    private List<VillageDTO> villageToVillageDTOWithoutLivingCondition(List<Village> villages) {
+    protected List<VillageDTO> villageToVillageDTOWithoutLivingCondition(List<Village> villages) {
         List<VillageDTO> villageDTOs = new ArrayList<>();
 
         for (Village village : villages) {
@@ -294,7 +294,7 @@ public class VillageService {
         return villageDTOs;
     }
 
-    private List<VillageDTO> convertToDTO(List<Village> villages) {
+    protected List<VillageDTO> convertToDTO(List<Village> villages) {
         List<VillageDTO> villageDTOs = new ArrayList<>();
 
         for (Village village : villages) {
@@ -315,7 +315,7 @@ public class VillageService {
 
 
 
-    private List<LivingConditionDTO> convertToLivingConditionDTOList(List<VillageLivingConditions> villageLivingConditions) {
+    protected List<LivingConditionDTO> convertToLivingConditionDTOList(List<VillageLivingConditions> villageLivingConditions) {
         List<LivingConditionDTO> livingConditionDTOs = new ArrayList<>();
 
         for (VillageLivingConditions vl : villageLivingConditions) {
@@ -331,7 +331,7 @@ public class VillageService {
     }
 
 
-    private PopulationDTO convertToPopulationDTO(Children children) {
+    protected PopulationDTO convertToPopulationDTO(Children children) {
         Children childrenEnum = children.getEnumValue();
         PopulationDTO populationDTO = new PopulationDTO();
 
