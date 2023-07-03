@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
@@ -267,13 +268,13 @@ class AddVillageFormResultServiceTest {
 
         List<VillageAnswerQuestionDTO> capturedDTOs = captor.getAllValues();
 
-        Assertions.assertEquals(questionResponses.size(), capturedDTOs.size(), "Number of created VillageAnswerQuestionDTOs should match the number of question responses.");
+        assertEquals(questionResponses.size(), capturedDTOs.size(), "Number of created VillageAnswerQuestionDTOs should match the number of question responses.");
 
         for (int i = 0; i < questionResponses.size(); i++) {
             VillageAnswerQuestionDTO capturedDTO = capturedDTOs.get(i);
-            Assertions.assertEquals(villageId, capturedDTO.getVillageId(), "Village ID should match.");
-            Assertions.assertEquals(questionsDTO.get(i).getId(), capturedDTO.getQuestionId(), "Question ID should match.");
-            Assertions.assertEquals(questionResponses.get(i), capturedDTO.getAnswer(), "Answer should match.");
+            assertEquals(villageId, capturedDTO.getVillageId(), "Village ID should match.");
+            assertEquals(questionsDTO.get(i).getId(), capturedDTO.getQuestionId(), "Question ID should match.");
+            assertEquals(questionResponses.get(i), capturedDTO.getAnswer(), "Answer should match.");
         }
     }
     @Test
@@ -359,8 +360,8 @@ class AddVillageFormResultServiceTest {
         Mockito.verify(villageGroundCategoryService).createVillageGroundCategoryDTO(villageGroundCategoryDTOCaptor.capture());
 
         VillageGroundCategoryDTO capturedDTO = villageGroundCategoryDTOCaptor.getValue();
-        Assertions.assertEquals(villageId, capturedDTO.getVillageId());
-        Assertions.assertEquals(groundCategoryDTO.getId(), capturedDTO.getGroundCategoryId());
+        assertEquals(villageId, capturedDTO.getVillageId());
+        assertEquals(groundCategoryDTO.getId(), capturedDTO.getGroundCategoryId());
     }
 
     @Test
@@ -374,5 +375,10 @@ class AddVillageFormResultServiceTest {
         verify(villageGroundCategoryService).createVillageGroundCategoryDTO(any(VillageGroundCategoryDTO.class));
     }
 
+    @Test
+    public void testExperimentMethodSumGreaterThanTen() {
+        int result = addVillageFormResultService.experimentMethod(6, 5);
+        assertEquals(11, result, "The result should be the sum of the two parameters when their sum is greater than 10");
+    }
 
 }

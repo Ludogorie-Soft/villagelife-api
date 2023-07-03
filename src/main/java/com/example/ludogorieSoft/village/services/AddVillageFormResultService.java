@@ -22,6 +22,14 @@ public class AddVillageFormResultService {
     private EthnicityService ethnicityService;
     private VillageImageService villageImageService;
 
+    public int experimentMethod(int a, int b) {
+        if(a + b > 10) {
+            return a + b;
+        } else {
+            return a * b;
+        }
+    }
+
     public AddVillageFormResult create(AddVillageFormResult addVillageFormResult){
         PopulationDTO populationDTO = addVillageFormResult.getPopulationDTO();
         PopulationDTO savedPopulation = populationService.createPopulation(populationDTO);
