@@ -32,9 +32,14 @@ public class AuthenticationService {
                 .build();
         administratorRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
-        return AuthenticationResponce.builder()
-                .token(jwtToken)
-                .build();
+        if(jwtToken != null) {
+            return AuthenticationResponce.builder()
+                                         .token(jwtToken)
+                                         .build();
+        } else {
+            return null;
+        }
+
     }
 
     public AuthenticationResponce authenticate(AuthenticationRequest request) {

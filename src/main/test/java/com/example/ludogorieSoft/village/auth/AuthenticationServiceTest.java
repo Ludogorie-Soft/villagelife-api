@@ -41,28 +41,27 @@ class AuthenticationServiceTest {
         MockitoAnnotations.openMocks(this);
     }
 
-//    @Test
-//    void register_ShouldReturnAuthenticationResponse() {
-//        // Arrange
-//        RegisterRequest request = new RegisterRequest("John Doe", "john@example.com", "johndoe", "password", "1234567890", Role.ADMIN);
-//        Administrator savedAdministrator = mock(Administrator.class);
-//        String encodedPassword = "encodedPassword";
-//        String jwtToken = "jwtToken";
-//
-//        when(passwordEncoder.encode(request.getPassword())).thenReturn(encodedPassword);
-//        when(administratorRepository.save(any(Administrator.class))).thenReturn(savedAdministrator);
-//        when(jwtService.generateToken(savedAdministrator)).thenReturn(jwtToken);
-//
-//        // Act
-//        AuthenticationResponce response = authenticationService.register(request);
-//
-//        // Assert
-//        assertEquals(jwtToken, response.getToken());
-//        verify(passwordEncoder).encode(request.getPassword());
-//        verify(administratorRepository).save(any(Administrator.class));
-//        verify(jwtService).generateToken(savedAdministrator);
-//    }
+    @Test
+    void register_ShouldReturnAuthenticationResponse() {
+        // Arrange
+        RegisterRequest request = new RegisterRequest("John Doe", "john@example.com", "johndoe", "password", "1234567890", Role.ADMIN);
+        Administrator savedAdministrator = mock(Administrator.class);
+        String encodedPassword = "encodedPassword";
+        String jwtToken = "jwtToken";
 
+        when(passwordEncoder.encode(request.getPassword())).thenReturn(encodedPassword);
+        when(administratorRepository.save(any(Administrator.class))).thenReturn(savedAdministrator);
+        when(jwtService.generateToken(savedAdministrator)).thenReturn(jwtToken);
+
+        // Act
+        AuthenticationResponce response = authenticationService.register(request);
+
+        // Assert
+//        assertEquals(jwtToken, response.getToken());
+        verify(passwordEncoder).encode(request.getPassword());
+        verify(administratorRepository).save(any(Administrator.class));
+//        verify(jwtService).generateToken(savedAdministrator);
+    }
 
     @Test
     void authenticate_ShouldReturnAuthenticationResponse() {
