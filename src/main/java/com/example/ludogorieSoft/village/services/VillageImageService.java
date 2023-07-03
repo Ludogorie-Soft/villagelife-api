@@ -6,15 +6,21 @@ import com.example.ludogorieSoft.village.model.VillageImage;
 import com.example.ludogorieSoft.village.repositories.VillageImageRepository;
 import lombok.AllArgsConstructor;
 import org.apache.tika.Tika;
+import org.apache.tika.io.IOUtils;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,7 +28,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class VillageImageService {
     private final VillageImageRepository villageImageRepository;
-    private static final String UPLOAD_DIRECTORY = "src/main/resources/static/village_images";
+    private static final String UPLOAD_DIRECTORY = "src/main/resources/static/village_images/";
     private final ModelMapper modelMapper;
     private final VillageService villageService;
     private static final Logger logger = LoggerFactory.getLogger(VillageImageService.class);
@@ -96,5 +102,40 @@ public class VillageImageService {
     }
     public VillageImage villageImageDTOToVillageImage(VillageImageDTO villageImageDTO) {
         return modelMapper.map(villageImageDTO, VillageImage.class);
+    }
+    public Resource getImage(String imageName) {
+        String imageDirectory = "src/main/resources/static/village_images/";
+        String imagePath = imageDirectory + imageName;
+
+        try {
+            Resource imageResource = new UrlResource("file:" + imagePath);
+            if (imageResource.exists()) {
+                return imageResource;
+            } else {
+                return null;
+            }
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    public List<String> getAllImagesForVillage(Long villageId) {
+        List<String> base64Images = new ArrayList<>();
+        List<VillageImage> villageImages = villageImageRepository.findByVillageId(villageId);
+        for (VillageImage villageImage : villageImages) {
+            String imagePath = UPLOAD_DIRECTORY + villageImage.getImageName();
+            try {
+                File imageFile = new File(imagePath);
+                if (imageFile.exists()) {
+                    FileInputStream inputStream = new FileInputStream(imageFile);
+                    byte[] imageBytes = IOUtils.toByteArray(inputStream);
+                    String base64Image = Base64.getEncoder().encodeToString(imageBytes);
+                    base64Images.add(base64Image);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return base64Images;
     }
 }
