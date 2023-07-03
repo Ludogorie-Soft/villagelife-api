@@ -1,5 +1,6 @@
 package com.example.ludogorieSoft.village.controllers;
 
+import com.example.ludogorieSoft.village.dtos.VillageImageResponse;
 import com.example.ludogorieSoft.village.services.VillageImageService;
 import lombok.AllArgsConstructor;
 import org.apache.tika.io.IOUtils;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -46,6 +46,15 @@ public class VillageImageController {
         List<String> base64Images = villageImageService.getAllImagesForVillage(villageId);
         if (!base64Images.isEmpty()) {
             return new ResponseEntity<>(base64Images, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+    @GetMapping("/all")
+    public ResponseEntity<List<VillageImageResponse>> getAllVillageImageResponses() {
+        List<VillageImageResponse> villageImageResponses = villageImageService.getAllVillageImages();
+        if (!villageImageResponses.isEmpty()) {
+            return new ResponseEntity<>(villageImageResponses, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

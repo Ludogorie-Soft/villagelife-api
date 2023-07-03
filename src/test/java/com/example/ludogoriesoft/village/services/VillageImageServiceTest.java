@@ -63,7 +63,7 @@ class VillageImageServiceTest {
 
     @Test
     void testGetUploadDirectoryPath() {
-        String expectedPath = System.getProperty("user.dir") + File.separator + "src/main/resources/static/village_images";
+        String expectedPath = System.getProperty("user.dir") + File.separator + "src/main/resources/static/village_images/";
         String actualPath = villageImageService.getUploadDirectoryPath();
         Assertions.assertEquals(expectedPath, actualPath);
     }

@@ -1,6 +1,8 @@
 package com.example.ludogorieSoft.village.services;
 
+import com.example.ludogorieSoft.village.dtos.VillageDTO;
 import com.example.ludogorieSoft.village.dtos.VillageImageDTO;
+import com.example.ludogorieSoft.village.dtos.VillageImageResponse;
 import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.model.VillageImage;
 import com.example.ludogorieSoft.village.repositories.VillageImageRepository;
@@ -122,20 +124,61 @@ public class VillageImageService {
     public List<String> getAllImagesForVillage(Long villageId) {
         List<String> base64Images = new ArrayList<>();
         List<VillageImage> villageImages = villageImageRepository.findByVillageId(villageId);
+        if (villageImages.isEmpty()) {
+            addDefaultImage(base64Images);
+        } else {
+            addVillageImages(base64Images, villageImages);
+        }
+        return base64Images;
+    }
+
+    private void addDefaultImage(List<String> base64Images) {
+        String defaultImagePath = UPLOAD_DIRECTORY + "pexels-alexander-kovalev-2871478.jpg";
+        try {
+            File defaultImageFile = new File(defaultImagePath);
+            if (defaultImageFile.exists()) {
+                byte[] imageBytes = readImageBytes(defaultImageFile);
+                String base64Image = encodeImageToBase64(imageBytes);
+                base64Images.add(base64Image);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void addVillageImages(List<String> base64Images, List<VillageImage> villageImages) {
         for (VillageImage villageImage : villageImages) {
             String imagePath = UPLOAD_DIRECTORY + villageImage.getImageName();
             try {
                 File imageFile = new File(imagePath);
                 if (imageFile.exists()) {
-                    FileInputStream inputStream = new FileInputStream(imageFile);
-                    byte[] imageBytes = IOUtils.toByteArray(inputStream);
-                    String base64Image = Base64.getEncoder().encodeToString(imageBytes);
+                    byte[] imageBytes = readImageBytes(imageFile);
+                    String base64Image = encodeImageToBase64(imageBytes);
                     base64Images.add(base64Image);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        return base64Images;
+    }
+
+    private byte[] readImageBytes(File imageFile) throws IOException {
+        FileInputStream inputStream = new FileInputStream(imageFile);
+        return IOUtils.toByteArray(inputStream);
+    }
+
+    private String encodeImageToBase64(byte[] imageBytes) {
+        return Base64.getEncoder().encodeToString(imageBytes);
+    }
+
+    public List<VillageImageResponse> getAllVillageImages(){
+        List<VillageDTO> villageDTOs = villageService.getAllVillages();
+        List<VillageImageResponse> villageImageResponses = new ArrayList<>();
+        for (VillageDTO village: villageDTOs) {
+            List<String> images = getAllImagesForVillage(village.getId());
+            VillageImageResponse villageImageResponse = new VillageImageResponse(village, images);
+            villageImageResponses.add(villageImageResponse);
+        }
+        return villageImageResponses;
     }
 }
