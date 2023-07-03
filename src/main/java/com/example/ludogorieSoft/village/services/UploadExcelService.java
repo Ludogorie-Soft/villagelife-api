@@ -6,7 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class UploadExcelService {
     public Long uploadFile(MultipartFile file) {
-        for (int i = 0; i <2000000 ; i++) {
+        for (int i = 0; i <2000 ; i++) {
             System.err.println("UploadExcelService.uploadFile");
         }
         try {
