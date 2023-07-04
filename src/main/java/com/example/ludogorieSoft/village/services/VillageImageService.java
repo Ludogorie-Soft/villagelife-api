@@ -1,20 +1,25 @@
 package com.example.ludogorieSoft.village.services;
 
+import com.example.ludogorieSoft.village.dtos.VillageDTO;
 import com.example.ludogorieSoft.village.dtos.VillageImageDTO;
+import com.example.ludogorieSoft.village.dtos.VillageImageResponse;
 import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.model.VillageImage;
 import com.example.ludogorieSoft.village.repositories.VillageImageRepository;
 import lombok.AllArgsConstructor;
 import org.apache.tika.Tika;
+import org.apache.tika.io.IOUtils;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,7 +27,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class VillageImageService {
     private final VillageImageRepository villageImageRepository;
-    private static final String UPLOAD_DIRECTORY = "src/main/resources/static/village_images";
+    private static final String UPLOAD_DIRECTORY = "src/main/resources/static/village_images/";
     private final ModelMapper modelMapper;
     private final VillageService villageService;
     private static final Logger logger = LoggerFactory.getLogger(VillageImageService.class);
@@ -96,5 +101,51 @@ public class VillageImageService {
     }
     public VillageImage villageImageDTOToVillageImage(VillageImageDTO villageImageDTO) {
         return modelMapper.map(villageImageDTO, VillageImage.class);
+    }
+    public List<String> getAllImagesForVillage(Long villageId) {
+        List<String> base64Images = new ArrayList<>();
+        List<VillageImage> villageImages = villageImageRepository.findByVillageId(villageId);
+        if (villageImages.isEmpty()) {
+            base64Images.add(null);
+        } else {
+            addVillageImages(base64Images, villageImages);
+        }
+        return base64Images;
+    }
+
+    public void addVillageImages(List<String> base64Images, List<VillageImage> villageImages) {
+        for (VillageImage villageImage : villageImages) {
+            String imagePath = UPLOAD_DIRECTORY + villageImage.getImageName();
+            try {
+                File imageFile = new File(imagePath);
+                if (imageFile.exists()) {
+                    byte[] imageBytes = readImageBytes(imageFile);
+                    String base64Image = encodeImageToBase64(imageBytes);
+                    base64Images.add(base64Image);
+                }
+            } catch (IOException e) {
+                logger.error("An error occurred while processing the image", e);
+            }
+        }
+    }
+
+    public byte[] readImageBytes(File imageFile) throws IOException {
+        FileInputStream inputStream = new FileInputStream(imageFile);
+        return IOUtils.toByteArray(inputStream);
+    }
+
+    public String encodeImageToBase64(byte[] imageBytes) {
+        return Base64.getEncoder().encodeToString(imageBytes);
+    }
+
+    public List<VillageImageResponse> getAllVillageImages(){
+        List<VillageDTO> villageDTOs = villageService.getAllVillages();
+        List<VillageImageResponse> villageImageResponses = new ArrayList<>();
+        for (VillageDTO village: villageDTOs) {
+            List<String> images = getAllImagesForVillage(village.getId());
+            VillageImageResponse villageImageResponse = new VillageImageResponse(village, images);
+            villageImageResponses.add(villageImageResponse);
+        }
+        return villageImageResponses;
     }
 }
