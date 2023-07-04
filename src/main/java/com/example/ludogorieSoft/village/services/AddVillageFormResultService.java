@@ -1,6 +1,7 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.*;
+import com.example.ludogorieSoft.village.enums.NumberOfPopulation;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,7 @@ public class AddVillageFormResultService {
 
     public AddVillageFormResult create(AddVillageFormResult addVillageFormResult){
         PopulationDTO populationDTO = addVillageFormResult.getPopulationDTO();
+        populationDTO.setNumberOfPopulation(getNumberOfPopulationByAddVillageFormResult(addVillageFormResult));
         PopulationDTO savedPopulation = populationService.createPopulation(populationDTO);
 
         VillageDTO villageDTO = addVillageFormResult.getVillageDTO();
@@ -40,6 +42,24 @@ public class AddVillageFormResultService {
 
         villageImageService.createImagePaths(addVillageFormResult.getImageBytes(), savedVillage.getId());
         return addVillageFormResult;
+    }
+    public NumberOfPopulation getNumberOfPopulationByAddVillageFormResult(AddVillageFormResult addVillageFormResult){
+        int populationAsNumber = addVillageFormResult.getVillageDTO().getPopulationCount();
+        if(populationAsNumber <= 10){
+            return NumberOfPopulation.UP_TO_10_PEOPLE;
+        }else if(populationAsNumber <= 50){
+            return NumberOfPopulation.FROM_11_TO_50_PEOPLE;
+        }else if(populationAsNumber <= 200){
+            return NumberOfPopulation.FROM_51_TO_200_PEOPLE;
+        }else if(populationAsNumber <= 500){
+            return NumberOfPopulation.FROM_201_TO_500_PEOPLE;
+        }else if (populationAsNumber <= 1000){
+            return NumberOfPopulation.FROM_501_TO_1000_PEOPLE;
+        }else if(populationAsNumber <= 2000){
+            return NumberOfPopulation.FROM_1001_TO_2000_PEOPLE;
+        }else {
+            return NumberOfPopulation.FROM_2000_PEOPLE;
+        }
     }
     public void createVillageGroundCategoryFromAddVillageFormResult(Long villageId, AddVillageFormResult addVillageFormResult) {
         VillageGroundCategoryDTO villageGroundCategoryDTO = new VillageGroundCategoryDTO();
