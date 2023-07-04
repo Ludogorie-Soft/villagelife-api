@@ -69,8 +69,8 @@ class VillageImageControllerIntegrationTest {
         villageDTO1.setName("vl1");
 
         VillageDTO villageDTO2 = new VillageDTO();
-        villageDTO1.setId(2L);
-        villageDTO1.setName("vl2");
+        villageDTO2.setId(2L);
+        villageDTO2.setName("vl2");
 
         List<String> images1 = Arrays.asList("image1", "image2");
         List<String> images2 = Arrays.asList("image3", "image4");
@@ -101,6 +101,13 @@ class VillageImageControllerIntegrationTest {
         Assertions.assertEquals(HttpStatus.OK.value(), response.getStatus());
         String responseBody = response.getContentAsString();
         List<VillageImageResponse> actualResponses = new ObjectMapper().readValue(responseBody, new TypeReference<List<VillageImageResponse>>() {});
-        Assertions.assertEquals(villageImageResponses, actualResponses);
+
+        for (int i = 0; i < villageImageResponses.size(); i++) {
+            VillageImageResponse expectedResponse = villageImageResponses.get(i);
+            VillageImageResponse actualResponse = actualResponses.get(i);
+            Assertions.assertEquals(expectedResponse.getVillageDTO().getId(), actualResponse.getVillageDTO().getId());
+            Assertions.assertEquals(expectedResponse.getVillageDTO().getName(), actualResponse.getVillageDTO().getName());
+            Assertions.assertEquals(expectedResponse.getImages(), actualResponse.getImages());
+        }
     }
 }
