@@ -21,15 +21,16 @@ import org.springframework.http.HttpStatus;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Collections;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
+import org.mockito.Mockito;
 @WebMvcTest(VillageImageController.class)
 @AutoConfigureMockMvc
 class VillageImageControllerIntegrationTest {
@@ -58,7 +59,8 @@ class VillageImageControllerIntegrationTest {
         Assertions.assertEquals(HttpStatus.OK.value(), response.getStatus());
 
         String responseBody = response.getContentAsString();
-        List<String> responseImages = new ObjectMapper().readValue(responseBody, new TypeReference<List<String>>() {});
+        List<String> responseImages = new ObjectMapper().readValue(responseBody, new TypeReference<>() {
+        });
         Assertions.assertEquals(base64Images, responseImages);
     }
 
@@ -100,7 +102,8 @@ class VillageImageControllerIntegrationTest {
         MockHttpServletResponse response = mvcResult.getResponse();
         Assertions.assertEquals(HttpStatus.OK.value(), response.getStatus());
         String responseBody = response.getContentAsString();
-        List<VillageImageResponse> actualResponses = new ObjectMapper().readValue(responseBody, new TypeReference<List<VillageImageResponse>>() {});
+        List<VillageImageResponse> actualResponses = new ObjectMapper().readValue(responseBody, new TypeReference<>() {
+        });
 
         for (int i = 0; i < villageImageResponses.size(); i++) {
             VillageImageResponse expectedResponse = villageImageResponses.get(i);
@@ -110,4 +113,24 @@ class VillageImageControllerIntegrationTest {
             Assertions.assertEquals(expectedResponse.getImages(), actualResponse.getImages());
         }
     }
+        @Test
+        void testGetAllImagesForVillageNotFound() throws Exception {
+            Long villageId = 1L;
+
+            Mockito.when(villageImageService.getAllImagesForVillage(villageId)).thenReturn(Collections.emptyList());
+
+            mockMvc.perform(get("/api/v1/village/{villageId}/images", villageId)
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isNotFound());
+        }
+
+        @Test
+        void testGetAllVillageImageResponsesNotFound() throws Exception {
+            Mockito.when(villageImageService.getAllVillageImages()).thenReturn(Collections.emptyList());
+
+            mockMvc.perform(get("/api/v1/villageImages/all")
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isNotFound());
+        }
 }
+
