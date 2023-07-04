@@ -124,7 +124,7 @@ public class VillageImageService {
                     base64Images.add(base64Image);
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("An error occurred while processing the image", e);
             }
         }
     }

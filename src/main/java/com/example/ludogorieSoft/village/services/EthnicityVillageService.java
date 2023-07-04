@@ -90,8 +90,4 @@ public class EthnicityVillageService {
                 .filter(ethnicityVillage -> ethnicityVillage.getVillage() != null && ethnicityVillage.getVillage().getId().equals(villageId))
                 .findFirst();
     }
-
-
-
-
 }
