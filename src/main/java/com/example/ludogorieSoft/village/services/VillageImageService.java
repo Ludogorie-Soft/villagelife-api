@@ -106,8 +106,7 @@ public class VillageImageService {
         return modelMapper.map(villageImageDTO, VillageImage.class);
     }
     public Resource getImage(String imageName) {
-        String imageDirectory = "src/main/resources/static/village_images/";
-        String imagePath = imageDirectory + imageName;
+        String imagePath = UPLOAD_DIRECTORY + imageName;
 
         try {
             Resource imageResource = new UrlResource("file:" + imagePath);
@@ -125,25 +124,11 @@ public class VillageImageService {
         List<String> base64Images = new ArrayList<>();
         List<VillageImage> villageImages = villageImageRepository.findByVillageId(villageId);
         if (villageImages.isEmpty()) {
-            addDefaultImage(base64Images);
+            base64Images.add(null);
         } else {
             addVillageImages(base64Images, villageImages);
         }
         return base64Images;
-    }
-
-    private void addDefaultImage(List<String> base64Images) {
-        String defaultImagePath = UPLOAD_DIRECTORY + "pexels-alexander-kovalev-2871478.jpg";
-        try {
-            File defaultImageFile = new File(defaultImagePath);
-            if (defaultImageFile.exists()) {
-                byte[] imageBytes = readImageBytes(defaultImageFile);
-                String base64Image = encodeImageToBase64(imageBytes);
-                base64Images.add(base64Image);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     private void addVillageImages(List<String> base64Images, List<VillageImage> villageImages) {
