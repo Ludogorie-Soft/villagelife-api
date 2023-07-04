@@ -23,11 +23,13 @@ import java.util.List;
 import org.apache.tika.Tika;
 import org.apache.tika.io.IOUtils;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.springframework.mock.web.MockMultipartFile;
@@ -45,6 +47,10 @@ class VillageImageServiceTest {
     private VillageImageService villageImageService;
     private static final String UPLOAD_DIRECTORY = "src/main/resources/static/village_images";
 
+    @BeforeEach
+    void setUp() throws IOException {
+        villageImageService = Mockito.spy(villageImageService);
+    }
 
     @Test
     void testCreateVillageImageDTO() {
@@ -172,64 +178,20 @@ class VillageImageServiceTest {
     }
 
     @Test
-    void testProcessImage_WithInvalidImage() {
+    void testProcessImageWithInvalidImage() {
         byte[] image = {0x12, 0x34, 0x56};
         String result = villageImageService.processImage(image);
         Assertions.assertNull(result);
     }
 
     @Test
-    void testProcessImage_WithIOException() {
+    void testProcessImageWithIOException() {
         byte[] image = {0x12, 0x34, 0x56, 0x78};
         String result = villageImageService.processImage(image);
         Assertions.assertNull(result);
     }
-    //@Test
-    //void testGetAllVillageImages() {
-    //    List<VillageDTO> villageDTOs = new ArrayList<>();
-    //    VillageDTO village1 = new VillageDTO();
-    //    VillageDTO village2 = new VillageDTO();
-    //    villageDTOs.add(village1);
-    //    villageDTOs.add(village2);
-    //    when(villageService.getAllVillages()).thenReturn(villageDTOs);
-//
-    //    List<String> images1 = new ArrayList<>();
-    //    images1.add("image1.jpg");
-    //    images1.add("image2.jpg");
-    //    List<String> images2 = new ArrayList<>();
-    //    images2.add("image3.jpg");
-    //    when(villageImageService.getAllImagesForVillage(village1.getId())).thenReturn(images1);
-    //    when(villageImageService.getAllImagesForVillage(village2.getId())).thenReturn(images2);
-//
-    //    List<VillageImageResponse> result = villageImageService.getAllVillageImages();
-//
-    //    verify(villageService, times(1)).getAllVillages();
-    //    verify(villageImageService, times(1)).getAllImagesForVillage(village1.getId());
-    //    verify(villageImageService, times(1)).getAllImagesForVillage(village2.getId());
-//
-    //    Assertions.assertEquals(2, result.size());
-//
-    //    VillageImageResponse response1 = result.get(0);
-    //    Assertions.assertEquals(village1, response1.getVillageDTO());
-    //    Assertions.assertEquals(images1, response1.getImages());
-//
-    //    VillageImageResponse response2 = result.get(1);
-    //    Assertions.assertEquals(village2, response2.getVillageDTO());
-    //    Assertions.assertEquals(images2, response2.getImages());
-    //}
-
-    //@Test
-    //void testEncodeImageToBase64() {
-    //    byte[] imageBytes = {0x12, 0x34, 0x56, 0x78, (byte) 0x9A, (byte) 0xBC, (byte) 0xDE, (byte) 0xF0};
-    //    String expectedBase64 = "EjRWeJq83A==";
-//
-    //    String result = villageImageService.encodeImageToBase64(imageBytes);
-//
-    //    Assertions.assertEquals(expectedBase64, result);
-    //}
-
     @Test
-    void testEncodeImageToBase64_EmptyImage() {
+    void testEncodeImageToBase64EmptyImage() {
         byte[] emptyImageBytes = new byte[0];
         String expectedBase64 = "";
 
@@ -239,7 +201,7 @@ class VillageImageServiceTest {
     }
 
     @Test
-    void testEncodeImageToBase64_NullImage() {
+    void testEncodeImageToBase64NullImage() {
         byte[] nullImageBytes = null;
 
         Assertions.assertThrows(NullPointerException.class, () -> {
@@ -265,5 +227,47 @@ class VillageImageServiceTest {
         } finally {
             imageFile.delete();
         }
+    }
+
+    @Test
+    void testGetAllVillageImages() {
+        VillageDTO village1 = new VillageDTO();
+        village1.setId(1L);
+        village1.setName("Village 1");
+        VillageDTO village2 = new VillageDTO();
+        village2.setId(2L);
+        village2.setName("Village 2");
+        List<VillageDTO> villageDTOs = new ArrayList<>();
+        villageDTOs.add(village1);
+        villageDTOs.add(village2);
+
+        List<String> images1 = new ArrayList<>();
+        images1.add("image1.png");
+        images1.add("image2.png");
+        List<String> images2 = new ArrayList<>();
+        images2.add("image3.png");
+        images2.add("image4.png");
+
+        when(villageService.getAllVillages()).thenReturn(villageDTOs);
+        when(villageImageService.getAllImagesForVillage(1L)).thenReturn(images1);
+        when(villageImageService.getAllImagesForVillage(2L)).thenReturn(images2);
+
+        List<VillageImageResponse> result = villageImageService.getAllVillageImages();
+
+        Assertions.assertEquals(2, result.size());
+
+        VillageImageResponse response1 = result.get(0);
+        Assertions.assertEquals(village1.getId(), response1.getVillageDTO().getId());
+        Assertions.assertEquals(village1.getName(), response1.getVillageDTO().getName());
+        Assertions.assertEquals(images1, response1.getImages());
+
+        VillageImageResponse response2 = result.get(1);
+        Assertions.assertEquals(village2.getId(), response2.getVillageDTO().getId());
+        Assertions.assertEquals(village2.getName(), response2.getVillageDTO().getName());
+        Assertions.assertEquals(images2, response2.getImages());
+
+        verify(villageService, times(1)).getAllVillages();
+        verify(villageImageService, times(1)).getAllImagesForVillage(1L);
+        verify(villageImageService, times(1)).getAllImagesForVillage(2L);
     }
 }
