@@ -4,6 +4,7 @@ package com.example.ludogorieSoft.village.services;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import org.slf4j.Logger;
 
 import com.example.ludogorieSoft.village.dtos.VillageDTO;
 import com.example.ludogorieSoft.village.dtos.VillageImageDTO;
@@ -20,7 +21,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.tika.Tika;
 import org.apache.tika.io.IOUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,11 +29,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
-import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.web.multipart.MultipartFile;
 
 @ExtendWith(MockitoExtension.class)
 class VillageImageServiceTest {
@@ -45,6 +42,8 @@ class VillageImageServiceTest {
     private VillageService villageService;
     @InjectMocks
     private VillageImageService villageImageService;
+    @Mock
+    private Logger logger;
     private static final String UPLOAD_DIRECTORY = "src/main/resources/static/village_images";
 
     @BeforeEach
@@ -270,4 +269,17 @@ class VillageImageServiceTest {
         verify(villageImageService, times(1)).getAllImagesForVillage(1L);
         verify(villageImageService, times(1)).getAllImagesForVillage(2L);
     }
+
+    @Test
+    void testAddVillageImagesImageFileDoesNotExist() {
+        VillageImage villageImage1 = new VillageImage();
+        villageImage1.setImageName("image1.png");
+
+        List<String> base64Images = new ArrayList<>();
+
+        villageImageService.addVillageImages(base64Images, List.of(villageImage1));
+
+        Assertions.assertEquals(0, base64Images.size());
+    }
+
 }
