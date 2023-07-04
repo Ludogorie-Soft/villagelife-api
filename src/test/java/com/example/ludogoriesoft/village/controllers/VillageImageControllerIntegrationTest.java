@@ -76,7 +76,9 @@ class VillageImageControllerIntegrationTest {
         List<String> images2 = Arrays.asList("image3", "image4");
 
         VillageImageResponse response1 = new VillageImageResponse(villageDTO1, images1);
-        VillageImageResponse response2 = new VillageImageResponse(villageDTO2, images2);
+        VillageImageResponse response2 = new VillageImageResponse();
+        response2.setVillageDTO(villageDTO2);
+        response2.setImages(images2);
 
         List<VillageImageResponse> villageImageResponses = Arrays.asList(response1, response2);
 
