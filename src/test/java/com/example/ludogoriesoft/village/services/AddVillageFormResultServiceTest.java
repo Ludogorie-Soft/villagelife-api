@@ -3,6 +3,7 @@ package com.example.ludogorieSoft.village.services;
 import com.example.ludogorieSoft.village.dtos.*;
 import com.example.ludogorieSoft.village.enums.Consents;
 import com.example.ludogorieSoft.village.enums.Distance;
+import com.example.ludogorieSoft.village.enums.NumberOfPopulation;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,7 +23,6 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class AddVillageFormResultServiceTest {
 
-    //test
     @InjectMocks
     AddVillageFormResultService addVillageFormResultService;
     @Mock
@@ -373,6 +373,89 @@ class AddVillageFormResultServiceTest {
         addVillageFormResultService.createVillageGroundCategoryFromAddVillageFormResult(villageId, addVillageFormResult);
         verify(villageGroundCategoryService).createVillageGroundCategoryDTO(any(VillageGroundCategoryDTO.class));
     }
+    @Test
+    void testGetNumberOfPopulationByAddVillageFormResultWhenLessThanOrEqualTo10(){
+        AddVillageFormResult result = new AddVillageFormResult();
+        VillageDTO villageDTO = new VillageDTO();
+        villageDTO.setPopulationCount(10);
+        result.setVillageDTO(villageDTO);
 
+        NumberOfPopulation expected = NumberOfPopulation.UP_TO_10_PEOPLE;
+        NumberOfPopulation actual = addVillageFormResultService.getNumberOfPopulationByAddVillageFormResult(result);
 
+        Assertions.assertEquals(expected, actual);
+    }
+    @Test
+    void testGetNumberOfPopulationByAddVillageFormResultWhenBetween11And50(){
+        AddVillageFormResult result = new AddVillageFormResult();
+        VillageDTO villageDTO = new VillageDTO();
+        villageDTO.setPopulationCount(35);
+        result.setVillageDTO(villageDTO);
+
+        NumberOfPopulation expected = NumberOfPopulation.FROM_11_TO_50_PEOPLE;
+        NumberOfPopulation actual = addVillageFormResultService.getNumberOfPopulationByAddVillageFormResult(result);
+
+        Assertions.assertEquals(expected, actual);
+
+    }
+    @Test
+    void testGetNumberOfPopulationByAddVillageFormResultWhenBetween51And200(){
+        AddVillageFormResult result = new AddVillageFormResult();
+        VillageDTO villageDTO = new VillageDTO();
+        villageDTO.setPopulationCount(125);
+        result.setVillageDTO(villageDTO);
+
+        NumberOfPopulation expected = NumberOfPopulation.FROM_51_TO_200_PEOPLE;
+        NumberOfPopulation actual = addVillageFormResultService.getNumberOfPopulationByAddVillageFormResult(result);
+
+        Assertions.assertEquals(expected, actual);
+    }
+    @Test
+    void testGetNumberOfPopulationByAddVillageFormResultWhenBetween201And500(){
+        AddVillageFormResult result = new AddVillageFormResult();
+        VillageDTO villageDTO = new VillageDTO();
+        villageDTO.setPopulationCount(450);
+        result.setVillageDTO(villageDTO);
+
+        NumberOfPopulation expected = NumberOfPopulation.FROM_201_TO_500_PEOPLE;
+        NumberOfPopulation actual = addVillageFormResultService.getNumberOfPopulationByAddVillageFormResult(result);
+
+        Assertions.assertEquals(expected, actual);
+    }
+    @Test
+    void testGetNumberOfPopulationByAddVillageFormResultWhenBetween501And1000(){
+        AddVillageFormResult result = new AddVillageFormResult();
+        VillageDTO villageDTO = new VillageDTO();
+        villageDTO.setPopulationCount(800);
+        result.setVillageDTO(villageDTO);
+
+        NumberOfPopulation expected = NumberOfPopulation.FROM_501_TO_1000_PEOPLE;
+        NumberOfPopulation actual = addVillageFormResultService.getNumberOfPopulationByAddVillageFormResult(result);
+
+        Assertions.assertEquals(expected, actual);
+    }
+    @Test
+    void testGetNumberOfPopulationByAddVillageFormResultWhenBetween1001And2000(){
+        AddVillageFormResult result = new AddVillageFormResult();
+        VillageDTO villageDTO = new VillageDTO();
+        villageDTO.setPopulationCount(1500);
+        result.setVillageDTO(villageDTO);
+
+        NumberOfPopulation expected = NumberOfPopulation.FROM_1001_TO_2000_PEOPLE;
+        NumberOfPopulation actual = addVillageFormResultService.getNumberOfPopulationByAddVillageFormResult(result);
+
+        Assertions.assertEquals(expected, actual);
+    }
+    @Test
+    void testGetNumberOfPopulationByAddVillageFormResultWhenGreaterThan2000(){
+        AddVillageFormResult result = new AddVillageFormResult();
+        VillageDTO villageDTO = new VillageDTO();
+        villageDTO.setPopulationCount(3000);
+        result.setVillageDTO(villageDTO);
+
+        NumberOfPopulation expected = NumberOfPopulation.FROM_2000_PEOPLE;
+        NumberOfPopulation actual = addVillageFormResultService.getNumberOfPopulationByAddVillageFormResult(result);
+
+        Assertions.assertEquals(expected, actual);
+    }
 }
