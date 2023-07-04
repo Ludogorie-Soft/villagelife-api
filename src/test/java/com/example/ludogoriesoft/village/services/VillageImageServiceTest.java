@@ -5,17 +5,23 @@ import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import com.example.ludogorieSoft.village.dtos.VillageDTO;
 import com.example.ludogorieSoft.village.dtos.VillageImageDTO;
+import com.example.ludogorieSoft.village.dtos.VillageImageResponse;
 import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.model.VillageImage;
 import com.example.ludogorieSoft.village.repositories.VillageImageRepository;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.tika.Tika;
+import org.apache.tika.io.IOUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -177,5 +183,87 @@ class VillageImageServiceTest {
         byte[] image = {0x12, 0x34, 0x56, 0x78};
         String result = villageImageService.processImage(image);
         Assertions.assertNull(result);
+    }
+    //@Test
+    //void testGetAllVillageImages() {
+    //    List<VillageDTO> villageDTOs = new ArrayList<>();
+    //    VillageDTO village1 = new VillageDTO();
+    //    VillageDTO village2 = new VillageDTO();
+    //    villageDTOs.add(village1);
+    //    villageDTOs.add(village2);
+    //    when(villageService.getAllVillages()).thenReturn(villageDTOs);
+//
+    //    List<String> images1 = new ArrayList<>();
+    //    images1.add("image1.jpg");
+    //    images1.add("image2.jpg");
+    //    List<String> images2 = new ArrayList<>();
+    //    images2.add("image3.jpg");
+    //    when(villageImageService.getAllImagesForVillage(village1.getId())).thenReturn(images1);
+    //    when(villageImageService.getAllImagesForVillage(village2.getId())).thenReturn(images2);
+//
+    //    List<VillageImageResponse> result = villageImageService.getAllVillageImages();
+//
+    //    verify(villageService, times(1)).getAllVillages();
+    //    verify(villageImageService, times(1)).getAllImagesForVillage(village1.getId());
+    //    verify(villageImageService, times(1)).getAllImagesForVillage(village2.getId());
+//
+    //    Assertions.assertEquals(2, result.size());
+//
+    //    VillageImageResponse response1 = result.get(0);
+    //    Assertions.assertEquals(village1, response1.getVillageDTO());
+    //    Assertions.assertEquals(images1, response1.getImages());
+//
+    //    VillageImageResponse response2 = result.get(1);
+    //    Assertions.assertEquals(village2, response2.getVillageDTO());
+    //    Assertions.assertEquals(images2, response2.getImages());
+    //}
+
+    //@Test
+    //void testEncodeImageToBase64() {
+    //    byte[] imageBytes = {0x12, 0x34, 0x56, 0x78, (byte) 0x9A, (byte) 0xBC, (byte) 0xDE, (byte) 0xF0};
+    //    String expectedBase64 = "EjRWeJq83A==";
+//
+    //    String result = villageImageService.encodeImageToBase64(imageBytes);
+//
+    //    Assertions.assertEquals(expectedBase64, result);
+    //}
+
+    @Test
+    void testEncodeImageToBase64_EmptyImage() {
+        byte[] emptyImageBytes = new byte[0];
+        String expectedBase64 = "";
+
+        String result = villageImageService.encodeImageToBase64(emptyImageBytes);
+
+        Assertions.assertEquals(expectedBase64, result);
+    }
+
+    @Test
+    void testEncodeImageToBase64_NullImage() {
+        byte[] nullImageBytes = null;
+
+        Assertions.assertThrows(NullPointerException.class, () -> {
+            villageImageService.encodeImageToBase64(nullImageBytes);
+        });
+    }
+    @Test
+    void testReadImageBytes() throws IOException {
+        File imageFile = File.createTempFile("test-image", ".png");
+
+        try {
+            FileOutputStream outputStream = new FileOutputStream(imageFile);
+            byte[] dummyImageData = { 0x01, 0x02, 0x03 };
+            outputStream.write(dummyImageData);
+            outputStream.close();
+
+            byte[] result = villageImageService.readImageBytes(imageFile);
+
+            FileInputStream inputStream = new FileInputStream(imageFile);
+            byte[] expected = IOUtils.toByteArray(inputStream);
+            inputStream.close();
+            Assertions.assertArrayEquals(expected, result);
+        } finally {
+            imageFile.delete();
+        }
     }
 }

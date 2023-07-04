@@ -113,7 +113,7 @@ public class VillageImageService {
         return base64Images;
     }
 
-    private void addVillageImages(List<String> base64Images, List<VillageImage> villageImages) {
+    public void addVillageImages(List<String> base64Images, List<VillageImage> villageImages) {
         for (VillageImage villageImage : villageImages) {
             String imagePath = UPLOAD_DIRECTORY + villageImage.getImageName();
             try {
@@ -129,12 +129,12 @@ public class VillageImageService {
         }
     }
 
-    private byte[] readImageBytes(File imageFile) throws IOException {
+    public byte[] readImageBytes(File imageFile) throws IOException {
         FileInputStream inputStream = new FileInputStream(imageFile);
         return IOUtils.toByteArray(inputStream);
     }
 
-    private String encodeImageToBase64(byte[] imageBytes) {
+    public String encodeImageToBase64(byte[] imageBytes) {
         return Base64.getEncoder().encodeToString(imageBytes);
     }
 
