@@ -1,6 +1,5 @@
 package com.example.ludogorieSoft.village.controllers;
 
-import com.example.ludogorieSoft.village.dtos.LivingConditionDTO;
 import com.example.ludogorieSoft.village.dtos.MessageDTO;
 import com.example.ludogorieSoft.village.services.MessageService;
 import lombok.AllArgsConstructor;
@@ -18,9 +17,19 @@ import javax.validation.Valid;
 @AllArgsConstructor
 public class MessageController {
     private final MessageService messageService;
+    //@PostMapping
+    //public ResponseEntity<MessageDTO> createMessage(@Valid @RequestBody MessageDTO messageDTO) {
+    //    MessageDTO messageDTO1 = messageService.createMessage(messageDTO);
+    //    return new ResponseEntity<>(messageDTO1, HttpStatus.CREATED);
+    //}
     @PostMapping
-    public ResponseEntity<MessageDTO> createMessage(@Valid @RequestBody MessageDTO messageDTO) {
-        MessageDTO messageDTO1 = messageService.createMessage(messageDTO);
-        return new ResponseEntity<>(messageDTO1, HttpStatus.CREATED);
+    public ResponseEntity<?> createMessage(@Valid @RequestBody MessageDTO messageDTO) {
+        try {
+            MessageDTO messageDTO1 = messageService.createMessage(messageDTO);
+            return new ResponseEntity<>(messageDTO1, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error creating message", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
+
 }
