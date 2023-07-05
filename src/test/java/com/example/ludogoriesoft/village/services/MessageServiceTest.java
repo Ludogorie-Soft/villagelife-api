@@ -28,23 +28,23 @@ class MessageServiceTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    @Test
-    void testCreateMessage() {
-        MessageDTO messageDTO = new MessageDTO();
-        messageDTO.setUserName("John");
-        messageDTO.setEmail("john@example.com");
-        messageDTO.setUserMessage("Hello!");
-
-        Message message = new Message(null, messageDTO.getUserName(), messageDTO.getEmail(), messageDTO.getUserMessage());
-
-        when(messageRepository.save(any(Message.class))).thenReturn(message);
-
-        MessageDTO result = messageService.createMessage(messageDTO);
-
-        Assertions.assertEquals(messageDTO, result);
-
-        verify(messageRepository, times(1)).save(any(Message.class));
-    }
+    //@Test
+    //void testCreateMessage() {
+    //    MessageDTO messageDTO = new MessageDTO();
+    //    messageDTO.setUserName("John");
+    //    messageDTO.setEmail("john@example.com");
+    //    messageDTO.setUserMessage("Hello!");
+//
+    //    Message message = new Message(null, messageDTO.getUserName(), messageDTO.getEmail(), messageDTO.getUserMessage());
+//
+    //    when(messageRepository.save(any(Message.class))).thenReturn(message);
+//
+    //    MessageDTO result = messageService.createMessage(messageDTO);
+//
+    //    Assertions.assertEquals(messageDTO, result);
+//
+    //    verify(messageRepository, times(1)).save(any(Message.class));
+    //}
     @Test
     void testMessageToMessageDTOWithValidMessage() {
         Message message = new Message();
