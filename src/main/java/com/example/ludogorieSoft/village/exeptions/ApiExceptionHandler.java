@@ -1,5 +1,6 @@
 package com.example.ludogorieSoft.village.exeptions;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -10,14 +11,21 @@ import java.time.ZonedDateTime;
 @ControllerAdvice
 public class ApiExceptionHandler {
     @ExceptionHandler(value = {ApiRequestException.class})
-    public ResponseEntity<Object> handleApiRequestException(com.example.ludogorieSoft.village.exeptions.ApiRequestException e){
+    public ResponseEntity<Object> handleApiRequestException(ApiRequestException e){
         HttpStatus badRequest = HttpStatus.BAD_REQUEST;
         ApiVillageNotFound apiException = new ApiVillageNotFound(
-                e.getMessage(),
-                e.getCause(),
-                badRequest,
-                ZonedDateTime.now(ZoneId.of("Z"))
+            e.getMessage(),
+            e.getCause(),
+            badRequest,
+            ZonedDateTime.now(ZoneId.of("Z"))
         );
         return new ResponseEntity<>(apiException, badRequest);
     }
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<String> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+        String errorMessage = "Duplicate entry error";
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorMessage);
+    }
+
 }

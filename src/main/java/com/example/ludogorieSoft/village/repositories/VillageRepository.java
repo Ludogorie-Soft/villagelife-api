@@ -101,4 +101,7 @@ public interface VillageRepository extends JpaRepository<Village, Long> {
             "AND vl.consents = 'COMPLETELY_AGREED' " +
             "GROUP BY v.name")
     List<Village> searchVillagesByLivingCondition(@Param("livingConditionNames") List<String> livingConditionDTOS);
+
+    @Query("SELECT v, p, a FROM Village v JOIN v.population p JOIN v.admin a")
+    List<Object[]> findAllVillagesWithPopulation();
 }

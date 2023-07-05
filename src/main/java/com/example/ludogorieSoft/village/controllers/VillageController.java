@@ -35,11 +35,11 @@ public class VillageController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdVillage);
     }
 
-    @PostMapping("/null")
-    public ResponseEntity<Long> createVillageWithNullValues() {
-         Long villageID= villageService.createVillageWhitNullValues();
-        return ResponseEntity.status(HttpStatus.OK).body(villageID);
-    }
+//    @PostMapping("/null")
+//    public ResponseEntity<Long> createVillageWithNullValues() {
+//         Long villageID= villageService.createVillageWhitNullValues();
+//        return ResponseEntity.status(HttpStatus.OK).body(villageID);
+//    }
 
 
     @PutMapping("/{id}")

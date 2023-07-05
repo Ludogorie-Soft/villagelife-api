@@ -1,10 +1,14 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.AdministratorDTO;
-import com.example.ludogorieSoft.village.dtos.AdministratorRequest;
+import com.example.ludogorieSoft.village.dtos.request.AdministratorRequest;
+import com.example.ludogorieSoft.village.dtos.response.VillageResponse;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.Administrator;
+import com.example.ludogorieSoft.village.model.Population;
+import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.repositories.AdministratorRepository;
+import com.example.ludogorieSoft.village.repositories.VillageRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
@@ -15,20 +19,25 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class AdministratorServiceTest {
 
     private AdministratorService administratorService;
+
+    private VillageRepository villageRepository;
     private AdministratorRepository administratorRepository;
+
+
+
     private ModelMapper modelMapper;
 
     @BeforeEach
     public void setUp() {
         administratorRepository = mock(AdministratorRepository.class);
         modelMapper = mock(ModelMapper.class);
-        administratorService = new AdministratorService(administratorRepository, modelMapper);
+        villageRepository = mock(VillageRepository.class);
+        administratorService = new AdministratorService(administratorRepository, modelMapper, villageRepository );
     }
 
     @Test
@@ -51,8 +60,8 @@ class AdministratorServiceTest {
 
         when(administratorRepository.findAll()).thenReturn(administrators);
         when(modelMapper.map(any(Administrator.class), eq(AdministratorDTO.class)))
-                .thenReturn(administratorDTO1)
-                .thenReturn(administratorDTO2);
+            .thenReturn(administratorDTO1)
+            .thenReturn(administratorDTO2);
 
         List<AdministratorDTO> resultDTOs = administratorService.getAllAdministrators();
 
@@ -67,6 +76,8 @@ class AdministratorServiceTest {
         administratorRequest.setUsername("admin");
         Administrator administrator = new Administrator();
         administrator.setUsername("admin");
+        administrator.setPassword("123123");
+
 
         AdministratorDTO expectedDTO = new AdministratorDTO();
         expectedDTO.setUsername("admin");
@@ -81,6 +92,65 @@ class AdministratorServiceTest {
 
         assertEquals(expectedDTO.getUsername(), resultDTO.getUsername());
     }
+
+    @Test
+    void testGetAllVillagesWithPopulation() {
+        Village village1 = new Village();
+        village1.setId(1L);
+
+        Population population1 =  new Population();
+        population1.setId(1L);
+
+        Administrator administrator1 = new Administrator();
+        administrator1.setId(1L);
+
+        Village village2 = new Village();
+        village2.setId(2L);
+
+        Population population2 =  new Population();
+        population2.setId(3L);
+
+        Administrator administrator2 = new Administrator();
+        administrator2.setId(3L);
+
+
+
+        List<Object[]> mockResults = new ArrayList<>();
+        Object[] result1 = {village1,population1, administrator1};
+        Object[] result2 = {village2, population2, administrator2};
+        mockResults.add(result1);
+        mockResults.add(result2);
+        when(villageRepository.findAllVillagesWithPopulation()).thenReturn(mockResults);
+
+        List<VillageResponse> expectedResponses = new ArrayList<>();
+        VillageResponse response1 = new VillageResponse();
+        response1.setId(1L);
+        response1.setPopulation(population1);
+        response1.setAdmin(administrator1);
+        expectedResponses.add(response1);
+
+        VillageResponse response2 = new VillageResponse();
+        response2.setId(2L);
+        response2.setPopulation(population2);
+        response2.setAdmin(administrator2);
+        expectedResponses.add(response2);
+
+        List<VillageResponse> actualResponses = administratorService.getAllVillagesWithPopulation();
+
+        assertEquals(expectedResponses.size(), actualResponses.size());
+        for (int i = 0; i < expectedResponses.size(); i++) {
+            VillageResponse expectedResponse = expectedResponses.get(i);
+            VillageResponse actualResponse = actualResponses.get(i);
+            assertEquals(expectedResponse.getId(), actualResponse.getId());
+            assertEquals(expectedResponse.getName(), actualResponse.getName());
+            assertEquals(expectedResponse.getPopulation(), actualResponse.getPopulation());
+            assertEquals(expectedResponse.getDateUpload(), actualResponse.getDateUpload());
+            assertEquals(expectedResponse.getAdmin(), actualResponse.getAdmin());
+            assertEquals(expectedResponse.getDateApproved(), actualResponse.getDateApproved());
+        }
+        verify(villageRepository,times(1)).findAllVillagesWithPopulation();
+    }
+
 
     @Test
     void testCreateAdministratorWhenUsernameExists() {

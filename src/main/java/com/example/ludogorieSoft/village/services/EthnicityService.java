@@ -17,7 +17,7 @@ import java.util.Optional;
 public class EthnicityService {
     private final EthnicityRepository ethnicityRepository;
     private final ModelMapper modelMapper;
-    private final  static String ERROR_MESSAGE= "Ethnicity not found";
+    private static final String ERROR_MESSAGE = "Ethnicity not found";
 
     public EthnicityDTO ethnicityToEthnicityDTO(Ethnicity ethnicity){
         return modelMapper.map(ethnicity, EthnicityDTO.class);
@@ -31,11 +31,11 @@ public class EthnicityService {
         }
     }
     public List<EthnicityDTO> getAllEthnicities() {
-        List<Ethnicity> ethnicities = ethnicityRepository.findAllByOrderByIdAsc();
+        List<Ethnicity> ethnicities = ethnicityRepository.findAll();
         return ethnicities
-                .stream()
-                .map(this::ethnicityToEthnicityDTO)
-                .toList();
+            .stream()
+            .map(this::ethnicityToEthnicityDTO)
+            .toList();
     }
 
 
@@ -91,18 +91,10 @@ public class EthnicityService {
     public EthnicityDTO updateEthnicity(Long id, Ethnicity ethnicity) {
         Optional<Ethnicity> foundEthnicity = ethnicityRepository.findById(id);
         if (foundEthnicity.isEmpty()) {
-            throw new ApiRequestException(ERROR_MESSAGE);
+            throw new ApiRequestException("Administrator not found");
         }
         foundEthnicity.get().setEthnicityName(ethnicity.getEthnicityName());
         ethnicityRepository.save(foundEthnicity.get());
         return ethnicityToEthnicityDTO(foundEthnicity.get());
     }
-    public EthnicityDTO findEthnicityByName(String name){
-        Ethnicity ethnicity = ethnicityRepository.findByEthnicityName(name);
-        if(ethnicity == null){
-            throw new ApiRequestException(ERROR_MESSAGE);
-        }
-        return ethnicityToEthnicityDTO(ethnicity);
-    }
-
 }

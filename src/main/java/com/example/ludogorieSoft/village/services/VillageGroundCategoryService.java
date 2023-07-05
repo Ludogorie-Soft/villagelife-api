@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -26,7 +27,7 @@ public class VillageGroundCategoryService {
     private final ModelMapper modelMapper;
     private final VillageService villageService;
     private final GroundCategoryService groundCategoryService;
-    private final  String errorMessage="Village not found";
+    private static final String ERROR_MESSAGE = "Village not found";
 
     public VillageGroundCategoryDTO toDTO(VillageGroundCategory forMap) {
         return modelMapper.map(forMap, VillageGroundCategoryDTO.class);
@@ -36,8 +37,8 @@ public class VillageGroundCategoryService {
     public List<VillageGroundCategoryDTO> getAllVillageGroundCategories() {
         List<VillageGroundCategory> villageGroundCategories = villageGroundCategoryRepository.findAll();
         return villageGroundCategories.stream()
-                .map(this::toDTO)
-                .toList();
+                                      .map(this::toDTO)
+                                      .toList();
     }
 
     public VillageGroundCategoryDTO getByID(Long id) {
@@ -47,6 +48,7 @@ public class VillageGroundCategoryService {
         }
         return toDTO(optionalVillageGroundCategory.get());
     }
+
     public VillageGroundCategoryDTO createVillageGroundCategoryDTO(VillageGroundCategoryDTO villageGroundCategoryDTO) {
         VillageGroundCategory villageGroundCategory = new VillageGroundCategory();
 
@@ -76,6 +78,7 @@ public class VillageGroundCategoryService {
         villageGroundCategoryRepository.save(foundVillageGroundCategory.get());
         return toDTO(foundVillageGroundCategory.get());
     }
+
     public int deleteVillageGroundCategory(Long id) {
         try {
             villageGroundCategoryRepository.deleteById(id);
@@ -84,5 +87,4 @@ public class VillageGroundCategoryService {
             return 0;
         }
     }
-
 }
