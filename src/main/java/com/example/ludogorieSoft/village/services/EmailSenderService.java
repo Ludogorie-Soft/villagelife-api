@@ -1,5 +1,7 @@
 package com.example.ludogorieSoft.village.services;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -24,7 +26,8 @@ public class EmailSenderService {
 
     @Value("${spring.mail.password}")
     private String recipientPassword;
-    public void sendSimpleEmail(String fromEmail, String body, String subject) {
+    private static final Logger logger = LoggerFactory.getLogger(EmailSenderService.class);
+    public void sendEmail(String fromEmail, String body, String subject) {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
         try {
@@ -34,7 +37,7 @@ public class EmailSenderService {
             helper.setText(body);
             mailSender.send(message);
         } catch (MessagingException e) {
-            System.out.println("Error Sending Email: " + e.getMessage());
+            logger.error("An error occurred while sending an email", e);
         }
     }
 

@@ -17,31 +17,17 @@ public class MessageService {
     public MessageDTO messageToMessageDTO(Message message){
         return modelMapper.map(message, MessageDTO.class);
     }
-    //public MessageDTO createMessage(MessageDTO messageDTO) {
-    //    Message message = new Message(null, messageDTO.getUserName(), messageDTO.getEmail(), messageDTO.getUserMessage());
-    //    messageRepository.save(message);
-//
-    //    emailSenderService.sendSimpleEmail(
-    //            messageDTO.getEmail(),
-    //            "Име на потребител: " + messageDTO.getUserName() +
-    //                    "\nEmail: " + messageDTO.getEmail() +
-    //                    "\nЗапитване или заявка: " + messageDTO.getUserMessage(),
-    //            "VillageLife");
-//
-    //    return messageDTO;
-    //}
     public MessageDTO createMessage(MessageDTO messageDTO) {
         try {
             Message message = new Message(null, messageDTO.getUserName(), messageDTO.getEmail(), messageDTO.getUserMessage());
             messageRepository.save(message);
 
-            emailSenderService.sendSimpleEmail(
+            emailSenderService.sendEmail(
                     messageDTO.getEmail(),
                     "Име на потребител: " + messageDTO.getUserName() +
                             "\nEmail: " + messageDTO.getEmail() +
                             "\nЗапитване или заявка: " + messageDTO.getUserMessage(),
                     "VillageLife");
-
             return messageDTO;
         } catch (Exception e) {
             throw new ApiRequestException("Error creating message");
