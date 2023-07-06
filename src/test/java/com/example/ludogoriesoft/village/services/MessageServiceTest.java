@@ -1,6 +1,7 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.MessageDTO;
+import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.Message;
 import com.example.ludogorieSoft.village.repositories.MessageRepository;
 import org.junit.jupiter.api.Assertions;
@@ -11,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 
+import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.*;
 
 class MessageServiceTest {
@@ -50,6 +52,25 @@ class MessageServiceTest {
                 "VillageLife");
     }
 
+    @Test
+    void testCreateMessageErrorCreatingMessage() {
+        MessageDTO messageDTO = new MessageDTO();
+        messageDTO.setUserName("John Doe");
+        messageDTO.setEmail("johndoe@example.com");
+        messageDTO.setUserMessage("Hello, this is a test message.");
+
+        doThrow(new RuntimeException("Error creating message")).when(messageRepository).save(any(Message.class));
+
+        ApiRequestException exception = assertThrows(ApiRequestException.class, () -> {
+            messageService.createMessage(messageDTO);
+        });
+
+        Assertions.assertEquals("Error creating message", exception.getMessage());
+
+        verify(messageRepository).save(any(Message.class));
+
+        verify(emailSenderService, never()).sendEmail(anyString(), anyString(), anyString());
+    }
 
     @Test
     void testMessageToMessageDTOWithValidMessage() {
