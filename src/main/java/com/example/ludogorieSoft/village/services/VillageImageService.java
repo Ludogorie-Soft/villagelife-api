@@ -138,14 +138,22 @@ public class VillageImageService {
         return Base64.getEncoder().encodeToString(imageBytes);
     }
 
-    public List<VillageImageResponse> getAllVillageImages(){
+    //public List<VillageImageResponse> getAllVillageImages(){
+    //    List<VillageDTO> villageDTOs = villageService.getAllVillages();
+    //    List<VillageImageResponse> villageImageResponses = new ArrayList<>();
+    //    for (VillageDTO village: villageDTOs) {
+    //        List<String> images = getAllImagesForVillage(village.getId());
+    //        VillageImageResponse villageImageResponse = new VillageImageResponse(village, images);
+    //        villageImageResponses.add(villageImageResponse);
+    //    }
+    //    return villageImageResponses;
+    //}
+    public List<VillageDTO> getAllVillageDTOsWithImages(){
         List<VillageDTO> villageDTOs = villageService.getAllVillages();
-        List<VillageImageResponse> villageImageResponses = new ArrayList<>();
         for (VillageDTO village: villageDTOs) {
             List<String> images = getAllImagesForVillage(village.getId());
-            VillageImageResponse villageImageResponse = new VillageImageResponse(village, images);
-            villageImageResponses.add(villageImageResponse);
+            village.setImages(images);
         }
-        return villageImageResponses;
+        return villageDTOs;
     }
 }
