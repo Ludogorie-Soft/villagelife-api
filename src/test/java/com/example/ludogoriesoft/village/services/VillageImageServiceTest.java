@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 
 import com.example.ludogorieSoft.village.dtos.VillageDTO;
 import com.example.ludogorieSoft.village.dtos.VillageImageDTO;
-import com.example.ludogorieSoft.village.dtos.VillageImageResponse;
 import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.model.VillageImage;
 import com.example.ludogorieSoft.village.repositories.VillageImageRepository;
@@ -19,6 +18,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.tika.io.IOUtils;
@@ -228,47 +229,38 @@ class VillageImageServiceTest {
         }
     }
 
-    //@Test
-    //void testGetAllVillageImages() {
-    //    VillageDTO village1 = new VillageDTO();
-    //    village1.setId(1L);
-    //    village1.setName("Village 1");
-    //    VillageDTO village2 = new VillageDTO();
-    //    village2.setId(2L);
-    //    village2.setName("Village 2");
-    //    List<VillageDTO> villageDTOs = new ArrayList<>();
-    //    villageDTOs.add(village1);
-    //    villageDTOs.add(village2);
-//
-    //    List<String> images1 = new ArrayList<>();
-    //    images1.add("image1.png");
-    //    images1.add("image2.png");
-    //    List<String> images2 = new ArrayList<>();
-    //    images2.add("image3.png");
-    //    images2.add("image4.png");
-//
-    //    when(villageService.getAllVillages()).thenReturn(villageDTOs);
-    //    when(villageImageService.getAllImagesForVillage(1L)).thenReturn(images1);
-    //    when(villageImageService.getAllImagesForVillage(2L)).thenReturn(images2);
-//
-    //    List<VillageImageResponse> result = villageImageService.getAllVillageImages();
-//
-    //    Assertions.assertEquals(2, result.size());
-//
-    //    VillageImageResponse response1 = result.get(0);
-    //    Assertions.assertEquals(village1.getId(), response1.getVillageDTO().getId());
-    //    Assertions.assertEquals(village1.getName(), response1.getVillageDTO().getName());
-    //    Assertions.assertEquals(images1, response1.getImages());
-//
-    //    VillageImageResponse response2 = result.get(1);
-    //    Assertions.assertEquals(village2.getId(), response2.getVillageDTO().getId());
-    //    Assertions.assertEquals(village2.getName(), response2.getVillageDTO().getName());
-    //    Assertions.assertEquals(images2, response2.getImages());
-//
-    //    verify(villageService, times(1)).getAllVillages();
-    //    verify(villageImageService, times(1)).getAllImagesForVillage(1L);
-    //    verify(villageImageService, times(1)).getAllImagesForVillage(2L);
-    //}
+    @Test
+    void testGetAllVillageDTOsWithImagesWhenFound() {
+        List<VillageDTO> villageDTOs = new ArrayList<>();
+        VillageDTO villageDTO1 = new VillageDTO();
+        villageDTO1.setId(1L);
+        villageDTO1.setName("Village 1");
+        villageDTO1.setRegion("Region 1");
+        villageDTOs.add(villageDTO1);
+
+        VillageDTO villageDTO2 = new VillageDTO();
+        villageDTO2.setId(2L);
+        villageDTO2.setName("Village 2");
+        villageDTO2.setRegion("Region 2");
+        villageDTOs.add(villageDTO2);
+
+        when(villageService.getAllVillages()).thenReturn(villageDTOs);
+
+        when(villageImageService.getAllImagesForVillage(anyLong())).thenReturn(Arrays.asList("image1.jpg", "image2.jpg"));
+
+        List<VillageDTO> result = villageImageService.getAllVillageDTOsWithImages();
+
+        Assertions.assertEquals(2, result.size());
+        Assertions.assertEquals(Arrays.asList("image1.jpg", "image2.jpg"), result.get(0).getImages());
+        Assertions.assertEquals(Arrays.asList("image1.jpg", "image2.jpg"), result.get(1).getImages());
+    }
+
+    @Test
+    void testGetAllVillageDTOsWithImagesWhenNotFound() {
+        when(villageService.getAllVillages()).thenReturn(Collections.emptyList());
+        List<VillageDTO> result = villageImageService.getAllVillageDTOsWithImages();
+        Assertions.assertTrue(result.isEmpty());
+    }
 
     @Test
     void testAddVillageImagesImageFileDoesNotExist() {
