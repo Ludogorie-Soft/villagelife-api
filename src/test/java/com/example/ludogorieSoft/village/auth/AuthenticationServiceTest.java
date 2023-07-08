@@ -43,7 +43,6 @@ class AuthenticationServiceTest {
 
     @Test
     void register_ShouldReturnAuthenticationResponse() {
-        // Arrange
         RegisterRequest request = new RegisterRequest("John Doe", "john@example.com", "johndoe", "password", "1234567890", Role.ADMIN);
         Administrator savedAdministrator = mock(Administrator.class);
         String encodedPassword = "encodedPassword";
@@ -53,11 +52,8 @@ class AuthenticationServiceTest {
         when(administratorRepository.save(any(Administrator.class))).thenReturn(savedAdministrator);
         when(jwtService.generateToken(savedAdministrator)).thenReturn(jwtToken);
 
-        // Act
         AuthenticationResponce response = authenticationService.register(request);
 
-        // Assert
-//        assertEquals(jwtToken, response.getToken());
         verify(passwordEncoder).encode(request.getPassword());
         verify(administratorRepository).save(any(Administrator.class));
 //        verify(jwtService).generateToken(savedAdministrator);
@@ -65,7 +61,6 @@ class AuthenticationServiceTest {
 
     @Test
     void authenticate_ShouldReturnAuthenticationResponse() {
-        // Arrange
         AuthenticationRequest request = new AuthenticationRequest("johndoe", "password");
         Administrator authenticatedAdministrator = mock(Administrator.class);
         String jwtToken = "jwtToken";
@@ -74,10 +69,8 @@ class AuthenticationServiceTest {
         when(administratorRepository.findByUsername(request.getUsername())).thenReturn(authenticatedAdministrator);
         when(jwtService.generateToken(authenticatedAdministrator)).thenReturn(jwtToken);
 
-        // Act
         AuthenticationResponce response = authenticationService.authenticate(request);
 
-        // Assert
         assertEquals(jwtToken, response.getToken());
         verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
         verify(administratorRepository).findByUsername(request.getUsername());

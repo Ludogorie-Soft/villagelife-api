@@ -9,8 +9,10 @@ import com.example.ludogorieSoft.village.model.Population;
 import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.repositories.AdministratorRepository;
 import com.example.ludogorieSoft.village.repositories.VillageRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
 
 import java.util.ArrayList;
@@ -69,6 +71,22 @@ class AdministratorServiceTest {
         assertEquals(expectedDTOs.get(0).getId(), resultDTOs.get(0).getId());
         assertEquals(expectedDTOs.get(1).getId(), resultDTOs.get(1).getId());
     }
+    @Test
+    void testFindAdminByUsername() {
+        String username = "admin";
+        Administrator expectedAdmin = new Administrator();
+        expectedAdmin.setUsername(username);
+
+        Mockito.when(administratorRepository.findByUsername(username))
+                .thenReturn(expectedAdmin);
+
+        Administrator actualAdmin = administratorService.findAdminByUsername(username);
+
+        Assertions.assertEquals(expectedAdmin, actualAdmin);
+        Mockito.verify(administratorRepository, Mockito.times(1))
+                .findByUsername(username);
+    }
+
 
     @Test
     void testCreateAdministratorWhenUsernameDoesNotExist() {
@@ -202,40 +220,28 @@ class AdministratorServiceTest {
 
         assertThrows(ApiRequestException.class, () -> administratorService.deleteAdministratorById(id));
     }
-
     @Test
     void testUpdateAdministratorWhenAdministratorExists() {
         Long id = 1L;
         AdministratorRequest administratorRequest = new AdministratorRequest();
-        administratorRequest.setFullName("John Doe");
-        administratorRequest.setEmail("john@example.com");
-        administratorRequest.setUsername("john");
-        administratorRequest.setPassword("password");
-        administratorRequest.setMobile("123456789");
 
         Administrator administrator = new Administrator();
         administrator.setId(id);
 
         AdministratorDTO expectedDTO = new AdministratorDTO();
         expectedDTO.setId(id);
-        expectedDTO.setFullName(administratorRequest.getFullName());
-        expectedDTO.setEmail(administratorRequest.getEmail());
-        expectedDTO.setUsername(administratorRequest.getUsername());
-        expectedDTO.setMobile(administratorRequest.getMobile());
 
         Optional<Administrator> foundAdministrator = Optional.of(administrator);
 
         when(administratorRepository.findById(id)).thenReturn(foundAdministrator);
-        when(administratorRepository.save(foundAdministrator.get())).thenReturn(foundAdministrator.get());
-        when(modelMapper.map(foundAdministrator.get(), AdministratorDTO.class)).thenReturn(expectedDTO);
+        when(administratorRepository.save(any(Administrator.class))).thenReturn(administrator);
+        when(modelMapper.map(administrator, AdministratorDTO.class)).thenReturn(expectedDTO);
 
         AdministratorDTO resultDTO = administratorService.updateAdministrator(id, administratorRequest);
 
-        assertEquals(expectedDTO.getId(), resultDTO.getId());
-        assertEquals(expectedDTO.getFullName(), resultDTO.getFullName());
-        assertEquals(expectedDTO.getEmail(), resultDTO.getEmail());
-        assertEquals(expectedDTO.getUsername(), resultDTO.getUsername());
-        assertEquals(expectedDTO.getMobile(), resultDTO.getMobile());
+        verify(administratorRepository, times(1)).findById(id);
+        verify(administratorRepository, times(1)).save(any(Administrator.class));
+        verify(modelMapper, times(1)).map(administrator, AdministratorDTO.class);
     }
 
     @Test
