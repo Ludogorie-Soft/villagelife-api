@@ -24,6 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Collections;
@@ -63,56 +64,6 @@ class VillageImageControllerIntegrationTest {
         });
         Assertions.assertEquals(base64Images, responseImages);
     }
-
-    //@Test
-    //void testGetAllVillageImageResponses() throws Exception {
-    //    VillageDTO villageDTO1 = new VillageDTO();
-    //    villageDTO1.setId(1L);
-    //    villageDTO1.setName("vl1");
-//
-    //    VillageDTO villageDTO2 = new VillageDTO();
-    //    villageDTO2.setId(2L);
-    //    villageDTO2.setName("vl2");
-//
-    //    List<String> images1 = Arrays.asList("image1", "image2");
-    //    List<String> images2 = Arrays.asList("image3", "image4");
-//
-    //    VillageImageResponse response1 = new VillageImageResponse(villageDTO1, images1);
-    //    VillageImageResponse response2 = new VillageImageResponse();
-    //    response2.setVillageDTO(villageDTO2);
-    //    response2.setImages(images2);
-//
-    //    List<VillageImageResponse> villageImageResponses = Arrays.asList(response1, response2);
-//
-    //    when(villageImageService.getAllVillageImages()).thenReturn(villageImageResponses);
-//
-    //    MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageImages/all")
-    //                    .contentType(MediaType.APPLICATION_JSON))
-    //            .andExpect(status().isOk())
-    //            .andExpect(jsonPath("$.[0].villageDTO.id").value(response1.getVillageDTO().getId()))
-    //            .andExpect(jsonPath("$.[0].villageDTO.name").value(response1.getVillageDTO().getName()))
-    //            .andExpect(jsonPath("$.[0].images.[0]").value(response1.getImages().get(0)))
-    //            .andExpect(jsonPath("$.[0].images.[1]").value(response1.getImages().get(1)))
-    //            .andExpect(jsonPath("$.[1].villageDTO.id").value(response2.getVillageDTO().getId()))
-    //            .andExpect(jsonPath("$.[1].villageDTO.name").value(response2.getVillageDTO().getName()))
-    //            .andExpect(jsonPath("$.[1].images.[0]").value(response2.getImages().get(0)))
-    //            .andExpect(jsonPath("$.[1].images.[1]").value(response2.getImages().get(1)))
-    //            .andReturn();
-//
-    //    MockHttpServletResponse response = mvcResult.getResponse();
-    //    Assertions.assertEquals(HttpStatus.OK.value(), response.getStatus());
-    //    String responseBody = response.getContentAsString();
-    //    List<VillageImageResponse> actualResponses = new ObjectMapper().readValue(responseBody, new TypeReference<>() {
-    //    });
-//
-    //    for (int i = 0; i < villageImageResponses.size(); i++) {
-    //        VillageImageResponse expectedResponse = villageImageResponses.get(i);
-    //        VillageImageResponse actualResponse = actualResponses.get(i);
-    //        Assertions.assertEquals(expectedResponse.getVillageDTO().getId(), actualResponse.getVillageDTO().getId());
-    //        Assertions.assertEquals(expectedResponse.getVillageDTO().getName(), actualResponse.getVillageDTO().getName());
-    //        Assertions.assertEquals(expectedResponse.getImages(), actualResponse.getImages());
-    //    }
-    //}
         @Test
         void testGetAllImagesForVillageNotFound() throws Exception {
             Long villageId = 1L;
@@ -124,13 +75,55 @@ class VillageImageControllerIntegrationTest {
                     .andExpect(status().isNotFound());
         }
 
-        //@Test
-        //void testGetAllVillageImageResponsesNotFound() throws Exception {
-        //    Mockito.when(villageImageService.getAllVillageImages()).thenReturn(Collections.emptyList());
-//
-        //    mockMvc.perform(get("/api/v1/villageImages/all")
-        //                    .contentType(MediaType.APPLICATION_JSON))
-        //            .andExpect(status().isNotFound());
-        //}
+        @Test
+        void testGetAllVillageDTOsWithImages() throws Exception {
+            VillageDTO villageDTO1 = new VillageDTO();
+            villageDTO1.setId(1L);
+            villageDTO1.setName("Village 1");
+            villageDTO1.setRegion("Region 1");
+            List<String> images1 = new ArrayList<>();
+            images1.add("img1");
+            images1.add("img2");
+            villageDTO1.setImages(images1);
+
+            VillageDTO villageDTO2 = new VillageDTO();
+            villageDTO2.setId(2L);
+            villageDTO2.setName("Village 2");
+            villageDTO2.setRegion("Region 2");
+            List<String> images2 = new ArrayList<>();
+            images2.add("img3");
+            images2.add("img4");
+            images2.add("img5");
+            villageDTO2.setImages(images2);
+
+            List<VillageDTO> villageDTOList = Arrays.asList(villageDTO1, villageDTO2);
+
+            when(villageImageService.getAllVillageDTOsWithImages()).thenReturn(villageDTOList);
+
+
+            mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageImages/all")
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.[0].id").value(1))
+                    .andExpect(jsonPath("$.[0].name").value("Village 1"))
+                    .andExpect(jsonPath("$.[0].region").value("Region 1"))
+                    .andExpect(jsonPath("$.[0].images").value(images1))
+                    .andExpect(jsonPath("$.[1].id").value(2))
+                    .andExpect(jsonPath("$.[1].name").value("Village 2"))
+                    .andExpect(jsonPath("$.[1].region").value("Region 2"))
+                    .andExpect(jsonPath("$.[1].images").value(images2))
+                    .andReturn();
+        }
+    @Test
+    void testGetAllVillageDTOsWithImagesWhenNotFound() throws Exception {
+        when(villageImageService.getAllVillageDTOsWithImages()).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageImages/all")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andReturn();
+    }
+
+
 }
 
