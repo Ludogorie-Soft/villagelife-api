@@ -7,6 +7,7 @@ import com.example.ludogorieSoft.village.dtos.response.AuthenticationResponce;
 import com.example.ludogorieSoft.village.enums.Role;
 import com.example.ludogorieSoft.village.model.Administrator;
 import com.example.ludogorieSoft.village.repositories.AdministratorRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -41,22 +42,30 @@ class AuthenticationServiceTest {
         MockitoAnnotations.openMocks(this);
     }
 
+
     @Test
-    void register_ShouldReturnAuthenticationResponse() {
-        RegisterRequest request = new RegisterRequest("John Doe", "john@example.com", "johndoe", "password", "1234567890", Role.ADMIN);
-        Administrator savedAdministrator = mock(Administrator.class);
-        String encodedPassword = "encodedPassword";
-        String jwtToken = "jwtToken";
+    void registerShouldReturnAuthenticationResponse() {
+        RegisterRequest request = new RegisterRequest("John Doe", "john@example.com", "username", "password", "1234567890", Role.ADMIN);
 
+        String encodedPassword = "password";
         when(passwordEncoder.encode(request.getPassword())).thenReturn(encodedPassword);
+
+        Administrator savedAdministrator = Administrator.builder()
+                .fullName(request.getFullName())
+                .username("username")
+                .password(encodedPassword)
+                .build();
+        var jwtToken = "jwtToken";
+
         when(administratorRepository.save(any(Administrator.class))).thenReturn(savedAdministrator);
-        when(jwtService.generateToken(savedAdministrator)).thenReturn(jwtToken);
-
+        when(jwtService.generateToken(any(Administrator.class))).thenReturn(jwtToken);
         AuthenticationResponce response = authenticationService.register(request);
-
         verify(passwordEncoder).encode(request.getPassword());
         verify(administratorRepository).save(any(Administrator.class));
-//        verify(jwtService).generateToken(savedAdministrator);
+        verify(jwtService).generateToken(any(Administrator.class));
+
+        Assertions.assertNotNull(response);
+        assertEquals(jwtToken, response.getToken());
     }
 
     @Test

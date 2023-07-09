@@ -22,18 +22,18 @@ public class AdministratorController {
     private final VillageService villageService;
 
     @GetMapping
-    public ResponseEntity<List<AdministratorDTO>> getAllAdministrators(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<List<AdministratorDTO>> getAllAdministrators() {
         return ResponseEntity.ok(administratorService.getAllAdministrators());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AdministratorDTO> getAdministratorById(@PathVariable("id") Long id, @RequestHeader("Authorization") String token) {
+    public ResponseEntity<AdministratorDTO> getAdministratorById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(administratorService.getAdministratorById(id));
     }
 
 
     @PostMapping
-    public ResponseEntity<AdministratorDTO> createAdministrator(@Valid @RequestBody AdministratorRequest administratorRequest, @RequestHeader("Authorization") String token) {
+    public ResponseEntity<AdministratorDTO> createAdministrator(@Valid @RequestBody AdministratorRequest administratorRequest) {
         return ResponseEntity.ok(administratorService.createAdministrator(administratorRequest));
     }
     @PutMapping("/update/{id}")
@@ -46,11 +46,11 @@ public class AdministratorController {
         return new ResponseEntity<>("Administrator with id: " + id + " has been deleted successfully!!", HttpStatus.OK);
     }
     @GetMapping("/username/{username}")
-    public Administrator getAdministratorByUsername(@PathVariable("username") String username,@RequestHeader("Authorization") String token) {
+    public Administrator getAdministratorByUsername(@PathVariable("username") String username) {
         return administratorService.findAdminByUsername(username);
     }
     @GetMapping("village")
-    public List<VillageResponse> getAllVillages(@RequestHeader("Authorization") String token){
+    public List<VillageResponse> getAllVillages(){
        return administratorService.getAllVillagesWithPopulation();
     }
 }
