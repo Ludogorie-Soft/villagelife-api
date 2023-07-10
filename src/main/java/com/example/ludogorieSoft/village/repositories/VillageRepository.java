@@ -5,12 +5,10 @@ import com.example.ludogorieSoft.village.model.Village;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
-
 
 import java.util.List;
 
-@Repository
+
 public interface VillageRepository extends JpaRepository<Village, Long> {
     @Query("SELECT v FROM Village v WHERE v.name LIKE %:keyword%")
     List<Village> findByName(@Param("keyword") String keyword);
@@ -101,4 +99,6 @@ public interface VillageRepository extends JpaRepository<Village, Long> {
             "AND vl.consents = 'COMPLETELY_AGREED' " +
             "GROUP BY v.name")
     List<Village> searchVillagesByLivingCondition(@Param("livingConditionNames") List<String> livingConditionDTOS);
+    @Query("SELECT v, a FROM Village v JOIN v.admin a")
+    List<Object[]> findAllVillagesWithPopulation();
 }

@@ -1,4 +1,4 @@
-package com.example.ludogorieSoft.village.dtos;
+package com.example.ludogorieSoft.village.dtos.request;
 
 import com.example.ludogorieSoft.village.enums.Role;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -15,11 +15,12 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AdministratorDTO {
+public class AdministratorRequest {
     private Long id;
     private String fullName;
     private String email;
     private String username;
+    private String password;
     private String mobile;
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
@@ -27,5 +28,4 @@ public class AdministratorDTO {
     private LocalDateTime createdAt;
     private boolean enabled = true;
     private Role role;
-
 }

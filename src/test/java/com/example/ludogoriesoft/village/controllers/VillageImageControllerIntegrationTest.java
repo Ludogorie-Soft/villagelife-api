@@ -32,7 +32,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import org.mockito.Mockito;
 @WebMvcTest(VillageImageController.class)
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 class VillageImageControllerIntegrationTest {
     @Autowired
     private MockMvc mockMvc;

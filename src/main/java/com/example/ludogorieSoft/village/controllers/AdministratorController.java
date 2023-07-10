@@ -1,16 +1,17 @@
 package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.dtos.AdministratorDTO;
-import com.example.ludogorieSoft.village.dtos.AdministratorRequest;
+import com.example.ludogorieSoft.village.dtos.request.AdministratorRequest;
+import com.example.ludogorieSoft.village.dtos.response.VillageResponse;
+import com.example.ludogorieSoft.village.model.Administrator;
 import com.example.ludogorieSoft.village.services.AdministratorService;
+import com.example.ludogorieSoft.village.services.VillageService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
-import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -18,6 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 public class AdministratorController {
     private final AdministratorService administratorService;
+    private final VillageService villageService;
 
     @GetMapping
     public ResponseEntity<List<AdministratorDTO>> getAllAdministrators() {
@@ -29,15 +31,12 @@ public class AdministratorController {
         return ResponseEntity.ok(administratorService.getAdministratorById(id));
     }
 
-    @PostMapping
-    public ResponseEntity<AdministratorDTO> createAdministrator(@Valid @RequestBody AdministratorRequest administratorRequest, UriComponentsBuilder uriComponentsBuilder) {
-        URI location = uriComponentsBuilder.path("/api/v1/admins/{id}")
-                .buildAndExpand(administratorService.createAdministrator(administratorRequest).getId())
-                .toUri();
-        return ResponseEntity.created(location).build();
-    }
 
-    @PutMapping("/{id}")
+    @PostMapping
+    public ResponseEntity<AdministratorDTO> createAdministrator(@Valid @RequestBody AdministratorRequest administratorRequest) {
+        return ResponseEntity.ok(administratorService.createAdministrator(administratorRequest));
+    }
+    @PutMapping("/update/{id}")
     public ResponseEntity<AdministratorDTO> updateAdministrator(@PathVariable("id") Long id, @Valid @RequestBody AdministratorRequest administratorRequest) {
         return ResponseEntity.ok(administratorService.updateAdministrator(id, administratorRequest));
     }
@@ -45,5 +44,13 @@ public class AdministratorController {
     public ResponseEntity<String> deleteAdministratorById(@PathVariable("id") Long id) {
         administratorService.deleteAdministratorById(id);
         return new ResponseEntity<>("Administrator with id: " + id + " has been deleted successfully!!", HttpStatus.OK);
+    }
+    @GetMapping("/username/{username}")
+    public Administrator getAdministratorByUsername(@PathVariable("username") String username) {
+        return administratorService.findAdminByUsername(username);
+    }
+    @GetMapping("village")
+    public List<VillageResponse> getAllVillages(){
+        return administratorService.getAllVillagesWithPopulation();
     }
 }

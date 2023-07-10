@@ -27,7 +27,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(VillageLivingConditionController.class)
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 class VillageLivingConditionControllerIntegrationTest {
 
     @Autowired
