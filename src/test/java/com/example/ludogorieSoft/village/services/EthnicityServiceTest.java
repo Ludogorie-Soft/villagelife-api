@@ -251,4 +251,30 @@ class EthnicityServiceTest {
         });
     }
 
+    @Test
+    void testUpdateEthnicityWhenNonExistingEthnicity() {
+        Long id = 1L;
+        Ethnicity ethnicity = new Ethnicity();
+        ethnicity.setEthnicityName("Updated Ethnicity");
+
+        when(ethnicityRepository.findById(id)).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(ApiRequestException.class, () -> {
+            ethnicityService.updateEthnicity(id, ethnicity);
+        });
+
+        verify(ethnicityRepository, times(1)).findById(id);
+        verify(ethnicityRepository, never()).save(any());
+    }
+
+    @Test
+    void testFindEthnicityByNameWhenNonExistingEthnicity() {
+        String name = "Non-Existing Ethnicity";
+        when(ethnicityRepository.findByEthnicityName(name)).thenReturn(null);
+        Assertions.assertThrows(ApiRequestException.class, () -> {
+            ethnicityService.findEthnicityByName(name);
+        });
+        verify(ethnicityRepository, times(1)).findByEthnicityName(name);
+    }
+
 }
