@@ -6,6 +6,7 @@ import com.example.ludogorieSoft.village.dtos.response.VillageResponse;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.Administrator;
 import com.example.ludogorieSoft.village.model.Population;
+import com.example.ludogorieSoft.village.model.Region;
 import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.repositories.AdministratorRepository;
 import com.example.ludogorieSoft.village.repositories.VillageRepository;
@@ -113,11 +114,11 @@ class AdministratorServiceTest {
     }
 
     @Test
-    void testGetAllVillagesWithPopulation() {
+    void testGetAllVillagesWithRegion() {
         Village village1 = new Village();
         village1.setId(1L);
 
-        Population population1 =  new Population();
+        Region population1 =  new Region();
         population1.setId(1L);
 
         Administrator administrator1 = new Administrator();
@@ -126,7 +127,7 @@ class AdministratorServiceTest {
         Village village2 = new Village();
         village2.setId(2L);
 
-        Population population2 =  new Population();
+        Region population2 =  new Region();
         population2.setId(3L);
 
         Administrator administrator2 = new Administrator();
@@ -144,13 +145,13 @@ class AdministratorServiceTest {
         List<VillageResponse> expectedResponses = new ArrayList<>();
         VillageResponse response1 = new VillageResponse();
         response1.setId(1L);
-        response1.setPopulation(population1);
+        response1.setRegion(population1);
         response1.setAdmin(administrator1);
         expectedResponses.add(response1);
 
         VillageResponse response2 = new VillageResponse();
         response2.setId(2L);
-        response2.setPopulation(population2);
+        response2.setRegion(population2);
         response2.setAdmin(administrator2);
         expectedResponses.add(response2);
 

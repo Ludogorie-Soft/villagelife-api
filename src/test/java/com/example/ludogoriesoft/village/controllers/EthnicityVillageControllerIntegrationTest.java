@@ -1,6 +1,7 @@
 package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.dtos.EthnicityVillageDTO;
+import com.example.ludogorieSoft.village.exeptions.ApiExceptionHandler;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.services.EthnicityVillageService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -39,7 +40,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         @ComponentScan.Filter(
                 type = FilterType.ASSIGNABLE_TYPE,
                 value = EthnicityVillageController.class
-        )
+        ),@ComponentScan.Filter(
+        type = FilterType.ASSIGNABLE_TYPE,
+        value = ApiExceptionHandler.class
+)
 }
 )
 class EthnicityVillageControllerIntegrationTest {
@@ -100,16 +104,16 @@ class EthnicityVillageControllerIntegrationTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.ethnicityId").value(1L));
     }
 
-//    @Test
-//    void getEthnicityVillageByIdWithInvalidIdShouldReturnNotFound() throws Exception {
-//        Long id = 1L;
-//
-//        when(ethnicityVillageService.getEthnicityVillageById(id)).thenThrow(new ApiRequestException("Ethnicity in Village with id " + id + " not found"));
-//
-//        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageEthnicities/{id}", id))
-//                .andExpect(status().isBadRequest())
-//                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Ethnicity in Village with id " + id + " not found"));
-//    }
+    @Test
+    void getEthnicityVillageByIdWithInvalidIdShouldReturnNotFound() throws Exception {
+        Long id = 1L;
+
+        when(ethnicityVillageService.getEthnicityVillageById(id)).thenThrow(new ApiRequestException("Ethnicity in Village with id " + id + " not found"));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageEthnicities/{id}", id))
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Ethnicity in Village with id " + id + " not found"));
+    }
 
     @Test
     void createEthnicityVillageShouldReturnCreatedEthnicityVillage() throws Exception {
