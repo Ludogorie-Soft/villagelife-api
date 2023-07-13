@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
@@ -31,9 +33,16 @@ import java.util.Collections;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import org.mockito.Mockito;
-@WebMvcTest(VillageImageController.class)
 @AutoConfigureMockMvc(addFilters = false)
-class VillageImageControllerIntegrationTest {
+@WebMvcTest(value = VillageImageController.class
+        , useDefaultFilters = false
+        , includeFilters = {
+        @ComponentScan.Filter(
+                type = FilterType.ASSIGNABLE_TYPE,
+                value = VillageImageController.class
+        )
+}
+)class VillageImageControllerIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
 

@@ -6,7 +6,7 @@ import com.example.ludogorieSoft.village.dtos.request.AdministratorRequest;
 import com.example.ludogorieSoft.village.dtos.response.VillageResponse;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.Administrator;
-import com.example.ludogorieSoft.village.model.Population;
+import com.example.ludogorieSoft.village.model.Region;
 import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.repositories.AdministratorRepository;
 import com.example.ludogorieSoft.village.repositories.VillageRepository;
@@ -104,13 +104,13 @@ public class AdministratorService {
         List<VillageResponse> villageResponses = new ArrayList<>();
         for (Object[] result : results) {
             Village village = (Village) result[0];
-            Population population = (Population) result[1];
+            Region region = (Region) result[1];
             Administrator administrator = (Administrator) result[2];
 
             VillageResponse response = new VillageResponse();
             response.setId(village.getId());
             response.setName(village.getName());
-            response.setPopulation(population);
+            response.setRegion(region);
             response.setDateUpload(village.getDateUpload());
             response.setAdmin(administrator);
             response.setDateApproved(village.getDateApproved());

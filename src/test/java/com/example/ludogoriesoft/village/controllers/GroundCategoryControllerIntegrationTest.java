@@ -1,6 +1,7 @@
 package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.dtos.GroundCategoryDTO;
+import com.example.ludogorieSoft.village.exeptions.ApiExceptionHandler;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.services.GroundCategoryService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,7 +37,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         @ComponentScan.Filter(
                 type = FilterType.ASSIGNABLE_TYPE,
                 value = GroundCategoryController.class
-        )
+        ),@ComponentScan.Filter(
+        type = FilterType.ASSIGNABLE_TYPE,
+        value = ApiExceptionHandler.class
+)
 }
 )
 class GroundCategoryControllerIntegrationTest {

@@ -2,6 +2,7 @@ package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.dtos.ObjectVillageDTO;
 import com.example.ludogorieSoft.village.enums.Distance;
+import com.example.ludogorieSoft.village.exeptions.ApiExceptionHandler;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.services.ObjectVillageService;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,6 +15,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -37,7 +39,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         @ComponentScan.Filter(
                 type = FilterType.ASSIGNABLE_TYPE,
                 value = ObjectVillageController.class
-        )
+        ), @ComponentScan.Filter(
+        type = FilterType.ASSIGNABLE_TYPE,
+        value = ApiExceptionHandler.class
+)
 }
 )
 class ObjectVillageControllerIntegrationTest {

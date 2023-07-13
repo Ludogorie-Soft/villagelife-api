@@ -1,6 +1,7 @@
 package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.dtos.PopulatedAssertionDTO;
+import com.example.ludogorieSoft.village.exeptions.ApiExceptionHandler;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.services.PopulatedAssertionService;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -25,8 +28,19 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(PopulatedAssertionController.class)
 @AutoConfigureMockMvc(addFilters = false)
+@WebMvcTest(value = PopulatedAssertionController.class
+        , useDefaultFilters = false
+        , includeFilters = {
+        @ComponentScan.Filter(
+                type = FilterType.ASSIGNABLE_TYPE,
+                value = PopulatedAssertionController.class
+        ), @ComponentScan.Filter(
+        type = FilterType.ASSIGNABLE_TYPE,
+        value = ApiExceptionHandler.class
+)
+}
+)
 class PopulatedAssertionControllerIntegrationTest {
 
     @Autowired

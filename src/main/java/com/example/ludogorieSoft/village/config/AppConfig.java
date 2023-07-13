@@ -27,5 +27,4 @@ public class AppConfig {
                         .serializationInclusion(JsonInclude.Include.NON_NULL);
         return new MappingJackson2HttpMessageConverter(builder.build());
     }
-
 }

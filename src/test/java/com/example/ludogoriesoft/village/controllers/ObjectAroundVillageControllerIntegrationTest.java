@@ -1,6 +1,7 @@
 package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.dtos.ObjectAroundVillageDTO;
+import com.example.ludogorieSoft.village.exeptions.ApiExceptionHandler;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.ObjectAroundVillage;
 import com.example.ludogorieSoft.village.services.ObjectAroundVillageService;
@@ -38,7 +39,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         @ComponentScan.Filter(
                 type = FilterType.ASSIGNABLE_TYPE,
                 value = ObjectAroundVillageController.class
-        )
+        ), @ComponentScan.Filter(
+        type = FilterType.ASSIGNABLE_TYPE,
+        value = ApiExceptionHandler.class
+)
 }
 )
 class ObjectAroundVillageControllerIntegrationTest {

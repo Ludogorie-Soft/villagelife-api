@@ -1,6 +1,7 @@
 package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.dtos.LandscapeDTO;
+import com.example.ludogorieSoft.village.exeptions.ApiExceptionHandler;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.services.LandscapeService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -37,7 +38,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         @ComponentScan.Filter(
                 type = FilterType.ASSIGNABLE_TYPE,
                 value = LandscapeController.class
-        )
+        ),@ComponentScan.Filter(
+        type = FilterType.ASSIGNABLE_TYPE,
+        value = ApiExceptionHandler.class
+)
 }
 )
 class LandscapeControllerIntegrationTest {

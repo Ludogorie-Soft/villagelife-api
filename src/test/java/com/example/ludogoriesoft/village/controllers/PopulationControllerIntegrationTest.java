@@ -5,6 +5,7 @@ import com.example.ludogorieSoft.village.enums.Children;
 import com.example.ludogorieSoft.village.enums.Foreigners;
 import com.example.ludogorieSoft.village.enums.NumberOfPopulation;
 import com.example.ludogorieSoft.village.enums.Residents;
+import com.example.ludogorieSoft.village.exeptions.ApiExceptionHandler;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.services.PopulationService;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -29,8 +32,19 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(PopulationController.class)
 @AutoConfigureMockMvc(addFilters = false)
+@WebMvcTest(value = PopulationController.class
+        , useDefaultFilters = false
+        , includeFilters = {
+        @ComponentScan.Filter(
+                type = FilterType.ASSIGNABLE_TYPE,
+                value = PopulationController.class
+        ), @ComponentScan.Filter(
+        type = FilterType.ASSIGNABLE_TYPE,
+        value = ApiExceptionHandler.class
+)
+}
+)
 class PopulationControllerIntegrationTest {
 
     @Autowired

@@ -2,6 +2,7 @@ package com.example.ludogorieSoft.village.controllers;
 
 
 import com.example.ludogorieSoft.village.dtos.RegionDTO;
+import com.example.ludogorieSoft.village.exeptions.ApiExceptionHandler;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.services.RegionService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,6 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
+
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -22,16 +26,26 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+
+import static org.hamcrest.core.StringContains.containsString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(RegionController.class)
 @AutoConfigureMockMvc(addFilters = false)
+@WebMvcTest(value = RegionController.class
+        , useDefaultFilters = false
+        , includeFilters = {
+        @ComponentScan.Filter(
+                type = FilterType.ASSIGNABLE_TYPE,
+                value = RegionController.class
+        ),@ComponentScan.Filter(
+        type = FilterType.ASSIGNABLE_TYPE,
+        value = ApiExceptionHandler.class
+)
+}
+)
 class RegionControllerIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
@@ -197,7 +211,7 @@ class RegionControllerIntegrationTest {
 
         RegionDTO updatedRegion = new RegionDTO();
 
-        when(regionService.updateRegion(id, updatedRegion))
+        when(regionService.updateRegion(eq(id), any(RegionDTO.class)))
                 .thenThrow(new ApiRequestException("Region with id: " + id + " not found"));
 
         mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/regions/{id}", id)
