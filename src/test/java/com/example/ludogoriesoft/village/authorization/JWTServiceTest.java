@@ -45,32 +45,6 @@ class JWTServiceTest {
         assertEquals(expectedSignInKey, signInKey);
     }
 
-//    @Test
-//    void generateToken_ValidExtraClaimsAndUserDetails_ShouldReturnToken() {
-//        String username = "user";
-//        when(userDetails.getUsername()).thenReturn(username);
-//
-//        Map<String, Object> extraClaims = new HashMap<>();
-//        extraClaims.put("user", "value1");
-//
-//
-//        long currentTimeMillis = System.currentTimeMillis();
-//        long expirationTimeMillis = currentTimeMillis + 1000 * 60 * 60 * 24;
-//        Date expectedExpirationDate = new Date(expirationTimeMillis);
-//
-//        String expectedToken = Jwts.builder()
-//                .setClaims(extraClaims)
-//                .setSubject(username)
-//                .setIssuedAt(new Date(currentTimeMillis))
-//                .setExpiration(expectedExpirationDate)
-//                .signWith(jwtService.getSignInKey(), SignatureAlgorithm.HS256)
-//                .compact();
-//
-//        String generatedToken = jwtService.generateToken(extraClaims, userDetails);
-//
-//        assertEquals(expectedToken, generatedToken);
-//    }
-
     @Test
     void extractUsernameInvalidToken() {
         String token = "token";
