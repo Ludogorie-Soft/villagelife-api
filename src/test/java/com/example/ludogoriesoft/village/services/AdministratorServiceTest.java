@@ -249,4 +249,64 @@ class AdministratorServiceTest {
 
         assertThrows(ApiRequestException.class, () -> administratorService.updateAdministrator(id, administratorRequest));
     }
+
+    @Test
+    void testUpdateAdministratorWithoutChangingPassword() {
+        Long id = 1L;
+        AdministratorRequest administratorRequest = new AdministratorRequest();
+        administratorRequest.setFullName("John Doe");
+        administratorRequest.setEmail("john.doe@example.com");
+        administratorRequest.setUsername("johndoe");
+
+        Administrator administrator = new Administrator();
+        administrator.setId(id);
+        administrator.setPassword("oldPassword");
+
+        AdministratorDTO expectedDTO = new AdministratorDTO();
+        expectedDTO.setId(id);
+
+        Optional<Administrator> foundAdministrator = Optional.of(administrator);
+
+        when(administratorRepository.findById(id)).thenReturn(foundAdministrator);
+        when(administratorRepository.save(any(Administrator.class))).thenReturn(administrator);
+        when(modelMapper.map(administrator, AdministratorDTO.class)).thenReturn(expectedDTO);
+
+        AdministratorDTO resultDTO = administratorService.updateAdministrator(id, administratorRequest);
+
+        verify(administratorRepository, times(1)).findById(id);
+        verify(administratorRepository, times(1)).save(any(Administrator.class));
+        verify(modelMapper, times(1)).map(administrator, AdministratorDTO.class);
+
+        assertEquals("oldPassword", foundAdministrator.get().getPassword());
+    }
+    @Test
+    void testUpdateAdministratorWithNewPassword() {
+        Long id = 1L;
+        AdministratorRequest administratorRequest = new AdministratorRequest();
+        administratorRequest.setFullName("John Doe");
+        administratorRequest.setEmail("john.doe@example.com");
+        administratorRequest.setUsername("johndoe");
+        administratorRequest.setPassword("newPassword");
+
+        Administrator administrator = new Administrator();
+        administrator.setId(id);
+        administrator.setPassword("oldPassword");
+
+        AdministratorDTO expectedDTO = new AdministratorDTO();
+        expectedDTO.setId(id);
+
+        Optional<Administrator> foundAdministrator = Optional.of(administrator);
+
+        when(administratorRepository.findById(id)).thenReturn(foundAdministrator);
+        when(administratorRepository.save(any(Administrator.class))).thenReturn(administrator);
+        when(modelMapper.map(administrator, AdministratorDTO.class)).thenReturn(expectedDTO);
+
+        AdministratorDTO resultDTO = administratorService.updateAdministrator(id, administratorRequest);
+
+        verify(administratorRepository, times(1)).findById(id);
+        verify(administratorRepository, times(1)).save(any(Administrator.class));
+        verify(modelMapper, times(1)).map(administrator, AdministratorDTO.class);
+
+        assertNotEquals("oldPassword", foundAdministrator.get().getPassword());
+    }
 }
