@@ -3,7 +3,6 @@ package com.example.ludogorieSoft.village.controllers;
 import com.example.ludogorieSoft.village.dtos.AdministratorDTO;
 import com.example.ludogorieSoft.village.dtos.request.AdministratorRequest;
 import com.example.ludogorieSoft.village.dtos.response.VillageResponse;
-import com.example.ludogorieSoft.village.model.Administrator;
 import com.example.ludogorieSoft.village.services.AdministratorService;
 import com.example.ludogorieSoft.village.services.VillageService;
 import lombok.AllArgsConstructor;
@@ -45,10 +44,7 @@ public class AdministratorController {
         administratorService.deleteAdministratorById(id);
         return new ResponseEntity<>("Administrator with id: " + id + " has been deleted successfully!!", HttpStatus.OK);
     }
-    @GetMapping("/username/{username}")
-    public Administrator getAdministratorByUsername(@PathVariable("username") String username) {
-        return administratorService.findAdminByUsername(username);
-    }
+
     @GetMapping("village")
     public List<VillageResponse> getAllVillages(){
         return administratorService.getAllVillagesWithPopulation();

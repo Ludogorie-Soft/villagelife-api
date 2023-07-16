@@ -31,9 +31,6 @@ class AdministratorServiceTest {
 
     private VillageRepository villageRepository;
     private AdministratorRepository administratorRepository;
-
-
-
     private ModelMapper modelMapper;
 
     @BeforeEach
@@ -41,7 +38,7 @@ class AdministratorServiceTest {
         administratorRepository = mock(AdministratorRepository.class);
         modelMapper = mock(ModelMapper.class);
         villageRepository = mock(VillageRepository.class);
-        administratorService = new AdministratorService(administratorRepository, modelMapper, villageRepository );
+        administratorService = new AdministratorService(administratorRepository, modelMapper, villageRepository);
     }
 
     @Test
@@ -73,23 +70,22 @@ class AdministratorServiceTest {
         assertEquals(expectedDTOs.get(0).getId(), resultDTOs.get(0).getId());
         assertEquals(expectedDTOs.get(1).getId(), resultDTOs.get(1).getId());
     }
+
     @Test
     void testFindAdminByUsername() {
         String username = "admin";
-        Administrator expectedAdmin = new Administrator();
-        expectedAdmin.setUsername(username);
+        Administrator administrator = new Administrator();
+        administrator.setUsername(username);
 
         Mockito.when(administratorRepository.findByUsername(username))
-                .thenReturn(expectedAdmin);
+                .thenReturn(administrator);
 
         Administrator actualAdmin = administratorService.findAdminByUsername(username);
 
-        Assertions.assertEquals(expectedAdmin, actualAdmin);
+        Assertions.assertEquals(administrator, actualAdmin);
         Mockito.verify(administratorRepository, Mockito.times(1))
                 .findByUsername(username);
     }
-
-
     @Test
     void testCreateAdministratorWhenUsernameDoesNotExist() {
         com.example.ludogorieSoft.village.dtos.request.AdministratorRequest administratorRequest = new com.example.ludogorieSoft.village.dtos.request.AdministratorRequest();
@@ -118,7 +114,7 @@ class AdministratorServiceTest {
         Village village1 = new Village();
         village1.setId(1L);
 
-        Region population1 =  new Region();
+        Region population1 = new Region();
         population1.setId(1L);
 
         Administrator administrator1 = new Administrator();
@@ -127,16 +123,15 @@ class AdministratorServiceTest {
         Village village2 = new Village();
         village2.setId(2L);
 
-        Region population2 =  new Region();
+        Region population2 = new Region();
         population2.setId(3L);
 
         Administrator administrator2 = new Administrator();
         administrator2.setId(3L);
 
 
-
         List<Object[]> mockResults = new ArrayList<>();
-        Object[] result1 = {village1,population1, administrator1};
+        Object[] result1 = {village1, population1, administrator1};
         Object[] result2 = {village2, population2, administrator2};
         mockResults.add(result1);
         mockResults.add(result2);
@@ -167,7 +162,7 @@ class AdministratorServiceTest {
             assertEquals(expectedResponse.getAdmin(), actualResponse.getAdmin());
             assertEquals(expectedResponse.getDateApproved(), actualResponse.getDateApproved());
         }
-        verify(villageRepository,times(1)).findAllVillagesWithPopulation();
+        verify(villageRepository, times(1)).findAllVillagesWithPopulation();
     }
 
 
@@ -221,6 +216,7 @@ class AdministratorServiceTest {
 
         assertThrows(ApiRequestException.class, () -> administratorService.deleteAdministratorById(id));
     }
+
     @Test
     void testUpdateAdministratorWhenAdministratorExists() {
         Long id = 1L;

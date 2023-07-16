@@ -1,6 +1,5 @@
 package com.example.ludogorieSoft.village.auth;
 
-import com.example.ludogorieSoft.village.auth.AuthenticationService;
 import com.example.ludogorieSoft.village.authorization.JWTService;
 import com.example.ludogorieSoft.village.dtos.request.AuthenticationRequest;
 import com.example.ludogorieSoft.village.dtos.request.RegisterRequest;
