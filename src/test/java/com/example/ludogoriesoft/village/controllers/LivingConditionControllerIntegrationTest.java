@@ -32,17 +32,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @AutoConfigureMockMvc(addFilters = false)
-@WebMvcTest(value = LivingConditionController.class
-        , useDefaultFilters = false
-        , includeFilters = {
-        @ComponentScan.Filter(
-                type = FilterType.ASSIGNABLE_TYPE,
-                value = LivingConditionController.class
-        ), @ComponentScan.Filter(
-        type = FilterType.ASSIGNABLE_TYPE,
-        value = ApiExceptionHandler.class
-)
-}
+@WebMvcTest(value = LivingConditionController.class,
+        useDefaultFilters = false,
+        includeFilters = {
+                @ComponentScan.Filter(
+                        type = FilterType.ASSIGNABLE_TYPE,
+                        value = LivingConditionController.class),
+                @ComponentScan.Filter(
+                        type = FilterType.ASSIGNABLE_TYPE,
+                        value = ApiExceptionHandler.class
+                )
+        }
 )
 class LivingConditionControllerIntegrationTest {
 

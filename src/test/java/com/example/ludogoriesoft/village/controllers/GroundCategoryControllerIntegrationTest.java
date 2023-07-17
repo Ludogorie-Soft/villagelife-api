@@ -31,17 +31,16 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @AutoConfigureMockMvc(addFilters = false)
-@WebMvcTest(value = GroundCategoryController.class
-        , useDefaultFilters = false
-        , includeFilters = {
-        @ComponentScan.Filter(
-                type = FilterType.ASSIGNABLE_TYPE,
-                value = GroundCategoryController.class
-        ),@ComponentScan.Filter(
-        type = FilterType.ASSIGNABLE_TYPE,
-        value = ApiExceptionHandler.class
-)
-}
+@WebMvcTest(value = GroundCategoryController.class,
+        useDefaultFilters = false,
+        includeFilters = {
+                @ComponentScan.Filter(
+                        type = FilterType.ASSIGNABLE_TYPE,
+                        value = GroundCategoryController.class),
+                @ComponentScan.Filter(
+                        type = FilterType.ASSIGNABLE_TYPE,
+                        value = ApiExceptionHandler.class)
+        }
 )
 class GroundCategoryControllerIntegrationTest {
 
@@ -220,7 +219,6 @@ class GroundCategoryControllerIntegrationTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(containsString("Ground Category with id " + id + " not found")));
     }
-
 
 
     private static String asJsonString(final Object obj) {

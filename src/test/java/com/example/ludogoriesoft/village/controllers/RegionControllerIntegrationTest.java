@@ -34,17 +34,17 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @AutoConfigureMockMvc(addFilters = false)
-@WebMvcTest(value = RegionController.class
-        , useDefaultFilters = false
-        , includeFilters = {
-        @ComponentScan.Filter(
-                type = FilterType.ASSIGNABLE_TYPE,
-                value = RegionController.class
-        ),@ComponentScan.Filter(
-        type = FilterType.ASSIGNABLE_TYPE,
-        value = ApiExceptionHandler.class
-)
-}
+@WebMvcTest(value = RegionController.class,
+        useDefaultFilters = false,
+        includeFilters = {
+                @ComponentScan.Filter(
+                        type = FilterType.ASSIGNABLE_TYPE,
+                        value = RegionController.class),
+                @ComponentScan.Filter(
+                        type = FilterType.ASSIGNABLE_TYPE,
+                        value = ApiExceptionHandler.class
+                )
+        }
 )
 class RegionControllerIntegrationTest {
     @Autowired
@@ -83,6 +83,7 @@ class RegionControllerIntegrationTest {
         String response = mvcResult.getResponse().getContentAsString();
         Assertions.assertNotNull(response);
     }
+
     @Test
     void testGetRegionById() throws Exception {
         RegionDTO regionDTO = new RegionDTO();
@@ -121,6 +122,7 @@ class RegionControllerIntegrationTest {
         String response = mvcResult.getResponse().getContentAsString();
         Assertions.assertNotNull(response);
     }
+
     @Test
     void testUpdateRegion() throws Exception {
         RegionDTO regionDTO = new RegionDTO();
@@ -140,12 +142,14 @@ class RegionControllerIntegrationTest {
         String response = mvcResult.getResponse().getContentAsString();
         Assertions.assertNotNull(response);
     }
+
     @Test
     void testDeleteRegionById() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/regions/{id}", 1))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Region with id: 1 has been deleted successfully!!"));
     }
+
     @Test
     void testGetAllRegionsWhenNoRegionExist() throws Exception {
         when(regionService.getAllRegions()).thenReturn(Collections.emptyList());
@@ -158,6 +162,7 @@ class RegionControllerIntegrationTest {
                 .andExpect(jsonPath("$").isEmpty())
                 .andReturn();
     }
+
     @Test
     void testGetRegionByIdWhenRegionDoesNotExist() throws Exception {
         long regionId = 1L;
@@ -169,6 +174,7 @@ class RegionControllerIntegrationTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(containsString("Region with id: " + regionId + " not found")));
     }
+
     @Test
     void testShouldNotCreateRegionWithBlankRegionName() throws Exception {
         String blankRegionName = "";
@@ -183,6 +189,7 @@ class RegionControllerIntegrationTest {
                 .andExpect(jsonPath("$.message").value("Region name is blank"))
                 .andReturn();
     }
+
     @Test
     void testGetRegionWithInvalidId() throws Exception {
         Long invalidId = 100000L;
@@ -196,6 +203,7 @@ class RegionControllerIntegrationTest {
                 .andExpect(jsonPath("$.message").value("Region with id: " + invalidId + " Not Found"))
                 .andReturn();
     }
+
     @Test
     void testUpdateRegionWithInvalidData() throws Exception {
         String invalidData = "";
@@ -205,6 +213,7 @@ class RegionControllerIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
+
     @Test
     void testUpdateRegionWithInvalidIdShouldReturnNotFound() throws Exception {
         Long id = 1L;
@@ -219,6 +228,7 @@ class RegionControllerIntegrationTest {
                         .content(asJsonString(updatedRegion)))
                 .andExpect(status().isBadRequest());
     }
+
     private static String asJsonString(final Object obj) {
         try {
             return new ObjectMapper().writeValueAsString(obj);
@@ -226,6 +236,7 @@ class RegionControllerIntegrationTest {
             throw new RuntimeException(e);
         }
     }
+
     @Test
     void testDeleteRegionByIdWhenRegionDoesNotExist() throws Exception {
         long regionId = 1L;

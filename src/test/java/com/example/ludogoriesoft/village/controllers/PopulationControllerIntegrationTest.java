@@ -33,17 +33,17 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @AutoConfigureMockMvc(addFilters = false)
-@WebMvcTest(value = PopulationController.class
-        , useDefaultFilters = false
-        , includeFilters = {
-        @ComponentScan.Filter(
-                type = FilterType.ASSIGNABLE_TYPE,
-                value = PopulationController.class
-        ), @ComponentScan.Filter(
-        type = FilterType.ASSIGNABLE_TYPE,
-        value = ApiExceptionHandler.class
-)
-}
+@WebMvcTest(value = PopulationController.class,
+        useDefaultFilters = false,
+        includeFilters = {
+                @ComponentScan.Filter(
+                        type = FilterType.ASSIGNABLE_TYPE,
+                        value = PopulationController.class),
+                @ComponentScan.Filter(
+                        type = FilterType.ASSIGNABLE_TYPE,
+                        value = ApiExceptionHandler.class
+                )
+        }
 )
 class PopulationControllerIntegrationTest {
 
@@ -246,6 +246,7 @@ class PopulationControllerIntegrationTest {
                 .andExpect(jsonPath("$.message").value(errorMessage))
                 .andReturn();
     }
+
     @Test
     void testCreatePopulationWhitNullValues() throws Exception {
         Long populationId = 1L;

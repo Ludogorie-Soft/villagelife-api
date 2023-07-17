@@ -26,16 +26,16 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 @AutoConfigureMockMvc(addFilters = false)
-@WebMvcTest(value = AdministratorController.class
-        , useDefaultFilters = false
-        , includeFilters = {
-        @ComponentScan.Filter(
-                type = FilterType.ASSIGNABLE_TYPE,
-                value = AdministratorController.class
-        )
-}
+@WebMvcTest(value = AdministratorController.class,
+        useDefaultFilters = false,
+        includeFilters = {
+                @ComponentScan.Filter(
+                        type = FilterType.ASSIGNABLE_TYPE,
+                        value = AdministratorController.class
+                )
+        }
 )
- class AdministratorControllerIntegrationTest {
+class AdministratorControllerIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -109,6 +109,7 @@ import static org.mockito.Mockito.*;
 
         verify(administratorService, times(1)).createAdministrator(request);
     }
+
     @Test
     void updateAdministrator_shouldReturnUpdatedAdministrator() throws Exception {
         AdministratorRequest request = new AdministratorRequest();
@@ -148,7 +149,7 @@ import static org.mockito.Mockito.*;
         VillageResponse villageResponse2 = new VillageResponse();
         villageResponse2.setId(2L);
         villageResponse2.setName("village2");
-        List<VillageResponse> villageResponses = Arrays.asList(villageResponse1,villageResponse2);
+        List<VillageResponse> villageResponses = Arrays.asList(villageResponse1, villageResponse2);
         when(administratorService.getAllVillagesWithPopulation()).thenReturn(villageResponses);
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/admins/village")
                         .contentType(MediaType.APPLICATION_JSON))

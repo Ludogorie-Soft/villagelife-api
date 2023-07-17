@@ -73,7 +73,6 @@ import static org.mockito.Mockito.*;
 
     @Test
      void testAuthenticate() {
-        // Prepare test data
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
         authenticationRequest.setUsername("username");
         authenticationRequest.setPassword("pass");

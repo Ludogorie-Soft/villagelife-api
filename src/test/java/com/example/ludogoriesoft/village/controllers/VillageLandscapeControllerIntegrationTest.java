@@ -26,14 +26,15 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @AutoConfigureMockMvc(addFilters = false)
-@WebMvcTest(value = VillageLandscapeController.class
-        , useDefaultFilters = false
-        , includeFilters = {
-        @ComponentScan.Filter(
-                type = FilterType.ASSIGNABLE_TYPE,
-                value = VillageLandscapeController.class
-        )
-})
+@WebMvcTest(value = VillageLandscapeController.class,
+        useDefaultFilters = false,
+        includeFilters = {
+                @ComponentScan.Filter(
+                        type = FilterType.ASSIGNABLE_TYPE,
+                        value = VillageLandscapeController.class
+                )
+        }
+)
 class VillageLandscapeControllerIntegrationTest {
 
     @Autowired

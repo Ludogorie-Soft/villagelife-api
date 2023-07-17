@@ -1,7 +1,6 @@
 package com.example.ludogorieSoft.village.config;
 
 import com.fasterxml.jackson.databind.SerializationFeature;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;

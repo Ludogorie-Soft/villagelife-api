@@ -1,9 +1,5 @@
 package com.example.ludogorieSoft.village.authorization;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import com.example.ludogorieSoft.village.config.AppConfig;
-import com.example.ludogorieSoft.village.dtos.AdministratorDTO;
 import com.example.ludogorieSoft.village.model.Administrator;
 import com.example.ludogorieSoft.village.services.AdministratorService;
 import org.junit.jupiter.api.BeforeEach;

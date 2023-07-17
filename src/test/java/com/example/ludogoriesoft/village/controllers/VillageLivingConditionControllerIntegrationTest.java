@@ -29,14 +29,14 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @AutoConfigureMockMvc(addFilters = false)
-@WebMvcTest(value = VillageLivingConditionController.class
-        , useDefaultFilters = false
-        , includeFilters = {
-        @ComponentScan.Filter(
-                type = FilterType.ASSIGNABLE_TYPE,
-                value = VillageLivingConditionController.class
-        )
-}
+@WebMvcTest(value = VillageLivingConditionController.class,
+        useDefaultFilters = false,
+        includeFilters = {
+                @ComponentScan.Filter(
+                        type = FilterType.ASSIGNABLE_TYPE,
+                        value = VillageLivingConditionController.class
+                )
+        }
 )
 class VillageLivingConditionControllerIntegrationTest {
 
@@ -177,6 +177,7 @@ class VillageLivingConditionControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/villageLivingConditions/{id}", 1))
                 .andExpect(status().isNoContent());
     }
+
     @Test
     void testGetVillageLivingConditionsByVillageId() throws Exception {
         Long villageId = 1L;
@@ -214,6 +215,7 @@ class VillageLivingConditionControllerIntegrationTest {
         String response = mvcResult.getResponse().getContentAsString();
         assertNotNull(response);
     }
+
     @Test
     void testGetVillagePopulationAssertionByVillageIdValue() throws Exception {
         Long villageId = 1L;
@@ -232,6 +234,7 @@ class VillageLivingConditionControllerIntegrationTest {
         assertNotNull(response);
         Assertions.assertEquals(String.valueOf(populationAssertion), response);
     }
+
     @Test
     void testGetVillagePopulationAssertionByVillageIdDelinquencyValue() throws Exception {
         Long villageId = 1L;
@@ -250,6 +253,7 @@ class VillageLivingConditionControllerIntegrationTest {
         assertNotNull(response);
         Assertions.assertEquals(String.valueOf(delinquencyValue), response);
     }
+
     @Test
     void testGetVillagePopulationAssertionByVillageIdEcoValue() throws Exception {
         Long villageId = 1L;

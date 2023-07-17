@@ -22,14 +22,14 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @AutoConfigureMockMvc(addFilters = false)
-@WebMvcTest(value = MessageController.class
-        , useDefaultFilters = false
-        , includeFilters = {
-        @ComponentScan.Filter(
-                type = FilterType.ASSIGNABLE_TYPE,
-                value = MessageController.class
-        )
-}
+@WebMvcTest(value = MessageController.class,
+        useDefaultFilters = false,
+        includeFilters = {
+                @ComponentScan.Filter(
+                        type = FilterType.ASSIGNABLE_TYPE,
+                        value = MessageController.class
+                )
+        }
 )
 class MessageControllerIntegrationTest {
     @Autowired
@@ -42,6 +42,7 @@ class MessageControllerIntegrationTest {
     public void setup() {
         MockitoAnnotations.openMocks(this);
     }
+
     @Test
     void testCreateMessage() throws Exception {
         MessageDTO messageDTO = new MessageDTO();

@@ -29,17 +29,17 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @AutoConfigureMockMvc(addFilters = false)
-@WebMvcTest(value = PopulatedAssertionController.class
-        , useDefaultFilters = false
-        , includeFilters = {
-        @ComponentScan.Filter(
-                type = FilterType.ASSIGNABLE_TYPE,
-                value = PopulatedAssertionController.class
-        ), @ComponentScan.Filter(
-        type = FilterType.ASSIGNABLE_TYPE,
-        value = ApiExceptionHandler.class
-)
-}
+@WebMvcTest(value = PopulatedAssertionController.class,
+        useDefaultFilters = false,
+        includeFilters = {
+                @ComponentScan.Filter(
+                        type = FilterType.ASSIGNABLE_TYPE,
+                        value = PopulatedAssertionController.class),
+                @ComponentScan.Filter(
+                        type = FilterType.ASSIGNABLE_TYPE,
+                        value = ApiExceptionHandler.class
+                )
+        }
 )
 class PopulatedAssertionControllerIntegrationTest {
 
@@ -206,7 +206,6 @@ class PopulatedAssertionControllerIntegrationTest {
                 .andExpect(jsonPath("$.message").value("Populated Assertion with id: " + invalidId + " Not Found"))
                 .andReturn();
     }
-
 
 
 }

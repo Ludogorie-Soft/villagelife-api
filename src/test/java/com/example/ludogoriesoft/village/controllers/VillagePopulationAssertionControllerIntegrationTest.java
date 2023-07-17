@@ -30,14 +30,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @AutoConfigureMockMvc(addFilters = false)
-@WebMvcTest(value = VillagePopulationAssertionController.class
-        , useDefaultFilters = false
-        , includeFilters = {
-        @ComponentScan.Filter(
-                type = FilterType.ASSIGNABLE_TYPE,
-                value = VillagePopulationAssertionController.class
-        )
-}
+@WebMvcTest(value = VillagePopulationAssertionController.class,
+        useDefaultFilters = false,
+        includeFilters = {
+                @ComponentScan.Filter(
+                        type = FilterType.ASSIGNABLE_TYPE,
+                        value = VillagePopulationAssertionController.class
+                )
+        }
 )
 class VillagePopulationAssertionControllerIntegrationTest {
 
@@ -169,6 +169,7 @@ class VillagePopulationAssertionControllerIntegrationTest {
         mockMvc.perform(delete("/api/v1/villagePopulationAssertions/1"))
                 .andExpect(status().isNotFound());
     }
+
     @Test
     void testGetVillagePopulationAssertionByVillageIdValidVillageIDWithAssertions() throws Exception {
         Long villageId = 1L;
