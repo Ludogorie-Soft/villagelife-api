@@ -74,12 +74,4 @@ public class PopulationService {
         populationRepository.save(findPopulation.get());
         return populationToPopulationDTO(findPopulation.get());
     }
-
-    public PopulationDTO getPopulationByVillageId(Long id) {
-        Optional<Population> population = populationRepository.findById(id);
-        if (population.isEmpty()) {
-            throw new ApiRequestException("This population not found");
-        }
-        return populationToPopulationDTO(population.get());
-    }
 }
