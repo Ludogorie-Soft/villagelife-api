@@ -19,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -233,6 +234,15 @@ class PopulationControllerIntegrationTest {
                 .andExpect(jsonPath("$.message").value(errorMessage))
                 .andReturn();
     }
+    @Test
+    void testCreatePopulationWithNullValues() throws Exception {
+        Long populationId = 123L;
+        when(populationService.createPopulationWhitNullValues()).thenReturn(populationId);
 
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/populations/null")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$").value(populationId));
+    }
 }
 
