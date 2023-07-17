@@ -8,9 +8,6 @@ import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.repositories.ObjectAroundVillageRepository;
 import com.example.ludogorieSoft.village.repositories.ObjectVillageRepository;
 import com.example.ludogorieSoft.village.repositories.VillageRepository;
-import com.example.ludogorieSoft.village.services.ObjectAroundVillageService;
-import com.example.ludogorieSoft.village.services.ObjectVillageService;
-import com.example.ludogorieSoft.village.services.VillageService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.InjectMocks;
@@ -178,5 +175,34 @@ class ObjectVillageServiceTest {
         verifyNoMoreInteractions(objectVillageRepository);
     }
 
+    @Test
+    void testGetObjectVillageByVillageId() {
+        Long villageId = 1L;
 
+        List<ObjectVillage> objectVillageList = new ArrayList<>();
+        ObjectVillage objectVillage1 = new ObjectVillage();
+        objectVillage1.setId(1L);
+        objectVillage1.setVillage(new Village());
+        objectVillage1.getVillage().setId(villageId);
+        objectVillageList.add(objectVillage1);
+        ObjectVillageDTO objectVillageDTO1 = new ObjectVillageDTO();
+        objectVillageDTO1.setId(1L);
+        objectVillageDTO1.setVillageId(villageId);
+
+        ObjectVillage objectVillage2 = new ObjectVillage();
+        objectVillage2.setId(2L);
+        objectVillage2.setVillage(new Village());
+        objectVillage2.getVillage().setId(2L);
+        objectVillageList.add(objectVillage2);
+
+        when(objectVillageRepository.findAll()).thenReturn(objectVillageList);
+        when(modelMapper.map(objectVillage1, ObjectVillageDTO.class)).thenReturn(objectVillageDTO1);
+
+        List<ObjectVillageDTO> result = objectVillageService.getObjectVillageByVillageId(villageId);
+
+        assertEquals(1, result.size());
+        assertEquals(objectVillage1.getId(), result.get(0).getId());
+        assertEquals(objectVillage1.getVillage().getId(), result.get(0).getVillageId());
+        verify(modelMapper, never()).map(objectVillage2, ObjectVillageDTO.class);
+    }
 }
