@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -92,7 +91,7 @@ public class VillagePopulationAssertionService {
         if (id != null) {
             villagePopulationAssertionsList = villagePopulationAssertionsList.stream()
                     .filter(assertion -> id.equals(assertion.getVillage().getId()))
-                    .collect(Collectors.toList());
+                    .toList();
         }
 
         return villagePopulationAssertionsList.stream()
