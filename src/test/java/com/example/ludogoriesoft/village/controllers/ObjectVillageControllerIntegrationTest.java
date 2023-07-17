@@ -2,6 +2,7 @@ package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.dtos.ObjectVillageDTO;
 import com.example.ludogorieSoft.village.enums.Distance;
+import com.example.ludogorieSoft.village.exeptions.ApiExceptionHandler;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.services.ObjectVillageService;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -27,8 +30,20 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(ObjectVillageController.class)
-@AutoConfigureMockMvc
+
+@AutoConfigureMockMvc(addFilters = false)
+@WebMvcTest(value = ObjectVillageController.class,
+        useDefaultFilters = false,
+        includeFilters = {
+                @ComponentScan.Filter(
+                        type = FilterType.ASSIGNABLE_TYPE,
+                        value = ObjectVillageController.class),
+                @ComponentScan.Filter(
+                        type = FilterType.ASSIGNABLE_TYPE,
+                        value = ApiExceptionHandler.class
+                )
+        }
+)
 class ObjectVillageControllerIntegrationTest {
 
     @Autowired
@@ -180,7 +195,6 @@ class ObjectVillageControllerIntegrationTest {
     }
 
 
-
     @Test
     void testUpdateObjectVillageByIdWhenObjectVillageNotFound() throws Exception {
         Long invalidId = 1L;
@@ -223,6 +237,7 @@ class ObjectVillageControllerIntegrationTest {
                 .andExpect(jsonPath("$.message").value(errorMessage))
                 .andReturn();
     }
+
     @Test
     void testGetObjectVillageByVillageID() throws Exception {
         Long villageId = 1L;

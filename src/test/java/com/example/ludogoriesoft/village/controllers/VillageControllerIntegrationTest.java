@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -26,8 +28,16 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(VillageController.class)
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
+@WebMvcTest(value = VillageController.class,
+        useDefaultFilters = false,
+        includeFilters = {
+                @ComponentScan.Filter(
+                        type = FilterType.ASSIGNABLE_TYPE,
+                        value = VillageController.class
+                )
+        }
+)
 class VillageControllerIntegrationTest {
 
     @Autowired
@@ -177,6 +187,7 @@ class VillageControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/villages/{id}", 1))
                 .andExpect(status().isNoContent());
     }
+
     @Test
     void testCreateVillageWithNullValues() throws Exception {
         Long villageId = 1L;

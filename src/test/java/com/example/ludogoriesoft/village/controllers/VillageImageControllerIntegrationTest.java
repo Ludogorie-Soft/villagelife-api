@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
@@ -30,9 +32,19 @@ import java.util.Collections;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
+
 import org.mockito.Mockito;
-@WebMvcTest(VillageImageController.class)
-@AutoConfigureMockMvc
+
+@AutoConfigureMockMvc(addFilters = false)
+@WebMvcTest(value = VillageImageController.class,
+        useDefaultFilters = false,
+        includeFilters = {
+                @ComponentScan.Filter(
+                        type = FilterType.ASSIGNABLE_TYPE,
+                        value = VillageImageController.class
+                )
+        }
+)
 class VillageImageControllerIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
@@ -44,6 +56,7 @@ class VillageImageControllerIntegrationTest {
     public void setup() {
         MockitoAnnotations.openMocks(this);
     }
+
     @Test
     void testGetAllImagesForVillage() throws Exception {
         List<String> base64Images = Arrays.asList("image1", "image2");
@@ -113,24 +126,25 @@ class VillageImageControllerIntegrationTest {
             Assertions.assertEquals(expectedResponse.getImages(), actualResponse.getImages());
         }
     }
-        @Test
-        void testGetAllImagesForVillageNotFound() throws Exception {
-            Long villageId = 1L;
 
-            Mockito.when(villageImageService.getAllImagesForVillage(villageId)).thenReturn(Collections.emptyList());
+    @Test
+    void testGetAllImagesForVillageNotFound() throws Exception {
+        Long villageId = 1L;
 
-            mockMvc.perform(get("/api/v1/village/{villageId}/images", villageId)
-                            .contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isNotFound());
-        }
+        Mockito.when(villageImageService.getAllImagesForVillage(villageId)).thenReturn(Collections.emptyList());
 
-        @Test
-        void testGetAllVillageImageResponsesNotFound() throws Exception {
-            Mockito.when(villageImageService.getAllVillageImages()).thenReturn(Collections.emptyList());
+        mockMvc.perform(get("/api/v1/village/{villageId}/images", villageId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
 
-            mockMvc.perform(get("/api/v1/villageImages/all")
-                            .contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isNotFound());
-        }
+    @Test
+    void testGetAllVillageImageResponsesNotFound() throws Exception {
+        Mockito.when(villageImageService.getAllVillageImages()).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(get("/api/v1/villageImages/all")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
 }
 
