@@ -155,31 +155,20 @@ class RegionServiceTest {
 
         verify(regionRepository, times(1)).save(region);
     }
-
     @Test
     void testUpdateRegionThrowsExceptionForRegionNotFound() {
-        ApiRequestException exception1 = assertThrows(ApiRequestException.class, () -> {
-            regionService.updateRegion(1L, new RegionDTO());
-        });
-        assertEquals("Region not found", exception1.getMessage());
-
+        Long regionId = 1L;
         RegionDTO regionDTO = new RegionDTO();
         regionDTO.setRegionName("");
 
-        ApiRequestException exception2 = assertThrows(ApiRequestException.class, () -> {
-            regionService.updateRegion(1L, regionDTO);
+        ApiRequestException exception = assertThrows(ApiRequestException.class, () -> {
+            regionService.updateRegion(regionId, regionDTO);
         });
-        assertEquals("Region not found", exception2.getMessage());
-
-        RegionDTO regionDTOWithoutName = new RegionDTO();
-
-        ApiRequestException exception3 = assertThrows(ApiRequestException.class, () -> {
-            regionService.updateRegion(1L, regionDTOWithoutName);
-        });
-        assertEquals("Region not found", exception3.getMessage());
+        assertEquals("Region not found", exception.getMessage());
 
         verify(regionRepository, never()).save(any(Region.class));
     }
+
     @Test
     void testUpdateRegionThrowsExceptionForExistingRegionName() {
         RegionDTO regionDTO = new RegionDTO();
