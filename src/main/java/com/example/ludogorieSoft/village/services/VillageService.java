@@ -1,18 +1,18 @@
-package com.example.ludogoriesoft.village.services;
+package com.example.ludogorieSoft.village.services;
 
-import com.example.ludogoriesoft.village.dtos.RegionDTO;
-import com.example.ludogoriesoft.village.dtos.LivingConditionDTO;
-import com.example.ludogoriesoft.village.dtos.ObjectAroundVillageDTO;
-import com.example.ludogoriesoft.village.dtos.PopulationDTO;
-import com.example.ludogoriesoft.village.dtos.VillageDTO;
-import com.example.ludogoriesoft.village.enums.Children;
+import com.example.ludogorieSoft.village.dtos.RegionDTO;
+import com.example.ludogorieSoft.village.dtos.LivingConditionDTO;
+import com.example.ludogorieSoft.village.dtos.ObjectAroundVillageDTO;
+import com.example.ludogorieSoft.village.dtos.PopulationDTO;
+import com.example.ludogorieSoft.village.dtos.VillageDTO;
+import com.example.ludogorieSoft.village.enums.Children;
 
-import com.example.ludogoriesoft.village.model.ObjectVillage;
-import com.example.ludogoriesoft.village.model.Population;
-import com.example.ludogoriesoft.village.model.Village;
-import com.example.ludogoriesoft.village.model.VillageLivingConditions;
-import com.example.ludogoriesoft.village.repositories.VillageRepository;
-import com.example.ludogoriesoft.village.exeptions.ApiRequestException;
+import com.example.ludogorieSoft.village.model.ObjectVillage;
+import com.example.ludogorieSoft.village.model.Population;
+import com.example.ludogorieSoft.village.model.Village;
+import com.example.ludogorieSoft.village.model.VillageLivingConditions;
+import com.example.ludogorieSoft.village.repositories.VillageRepository;
+import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 

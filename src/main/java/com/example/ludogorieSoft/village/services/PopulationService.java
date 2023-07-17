@@ -1,10 +1,10 @@
-package com.example.ludogoriesoft.village.services;
+package com.example.ludogorieSoft.village.services;
 
-import com.example.ludogoriesoft.village.dtos.PopulationDTO;
-import com.example.ludogoriesoft.village.enums.NumberOfPopulation;
-import com.example.ludogoriesoft.village.model.Population;
-import com.example.ludogoriesoft.village.repositories.PopulationRepository;
-import com.example.ludogoriesoft.village.exeptions.ApiRequestException;
+import com.example.ludogorieSoft.village.dtos.PopulationDTO;
+import com.example.ludogorieSoft.village.enums.NumberOfPopulation;
+import com.example.ludogorieSoft.village.model.Population;
+import com.example.ludogorieSoft.village.repositories.PopulationRepository;
+import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -73,13 +73,5 @@ public class PopulationService {
 
         populationRepository.save(findPopulation.get());
         return populationToPopulationDTO(findPopulation.get());
-    }
-
-    public PopulationDTO getPopulationByVillageId(Long id) {
-        Optional<Population> population = populationRepository.findById(id);
-        if (population.isEmpty()) {
-            throw new ApiRequestException("This population not found");
-        }
-        return populationToPopulationDTO(population.get());
     }
 }

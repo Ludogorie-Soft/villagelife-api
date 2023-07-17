@@ -1,4 +1,4 @@
-package com.example.ludogoriesoft.village.exeptions;
+package com.example.ludogorieSoft.village.exeptions;
 
 import lombok.Data;
 import org.springframework.http.HttpStatus;

@@ -1,17 +1,17 @@
-package com.example.ludogoriesoft.village.services;
+package com.example.ludogorieSoft.village.services;
 
-import com.example.ludogoriesoft.village.dtos.VillageImageDTO;
-import com.example.ludogoriesoft.village.model.Village;
-import com.example.ludogoriesoft.village.model.VillageImage;
-import com.example.ludogoriesoft.village.repositories.VillageImageRepository;
+import com.example.ludogorieSoft.village.dtos.VillageImageDTO;
+import com.example.ludogorieSoft.village.model.Village;
+import com.example.ludogorieSoft.village.model.VillageImage;
+import com.example.ludogorieSoft.village.repositories.VillageImageRepository;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.apache.tika.Tika;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -26,6 +26,7 @@ public class VillageImageService {
     private static final String UPLOAD_DIRECTORY = "src/main/resources/static/village_images";
     private final ModelMapper modelMapper;
     private final VillageService villageService;
+    private static final Logger logger = LoggerFactory.getLogger(VillageImageService.class);
 
     public List<String> createImagePaths(List<byte[]> imageBytes, Long villageId) {
         List<String> imagePaths = new ArrayList<>();
@@ -53,7 +54,8 @@ public class VillageImageService {
                     VillageImageDTO villageImageDTO = new VillageImageDTO(null, villageId, fileName);
                     createVillageImageDTO(villageImageDTO);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error("An error occurred while processing the image", e);
+                    return new ArrayList<>();
                 }
             }
         }
@@ -81,7 +83,8 @@ public class VillageImageService {
                 byte[] imageData = image.getBytes();
                 imageBytes.add(imageData);
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("An error occurred while processing the image", e);
+                return new ArrayList<>();
             }
         }
         return imageBytes;

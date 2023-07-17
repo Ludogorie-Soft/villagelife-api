@@ -1,7 +1,7 @@
-package com.example.ludogoriesoft.village.repositories;
+package com.example.ludogorieSoft.village.repositories;
 
-import com.example.ludogoriesoft.village.enums.Children;
-import com.example.ludogoriesoft.village.model.Village;
+import com.example.ludogorieSoft.village.enums.Children;
+import com.example.ludogorieSoft.village.model.Village;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
