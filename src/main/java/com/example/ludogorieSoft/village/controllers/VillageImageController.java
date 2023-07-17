@@ -1,7 +1,6 @@
 package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.dtos.VillageDTO;
-import com.example.ludogorieSoft.village.dtos.VillageImageResponse;
 import com.example.ludogorieSoft.village.services.VillageImageService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,15 +26,6 @@ public class VillageImageController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-    //@GetMapping("/all")
-    //public ResponseEntity<List<VillageImageResponse>> getAllVillageImageResponses() {
-    //    List<VillageImageResponse> villageImageResponses = villageImageService.getAllVillageImages();
-    //    if (!villageImageResponses.isEmpty()) {
-    //        return new ResponseEntity<>(villageImageResponses, HttpStatus.OK);
-    //    } else {
-    //        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    //    }
-    //}
     @GetMapping("/all")
     public ResponseEntity<List<VillageDTO>> getAllVillageDTOsWithImages() {
         List<VillageDTO> villageDTOS = villageImageService.getAllVillageDTOsWithImages();

@@ -2,7 +2,6 @@ package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.VillageDTO;
 import com.example.ludogorieSoft.village.dtos.VillageImageDTO;
-import com.example.ludogorieSoft.village.dtos.VillageImageResponse;
 import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.model.VillageImage;
 import com.example.ludogorieSoft.village.repositories.VillageImageRepository;
@@ -138,16 +137,6 @@ public class VillageImageService {
         return Base64.getEncoder().encodeToString(imageBytes);
     }
 
-    //public List<VillageImageResponse> getAllVillageImages(){
-    //    List<VillageDTO> villageDTOs = villageService.getAllVillages();
-    //    List<VillageImageResponse> villageImageResponses = new ArrayList<>();
-    //    for (VillageDTO village: villageDTOs) {
-    //        List<String> images = getAllImagesForVillage(village.getId());
-    //        VillageImageResponse villageImageResponse = new VillageImageResponse(village, images);
-    //        villageImageResponses.add(villageImageResponse);
-    //    }
-    //    return villageImageResponses;
-    //}
     public List<VillageDTO> getAllVillageDTOsWithImages(){
         List<VillageDTO> villageDTOs = villageService.getAllVillages();
         for (VillageDTO village: villageDTOs) {
