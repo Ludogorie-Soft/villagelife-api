@@ -90,4 +90,7 @@ public class EthnicityVillageService {
                 .filter(ethnicityVillage -> ethnicityVillage.getVillage() != null && ethnicityVillage.getVillage().getId().equals(villageId))
                 .findFirst();
     }
+    public boolean existsByVillageIdAndEthnicityId(Long villageId, Long ethnicityId){
+        return ethnicityVillageRepository.existsByEthnicityIdAndVillageId(ethnicityId, villageId);
+    }
 }

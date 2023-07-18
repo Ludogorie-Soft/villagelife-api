@@ -59,15 +59,14 @@ public class VillageService {
         Village village = villageRepository.findSingleVillageByNameAndRegionName(villageDTO.getName(), villageDTO.getRegion());
         if (village == null) {
             village = new Village();
-            village.setPopulation(modelMapper.map(villageDTO.getPopulationDTO(), Population.class));
             village.setName(villageDTO.getName());
             RegionDTO regionDTO = regionService.findRegionByName(villageDTO.getRegion());
             village.setRegion(regionService.checkRegion(regionDTO.getId()));
-            village.setPopulationCount(villageDTO.getPopulationCount());
-            Village savedVillage = villageRepository.save(village);
-            villageDTO.setId(savedVillage.getId());
-            return modelMapper.map(village, VillageDTO.class);
         }
+        village.setPopulation(modelMapper.map(villageDTO.getPopulationDTO(), Population.class));
+        village.setPopulationCount(villageDTO.getPopulationCount());
+        Village savedVillage = villageRepository.save(village);
+        villageDTO.setId(savedVillage.getId());
         return modelMapper.map(village, VillageDTO.class);
     }
 

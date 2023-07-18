@@ -70,13 +70,15 @@ public class AddVillageFormResultService {
     }
     public void createEthnicityVillagesFromAddVillageFormResult(Long villageId, AddVillageFormResult addVillageFormResult){
         List<Long> ethnicityDTOIds = addVillageFormResult.getEthnicityDTOIds();
-        if (ethnicityDTOIds == null) {
+        if (ethnicityDTOIds == null && !ethnicityVillageService.existsByVillageIdAndEthnicityId(villageId, ethnicityService.findEthnicityByName("няма малцинствени групи").getId())) {
             ethnicityVillageService.createEthnicityVillage(new EthnicityVillageDTO(null, villageId, ethnicityService.findEthnicityByName("няма малцинствени групи").getId()));
-            return;
-        }
-        for (Long id : ethnicityDTOIds) {
-            EthnicityVillageDTO ethnicityVillageDTO = new EthnicityVillageDTO(null, villageId, id);
-            ethnicityVillageService.createEthnicityVillage(ethnicityVillageDTO);
+        }else if(ethnicityDTOIds != null){
+            for (Long id : ethnicityDTOIds) {
+                if(!ethnicityVillageService.existsByVillageIdAndEthnicityId(villageId, id)){
+                    EthnicityVillageDTO ethnicityVillageDTO = new EthnicityVillageDTO(null, villageId, id);
+                    ethnicityVillageService.createEthnicityVillage(ethnicityVillageDTO);
+                }
+            }
         }
     }
     public void createVillageAnswerQuestionsFromAddVillageFormResult(Long villageId, AddVillageFormResult addVillageFormResult){

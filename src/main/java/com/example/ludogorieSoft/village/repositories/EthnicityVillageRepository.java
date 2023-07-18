@@ -4,4 +4,5 @@ import com.example.ludogorieSoft.village.model.EthnicityVillage;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface EthnicityVillageRepository extends JpaRepository<EthnicityVillage, Long> {
+    boolean existsByEthnicityIdAndVillageId(Long ethnicityId, Long villageId);
 }
