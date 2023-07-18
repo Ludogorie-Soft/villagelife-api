@@ -1,6 +1,7 @@
 package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.dtos.MessageDTO;
+import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.services.MessageService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -58,15 +59,24 @@ class MessageControllerIntegrationTest {
         Assertions.assertNotNull(response);
     }
     @Test
-    void testCreateMessageExceptionThrownInternalServerError() {
+    void testCreateMessageExceptionThrown() {
         MessageDTO messageDTO = new MessageDTO();
+        messageDTO.setId(1L);
+        messageDTO.setUserName("John");
+        messageDTO.setEmail("john@example.com");
+        messageDTO.setUserMessage("Hello, World!");
+
         MessageService messageService = mock(MessageService.class);
         when(messageService.createMessage(messageDTO)).thenThrow(new RuntimeException("Error creating message"));
         MessageController messageController = new MessageController(messageService);
 
-        ResponseEntity<MessageDTO> response = messageController.createMessage(messageDTO);
-
-        Assertions.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        try {
+            messageController.createMessage(messageDTO);
+            Assertions.fail("Expected an ApiRequestException to be thrown");
+        } catch (ApiRequestException e) {
+            Assertions.assertEquals("Error creating message", e.getMessage());
+        }
         verify(messageService).createMessage(messageDTO);
     }
+
 }
