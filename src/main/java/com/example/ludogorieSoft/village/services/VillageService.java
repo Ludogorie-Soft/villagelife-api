@@ -29,8 +29,8 @@ public class VillageService {
     private final VillageRepository villageRepository;
     private final ModelMapper modelMapper;
     private final RegionService regionService;
-    private final String errorMessage1="Village with id ";
-    private final String errorMessage2=" not found  ";
+    private static final String errorMessage1="Village with id ";
+    private static final String errorMessage2=" not found  ";
 
 
 
@@ -56,14 +56,18 @@ public class VillageService {
     }
 
     public VillageDTO createVillage(VillageDTO villageDTO) {
-        Village village = new Village();
-        village.setPopulation(modelMapper.map(villageDTO.getPopulationDTO(), Population.class));
-        village.setName(villageDTO.getName());
-        RegionDTO regionDTO = regionService.findRegionByName(villageDTO.getRegion());
-        village.setRegion(regionService.checkRegion(regionDTO.getId()));
-        village.setPopulationCount(villageDTO.getPopulationCount());
-        Village savedVillage = villageRepository.save(village);
-        villageDTO.setId(savedVillage.getId());
+        Village village = villageRepository.findSingleVillageByNameAndRegionName(villageDTO.getName(), villageDTO.getRegion());
+        if (village == null) {
+            village = new Village();
+            village.setPopulation(modelMapper.map(villageDTO.getPopulationDTO(), Population.class));
+            village.setName(villageDTO.getName());
+            RegionDTO regionDTO = regionService.findRegionByName(villageDTO.getRegion());
+            village.setRegion(regionService.checkRegion(regionDTO.getId()));
+            village.setPopulationCount(villageDTO.getPopulationCount());
+            Village savedVillage = villageRepository.save(village);
+            villageDTO.setId(savedVillage.getId());
+            return modelMapper.map(village, VillageDTO.class);
+        }
         return modelMapper.map(village, VillageDTO.class);
     }
 
