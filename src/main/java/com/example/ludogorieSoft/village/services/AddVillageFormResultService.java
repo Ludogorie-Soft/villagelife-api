@@ -100,7 +100,7 @@ public class AddVillageFormResultService {
         List<ObjectVillageDTO> objectVillageDTOS = addVillageFormResult.getObjectVillageDTOS();
         for (int i = 1; i < objectVillageDTOS.size(); i++) {
             ObjectVillageDTO objectVillageToSave = new ObjectVillageDTO(null, villageId, objectVillageDTOS.get(i).getObjectAroundVillageId(), objectVillageDTOS.get(i).getDistance());
-            if(objectVillageToSave.getDistance() != null){
+            if(objectVillageToSave.getDistance() != null && !objectVillageService.existsByVillageIdAndObjectIdAndDistance(villageId, objectVillageDTOS.get(i).getObjectAroundVillageId(), objectVillageDTOS.get(i).getDistance())){
                 objectVillageService.createObjectVillage(objectVillageToSave);
             }
         }
