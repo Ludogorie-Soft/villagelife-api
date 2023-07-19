@@ -49,4 +49,10 @@ public class AdministratorController {
     public List<VillageResponse> getAllVillages(){
         return administratorService.getAllVillagesWithPopulation();
     }
+
+    @DeleteMapping("/village-delete/{villageId}")
+    public ResponseEntity<String> deleteVillageById(@PathVariable("villageId") Long villageId) {
+        villageService.deleteVillage(villageId);
+        return new ResponseEntity<>("Village with id: " + villageId + " has been deleted successfully!!", HttpStatus.OK);
+    }
 }

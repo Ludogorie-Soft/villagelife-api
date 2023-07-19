@@ -1,15 +1,14 @@
 package com.example.ludogorieSoft.village.model;
 
 import com.example.ludogorieSoft.village.enums.Consents;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name = "village_living_conditions")
 @NoArgsConstructor
 @AllArgsConstructor
