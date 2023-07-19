@@ -112,8 +112,14 @@ public class AdministratorService {
             response.setName(village.getName());
             response.setRegion(region);
             response.setDateUpload(village.getDateUpload());
-            response.setAdmin(administrator);
-            response.setDateApproved(village.getDateApproved());
+
+            if (administrator != null) {
+                response.setAdmin(administrator);
+                response.setDateApproved(village.getDateApproved());
+            } else {
+                response.setAdmin(null);
+                response.setDateApproved(null);
+            }
 
             villageResponses.add(response);
         }
