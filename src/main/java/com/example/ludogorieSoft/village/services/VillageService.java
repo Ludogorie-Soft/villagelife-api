@@ -29,8 +29,8 @@ public class VillageService {
     private final VillageRepository villageRepository;
     private final ModelMapper modelMapper;
     private final RegionService regionService;
-    private static final String errorMessage1="Village with id ";
-    private static final String errorMessage2=" not found  ";
+    private static final String ERROR_MESSAGE1="Village with id ";
+    private static final String ERROR_MESSAGE2=" not found  ";
 
 
 
@@ -51,7 +51,7 @@ public class VillageService {
         if (optionalVillage.isPresent()) {
             return villageToVillageDTO(optionalVillage.get());
         } else {
-            throw new ApiRequestException(errorMessage1 + id + errorMessage2);
+            throw new ApiRequestException(ERROR_MESSAGE1 + id + ERROR_MESSAGE2);
         }
     }
 
@@ -92,7 +92,7 @@ public class VillageService {
             villageRepository.save(village);
             return modelMapper.map(village, VillageDTO.class);
         } else {
-            throw new ApiRequestException(errorMessage1 + id + errorMessage2);
+            throw new ApiRequestException(ERROR_MESSAGE1 + id + ERROR_MESSAGE2);
         }
     }
 
@@ -101,7 +101,7 @@ public class VillageService {
         if (villageRepository.existsById(id)) {
             villageRepository.deleteById(id);
         } else {
-            throw new ApiRequestException(errorMessage1 + id + errorMessage2);
+            throw new ApiRequestException(ERROR_MESSAGE1 + id + ERROR_MESSAGE2);
         }
     }
 
