@@ -81,12 +81,17 @@ public class AddVillageFormResultService {
             }
         }
     }
-    public void createVillageAnswerQuestionsFromAddVillageFormResult(Long villageId, AddVillageFormResult addVillageFormResult){
+    public void createVillageAnswerQuestionsFromAddVillageFormResult(Long villageId, AddVillageFormResult addVillageFormResult) {
         List<String> questionResponses = addVillageFormResult.getQuestionResponses();
         List<QuestionDTO> questionsDTO = questionService.getAllQuestions();
         for (int i = 0; i < questionResponses.size(); i++) {
-            VillageAnswerQuestionDTO villageAnswerQuestionDTO = new VillageAnswerQuestionDTO(null, villageId, questionsDTO.get(i).getId(), addVillageFormResult.getQuestionResponses().get(i));
-            if(villageAnswerQuestionDTO.getAnswer() != null){
+            if (!addVillageFormResult.getQuestionResponses().get(i).equals("") &&
+                    !villageAnswerQuestionService.existsByVillageIdAndQuestionIdAndAnswer(
+                            villageId, questionsDTO.get(i).getId(), addVillageFormResult.getQuestionResponses().get(i))) {
+
+                VillageAnswerQuestionDTO villageAnswerQuestionDTO = new VillageAnswerQuestionDTO(
+                        null, villageId, questionsDTO.get(i).getId(), addVillageFormResult.getQuestionResponses().get(i));
+
                 villageAnswerQuestionService.createVillageAnswerQuestion(villageAnswerQuestionDTO);
             }
         }
