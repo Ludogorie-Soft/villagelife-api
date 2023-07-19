@@ -12,6 +12,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
@@ -22,8 +24,16 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(MessageController.class)
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
+@WebMvcTest(value = MessageController.class,
+        useDefaultFilters = false,
+        includeFilters = {
+                @ComponentScan.Filter(
+                        type = FilterType.ASSIGNABLE_TYPE,
+                        value = MessageController.class
+                )
+        }
+)
 class MessageControllerIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
@@ -35,6 +45,7 @@ class MessageControllerIntegrationTest {
     public void setup() {
         MockitoAnnotations.openMocks(this);
     }
+
     @Test
     void testCreateMessage() throws Exception {
         MessageDTO messageDTO = new MessageDTO();
