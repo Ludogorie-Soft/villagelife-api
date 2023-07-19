@@ -25,8 +25,5 @@ public class VillageDTO {
 
     private List<LivingConditionDTO> livingConditions;
     private List<ObjectAroundVillageDTO> object;
-
-
-
-
+    private List<String> images;
 }

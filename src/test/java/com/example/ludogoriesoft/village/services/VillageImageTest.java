@@ -2,34 +2,30 @@ package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.model.VillageImage;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class VillageImageTest {
+class VillageImageTest {
 
     @Test
     void testVillageImageConstructor() {
-        // Define the test input
         Long id = 1L;
         Village village = new Village();
         String imageName = "image.jpg";
 
-        // Create a new VillageImage instance
         VillageImage villageImage = new VillageImage(id, village, imageName);
 
-        // Verify the properties
-        assertEquals(id, villageImage.getId());
-        assertEquals(village, villageImage.getVillage());
-        assertEquals(imageName, villageImage.getImageName());
+        Assertions.assertEquals(id, villageImage.getId());
+        Assertions.assertEquals(village, villageImage.getVillage());
+        Assertions.assertEquals(imageName, villageImage.getImageName());
     }
 
     @Test
     void testVillageImageGettersAndSetters() {
-        // Create a new VillageImage instance
         VillageImage villageImage = new VillageImage();
 
-        // Set the properties
         Long id = 1L;
         Village village = new Village();
         String imageName = "image.jpg";
@@ -37,10 +33,9 @@ public class VillageImageTest {
         villageImage.setVillage(village);
         villageImage.setImageName(imageName);
 
-        // Verify the properties
-        assertEquals(id, villageImage.getId());
-        assertEquals(village, villageImage.getVillage());
-        assertEquals(imageName, villageImage.getImageName());
+        Assertions.assertEquals(id, villageImage.getId());
+        Assertions.assertEquals(village, villageImage.getVillage());
+        Assertions.assertEquals(imageName, villageImage.getImageName());
     }
 }
 
