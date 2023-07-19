@@ -1,4 +1,4 @@
-package com.example.ludogorieSoft.village.exeptions;
+package com.example.ludogorieSoft.village.exceptions;
 
 
 

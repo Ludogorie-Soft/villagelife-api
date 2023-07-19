@@ -13,13 +13,16 @@ import java.util.List;
 @Repository
 public interface VillageRepository extends JpaRepository<Village, Long> {
 
-    @Query("SELECT v FROM Village v JOIN v.region r WHERE LOWER(v.name) LIKE %:keyword% ORDER BY r.regionName ASC")
+    @Query("SELECT v FROM Village v WHERE v.status = 1")
+    List<Village> findAllApprovedVillages();
+
+    @Query("SELECT v FROM Village v JOIN v.region r WHERE LOWER(v.name) LIKE %:keyword% AND v.status = 1 ORDER BY r.regionName ASC")
     List<Village> findByNameContainingIgnoreCaseOrderByRegionNameAsc(@Param("keyword") String keyword);
 
-    @Query("SELECT v FROM Village v JOIN v.region r WHERE LOWER(r.regionName) = :regionName")
+    @Query("SELECT v FROM Village v JOIN v.region r WHERE LOWER(r.regionName) = :regionName AND v.status = 1")
     List<Village> findByRegionName(@Param("regionName") String regionName);
 
-    @Query("SELECT v FROM Village v JOIN v.region r WHERE r.regionName = :regionName AND LOWER(v.name) LIKE %:keyword%")
+    @Query("SELECT v FROM Village v JOIN v.region r WHERE r.regionName = :regionName AND LOWER(v.name) LIKE %:keyword% AND v.status = 1")
     List<Village> findByNameContainingIgnoreCaseAndRegionName(@Param("regionName") String regionName, @Param("keyword") String keyword);
 
     @Query(value = "SELECT DISTINCT v FROM Village v " +
@@ -34,6 +37,7 @@ public interface VillageRepository extends JpaRepository<Village, Long> {
             "AND p.children = :childrenCount " +
             "AND ov.distance = 'IN_THE_VILLAGE' " +
             "AND vl.consents = 'COMPLETELY_AGREED' " +
+            "AND v.status = 1 " +
             "GROUP BY v.name " +
             "ORDER BY r.regionName ASC")
     List<Village> searchVillages(@Param("objectTypes") List<String> objectAroundVillageDTOS,
@@ -49,6 +53,7 @@ public interface VillageRepository extends JpaRepository<Village, Long> {
             "WHERE lc.livingConditionName IN :livingConditionNames " +
             "AND p.children = :childrenCount " +
             "AND vl.consents = 'COMPLETELY_AGREED' " +
+            "AND v.status = 1 " +
             "GROUP BY v.name " +
             "ORDER BY r.regionName ASC")
     List<Village> searchVillagesByLivingConditionAndChildren(@Param("livingConditionNames") List<String> livingConditionDTOS,
@@ -63,6 +68,7 @@ public interface VillageRepository extends JpaRepository<Village, Long> {
             "WHERE o.type IN :objectTypes " +
             "AND p.children = :childrenCount " +
             "AND ov.distance = 'IN_THE_VILLAGE' " +
+            "AND v.status = 1 " +
             "GROUP BY v.name " +
             "ORDER BY r.regionName ASC")
     List<Village> searchVillagesByObjectAndChildren(@Param("objectTypes") List<String> objectAroundVillageDTOS,
@@ -79,6 +85,7 @@ public interface VillageRepository extends JpaRepository<Village, Long> {
             "AND lc.livingConditionName IN :livingConditionNames " +
             "AND ov.distance = 'IN_THE_VILLAGE' " +
             "AND vl.consents = 'COMPLETELY_AGREED' " +
+            "AND v.status = 1 " +
             "GROUP BY v.name " +
             "ORDER BY r.regionName ASC")
     List<Village> searchVillagesByObjectAndLivingCondition(@Param("objectTypes") List<String> objectAroundVillageDTOS,
@@ -89,6 +96,7 @@ public interface VillageRepository extends JpaRepository<Village, Long> {
             "JOIN v.population p " +
             "JOIN v.region r " +
             "WHERE p.children = :childrenCount " +
+            "AND v.status = 1 " +
             "GROUP BY v.name " +
             "ORDER BY r.regionName ASC")
     List<Village> searchVillagesByChildrenCount(@Param("childrenCount") Children children);
@@ -100,6 +108,7 @@ public interface VillageRepository extends JpaRepository<Village, Long> {
             "JOIN v.region r " +
             "WHERE o.type IN :objectTypes " +
             "AND ov.distance = 'IN_THE_VILLAGE' " +
+            "AND v.status = 1 " +
             "GROUP BY v.name " +
             "ORDER BY r.regionName ASC")
     List<Village> searchVillagesByObject(@Param("objectTypes") List<String> objectAroundVillageDTOS);
@@ -110,6 +119,7 @@ public interface VillageRepository extends JpaRepository<Village, Long> {
             "JOIN v.region r " +
             "WHERE lc.livingConditionName IN :livingConditionNames " +
             "AND vl.consents = 'COMPLETELY_AGREED' " +
+            "AND v.status = 1 " +
             "GROUP BY v.name " +
             "ORDER BY r.regionName ASC")
     List<Village> searchVillagesByLivingCondition(@Param("livingConditionNames") List<String> livingConditionDTOS);

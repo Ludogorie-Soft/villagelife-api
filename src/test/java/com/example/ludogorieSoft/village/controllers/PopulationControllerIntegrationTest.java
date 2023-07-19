@@ -1,12 +1,11 @@
 package com.example.ludogorieSoft.village.controllers;
 
-import com.example.ludogorieSoft.village.controllers.PopulationController;
 import com.example.ludogorieSoft.village.dtos.PopulationDTO;
 import com.example.ludogorieSoft.village.enums.Children;
 import com.example.ludogorieSoft.village.enums.Foreigners;
 import com.example.ludogorieSoft.village.enums.NumberOfPopulation;
 import com.example.ludogorieSoft.village.enums.Residents;
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
+import com.example.ludogorieSoft.village.exceptions.ApiRequestException;
 import com.example.ludogorieSoft.village.services.PopulationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -233,6 +232,39 @@ class PopulationControllerIntegrationTest {
                 .andExpect(jsonPath("$.message").value(errorMessage))
                 .andReturn();
     }
+
+
+    @Test
+    void testCreatePopulationWhitNullValuesWithException() throws Exception {
+        String errorMessage = "Error while creating population with null values";
+
+        when(populationService.createPopulationWhitNullValues())
+                .thenThrow(new ApiRequestException(errorMessage));
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/populations/null")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(errorMessage))
+                .andReturn();
+    }
+
+
+
+    @Test
+    void testCreatePopulationWhitNullValues() throws Exception {
+        Long generatedPopulationId = 1L;
+
+        when(populationService.createPopulationWhitNullValues()).thenReturn(generatedPopulationId);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/populations/null")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(generatedPopulationId.toString()))
+                .andReturn();
+    }
+
+
+
 
 }
 

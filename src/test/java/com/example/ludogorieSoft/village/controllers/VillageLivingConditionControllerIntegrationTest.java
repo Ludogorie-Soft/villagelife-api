@@ -1,8 +1,8 @@
 package com.example.ludogorieSoft.village.controllers;
 
-import com.example.ludogorieSoft.village.controllers.VillageLivingConditionController;
 import com.example.ludogorieSoft.village.dtos.VillageLivingConditionDTO;
 import com.example.ludogorieSoft.village.enums.Consents;
+import com.example.ludogorieSoft.village.exceptions.ApiRequestException;
 import com.example.ludogorieSoft.village.services.VillageLivingConditionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -158,12 +158,192 @@ class VillageLivingConditionControllerIntegrationTest {
                 .andReturn();
     }
 
+
+    @Test
+    void testGetVillageLivingConditionsByVillageId() throws Exception {
+        Long villageId = 1L;
+
+        VillageLivingConditionDTO villageLivingConditionDTO1 = new VillageLivingConditionDTO();
+        villageLivingConditionDTO1.setId(1L);
+        villageLivingConditionDTO1.setVillageId(villageId);
+        villageLivingConditionDTO1.setLivingConditionId(1L);
+        villageLivingConditionDTO1.setConsents(Consents.COMPLETELY_AGREED);
+
+        VillageLivingConditionDTO villageLivingConditionDTO2 = new VillageLivingConditionDTO();
+        villageLivingConditionDTO2.setId(2L);
+        villageLivingConditionDTO2.setVillageId(villageId);
+        villageLivingConditionDTO2.setLivingConditionId(2L);
+        villageLivingConditionDTO2.setConsents(Consents.CANT_DECIDE);
+
+        List<VillageLivingConditionDTO> villageLivingConditionDTOList = Arrays.asList(villageLivingConditionDTO1, villageLivingConditionDTO2);
+
+        when(villageLivingConditionService.getVillagePopulationAssertionByVillageId(villageId)).thenReturn(villageLivingConditionDTOList);
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageLivingConditions/village/{id}", villageId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].villageId").value(villageId))
+                .andExpect(jsonPath("$[0].livingConditionId").value(1L))
+                .andExpect(jsonPath("$[0].consents").value("COMPLETELY_AGREED"))
+                .andExpect(jsonPath("$[1].id").value(2))
+                .andExpect(jsonPath("$[1].villageId").value(villageId))
+                .andExpect(jsonPath("$[1].livingConditionId").value(2L))
+                .andExpect(jsonPath("$[1].consents").value("CANT_DECIDE"))
+                .andReturn();
+
+        String response = mvcResult.getResponse().getContentAsString();
+        assertNotNull(response);
+    }
+
+    @Test
+    void testGetVillageLivingConditionsByVillageIdWhenNoneExist() throws Exception {
+        Long villageId = 1L;
+
+        when(villageLivingConditionService.getVillagePopulationAssertionByVillageId(villageId)).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageLivingConditions/village/{id}", villageId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(0))
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isEmpty())
+                .andReturn();
+    }
+
+    @Test
+    void testGetVillageLivingConditionsByVillageIdWithInvalidId() throws Exception {
+        Long invalidId = 100000L;
+
+        when(villageLivingConditionService.getVillagePopulationAssertionByVillageId(anyLong()))
+                .thenThrow(new ApiRequestException("Village with id: " + invalidId + " Not Found"));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageLivingConditions/village/{id}", invalidId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Village with id: " + invalidId + " Not Found"))
+                .andReturn();
+    }
+
+
+    @Test
+    void testGetVillagePopulationAssertionByVillageIdValue() throws Exception {
+        Long villageId = 1L;
+        double populationAssertionValue = 123.45;
+
+        when(villageLivingConditionService.getVillagePopulationAssertionByVillageIdValue(villageId)).thenReturn(populationAssertionValue);
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageLivingConditions/village/value/{id}", villageId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(String.valueOf(populationAssertionValue)))
+                .andReturn();
+
+        String response = mvcResult.getResponse().getContentAsString();
+        assertNotNull(response);
+    }
+
+    @Test
+    void testGetVillagePopulationAssertionByVillageIdValueWithInvalidId() throws Exception {
+        Long invalidId = 100000L;
+
+        when(villageLivingConditionService.getVillagePopulationAssertionByVillageIdValue(anyLong()))
+                .thenThrow(new ApiRequestException("Village with id: " + invalidId + " Not Found"));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageLivingConditions/village/value/{id}", invalidId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Village with id: " + invalidId + " Not Found"))
+                .andReturn();
+    }
+
+
+    @Test
+    void testGetVillagePopulationAssertionByVillageIdDelinquencyValue() throws Exception {
+        Long villageId = 1L;
+        double delinquencyValue = 78.9;
+
+        when(villageLivingConditionService.getVillagePopulationAssertionByVillageIdDelinquencyValue(villageId)).thenReturn(delinquencyValue);
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageLivingConditions/village/delinquencyValue/{id}", villageId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(String.valueOf(delinquencyValue)))
+                .andReturn();
+
+        String response = mvcResult.getResponse().getContentAsString();
+        assertNotNull(response);
+    }
+
+    @Test
+    void testGetVillagePopulationAssertionByVillageIdDelinquencyValueWithInvalidId() throws Exception {
+        Long invalidId = 100000L;
+
+        when(villageLivingConditionService.getVillagePopulationAssertionByVillageIdDelinquencyValue(anyLong()))
+                .thenThrow(new ApiRequestException("Village with id: " + invalidId + " Not Found"));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageLivingConditions/village/delinquencyValue/{id}", invalidId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Village with id: " + invalidId + " Not Found"))
+                .andReturn();
+    }
+
+
+    @Test
+    void testGetVillagePopulationAssertionByVillageIdEcoValue() throws Exception {
+        Long villageId = 1L;
+        double ecoValue = 34.56;
+
+        when(villageLivingConditionService.getVillagePopulationAssertionByVillageIdEcoValue(villageId)).thenReturn(ecoValue);
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageLivingConditions/village/ecoValue/{id}", villageId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(String.valueOf(ecoValue)))
+                .andReturn();
+
+        String response = mvcResult.getResponse().getContentAsString();
+        assertNotNull(response);
+    }
+
+    @Test
+    void testGetVillagePopulationAssertionByVillageIdEcoValueWithInvalidId() throws Exception {
+        Long invalidId = 100000L;
+
+        when(villageLivingConditionService.getVillagePopulationAssertionByVillageIdEcoValue(anyLong()))
+                .thenThrow(new ApiRequestException("Village with id: " + invalidId + " Not Found"));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageLivingConditions/village/ecoValue/{id}", invalidId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Village with id: " + invalidId + " Not Found"))
+                .andReturn();
+    }
+
     @Test
     void testDeleteVillageLivingConditionsById() throws Exception {
+        Long villageLivingConditionId = 1L;
 
-        when(villageLivingConditionService.deleteVillageLivingConditions(anyLong())).thenReturn(1);
+        when(villageLivingConditionService.deleteVillageLivingConditions(villageLivingConditionId)).thenReturn(1);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/villageLivingConditions/{id}", 1))
-                .andExpect(status().isNoContent());
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/villageLivingConditions/{id}", villageLivingConditionId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent())
+                .andReturn();
     }
+
+
+    @Test
+    void testDeleteVillageLivingConditionsByIdWhenNoRowsAffected() throws Exception {
+        Long villageLivingConditionId = 1L;
+
+        when(villageLivingConditionService.deleteVillageLivingConditions(villageLivingConditionId)).thenReturn(0);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/villageLivingConditions/{id}", villageLivingConditionId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andReturn();
+    }
+
 }

@@ -12,7 +12,7 @@ import com.example.ludogorieSoft.village.model.Population;
 import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.model.VillageLivingConditions;
 import com.example.ludogorieSoft.village.repositories.VillageRepository;
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
+import com.example.ludogorieSoft.village.exceptions.ApiRequestException;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 
@@ -338,6 +338,13 @@ public class VillageService {
         populationDTO.setChildren(childrenEnum);
 
         return populationDTO;
+    }
+
+    public List<VillageDTO> getAllApprovedVillages() {
+        List<Village> approvedVillages = villageRepository.findAllApprovedVillages();
+        return approvedVillages.stream()
+                .map(this::villageToVillageDTO)
+                .toList();
     }
 
 

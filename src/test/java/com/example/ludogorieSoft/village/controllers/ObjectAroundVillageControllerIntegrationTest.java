@@ -1,8 +1,7 @@
 package com.example.ludogorieSoft.village.controllers;
 
-import com.example.ludogorieSoft.village.controllers.ObjectAroundVillageController;
 import com.example.ludogorieSoft.village.dtos.ObjectAroundVillageDTO;
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
+import com.example.ludogorieSoft.village.exceptions.ApiRequestException;
 import com.example.ludogorieSoft.village.services.ObjectAroundVillageService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -234,6 +233,41 @@ class ObjectAroundVillageControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/objectsAroundVillage/{id}", objectId))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(containsString("ObjectAroundVillage with id: " + objectId + " not found")));
+    }
+
+    @Test
+    void testGetObjectAroundVillageByVillageID() throws Exception {
+        Long villageId = 1L;
+
+        ObjectAroundVillageDTO objectAroundVillageDTO = new ObjectAroundVillageDTO();
+        objectAroundVillageDTO.setId(1L);
+        objectAroundVillageDTO.setType("Object 1");
+
+        when(objectAroundVillageService.getObjectAroundVillageById(villageId)).thenReturn(objectAroundVillageDTO);
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/objectsAroundVillage/village/{id}", villageId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.type").value("Object 1"))
+                .andReturn();
+
+        String response = mvcResult.getResponse().getContentAsString();
+        assertNotNull(response);
+    }
+
+    @Test
+    void testGetObjectAroundVillageByVillageIDWithInvalidId() throws Exception {
+        Long invalidId = 100000L;
+
+        when(objectAroundVillageService.getObjectAroundVillageById(anyLong()))
+                .thenThrow(new ApiRequestException("Object Around Village with id: " + invalidId + " Not Found"));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/objectsAroundVillage/village/{id}", invalidId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Object Around Village with id: " + invalidId + " Not Found"))
+                .andReturn();
     }
 
 }

@@ -3,7 +3,7 @@ package com.example.ludogorieSoft.village.services;
 import com.example.ludogorieSoft.village.dtos.LivingConditionDTO;
 import com.example.ludogorieSoft.village.model.LivingCondition;
 import com.example.ludogorieSoft.village.repositories.LivingConditionRepository;
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
+import com.example.ludogorieSoft.village.exceptions.ApiRequestException;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang.StringUtils;
 import org.modelmapper.ModelMapper;

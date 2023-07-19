@@ -1,16 +1,11 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.EthnicityVillageDTO;
-import com.example.ludogorieSoft.village.model.Ethnicity;
-import com.example.ludogorieSoft.village.model.EthnicityVillage;
-import com.example.ludogorieSoft.village.model.Village;
+import com.example.ludogorieSoft.village.model.*;
 import com.example.ludogorieSoft.village.repositories.EthnicityRepository;
 import com.example.ludogorieSoft.village.repositories.EthnicityVillageRepository;
 import com.example.ludogorieSoft.village.repositories.VillageRepository;
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
-import com.example.ludogorieSoft.village.services.EthnicityService;
-import com.example.ludogorieSoft.village.services.EthnicityVillageService;
-import com.example.ludogorieSoft.village.services.VillageService;
+import com.example.ludogorieSoft.village.exceptions.ApiRequestException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,7 +15,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -181,6 +178,46 @@ class EthnicityVillageServiceTest {
         assertThrows(ApiRequestException.class, () -> {
             ethnicityVillageService.deleteEthnicityVillageById(1L);
         });
+    }
+
+
+    @Test
+    void testDeleteEthnicityVillageByIdWhenEthnicityVillageExists() {
+        Long id = 1L;
+
+        when(ethnicityVillageRepository.existsById(id)).thenReturn(true);
+
+        ethnicityVillageService.deleteEthnicityVillageById(id);
+
+        verify(ethnicityVillageRepository, times(1)).deleteById(id);
+    }
+
+
+
+    @Test
+    void testGetVillageEthnicityByVillageIdWithEmptyList() {
+        Long villageId = 1L;
+
+        when(ethnicityVillageRepository.findAll()).thenReturn(Collections.emptyList());
+
+        List<EthnicityVillageDTO> resultDTOs = ethnicityVillageService.getVillageEthnicityByVillageId(villageId);
+
+        assertTrue(resultDTOs.isEmpty());
+    }
+
+
+    @Test
+    void testGetVillageEthnicityByVillageIdWithEmptyEthnicityVillages() {
+        Long villageId = 1L;
+
+        // Assume there are no EthnicityVillages in the repository
+        when(ethnicityVillageRepository.findAll()).thenReturn(Collections.emptyList());
+
+        // Call the method under test
+        List<EthnicityVillageDTO> resultDTOs = ethnicityVillageService.getVillageEthnicityByVillageId(villageId);
+
+        // Assert that the result list is empty
+        assertTrue(resultDTOs.isEmpty());
     }
 
 

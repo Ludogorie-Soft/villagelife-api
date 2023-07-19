@@ -2,7 +2,7 @@ package com.example.ludogorieSoft.village.services;
 
 
 import com.example.ludogorieSoft.village.dtos.PopulatedAssertionDTO;
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
+import com.example.ludogorieSoft.village.exceptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.PopulatedAssertion;
 import com.example.ludogorieSoft.village.repositories.PopulatedAssertionRepository;
 import lombok.AllArgsConstructor;

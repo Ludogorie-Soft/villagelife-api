@@ -1,7 +1,7 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.ObjectVillageDTO;
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
+import com.example.ludogorieSoft.village.exceptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.ObjectAroundVillage;
 import com.example.ludogorieSoft.village.model.ObjectVillage;
 import com.example.ludogorieSoft.village.model.Village;
@@ -19,6 +19,7 @@ import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -177,6 +178,48 @@ class ObjectVillageServiceTest {
         verify(objectVillageRepository).findById(objectId);
         verifyNoMoreInteractions(objectVillageRepository);
     }
+
+
+    @Test
+    void testGetObjectVillageByVillageIdWithValidId() {
+        Long villageId = 1L;
+
+        List<ObjectVillage> objectVillages = new ArrayList<>();
+        objectVillages.add(new ObjectVillage());
+        objectVillages.add(new ObjectVillage());
+        objectVillages.add(new ObjectVillage());
+
+        Village village = new Village();
+        village.setId(villageId);
+        objectVillages.forEach(obj -> obj.setVillage(village));
+
+        when(objectVillageRepository.findAll()).thenReturn(objectVillages);
+
+        List<ObjectVillageDTO> resultDTOs = objectVillageService.getObjectVillageByVillageId(villageId);
+
+        assertEquals(objectVillages.size(), resultDTOs.size());
+        verify(objectVillageRepository, times(1)).findAll();
+        verify(modelMapper, times(objectVillages.size())).map(any(), eq(ObjectVillageDTO.class));
+    }
+
+
+    @Test
+    void testGetObjectVillageByVillageIdWhenDatabaseIsEmpty() {
+        Long villageId = 1L;
+
+        when(objectVillageRepository.findAll()).thenReturn(Collections.emptyList());
+
+        List<ObjectVillageDTO> resultDTOs = objectVillageService.getObjectVillageByVillageId(villageId);
+
+        assertTrue(resultDTOs.isEmpty());
+        verify(objectVillageRepository, times(1)).findAll();
+        verify(modelMapper, times(0)).map(any(), eq(ObjectVillageDTO.class));
+    }
+
+
+
+
+
 
 
 }

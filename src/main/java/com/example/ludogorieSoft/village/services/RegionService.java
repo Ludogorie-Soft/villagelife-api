@@ -1,7 +1,7 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.RegionDTO;
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
+import com.example.ludogorieSoft.village.exceptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.Region;
 import com.example.ludogorieSoft.village.repositories.RegionRepository;
 import lombok.AllArgsConstructor;

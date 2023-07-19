@@ -1,25 +1,18 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.VillageAnswerQuestionDTO;
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
-import com.example.ludogorieSoft.village.model.Question;
-import com.example.ludogorieSoft.village.model.Village;
-import com.example.ludogorieSoft.village.model.VillageAnswerQuestion;
+import com.example.ludogorieSoft.village.exceptions.ApiRequestException;
+import com.example.ludogorieSoft.village.model.*;
 import com.example.ludogorieSoft.village.repositories.QuestionRepository;
 import com.example.ludogorieSoft.village.repositories.VillageAnswerQuestionRepository;
 import com.example.ludogorieSoft.village.repositories.VillageRepository;
-import com.example.ludogorieSoft.village.services.QuestionService;
-import com.example.ludogorieSoft.village.services.VillageAnswerQuestionService;
-import com.example.ludogorieSoft.village.services.VillageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.mockito.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -230,4 +223,217 @@ class VillageAnswerQuestionServiceTest {
 
         assertThrows(ApiRequestException.class, () -> villageAnswerQuestionService.updateVillageAnswerQuestion(id, villageAnswerQuestionDTO));
     }
+
+
+    @Test
+    void testGetVillageAnswerQuestionByVillageIdWithNullVillageIdReturnsAllDTOs() {
+        Long villageId = null;
+
+        VillageAnswerQuestion villageAnswerQuestion1 = new VillageAnswerQuestion();
+        VillageAnswerQuestion villageAnswerQuestion2 = new VillageAnswerQuestion();
+
+        villageAnswerQuestion1.setVillage(new Village(1L, "Village1", new Region(1L, "Region1"), 1000, new Population(), LocalDateTime.now(), true, new Administrator(), null, null, null));
+        villageAnswerQuestion1.setAnswer("Answer1");
+
+        villageAnswerQuestion2.setVillage(new Village(2L, "Village1", new Region(1L, "Region1"), 1000, new Population(), LocalDateTime.now(), true, new Administrator(), null, null, null));
+        villageAnswerQuestion2.setAnswer("Answer2");
+
+        List<VillageAnswerQuestion> villageAnswerQuestions = List.of(villageAnswerQuestion1, villageAnswerQuestion2);
+
+        when(villageAnswerQuestionRepository.findAll()).thenReturn(villageAnswerQuestions);
+
+        List<VillageAnswerQuestionDTO> result = villageAnswerQuestionService.getVillageAnswerQuestionByVillageId(villageId);
+
+        assertEquals(2, result.size());
+    }
+
+
+    @Test
+    void testGetVillageAnswerQuestionByVillageIdWithValidVillageIdFiltersProperly() {
+        Long villageId = 1L;
+
+        VillageAnswerQuestion villageAnswerQuestion1 = new VillageAnswerQuestion();
+        villageAnswerQuestion1.setVillage(new Village(1L, "Village1", new Region(1L, "Region1"), 1000, new Population(), LocalDateTime.now(), true, new Administrator(), null, null, null));
+        villageAnswerQuestion1.setAnswer("Answer1");
+
+        VillageAnswerQuestion villageAnswerQuestion2 = new VillageAnswerQuestion();
+        villageAnswerQuestion2.setVillage(new Village(2L, "Village2", new Region(2L, "Region2"), 2000, new Population(), LocalDateTime.now(), true, new Administrator(), null, null, null));
+        villageAnswerQuestion2.setAnswer("Answer2");
+
+        List<VillageAnswerQuestion> villageAnswerQuestions = List.of(villageAnswerQuestion1, villageAnswerQuestion2);
+
+        when(villageAnswerQuestionRepository.findAll()).thenReturn(villageAnswerQuestions);
+
+        List<VillageAnswerQuestionDTO> result = villageAnswerQuestionService.getVillageAnswerQuestionByVillageId(villageId);
+
+        assertEquals(1, result.size());
+    }
+
+    @Test
+    void testGetVillageAnswerQuestionByVillageIdWithValidVillageIdNoMatches() {
+        Long villageId = 3L;
+
+        VillageAnswerQuestion villageAnswerQuestion1 = new VillageAnswerQuestion();
+        villageAnswerQuestion1.setVillage(new Village(1L, "Village1", new Region(1L, "Region1"), 1000, new Population(), LocalDateTime.now(), true, new Administrator(), null, null, null));
+        villageAnswerQuestion1.setAnswer("Answer1");
+
+        VillageAnswerQuestion villageAnswerQuestion2 = new VillageAnswerQuestion();
+        villageAnswerQuestion2.setVillage(new Village(2L, "Village2", new Region(2L, "Region2"), 2000, new Population(), LocalDateTime.now(), true, new Administrator(), null, null, null));
+        villageAnswerQuestion2.setAnswer("Answer2");
+
+        List<VillageAnswerQuestion> villageAnswerQuestions = List.of(villageAnswerQuestion1, villageAnswerQuestion2);
+
+        when(villageAnswerQuestionRepository.findAll()).thenReturn(villageAnswerQuestions);
+
+        List<VillageAnswerQuestionDTO> result = villageAnswerQuestionService.getVillageAnswerQuestionByVillageId(villageId);
+
+        assertEquals(0, result.size());
+    }
+
+
+    @Test
+    void testGetVillageAnswerQuestionByVillageIdWithNullVillageId() {
+        Long villageId = null;
+
+        VillageAnswerQuestion villageAnswerQuestion1 = new VillageAnswerQuestion();
+        villageAnswerQuestion1.setVillage(new Village(1L, "Village1", new Region(1L, "Region1"), 1000, new Population(), LocalDateTime.now(), true, new Administrator(), null, null, null));
+        villageAnswerQuestion1.setAnswer("Answer1");
+
+        VillageAnswerQuestion villageAnswerQuestion2 = new VillageAnswerQuestion();
+        villageAnswerQuestion2.setVillage(new Village(2L, "Village2", new Region(2L, "Region2"), 2000, new Population(), LocalDateTime.now(), true, new Administrator(), null, null, null));
+        villageAnswerQuestion2.setAnswer("Answer2");
+
+        List<VillageAnswerQuestion> villageAnswerQuestions = List.of(villageAnswerQuestion1, villageAnswerQuestion2);
+
+        when(villageAnswerQuestionRepository.findAll()).thenReturn(villageAnswerQuestions);
+
+        List<VillageAnswerQuestionDTO> result = villageAnswerQuestionService.getVillageAnswerQuestionByVillageId(villageId);
+
+        assertEquals(2, result.size());
+    }
+
+
+    @Test
+    void testUpdateVillageAnswerQuestionWithInvalidId() {
+        Long id = 1L;
+        VillageAnswerQuestionDTO inputDTO = new VillageAnswerQuestionDTO();
+        inputDTO.setVillageId(1L);
+        inputDTO.setQuestionId(1L);
+        inputDTO.setAnswer("Updated answer");
+
+        when(villageAnswerQuestionRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(ApiRequestException.class, () -> villageAnswerQuestionService.updateVillageAnswerQuestion(id, inputDTO));
+
+        verify(villageService, never()).checkVillage(anyLong());
+        verify(questionService, never()).checkQuestion(anyLong());
+        verify(villageAnswerQuestionRepository, times(1)).findById(id);
+        verify(villageAnswerQuestionRepository, never()).save(any(VillageAnswerQuestion.class));
+    }
+
+
+    @Test
+    void testDeleteVillageAnswerQuestionByIdWithValidId() {
+        Long id = 1L;
+        int expectedResult = 1;
+
+        int result = villageAnswerQuestionService.deleteVillageAnswerQuestionById(id);
+
+        assertEquals(expectedResult, result);
+        verify(villageAnswerQuestionRepository, times(1)).deleteById(id);
+    }
+
+
+    @Test
+    void testDeleteVillageAnswerQuestionByIdWithInvalidId() {
+        Long id = 1L;
+        int expectedResult = 0;
+
+        doThrow(new EmptyResultDataAccessException(1)).when(villageAnswerQuestionRepository).deleteById(id);
+
+        int result = villageAnswerQuestionService.deleteVillageAnswerQuestionById(id);
+
+        assertEquals(expectedResult, result);
+        verify(villageAnswerQuestionRepository, times(1)).deleteById(id);
+    }
+
+
+    @Test
+    void testGetVillageAnswerQuestionByInvalidVillageId() {
+        Long villageId = 999L;
+
+        VillageAnswerQuestion villageAnswerQuestion1 = new VillageAnswerQuestion();
+        villageAnswerQuestion1.setVillage(new Village(1L, "Village1", new Region(1L, "Region1"), 1000, new Population(), LocalDateTime.now(), true, new Administrator(), null, null, null));
+        villageAnswerQuestion1.setAnswer("Answer1");
+
+        VillageAnswerQuestion villageAnswerQuestion2 = new VillageAnswerQuestion();
+        villageAnswerQuestion2.setVillage(new Village(2L, "Village2", new Region(2L, "Region2"), 2000, new Population(), LocalDateTime.now(), true, new Administrator(), null, null, null));
+        villageAnswerQuestion2.setAnswer("Answer2");
+
+        List<VillageAnswerQuestion> villageAnswerQuestions = List.of(villageAnswerQuestion1, villageAnswerQuestion2);
+
+        when(villageAnswerQuestionRepository.findAll()).thenReturn(villageAnswerQuestions);
+
+        List<VillageAnswerQuestionDTO> result = villageAnswerQuestionService.getVillageAnswerQuestionByVillageId(villageId);
+
+        assertTrue(result.isEmpty());
+    }
+
+
+    @Test
+    void testGetVillageAnswerQuestionByEmptyVillageId() {
+        Long villageId = null;
+
+        VillageAnswerQuestion villageAnswerQuestion1 = new VillageAnswerQuestion();
+        villageAnswerQuestion1.setVillage(new Village(1L, "Village1", new Region(1L, "Region1"), 1000, new Population(), LocalDateTime.now(), true, new Administrator(), null, null, null));
+        villageAnswerQuestion1.setAnswer("Answer1");
+
+        VillageAnswerQuestion villageAnswerQuestion2 = new VillageAnswerQuestion();
+        villageAnswerQuestion2.setVillage(new Village(2L, "Village2", new Region(2L, "Region2"), 2000, new Population(), LocalDateTime.now(), true, new Administrator(), null, null, null));
+        villageAnswerQuestion2.setAnswer("Answer2");
+
+        List<VillageAnswerQuestion> villageAnswerQuestions = List.of(villageAnswerQuestion1, villageAnswerQuestion2);
+
+        when(villageAnswerQuestionRepository.findAll()).thenReturn(villageAnswerQuestions);
+
+        List<VillageAnswerQuestionDTO> result = villageAnswerQuestionService.getVillageAnswerQuestionByVillageId(villageId);
+
+        assertEquals(2, result.size());
+    }
+
+
+
+    @Test
+    void testCreateVillageAnswerQuestionWithInvalidVillageAndQuestionIds() {
+        VillageAnswerQuestionDTO inputDTO = new VillageAnswerQuestionDTO();
+        inputDTO.setVillageId(1L);
+        inputDTO.setQuestionId(1L);
+        inputDTO.setAnswer("Sample answer");
+
+        when(villageService.checkVillage(1L)).thenThrow(new ApiRequestException("Village not found"));
+        when(questionService.checkQuestion(1L)).thenThrow(new ApiRequestException("Question not found"));
+
+        assertThrows(ApiRequestException.class, () -> villageAnswerQuestionService.createVillageAnswerQuestion(inputDTO));
+
+        verify(villageService, times(1)).checkVillage(1L);
+        verify(villageAnswerQuestionRepository, never()).save(any(VillageAnswerQuestion.class));
+    }
+
+
+    @Test
+    void testGetAllVillageAnswerQuestionsEmptyList() {
+        when(villageAnswerQuestionRepository.findAll()).thenReturn(new ArrayList<>());
+
+        List<VillageAnswerQuestionDTO> result = villageAnswerQuestionService.getAllVillageAnswerQuestions();
+
+        assertTrue(result.isEmpty());
+    }
+
+
+
+
+
+
+
+
 }

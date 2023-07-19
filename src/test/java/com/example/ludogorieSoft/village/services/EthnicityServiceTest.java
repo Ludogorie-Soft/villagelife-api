@@ -1,10 +1,9 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.EthnicityDTO;
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
+import com.example.ludogorieSoft.village.exceptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.Ethnicity;
 import com.example.ludogorieSoft.village.repositories.EthnicityRepository;
-import com.example.ludogorieSoft.village.services.EthnicityService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -276,5 +275,111 @@ class EthnicityServiceTest {
         });
         verify(ethnicityRepository, times(1)).findByEthnicityName(name);
     }
+
+
+    @Test
+    void testUpdateEthnicityWithBlankName() {
+        Long ethnicityId = 123L;
+        Ethnicity existingEthnicity = new Ethnicity(ethnicityId, "Existing Ethnicity");
+
+        when(ethnicityRepository.findById(ethnicityId)).thenReturn(Optional.of(existingEthnicity));
+
+        EthnicityDTO updatedDTO = new EthnicityDTO(ethnicityId, "");
+        assertThrows(ApiRequestException.class, () -> ethnicityService.updateEthnicity(ethnicityId, updatedDTO));
+
+        verify(ethnicityRepository, times(1)).findById(ethnicityId);
+        verify(ethnicityRepository, never()).save(any());
+    }
+
+
+    @Test
+    void testFindEthnicityByNameWhenExistingEthnicity() {
+        String name = "Existing Ethnicity";
+        Ethnicity existingEthnicity = new Ethnicity();
+        existingEthnicity.setEthnicityName(name);
+        EthnicityDTO ethnicityDTO = new EthnicityDTO();
+        ethnicityDTO.setEthnicityName(name);
+
+        Mockito.when(ethnicityRepository.findByEthnicityName(anyString())).thenReturn(existingEthnicity);
+        when(modelMapper.map(existingEthnicity, EthnicityDTO.class)).thenReturn(ethnicityDTO);
+
+        EthnicityDTO result = ethnicityService.findEthnicityByName(name);
+
+        assertNotNull(result);
+        assertEquals(name, result.getEthnicityName());
+    }
+
+
+    @Test
+    void testUpdateEthnicityWithUnchangedName() {
+        Long ethnicityId = 123L;
+        Ethnicity existingEthnicity = new Ethnicity(ethnicityId, "Existing Ethnicity");
+
+        EthnicityDTO expectedEthnicityDTO = new EthnicityDTO(ethnicityId, "Existing Ethnicity");
+
+        when(ethnicityRepository.findById(ethnicityId)).thenReturn(Optional.of(existingEthnicity));
+        when(modelMapper.map(existingEthnicity, EthnicityDTO.class)).thenReturn(expectedEthnicityDTO);
+
+        EthnicityDTO updatedDTO = new EthnicityDTO(ethnicityId, "Existing Ethnicity");
+        EthnicityDTO result = ethnicityService.updateEthnicity(ethnicityId, updatedDTO);
+
+        verify(ethnicityRepository, times(1)).findById(ethnicityId);
+        verify(ethnicityRepository, never()).save(any());
+        assertEquals(expectedEthnicityDTO, result);
+    }
+
+
+    @Test
+    void testDeleteEthnicityByIdWhenEthnicityDoesNotExist() {
+        Long ethnicityId = 123L;
+        when(ethnicityRepository.existsById(ethnicityId)).thenReturn(false);
+
+        assertThrows(ApiRequestException.class, () -> ethnicityService.deleteEthnicityById(ethnicityId));
+        verify(ethnicityRepository, times(1)).existsById(ethnicityId);
+        verify(ethnicityRepository, never()).deleteById(ethnicityId);
+    }
+
+    @Test
+    void testUpdateEthnicityWithValidDataAndUniqueName() {
+        Long ethnicityId = 1L;
+        EthnicityDTO existingDTO = new EthnicityDTO(ethnicityId, "Existing Ethnicity");
+        Ethnicity existingEthnicity = new Ethnicity(ethnicityId, "Existing Ethnicity");
+
+        EthnicityDTO updatedDTO = new EthnicityDTO(ethnicityId, "Updated Ethnicity");
+        Ethnicity updatedEthnicity = new Ethnicity(ethnicityId, "Updated Ethnicity");
+
+        when(ethnicityRepository.findById(ethnicityId)).thenReturn(Optional.of(existingEthnicity));
+        when(ethnicityRepository.existsByEthnicityName("Updated Ethnicity")).thenReturn(false);
+        when(ethnicityRepository.save(updatedEthnicity)).thenReturn(updatedEthnicity);
+        when(modelMapper.map(updatedEthnicity, EthnicityDTO.class)).thenReturn(updatedDTO);
+
+        EthnicityDTO result = ethnicityService.updateEthnicity(ethnicityId, updatedDTO);
+
+        assertEquals(updatedDTO, result);
+        verify(ethnicityRepository, times(1)).findById(ethnicityId);
+        verify(ethnicityRepository, times(1)).existsByEthnicityName("Updated Ethnicity");
+        verify(ethnicityRepository, times(1)).save(updatedEthnicity);
+        verify(modelMapper, times(1)).map(updatedEthnicity, EthnicityDTO.class);
+    }
+
+
+
+    @Test
+    void testUpdateEthnicityWhenEthnicityDoesNotExist() {
+        Long ethnicityId = 1L;
+        EthnicityDTO updatedDTO = new EthnicityDTO(ethnicityId, "Updated Ethnicity");
+
+        when(ethnicityRepository.findById(ethnicityId)).thenReturn(Optional.empty());
+
+        ApiRequestException exception = Assertions.assertThrows(ApiRequestException.class,
+                () -> ethnicityService.updateEthnicity(ethnicityId, updatedDTO));
+
+        assertEquals("Ethnicity not found", exception.getMessage());
+        verify(ethnicityRepository, times(1)).findById(ethnicityId);
+        verify(ethnicityRepository, never()).existsByEthnicityName(any());
+        verify(ethnicityRepository, never()).save(any());
+        verify(modelMapper, never()).map(any(), eq(EthnicityDTO.class));
+    }
+
 
 }

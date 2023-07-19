@@ -1,7 +1,7 @@
 package com.example.ludogorieSoft.village.controllers;
 
-import com.example.ludogorieSoft.village.controllers.VillageAnswerQuestionController;
 import com.example.ludogorieSoft.village.dtos.VillageAnswerQuestionDTO;
+import com.example.ludogorieSoft.village.exceptions.ApiRequestException;
 import com.example.ludogorieSoft.village.services.VillageAnswerQuestionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -177,6 +177,72 @@ class VillageAnswerQuestionControllerIntegrationTest {
                 .andExpect(status().isNotFound());
     }
 
+
+    @Test
+    void testGetVillageAnswerQuestionByVillageId() throws Exception {
+        Long villageId = 1L;
+
+        VillageAnswerQuestionDTO villageAnswerQuestionDTO1 = new VillageAnswerQuestionDTO();
+        villageAnswerQuestionDTO1.setId(1L);
+        villageAnswerQuestionDTO1.setVillageId(villageId);
+        villageAnswerQuestionDTO1.setQuestionId(1L);
+        villageAnswerQuestionDTO1.setAnswer("Answer 1");
+
+        VillageAnswerQuestionDTO villageAnswerQuestionDTO2 = new VillageAnswerQuestionDTO();
+        villageAnswerQuestionDTO2.setId(2L);
+        villageAnswerQuestionDTO2.setVillageId(villageId);
+        villageAnswerQuestionDTO2.setQuestionId(2L);
+        villageAnswerQuestionDTO2.setAnswer("Answer 2");
+
+        List<VillageAnswerQuestionDTO> villageAnswerQuestionDTOList = Arrays.asList(villageAnswerQuestionDTO1, villageAnswerQuestionDTO2);
+
+        when(villageAnswerQuestionService.getVillageAnswerQuestionByVillageId(villageId)).thenReturn(villageAnswerQuestionDTOList);
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageAnswerQuestion/village/{id}", villageId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].villageId").value(villageId))
+                .andExpect(jsonPath("$[0].questionId").value(1L))
+                .andExpect(jsonPath("$[0].answer").value("Answer 1"))
+                .andExpect(jsonPath("$[1].id").value(2))
+                .andExpect(jsonPath("$[1].villageId").value(villageId))
+                .andExpect(jsonPath("$[1].questionId").value(2L))
+                .andExpect(jsonPath("$[1].answer").value("Answer 2"))
+                .andReturn();
+
+        String response = mvcResult.getResponse().getContentAsString();
+        assertNotNull(response);
+    }
+
+    @Test
+    void testGetVillageAnswerQuestionByVillageIdWhenNoneExist() throws Exception {
+        Long villageId = 1L;
+
+        when(villageAnswerQuestionService.getVillageAnswerQuestionByVillageId(villageId)).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageAnswerQuestion/village/{id}", villageId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(0))
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isEmpty())
+                .andReturn();
+    }
+
+    @Test
+    void testGetVillageAnswerQuestionByVillageIdWithInvalidId() throws Exception {
+        Long invalidId = 100000L;
+
+        when(villageAnswerQuestionService.getVillageAnswerQuestionByVillageId(anyLong()))
+                .thenThrow(new ApiRequestException("Village with id: " + invalidId + " Not Found"));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageAnswerQuestion/village/{id}", invalidId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Village with id: " + invalidId + " Not Found"))
+                .andReturn();
+    }
 
 
 

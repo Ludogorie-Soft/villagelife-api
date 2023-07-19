@@ -1,7 +1,7 @@
 package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.dtos.EthnicityVillageDTO;
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
+import com.example.ludogorieSoft.village.exceptions.ApiRequestException;
 import com.example.ludogorieSoft.village.services.EthnicityVillageService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -29,13 +29,14 @@ public class EthnicityVillageController {
         return ResponseEntity.ok(ethnicityVillageService.getEthnicityVillageById(id));
     }
 
+
     @GetMapping("/village/{id}")
-    public ResponseEntity<EthnicityVillageDTO> getEthnicityVillageByVillageId(@PathVariable("id") Long id) {
+    public ResponseEntity<List<EthnicityVillageDTO>> getVillageEthnicityByVillageId(@PathVariable("id") Long id) {
         return ResponseEntity.ok(ethnicityVillageService.getVillageEthnicityByVillageId(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<EthnicityVillageDTO> updateEthnicityVillageById(@PathVariable Long id, @Valid  @RequestBody EthnicityVillageDTO ethnicityVillageDTO) {
+    public ResponseEntity<EthnicityVillageDTO> updateEthnicityVillageById(@PathVariable Long id, @Valid @RequestBody EthnicityVillageDTO ethnicityVillageDTO) {
         return ResponseEntity.ok(ethnicityVillageService.updateEthnicityVillageById(id, ethnicityVillageDTO));
     }
 

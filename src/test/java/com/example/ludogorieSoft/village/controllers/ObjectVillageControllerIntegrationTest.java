@@ -3,7 +3,7 @@ package com.example.ludogorieSoft.village.controllers;
 import com.example.ludogorieSoft.village.controllers.ObjectVillageController;
 import com.example.ludogorieSoft.village.dtos.ObjectVillageDTO;
 import com.example.ludogorieSoft.village.enums.Distance;
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
+import com.example.ludogorieSoft.village.exceptions.ApiRequestException;
 import com.example.ludogorieSoft.village.services.ObjectVillageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -224,5 +224,74 @@ class ObjectVillageControllerIntegrationTest {
                 .andExpect(jsonPath("$.message").value(errorMessage))
                 .andReturn();
     }
+
+    @Test
+    void testGetObjectVillageByVillageIDWithValidID() throws Exception {
+        Long villageId = 1L;
+
+        // Create some dummy ObjectVillageDTOs
+        ObjectVillageDTO objectVillageDTO1 = new ObjectVillageDTO();
+        objectVillageDTO1.setId(1L);
+        objectVillageDTO1.setVillageId(villageId);
+        objectVillageDTO1.setObjectAroundVillageId(101L);
+        objectVillageDTO1.setDistance(Distance.IN_THE_VILLAGE);
+
+        ObjectVillageDTO objectVillageDTO2 = new ObjectVillageDTO();
+        objectVillageDTO2.setId(2L);
+        objectVillageDTO2.setVillageId(villageId);
+        objectVillageDTO2.setObjectAroundVillageId(102L);
+        objectVillageDTO2.setDistance(Distance.ON_10_KM);
+
+        // Mock the service to return the dummy ObjectVillageDTOs
+        when(objectVillageService.getObjectVillageByVillageId(villageId))
+                .thenReturn(Arrays.asList(objectVillageDTO1, objectVillageDTO2));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/objectVillages/village/{id}", villageId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].villageId").value(villageId))
+                .andExpect(jsonPath("$[0].objectAroundVillageId").value(101L))
+                .andExpect(jsonPath("$[0].distance").value("IN_THE_VILLAGE"))
+                .andExpect(jsonPath("$[1].id").value(2))
+                .andExpect(jsonPath("$[1].villageId").value(villageId))
+                .andExpect(jsonPath("$[1].objectAroundVillageId").value(102L))
+                .andExpect(jsonPath("$[1].distance").value("ON_10_KM"))
+                .andReturn();
+    }
+
+
+    @Test
+    void testGetObjectVillageByVillageIDWithNoData() throws Exception {
+        Long villageId = 2L;
+
+        // Mock the service to return an empty list
+        when(objectVillageService.getObjectVillageByVillageId(villageId))
+                .thenReturn(Collections.emptyList());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/objectVillages/village/{id}", villageId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isEmpty())
+                .andReturn();
+    }
+
+
+    @Test
+    void testGetObjectVillageByVillageIDWithInvalidID() throws Exception {
+        Long invalidId = 100L;
+
+        // Mock the service to throw an exception
+        when(objectVillageService.getObjectVillageByVillageId(invalidId))
+                .thenThrow(new ApiRequestException("Invalid Village ID: " + invalidId));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/objectVillages/village/{id}", invalidId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Invalid Village ID: " + invalidId))
+                .andReturn();
+    }
+
 
 }

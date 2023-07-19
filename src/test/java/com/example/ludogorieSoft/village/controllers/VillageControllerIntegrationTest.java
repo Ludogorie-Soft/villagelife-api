@@ -1,6 +1,5 @@
 package com.example.ludogorieSoft.village.controllers;
 
-import com.example.ludogorieSoft.village.controllers.VillageController;
 import com.example.ludogorieSoft.village.dtos.PopulationDTO;
 import com.example.ludogorieSoft.village.dtos.VillageDTO;
 import com.example.ludogorieSoft.village.services.VillageService;
@@ -177,5 +176,22 @@ class VillageControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/villages/{id}", 1))
                 .andExpect(status().isNoContent());
     }
+
+    @Test
+    void testCreateVillageWithNullValues() throws Exception {
+        Long villageId = 1L;
+        when(villageService.createVillageWhitNullValues()).thenReturn(villageId);
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/villages/null")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").value(villageId))
+                .andReturn();
+
+        String response = mvcResult.getResponse().getContentAsString();
+        assertNotNull(response);
+    }
+
+
 }
 

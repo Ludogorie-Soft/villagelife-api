@@ -1,7 +1,7 @@
 package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.dtos.EthnicityVillageDTO;
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
+import com.example.ludogorieSoft.village.exceptions.ApiRequestException;
 import com.example.ludogorieSoft.village.services.EthnicityVillageService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -181,5 +181,62 @@ class EthnicityVillageControllerIntegrationTest {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.writeValueAsString(obj);
     }
+
+
+    @Test
+    void deleteNonExistentEthnicityVillage() throws Exception {
+        Long id = 999L;
+
+        doThrow(new ApiRequestException("Ethnicity in Village with id " + id + " not found"))
+                .when(ethnicityVillageService).deleteEthnicityVillageById(id);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/villageEthnicities/{id}", id))
+                .andExpect(status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().string("Ethnicity in Village with id " + id + " not found"));
+    }
+
+
+    @Test
+    void getAllEthnicityVillagesWhenNoneExist() throws Exception {
+        when(ethnicityVillageService.getAllEthnicityVillages()).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageEthnicities")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(0))
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isEmpty())
+                .andReturn();
+    }
+
+    @Test
+    void getVillageEthnicityByVillageIdShouldReturnListOfEthnicityVillages() throws Exception {
+        Long villageId = 1L;
+
+        EthnicityVillageDTO ethnicity1 = new EthnicityVillageDTO();
+        ethnicity1.setId(1L);
+        ethnicity1.setVillageId(villageId);
+        ethnicity1.setEthnicityId(1L);
+
+        EthnicityVillageDTO ethnicity2 = new EthnicityVillageDTO();
+        ethnicity2.setId(2L);
+        ethnicity2.setVillageId(villageId);
+        ethnicity2.setEthnicityId(2L);
+
+        List<EthnicityVillageDTO> ethnicityVillages = Arrays.asList(ethnicity1, ethnicity2);
+
+        when(ethnicityVillageService.getVillageEthnicityByVillageId(villageId)).thenReturn(ethnicityVillages);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageEthnicities/village/{id}", villageId))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(1))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].villageId").value(villageId))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].ethnicityId").value(1L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(2))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].villageId").value(villageId))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].ethnicityId").value(2L));
+    }
+
+
 }
 

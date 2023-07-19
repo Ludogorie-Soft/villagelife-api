@@ -1,14 +1,11 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.VillageLandscapeDTO;
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
+import com.example.ludogorieSoft.village.exceptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.Landscape;
 import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.model.VillageLandscape;
 import com.example.ludogorieSoft.village.repositories.VillageLandscapeRepository;
-import com.example.ludogorieSoft.village.services.LandscapeService;
-import com.example.ludogorieSoft.village.services.VillageLandscapeService;
-import com.example.ludogorieSoft.village.services.VillageService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -182,5 +179,58 @@ class VillageLandscapeServiceTest {
         verify(landscapeService, never()).checkLandscape(anyLong());
         verify(villageLandscapeRepository, never()).save(any(VillageLandscape.class));
     }
+
+
+    @Test
+    void createVillageLandscapeShouldThrowExceptionWhenVillageNotFound() {
+        VillageLandscapeDTO villageLandscapeDTO = new VillageLandscapeDTO();
+        villageLandscapeDTO.setVillageId(1L);
+        villageLandscapeDTO.setLandscapeId(2L);
+
+        when(villageService.checkVillage(anyLong())).thenThrow(ApiRequestException.class);
+
+        assertThrows(ApiRequestException.class, () -> villageLandscapeService.createVillageLandscape(villageLandscapeDTO));
+
+        verify(villageService, times(1)).checkVillage(anyLong());
+        verify(landscapeService, never()).checkLandscape(anyLong());
+        verify(villageLandscapeRepository, never()).save(any(VillageLandscape.class));
+    }
+
+
+
+    @Test
+    void createVillageLandscapeShouldThrowExceptionWhenLandscapeNotFound() {
+        VillageLandscapeDTO villageLandscapeDTO = new VillageLandscapeDTO();
+        villageLandscapeDTO.setVillageId(1L);
+        villageLandscapeDTO.setLandscapeId(2L);
+
+        when(villageService.checkVillage(anyLong())).thenReturn(new Village());
+        when(landscapeService.checkLandscape(anyLong())).thenThrow(ApiRequestException.class);
+
+        assertThrows(ApiRequestException.class, () -> villageLandscapeService.createVillageLandscape(villageLandscapeDTO));
+
+        verify(villageService, times(1)).checkVillage(anyLong());
+        verify(landscapeService, times(1)).checkLandscape(anyLong());
+        verify(villageLandscapeRepository, never()).save(any(VillageLandscape.class));
+    }
+
+
+    @Test
+    void updateVillageLandscapeShouldThrowExceptionWhenVillageLandscapeNotFound() {
+        Long id = 1L;
+        VillageLandscapeDTO villageLandscapeDTO = new VillageLandscapeDTO();
+        villageLandscapeDTO.setVillageId(2L);
+        villageLandscapeDTO.setLandscapeId(3L);
+
+        when(villageLandscapeRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(ApiRequestException.class, () -> villageLandscapeService.updateVillageLandscape(id, villageLandscapeDTO));
+
+        verify(villageLandscapeRepository, times(1)).findById(id);
+        verify(villageService, never()).checkVillage(anyLong());
+        verify(landscapeService, never()).checkLandscape(anyLong());
+        verify(villageLandscapeRepository, never()).save(any(VillageLandscape.class));
+    }
+
 
 }

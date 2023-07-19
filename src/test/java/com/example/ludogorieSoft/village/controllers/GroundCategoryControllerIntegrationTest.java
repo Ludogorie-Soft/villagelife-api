@@ -1,8 +1,7 @@
 package com.example.ludogorieSoft.village.controllers;
 
-import com.example.ludogorieSoft.village.controllers.GroundCategoryController;
 import com.example.ludogorieSoft.village.dtos.GroundCategoryDTO;
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
+import com.example.ludogorieSoft.village.exceptions.ApiRequestException;
 import com.example.ludogorieSoft.village.services.GroundCategoryService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,6 +24,11 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -217,6 +221,42 @@ class GroundCategoryControllerIntegrationTest {
             throw new RuntimeException(e);
         }
     }
+
+    @Test
+    void testGetGroundCategoryByName() throws Exception {
+        String categoryName = "Category Name";
+
+        GroundCategoryDTO groundCategoryDTO = new GroundCategoryDTO();
+        groundCategoryDTO.setId(1L);
+        groundCategoryDTO.setGroundCategoryName(categoryName);
+
+        when(groundCategoryService.getByGroundCategoryName(categoryName)).thenReturn(groundCategoryDTO);
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/groundCategories/name/{name}", categoryName)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.groundCategoryName").value(categoryName))
+                .andReturn();
+
+        String response = mvcResult.getResponse().getContentAsString();
+        assertNotNull(response);
+    }
+
+    @Test
+    void testGetGroundCategoryByNameWhenCategoryDoesNotExist() throws Exception {
+        String categoryName = "NonExistentCategory";
+
+        when(groundCategoryService.getByGroundCategoryName(categoryName))
+                .thenThrow(new ApiRequestException("Ground Category with name: " + categoryName + " Not Found"));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/groundCategories/name/{name}", categoryName)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Ground Category with name: " + categoryName + " Not Found"))
+                .andReturn();
+    }
+
 
 
 }

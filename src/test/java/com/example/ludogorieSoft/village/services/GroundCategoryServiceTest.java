@@ -1,10 +1,9 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.GroundCategoryDTO;
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
+import com.example.ludogorieSoft.village.exceptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.GroundCategory;
 import com.example.ludogorieSoft.village.repositories.GroundCategoryRepository;
-import com.example.ludogorieSoft.village.services.GroundCategoryService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -202,4 +201,46 @@ class GroundCategoryServiceTest {
 
         verify(groundCategoryRepository, times(1)).findById(groundCategoryId);
     }
+
+
+    @Test
+    void getByGroundCategoryNameShouldReturnExistingGroundCategory() {
+        String groundCategoryName = "Test Ground Category";
+        GroundCategory existingGroundCategory = new GroundCategory();
+        existingGroundCategory.setId(1L);
+        existingGroundCategory.setGroundCategoryName(groundCategoryName);
+        GroundCategoryDTO groundCategoryDTO = new GroundCategoryDTO();
+        groundCategoryDTO.setId(existingGroundCategory.getId());
+        groundCategoryDTO.setGroundCategoryName(existingGroundCategory.getGroundCategoryName());
+
+        when(groundCategoryRepository.findByGroundCategoryName(groundCategoryName)).thenReturn(existingGroundCategory);
+        when(groundCategoryService.toDTO(existingGroundCategory)).thenReturn(groundCategoryDTO);
+
+        GroundCategoryDTO result = groundCategoryService.getByGroundCategoryName(groundCategoryName);
+        Assertions.assertEquals(existingGroundCategory.getId(), result.getId());
+        Assertions.assertEquals(existingGroundCategory.getGroundCategoryName(), result.getGroundCategoryName());
+    }
+
+    @Test
+    void getByGroundCategoryNameShouldThrowExceptionWhenGroundCategoryNotFound() {
+        String groundCategoryName = "Non-Existent Ground Category";
+        when(groundCategoryRepository.findByGroundCategoryName(groundCategoryName)).thenReturn(null);
+
+        Assertions.assertThrows(ApiRequestException.class, () -> groundCategoryService.getByGroundCategoryName(groundCategoryName));
+
+        verify(groundCategoryRepository, times(1)).findByGroundCategoryName(groundCategoryName);
+    }
+
+    @Test
+    void createGroundCategoryDTOShouldThrowExceptionWhenGroundCategoryNameIsBlank() {
+        GroundCategoryDTO groundCategoryDTO = new GroundCategoryDTO();
+        groundCategoryDTO.setGroundCategoryName(""); // Blank name
+
+        Assertions.assertThrows(ApiRequestException.class, () -> groundCategoryService.createGroundCategoryDTO(groundCategoryDTO));
+
+        verify(groundCategoryRepository, never()).existsByGroundCategoryName(groundCategoryDTO.getGroundCategoryName());
+        verify(groundCategoryRepository, never()).save(any(GroundCategory.class));
+    }
+
+
 }

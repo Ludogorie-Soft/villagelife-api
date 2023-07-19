@@ -4,7 +4,7 @@ import com.example.ludogorieSoft.village.dtos.PopulationDTO;
 import com.example.ludogorieSoft.village.enums.NumberOfPopulation;
 import com.example.ludogorieSoft.village.model.Population;
 import com.example.ludogorieSoft.village.repositories.PopulationRepository;
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
+import com.example.ludogorieSoft.village.exceptions.ApiRequestException;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;

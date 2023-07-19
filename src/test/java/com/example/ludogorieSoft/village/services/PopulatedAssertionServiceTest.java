@@ -1,10 +1,9 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.PopulatedAssertionDTO;
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
+import com.example.ludogorieSoft.village.exceptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.PopulatedAssertion;
 import com.example.ludogorieSoft.village.repositories.PopulatedAssertionRepository;
-import com.example.ludogorieSoft.village.services.PopulatedAssertionService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -242,5 +241,38 @@ class PopulatedAssertionServiceTest {
         verify(populatedAssertionRepository, times(1)).findById(populationId);
         verify(populatedAssertionRepository, never()).delete(any());
     }
+
+
+    @Test
+    void testCheckPopulatedAssertionWithExistingId() {
+        Long populatedAssertionId = 1L;
+        PopulatedAssertion populatedAssertion = new PopulatedAssertion();
+        populatedAssertion.setId(populatedAssertionId);
+
+        when(populatedAssertionRepository.findById(populatedAssertionId)).thenReturn(Optional.of(populatedAssertion));
+
+        PopulatedAssertion result = populatedAssertionService.checkPopulatedAssertion(populatedAssertionId);
+
+        assertNotNull(result);
+        assertEquals(populatedAssertionId, result.getId());
+
+        verify(populatedAssertionRepository, times(1)).findById(populatedAssertionId);
+    }
+
+
+
+    @Test
+    void testCheckPopulatedAssertionWithNonExistingId() {
+        Long nonExistingPopulatedAssertionId = 100L;
+
+        when(populatedAssertionRepository.findById(nonExistingPopulatedAssertionId)).thenReturn(Optional.empty());
+
+        assertThrows(ApiRequestException.class, () -> {
+            populatedAssertionService.checkPopulatedAssertion(nonExistingPopulatedAssertionId);
+        });
+
+        verify(populatedAssertionRepository, times(1)).findById(nonExistingPopulatedAssertionId);
+    }
+
 
 }

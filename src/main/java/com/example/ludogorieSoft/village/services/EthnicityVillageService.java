@@ -5,10 +5,12 @@ import com.example.ludogorieSoft.village.model.Ethnicity;
 import com.example.ludogorieSoft.village.model.EthnicityVillage;
 import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.repositories.EthnicityVillageRepository;
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
+import com.example.ludogorieSoft.village.exceptions.ApiRequestException;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -78,15 +80,19 @@ public class EthnicityVillageService {
             throw new ApiRequestException("Ethnicity in Village with id " + id + " not found");
         }
     }
-    public EthnicityVillageDTO getVillageEthnicityByVillageId(Long villageId) {
+
+
+    public List<EthnicityVillageDTO> getVillageEthnicityByVillageId(Long villageId) {
         List<EthnicityVillage> ethnicityVillages = ethnicityVillageRepository.findAll();
+
+        List<EthnicityVillageDTO> filteredList = new ArrayList<>();
 
         for (EthnicityVillage ethnicityVillage : ethnicityVillages) {
             if (ethnicityVillage.getVillage().getId().equals(villageId)) {
-                return getEthnicityVillageById(ethnicityVillage.getId());
+                filteredList.add(getEthnicityVillageById(ethnicityVillage.getId()));
             }
         }
-        return new EthnicityVillageDTO();
+        return filteredList;
     }
 
 

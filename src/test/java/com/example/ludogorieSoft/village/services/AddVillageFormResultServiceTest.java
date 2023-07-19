@@ -1,9 +1,7 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.*;
-import com.example.ludogorieSoft.village.enums.Consents;
-import com.example.ludogorieSoft.village.enums.Distance;
-import com.example.ludogorieSoft.village.services.*;
+import com.example.ludogorieSoft.village.enums.*;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,8 +15,12 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import org.junit.Before;
+import org.springframework.boot.test.mock.mockito.MockBean;
+
 @RunWith(MockitoJUnitRunner.class)
 public class AddVillageFormResultServiceTest {
     @BeforeEach
@@ -290,15 +292,6 @@ public class AddVillageFormResultServiceTest {
         Mockito.verify(villageAnswerQuestionService, Mockito.never()).createVillageAnswerQuestion(Mockito.any(VillageAnswerQuestionDTO.class));
     }
 
-    //@Test
-    //public void createVillageAnswerQuestionsFromAddVillageFormResultNullAddVillageFormResultNoVillageAnswerQuestionsCreated() {
-    //    Long villageId = 1L;
-    //    AddVillageFormResult addVillageFormResult = null;
-//
-    //    addVillageFormResultService.createVillageAnswerQuestionsFromAddVillageFormResult(villageId, addVillageFormResult);
-//
-    //    Mockito.verify(villageAnswerQuestionService, Mockito.never()).createVillageAnswerQuestion(Mockito.any(VillageAnswerQuestionDTO.class));
-    //}
 
 
     @Test
@@ -375,4 +368,25 @@ public class AddVillageFormResultServiceTest {
         assertEquals(villageId, capturedDTO.getVillageId());
         assertEquals(groundCategoryDTO.getId(), capturedDTO.getGroundCategoryId());
     }
+
+
+    @Test
+    public void testCreateVillageAnswerQuestionsFromAddVillageFormResultDifferentSizes() {
+        Long villageId = 12345L;
+        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
+        addVillageFormResult.setQuestionResponses(Arrays.asList("Answer 1", "Answer 2"));
+
+        List<QuestionDTO> questionsDTO = Arrays.asList(
+                new QuestionDTO(1L, "Question 1"),
+                new QuestionDTO(2L, "Question 2"),
+                new QuestionDTO(3L, "Question 3")
+        );
+        when(questionService.getAllQuestions()).thenReturn(questionsDTO);
+
+        addVillageFormResultService.createVillageAnswerQuestionsFromAddVillageFormResult(villageId, addVillageFormResult);
+
+        verify(villageAnswerQuestionService, times(2)).createVillageAnswerQuestion(any(VillageAnswerQuestionDTO.class));
+    }
+
+
 }

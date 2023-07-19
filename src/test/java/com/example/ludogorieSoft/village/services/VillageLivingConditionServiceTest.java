@@ -2,14 +2,11 @@ package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.VillageLivingConditionDTO;
 import com.example.ludogorieSoft.village.enums.Consents;
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
+import com.example.ludogorieSoft.village.exceptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.LivingCondition;
 import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.model.VillageLivingConditions;
 import com.example.ludogorieSoft.village.repositories.VillageLivingConditionRepository;
-import com.example.ludogorieSoft.village.services.LivingConditionService;
-import com.example.ludogorieSoft.village.services.VillageLivingConditionService;
-import com.example.ludogorieSoft.village.services.VillageService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 class VillageLivingConditionServiceTest {
@@ -167,6 +165,7 @@ class VillageLivingConditionServiceTest {
         verify(villageLivingConditionRepository, times(1)).findById(id);
         verifyNoMoreInteractions(villageService, livingConditionService, villageLivingConditionRepository);
     }
+
     @Test
     void deleteVillageLivingConditionsShouldReturn1WhenDeleted() {
         Long id = 1L;
@@ -183,4 +182,233 @@ class VillageLivingConditionServiceTest {
         verify(villageLivingConditionRepository, times(1)).deleteById(id);
         Assertions.assertEquals(0, result);
     }
+
+
+    @Test
+    void getVillagePopulationAssertionByVillageIdValueShouldHandleEmptyList() {
+        Long villageId = 1L;
+        List<VillageLivingConditions> villageLivingConditionsList = new ArrayList<>();
+
+        when(villageLivingConditionRepository.findAll()).thenReturn(villageLivingConditionsList);
+
+        double result = villageLivingConditionService.getVillagePopulationAssertionByVillageIdValue(villageId);
+
+        Assertions.assertEquals(0.0, result, 0.001);
+    }
+
+
+    @Test
+    void getVillagePopulationAssertionByVillageIdShouldReturnAllWhenIdIsNull() {
+        List<VillageLivingConditions> villageLivingConditionsList = new ArrayList<>();
+        VillageLivingConditions condition1 = createVillageLivingConditions(Consents.CANT_DECIDE, 1L);
+        VillageLivingConditions condition2 = createVillageLivingConditions(Consents.COMPLETELY_AGREED, 2L);
+        villageLivingConditionsList.add(condition1);
+        villageLivingConditionsList.add(condition2);
+
+        when(villageLivingConditionRepository.findAll()).thenReturn(villageLivingConditionsList);
+
+        List<VillageLivingConditionDTO> result = villageLivingConditionService.getVillagePopulationAssertionByVillageId(null);
+
+        Assertions.assertEquals(2, result.size());
+    }
+
+
+    @Test
+    void getVillagePopulationAssertionByVillageIdShouldReturnFilteredDataWhenIdIsNotNull() {
+        Long villageId = 2L;
+        List<VillageLivingConditions> villageLivingConditionsList = new ArrayList<>();
+        VillageLivingConditions condition1 = createVillageLivingConditions(Consents.CANT_DECIDE, 1L);
+        VillageLivingConditions condition2 = createVillageLivingConditions(Consents.COMPLETELY_AGREED, villageId);
+        VillageLivingConditions condition3 = createVillageLivingConditions(Consents.RATHER_AGREE, villageId);
+        villageLivingConditionsList.add(condition1);
+        villageLivingConditionsList.add(condition2);
+        villageLivingConditionsList.add(condition3);
+
+        when(villageLivingConditionRepository.findAll()).thenReturn(villageLivingConditionsList);
+
+        List<VillageLivingConditionDTO> result = villageLivingConditionService.getVillagePopulationAssertionByVillageId(villageId);
+
+        Assertions.assertEquals(2, result.size());
+    }
+
+
+    private VillageLivingConditions createVillageLivingConditions(Consents consents, Long villageId) {
+        VillageLivingConditions conditions = new VillageLivingConditions();
+        conditions.setConsents(consents);
+
+        Village village = new Village();
+        village.setId(villageId);
+        conditions.setVillage(village);
+
+        return conditions;
+    }
+
+    @Test
+    void getVillagePopulationAssertionByVillageIdDelinquencyValueShouldReturnCorrectValue() {
+        Long villageId = 1L;
+        List<VillageLivingConditions> villageLivingConditionsList = new ArrayList<>();
+        VillageLivingConditions condition1 = createVillageLivingConditions(Consents.CANT_DECIDE, "в селото няма престъпност");
+        VillageLivingConditions condition2 = createVillageLivingConditions(Consents.COMPLETELY_AGREED, "в селото няма престъпност");
+        VillageLivingConditions condition3 = createVillageLivingConditions(Consents.RATHER_DISAGREE, "в селото няма престъпност");
+        villageLivingConditionsList.add(condition1);
+        villageLivingConditionsList.add(condition2);
+        villageLivingConditionsList.add(condition3);
+
+        when(villageLivingConditionRepository.findAll()).thenReturn(villageLivingConditionsList);
+
+        double expectedValue = -1.0;
+
+        double result = villageLivingConditionService.getVillagePopulationAssertionByVillageIdDelinquencyValue(villageId);
+
+        Assertions.assertEquals(expectedValue, result, 0.001);
+    }
+
+
+    @Test
+    void getVillagePopulationAssertionByVillageIdDelinquencyValueShouldReturnNegativeOneWhenConditionNotFound() {
+        Long villageId = 1L;
+        List<VillageLivingConditions> villageLivingConditionsList = new ArrayList<>();
+        VillageLivingConditions condition1 = createVillageLivingConditions(Consents.CANT_DECIDE, "престъпност в селото");
+        VillageLivingConditions condition2 = createVillageLivingConditions(Consents.COMPLETELY_AGREED, "престъпност в селото");
+        villageLivingConditionsList.add(condition1);
+        villageLivingConditionsList.add(condition2);
+
+        when(villageLivingConditionRepository.findAll()).thenReturn(villageLivingConditionsList);
+
+        double result = villageLivingConditionService.getVillagePopulationAssertionByVillageIdDelinquencyValue(villageId);
+
+        Assertions.assertEquals(-1.0, result, 0.001);
+    }
+
+
+    private VillageLivingConditions createVillageLivingConditions(Consents consents, String livingConditionName) {
+        VillageLivingConditions conditions = new VillageLivingConditions();
+        conditions.setConsents(consents);
+
+        Village village = new Village();
+        village.setId(1L);
+        conditions.setVillage(village);
+
+        LivingCondition livingCondition = new LivingCondition();
+        livingCondition.setLivingConditionName(livingConditionName);
+        conditions.setLivingCondition(livingCondition);
+
+        return conditions;
+    }
+
+
+    private VillageLivingConditions createVillageLivingConditions(Consents consents) {
+        VillageLivingConditions condition = new VillageLivingConditions();
+        condition.setConsents(consents);
+        condition.setVillage(new Village());
+        return condition;
+    }
+
+    @Test
+    void getVillagePopulationAssertionByVillageIdEcoValueShouldReturnZeroWhenNotEnoughData() {
+        Long villageId = 1L;
+        List<VillageLivingConditions> villageLivingConditionsList = new ArrayList<>();
+        villageLivingConditionsList.add(createVillageLivingConditions(Consents.CANT_DECIDE));
+
+        when(villageLivingConditionRepository.findAll()).thenReturn(villageLivingConditionsList);
+
+        double expectedValue = 0.0;
+
+        double result = villageLivingConditionService.getVillagePopulationAssertionByVillageIdEcoValue(villageId);
+
+        assertEquals(expectedValue, result, 0.001);
+    }
+
+
+    @Test
+    void getVillagePopulationAssertionByVillageIdEcoValueShouldReturnZeroWhenNoData() {
+        Long villageId = 1L;
+        List<VillageLivingConditions> villageLivingConditionsList = new ArrayList<>();
+
+        when(villageLivingConditionRepository.findAll()).thenReturn(villageLivingConditionsList);
+
+        double expectedValue = 0.0;
+
+        double result = villageLivingConditionService.getVillagePopulationAssertionByVillageIdEcoValue(villageId);
+
+        assertEquals(expectedValue, result, 0.001);
+    }
+
+
+
+
+
+
+
+
+
+    @Test
+    void getVillagePopulationAssertionByVillageIdValueShouldReturnZeroWhenNoData() {
+        Long villageId = 1L;
+        List<VillageLivingConditions> villageLivingConditionsList = new ArrayList<>();
+
+        when(villageLivingConditionRepository.findAll()).thenReturn(villageLivingConditionsList);
+
+        double expectedValue = 0.0;
+
+        double result = villageLivingConditionService.getVillagePopulationAssertionByVillageIdValue(villageId);
+
+        assertEquals(expectedValue, result, 0.001);
+    }
+
+
+    @Test
+    void getVillagePopulationAssertionByVillageIdValueShouldReturnZeroWhenSingleCantDecideCondition() {
+        Long villageId = 1L;
+        List<VillageLivingConditions> villageLivingConditionsList = new ArrayList<>();
+        villageLivingConditionsList.add(createVillageLivingConditions(Consents.CANT_DECIDE));
+
+        when(villageLivingConditionRepository.findAll()).thenReturn(villageLivingConditionsList);
+
+        double expectedValue = 0.0;
+
+        double result = villageLivingConditionService.getVillagePopulationAssertionByVillageIdValue(villageId);
+
+        assertEquals(expectedValue, result, 0.001);
+    }
+
+
+    @Test
+    void getVillagePopulationAssertionByVillageIdDelinquencyValueShouldReturnNegativeOneWhenCantDecideNotPresent() {
+        Long villageId = 1L;
+        List<VillageLivingConditions> villageLivingConditionsList = new ArrayList<>();
+        VillageLivingConditions condition1 = createVillageLivingConditions(Consents.COMPLETELY_AGREED, "в селото няма престъпност");
+        VillageLivingConditions condition2 = createVillageLivingConditions(Consents.RATHER_DISAGREE, "в селото няма престъпност");
+        villageLivingConditionsList.add(condition1);
+        villageLivingConditionsList.add(condition2);
+
+        when(villageLivingConditionRepository.findAll()).thenReturn(villageLivingConditionsList);
+
+        double expectedValue = -1.0;
+
+        double result = villageLivingConditionService.getVillagePopulationAssertionByVillageIdDelinquencyValue(villageId);
+
+        assertEquals(expectedValue, result, 0.001);
+    }
+
+
+
+    @Test
+    void getVillagePopulationAssertionByVillageIdDelinquencyValueShouldReturnNegativeOneWhenDelinquencyNotPresent() {
+        Long villageId = 1L;
+        List<VillageLivingConditions> villageLivingConditionsList = new ArrayList<>();
+        VillageLivingConditions condition1 = createVillageLivingConditions(Consents.CANT_DECIDE, "престъпност в селото");
+        VillageLivingConditions condition2 = createVillageLivingConditions(Consents.COMPLETELY_AGREED, "престъпност в селото");
+        villageLivingConditionsList.add(condition1);
+        villageLivingConditionsList.add(condition2);
+
+        when(villageLivingConditionRepository.findAll()).thenReturn(villageLivingConditionsList);
+
+        double result = villageLivingConditionService.getVillagePopulationAssertionByVillageIdDelinquencyValue(villageId);
+
+        assertEquals(-1.0, result, 0.001);
+    }
+
+
+
 }

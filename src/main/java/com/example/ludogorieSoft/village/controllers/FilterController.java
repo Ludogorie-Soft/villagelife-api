@@ -17,6 +17,12 @@ public class FilterController {
     private VillageService villageSearchService;
 
 
+    @GetMapping
+    public ResponseEntity<List<VillageDTO>> getAllApprovedVillages() {
+        List<VillageDTO> approvedVillages = villageSearchService.getAllApprovedVillages();
+        return ResponseEntity.ok(approvedVillages);
+    }
+
     @GetMapping("/byName")
     public ResponseEntity<List<VillageDTO>> getVillageByName(@RequestParam("name") String name) {
         List<VillageDTO> villages = villageSearchService.getAllSearchVillages(name);
@@ -35,7 +41,6 @@ public class FilterController {
     public ResponseEntity<List<VillageDTO>> getVillageByNameAndRegion(@RequestParam String region, @RequestParam String keyword) {
         return ResponseEntity.ok(villageSearchService.getAllSearchVillagesByNameAndRegionName(region, keyword));
     }
-
 
 
     @GetMapping("/searchVillages")

@@ -5,13 +5,13 @@ import com.example.ludogorieSoft.village.enums.Children;
 import com.example.ludogorieSoft.village.enums.Foreigners;
 import com.example.ludogorieSoft.village.enums.NumberOfPopulation;
 import com.example.ludogorieSoft.village.enums.Residents;
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
+import com.example.ludogorieSoft.village.exceptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.Population;
 import com.example.ludogorieSoft.village.repositories.PopulationRepository;
-import com.example.ludogorieSoft.village.services.PopulationService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -209,6 +209,45 @@ class PopulationServiceTest {
         Assertions.assertThrows(ApiRequestException.class, () -> populationService.deletePopulationById(populationId));
         verify(populationRepository, times(1)).findById(populationId);
         verify(populationRepository, never()).delete(any(Population.class));
+    }
+
+
+
+    @Test
+    void testCreatePopulationWithNullValues() {
+        Population population = new Population();
+        population.setNumberOfPopulation(NumberOfPopulation.UP_TO_10_PEOPLE);
+
+        when(populationRepository.save(any(Population.class))).thenAnswer(invocation -> {
+            Population savedPopulation = invocation.getArgument(0);
+            savedPopulation.setId(1L);
+            return savedPopulation;
+        });
+
+        Long resultId = populationService.createPopulationWhitNullValues();
+
+        assertNotNull(resultId);
+        assertEquals(1L, resultId);
+
+        verify(populationRepository, times(1)).save(any(Population.class));
+    }
+
+
+    @Test
+    void testUpdatePopulationWithInvalidId() {
+        Long populationId = 1L;
+
+        PopulationDTO populationDTO = new PopulationDTO();
+        populationDTO.setNumberOfPopulation(NumberOfPopulation.FROM_51_TO_200_PEOPLE);
+
+        when(populationRepository.findById(populationId)).thenReturn(Optional.empty());
+
+        assertThrows(ApiRequestException.class, () -> {
+            populationService.updatePopulation(populationId, populationDTO);
+        });
+
+        verify(populationRepository, times(1)).findById(populationId);
+        verify(populationRepository, never()).save(any(Population.class));
     }
 
 
