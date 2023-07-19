@@ -1,8 +1,8 @@
 package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.dtos.ObjectAroundVillageDTO;
+import com.example.ludogorieSoft.village.exeptions.ApiExceptionHandler;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
-import com.example.ludogorieSoft.village.model.ObjectAroundVillage;
 import com.example.ludogorieSoft.village.services.ObjectAroundVillageService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -28,8 +30,20 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(ObjectAroundVillageController.class)
-@AutoConfigureMockMvc
+
+@AutoConfigureMockMvc(addFilters = false)
+@WebMvcTest(value = ObjectAroundVillageController.class,
+        useDefaultFilters = false,
+        includeFilters = {
+                @ComponentScan.Filter(
+                        type = FilterType.ASSIGNABLE_TYPE,
+                        value = ObjectAroundVillageController.class),
+                @ComponentScan.Filter(
+                        type = FilterType.ASSIGNABLE_TYPE,
+                        value = ApiExceptionHandler.class
+                )
+        }
+)
 class ObjectAroundVillageControllerIntegrationTest {
 
     @Autowired
@@ -163,7 +177,6 @@ class ObjectAroundVillageControllerIntegrationTest {
     }
 
 
-
     @Test
     void testShouldNotCreateObjectAroundWithBlankObjectAround() throws Exception {
         String blankObjectAroundVillage = "";
@@ -178,6 +191,7 @@ class ObjectAroundVillageControllerIntegrationTest {
                 .andExpect(jsonPath("$.message").value("Object Around Village is blank"))
                 .andReturn();
     }
+
     @Test
     void testGetObjectAroundVillageWithInvalidId() throws Exception {
         Long invalidId = 100000L;
@@ -235,6 +249,7 @@ class ObjectAroundVillageControllerIntegrationTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(containsString("ObjectAroundVillage with id: " + objectId + " not found")));
     }
+
     @Test
     void testGetObjectAroundVillageByVillageID() throws Exception {
         Long villageId = 1L;

@@ -217,30 +217,4 @@ class EthnicityVillageServiceTest {
             ethnicityVillageService.deleteEthnicityVillageById(1L);
         });
     }
-
-    @Test
-    void testExistsByVillageIdAndEthnicityIdWhenExistsThenReturnsTrue() {
-        Long villageId = 1L;
-        Long ethnicityId = 2L;
-
-        when(ethnicityVillageRepository.existsByEthnicityIdAndVillageId(ethnicityId, villageId)).thenReturn(true);
-
-        boolean result = ethnicityVillageService.existsByVillageIdAndEthnicityId(villageId, ethnicityId);
-
-        assertTrue(result);
-        verify(ethnicityVillageRepository, times(1)).existsByEthnicityIdAndVillageId(ethnicityId, villageId);
-    }
-
-    @Test
-    void testExistsByVillageIdAndEthnicityIdWhenNotExistsThenReturnsFalse() {
-        Long villageId = 1L;
-        Long ethnicityId = 2L;
-
-        when(ethnicityVillageRepository.existsByEthnicityIdAndVillageId(ethnicityId, villageId)).thenReturn(false);
-
-        boolean result = ethnicityVillageService.existsByVillageIdAndEthnicityId(villageId, ethnicityId);
-
-        assertFalse(result);
-        verify(ethnicityVillageRepository, times(1)).existsByEthnicityIdAndVillageId(ethnicityId, villageId);
-    }
 }

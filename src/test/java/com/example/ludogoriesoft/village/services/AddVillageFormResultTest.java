@@ -11,7 +11,6 @@ class AddVillageFormResultTest {
 
     @Test
     void testAddVillageFormResult() {
-        // Create sample data
         VillageDTO villageDTO = new VillageDTO();
         PopulationDTO populationDTO = new PopulationDTO();
         String groundCategoryName = "Ground Category";
@@ -22,7 +21,6 @@ class AddVillageFormResultTest {
         List<VillagePopulationAssertionDTO> villagePopulationAssertionDTOS = new ArrayList<>();
         List<byte[]> imageBytes = new ArrayList<>();
 
-        // Create an instance of AddVillageFormResult
         AddVillageFormResult formResult = new AddVillageFormResult(
                 villageDTO,
                 populationDTO,

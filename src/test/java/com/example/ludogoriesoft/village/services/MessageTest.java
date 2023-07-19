@@ -1,6 +1,7 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.model.Message;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import javax.validation.ConstraintViolation;
@@ -18,43 +19,36 @@ class MessageTest {
 
     @Test
     void testValidation() {
-        // Create a Message instance with invalid data
         Message message = new Message();
-        message.setUserName("A"); // Invalid length
-        message.setEmail("invalid_email"); // Invalid email format
-        message.setUserMessage(""); // Blank field
+        message.setUserName("A");
+        message.setEmail("invalid_email");
+        message.setUserMessage("");
 
-        // Validate the Message instance
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
         Set<ConstraintViolation<Message>> violations = validator.validate(message);
 
-        // Check if any validation violations are present
         assertThat(violations).isNotEmpty();
         assertThat(violations).hasSize(3);
 
-        // Check the violation messages
         assertThat(violations).extracting("message").contains(
                 "Name should be at least than 2 characters long!",
                 "Please enter a valid email address!"
         );
     }
     @Test
-    void createMessage_ValidData_Success() {
-        // Arrange
+    void createMessageValidDataSuccess() {
         Long id = 1L;
         String userName = "John";
         String email = "john@example.com";
         String userMessage = "Hello";
 
-        // Act
         Message message = new Message(id, userName, email, userMessage);
 
-        // Assert
-        assertEquals(id, message.getId());
-        assertEquals(userName, message.getUserName());
-        assertEquals(email, message.getEmail());
-        assertEquals(userMessage, message.getUserMessage());
+        Assertions.assertEquals(id, message.getId());
+        Assertions.assertEquals(userName, message.getUserName());
+        Assertions.assertEquals(email, message.getEmail());
+        Assertions.assertEquals(userMessage, message.getUserMessage());
     }
 
     @Test

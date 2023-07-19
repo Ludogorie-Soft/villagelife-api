@@ -1,7 +1,7 @@
 package com.example.ludogorieSoft.village.controllers;
 
-import com.example.ludogorieSoft.village.dtos.LivingConditionDTO;
 import com.example.ludogorieSoft.village.dtos.MessageDTO;
+import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.services.MessageService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,7 +20,11 @@ public class MessageController {
     private final MessageService messageService;
     @PostMapping
     public ResponseEntity<MessageDTO> createMessage(@Valid @RequestBody MessageDTO messageDTO) {
-        MessageDTO messageDTO1 = messageService.createMessage(messageDTO);
-        return new ResponseEntity<>(messageDTO1, HttpStatus.CREATED);
+        try {
+            MessageDTO createdMessageDTO = messageService.createMessage(messageDTO);
+            return new ResponseEntity<>(createdMessageDTO, HttpStatus.CREATED);
+        } catch (Exception e) {
+            throw new ApiRequestException("Error creating message");
+        }
     }
 }
