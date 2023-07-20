@@ -259,5 +259,22 @@ class PopulationServiceTest {
         verify(populationRepository, never()).delete(any(Population.class));
     }
 
+    @Test
+    void testFindPopulationByVillageNameAndRegionWhenExists() {
+        String villageName = "Sample Village";
+        String regionName = "Sample Region";
+        Population population = new Population(1L, NumberOfPopulation.UP_TO_10_PEOPLE, Residents.FROM_21_TO_30_PERCENT, Children.BELOW_10, Foreigners.I_DONT_KNOW);
+        when(populationRepository.findByVillageNameAndRegionName(villageName, regionName)).thenReturn(population);
+        Population resultPopulation = populationService.findPopulationByVillageNameAndRegion(villageName, regionName);
+        assertEquals(population, resultPopulation);
+    }
 
+    @Test
+    void testFindPopulationByVillageNameAndRegionWhenNotExists() {
+        String villageName = "Nonexistent Village";
+        String regionName = "Nonexistent Region";
+        when(populationRepository.findByVillageNameAndRegionName(villageName, regionName)).thenReturn(null);
+        Population resultPopulation = populationService.findPopulationByVillageNameAndRegion(villageName, regionName);
+        assertNull(resultPopulation);
+    }
 }
