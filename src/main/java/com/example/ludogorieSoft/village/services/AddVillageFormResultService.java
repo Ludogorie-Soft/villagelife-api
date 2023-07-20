@@ -124,7 +124,7 @@ public class AddVillageFormResultService {
         List<VillagePopulationAssertionDTO> villagePopulationAssertionDTOS = addVillageFormResult.getVillagePopulationAssertionDTOS();
         for (int i = 1; i < villagePopulationAssertionDTOS.size(); i++) {
             VillagePopulationAssertionDTO villagePopulationAssertionDTO = new VillagePopulationAssertionDTO(null, villageId, villagePopulationAssertionDTOS.get(i).getPopulatedAssertionId(), villagePopulationAssertionDTOS.get(i).getAnswer());
-            if(villagePopulationAssertionDTO.getAnswer() != null){
+            if(villagePopulationAssertionDTO.getAnswer() != null && !villagePopulationAssertionService.existsByVillageIdAndPopulatedAssertionIdAndAnswer(villageId, villagePopulationAssertionDTOS.get(i).getPopulatedAssertionId(), villagePopulationAssertionDTOS.get(i).getAnswer())){
                 villagePopulationAssertionService.createVillagePopulationAssertionDTO(villagePopulationAssertionDTO);
             }
         }
@@ -133,7 +133,7 @@ public class AddVillageFormResultService {
         List<VillageLivingConditionDTO> villageLivingConditionDTOS = addVillageFormResult.getVillageLivingConditionDTOS();
         for (int i = 1; i < villageLivingConditionDTOS.size(); i++) {
             VillageLivingConditionDTO villageLivingConditionDTO = new VillageLivingConditionDTO(null, villageId, villageLivingConditionDTOS.get(i).getLivingConditionId(), villageLivingConditionDTOS.get(i).getConsents());
-            if(villageLivingConditionDTO.getConsents() != null){
+            if(villageLivingConditionDTO.getConsents() != null && !villageLivingConditionService.existsByVillageIdAndLivingConditionIdAndConsents(villageId, villageLivingConditionDTOS.get(i).getLivingConditionId(), villageLivingConditionDTOS.get(i).getConsents())){
                 villageLivingConditionService.createVillageLivingCondition(villageLivingConditionDTO);
             }
         }

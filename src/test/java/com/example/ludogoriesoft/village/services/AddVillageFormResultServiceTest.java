@@ -175,11 +175,17 @@ class AddVillageFormResultServiceTest {
 
         addVillageFormResult.setVillagePopulationAssertionDTOS(dtos);
 
+        when(villagePopulationAssertionService.existsByVillageIdAndPopulatedAssertionIdAndAnswer(villageId, dto1.getPopulatedAssertionId(), dto1.getAnswer())).thenReturn(false);
+        when(villagePopulationAssertionService.existsByVillageIdAndPopulatedAssertionIdAndAnswer(villageId, dto3.getPopulatedAssertionId(), dto3.getAnswer())).thenReturn(false);
+
         addVillageFormResultService.createVillagePopulationAssertionsFromAddVillageFormResult(villageId, addVillageFormResult);
 
-        verify(villagePopulationAssertionService, times(2)).createVillagePopulationAssertionDTO(any(VillagePopulationAssertionDTO.class));
-        verify(villagePopulationAssertionService).createVillagePopulationAssertionDTO(dto1);
-        verify(villagePopulationAssertionService).createVillagePopulationAssertionDTO(dto3);
+        verify(villagePopulationAssertionService, times(1)).existsByVillageIdAndPopulatedAssertionIdAndAnswer(villageId, dto1.getPopulatedAssertionId(), dto1.getAnswer());
+        verify(villagePopulationAssertionService, times(1)).existsByVillageIdAndPopulatedAssertionIdAndAnswer(villageId, dto3.getPopulatedAssertionId(), dto3.getAnswer());
+
+        verify(villagePopulationAssertionService, times(1)).createVillagePopulationAssertionDTO(dto1);
+        verify(villagePopulationAssertionService, times(1)).createVillagePopulationAssertionDTO(dto3);
+
         verifyNoMoreInteractions(villagePopulationAssertionService);
     }
 
