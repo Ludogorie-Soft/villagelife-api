@@ -2,6 +2,7 @@ package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.*;
 import com.example.ludogorieSoft.village.enums.NumberOfPopulation;
+import com.example.ludogorieSoft.village.model.Population;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,11 +25,8 @@ public class AddVillageFormResultService {
     private VillageImageService villageImageService;
 
     public AddVillageFormResult create(AddVillageFormResult addVillageFormResult){
-        PopulationDTO populationDTO = addVillageFormResult.getPopulationDTO();
-        populationDTO.setNumberOfPopulation(getNumberOfPopulationByAddVillageFormResult(addVillageFormResult));
-        PopulationDTO savedPopulation = populationService.createPopulation(populationDTO);
-
         VillageDTO villageDTO = addVillageFormResult.getVillageDTO();
+        PopulationDTO savedPopulation = createPopulationFromAddVillageFormResult(addVillageFormResult);
         villageDTO.setPopulationDTO(savedPopulation);
         villageDTO.setRegion(addVillageFormResult.getVillageDTO().getRegion());
         VillageDTO savedVillage = villageService.createVillage(villageDTO);
@@ -59,6 +57,16 @@ public class AddVillageFormResultService {
             return NumberOfPopulation.FROM_1001_TO_2000_PEOPLE;
         }else {
             return NumberOfPopulation.FROM_2000_PEOPLE;
+        }
+    }
+    public PopulationDTO createPopulationFromAddVillageFormResult(AddVillageFormResult addVillageFormResult){
+        Population existingPopulation = populationService.findPopulationByVillageNameAndRegion(addVillageFormResult.getVillageDTO().getName(), addVillageFormResult.getVillageDTO().getRegion());
+        PopulationDTO populationDTO = addVillageFormResult.getPopulationDTO();
+        populationDTO.setNumberOfPopulation(getNumberOfPopulationByAddVillageFormResult(addVillageFormResult));
+        if(existingPopulation == null){
+            return populationService.createPopulation(populationDTO);
+        }else {
+            return populationService.updatePopulation(existingPopulation.getId(), populationDTO);
         }
     }
     public void createVillageGroundCategoryFromAddVillageFormResult(Long villageId, AddVillageFormResult addVillageFormResult) {
