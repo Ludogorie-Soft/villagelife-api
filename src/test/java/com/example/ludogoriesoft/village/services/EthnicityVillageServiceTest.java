@@ -47,6 +47,7 @@ class EthnicityVillageServiceTest {
         modelMapper = mock(ModelMapper.class);
         ethnicityVillageService = new EthnicityVillageService(modelMapper, ethnicityVillageRepository, villageService, ethnicityService);
     }
+
     @Test
     void deleteEthnicityVillageById_ShouldDeleteWhenIdExists() {
         Long id = 1L;
@@ -60,7 +61,6 @@ class EthnicityVillageServiceTest {
         verify(ethnicityVillageRepository, times(1)).existsById(id);
         verify(ethnicityVillageRepository, times(1)).deleteById(id);
     }
-
 
 
     @Test
@@ -216,5 +216,23 @@ class EthnicityVillageServiceTest {
         assertThrows(ApiRequestException.class, () -> {
             ethnicityVillageService.deleteEthnicityVillageById(1L);
         });
+    }
+
+    @Test
+    void testExistsByVillageIdAndEthnicityIdWhenExists() {
+        Long villageId = 1L;
+        Long ethnicityId = 2L;
+        when(ethnicityVillageRepository.existsByEthnicityIdAndVillageId(ethnicityId, villageId)).thenReturn(true);
+        boolean exists = ethnicityVillageService.existsByVillageIdAndEthnicityId(villageId, ethnicityId);
+        assertTrue(exists);
+    }
+
+    @Test
+    void testExistsByVillageIdAndEthnicityIdNotExists() {
+        Long villageId = 1L;
+        Long ethnicityId = 2L;
+        when(ethnicityVillageRepository.existsByEthnicityIdAndVillageId(ethnicityId, villageId)).thenReturn(false);
+        boolean exists = ethnicityVillageService.existsByVillageIdAndEthnicityId(villageId, ethnicityId);
+        assertFalse(exists);
     }
 }
