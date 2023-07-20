@@ -1,5 +1,6 @@
 package com.example.ludogorieSoft.village.services;
 import com.example.ludogorieSoft.village.dtos.VillagePopulationAssertionDTO;
+import com.example.ludogorieSoft.village.enums.Consents;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.*;
 import com.example.ludogorieSoft.village.repositories.PopulatedAssertionRepository;
@@ -18,8 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class VillagePopulationAssertionServiceTest {
     private VillagePopulationAssertionRepository villagePopulationAssertionRepository;
@@ -194,5 +194,29 @@ class VillagePopulationAssertionServiceTest {
         when(villagePopulationAssertionRepository.findAll()).thenReturn(villagePopulationAssertionList);
         List<VillagePopulationAssertionDTO> result = villagePopulationAssertionService.getVillagePopulationAssertionByVillageId(villageId);
         Assertions.assertEquals(0, result.size());
+    }
+
+    @Test
+    void testExistsByVillageIdAndPopulatedAssertionIdAndAnswerWhenRecordExists() {
+        Long villageId = 1L;
+        Long populatedAssertionId = 10L;
+        Consents answer = Consents.COMPLETELY_AGREED;
+        when(villagePopulationAssertionRepository.existsByVillageIdAndPopulatedAssertionIDIdAndAnswer(villageId, populatedAssertionId, answer))
+                .thenReturn(true);
+        boolean result = villagePopulationAssertionService.existsByVillageIdAndPopulatedAssertionIdAndAnswer(villageId, populatedAssertionId, answer);
+        Assertions.assertTrue(result);
+        verify(villagePopulationAssertionRepository, times(1)).existsByVillageIdAndPopulatedAssertionIDIdAndAnswer(villageId, populatedAssertionId, answer);
+    }
+
+    @Test
+    void testExistsByVillageIdAndPopulatedAssertionIdAndAnswerWhenRecordDoesNotExist() {
+        Long villageId = 1L;
+        Long populatedAssertionId = 10L;
+        Consents answer = Consents.COMPLETELY_AGREED;
+        when(villagePopulationAssertionRepository.existsByVillageIdAndPopulatedAssertionIDIdAndAnswer(villageId, populatedAssertionId, answer))
+                .thenReturn(false);
+        boolean result = villagePopulationAssertionService.existsByVillageIdAndPopulatedAssertionIdAndAnswer(villageId, populatedAssertionId, answer);
+        Assertions.assertFalse(result);
+        verify(villagePopulationAssertionRepository, times(1)).existsByVillageIdAndPopulatedAssertionIDIdAndAnswer(villageId, populatedAssertionId, answer);
     }
 }
