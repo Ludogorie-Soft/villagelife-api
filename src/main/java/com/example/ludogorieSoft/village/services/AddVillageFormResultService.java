@@ -63,10 +63,17 @@ public class AddVillageFormResultService {
     }
     public void createVillageGroundCategoryFromAddVillageFormResult(Long villageId, AddVillageFormResult addVillageFormResult) {
         VillageGroundCategoryDTO villageGroundCategoryDTO = new VillageGroundCategoryDTO();
-        villageGroundCategoryDTO.setVillageId(villageId);
         GroundCategoryDTO groundCategoryDTO = groundCategoryService.getByGroundCategoryName(addVillageFormResult.getGroundCategoryName());
         villageGroundCategoryDTO.setGroundCategoryId(groundCategoryDTO.getId());
-        villageGroundCategoryService.createVillageGroundCategoryDTO(villageGroundCategoryDTO);
+        try{
+            villageGroundCategoryDTO = villageGroundCategoryService.findVillageGroundCategoryDTOByVillageId(villageId);
+            villageGroundCategoryDTO.setGroundCategoryId(groundCategoryDTO.getId());
+            villageGroundCategoryService.updateVillageGroundCategory(villageGroundCategoryDTO.getId(), villageGroundCategoryDTO);
+        }catch (Exception e){
+            villageGroundCategoryDTO.setVillageId(villageId);
+            villageGroundCategoryDTO.setGroundCategoryId(groundCategoryDTO.getId());
+            villageGroundCategoryService.createVillageGroundCategoryDTO(villageGroundCategoryDTO);
+        }
     }
     public void createEthnicityVillagesFromAddVillageFormResult(Long villageId, AddVillageFormResult addVillageFormResult){
         List<Long> ethnicityDTOIds = addVillageFormResult.getEthnicityDTOIds();

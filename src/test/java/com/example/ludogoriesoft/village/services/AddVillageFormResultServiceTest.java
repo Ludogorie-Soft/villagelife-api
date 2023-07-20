@@ -4,6 +4,7 @@ import com.example.ludogorieSoft.village.dtos.*;
 import com.example.ludogorieSoft.village.enums.Consents;
 import com.example.ludogorieSoft.village.enums.Distance;
 import com.example.ludogorieSoft.village.enums.NumberOfPopulation;
+import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -344,35 +345,39 @@ class AddVillageFormResultServiceTest {
         }
     }
     @Test
-    void createVillageGroundCategoryFromAddVillageFormResultTest() {
-        Long villageId = 1L;
-        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
-        addVillageFormResult.setGroundCategoryName("Ground Category Name");
-
+    void testCreateVillageGroundCategoryWithNewVillage() {
         GroundCategoryDTO groundCategoryDTO = new GroundCategoryDTO();
-        groundCategoryDTO.setId(2L);
-        Mockito.when(groundCategoryService.getByGroundCategoryName(addVillageFormResult.getGroundCategoryName())).thenReturn(groundCategoryDTO);
+        groundCategoryDTO.setId(1L);
+        when(groundCategoryService.getByGroundCategoryName(anyString())).thenReturn(groundCategoryDTO);
 
-        addVillageFormResultService.createVillageGroundCategoryFromAddVillageFormResult(villageId, addVillageFormResult);
+        when(villageGroundCategoryService.findVillageGroundCategoryDTOByVillageId(anyLong())).thenThrow(new ApiRequestException("Not found"));
 
-        ArgumentCaptor<VillageGroundCategoryDTO> villageGroundCategoryDTOCaptor = ArgumentCaptor.forClass(VillageGroundCategoryDTO.class);
-        Mockito.verify(villageGroundCategoryService).createVillageGroundCategoryDTO(villageGroundCategoryDTOCaptor.capture());
+        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
+        addVillageFormResult.setGroundCategoryName("Test Ground Category Name");
+        addVillageFormResultService.createVillageGroundCategoryFromAddVillageFormResult(1L, addVillageFormResult);
 
-        VillageGroundCategoryDTO capturedDTO = villageGroundCategoryDTOCaptor.getValue();
-        Assertions.assertEquals(villageId, capturedDTO.getVillageId());
-        Assertions.assertEquals(groundCategoryDTO.getId(), capturedDTO.getGroundCategoryId());
+        verify(villageGroundCategoryService).createVillageGroundCategoryDTO(any(VillageGroundCategoryDTO.class));
+        verify(villageGroundCategoryService, never()).updateVillageGroundCategory(anyLong(), any(VillageGroundCategoryDTO.class));
     }
 
     @Test
-    void testCreateVillageGroundCategoryFromAddVillageFormResult() {
-        Long villageId = 1L;
-        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
-        addVillageFormResult.setGroundCategoryName("Category");
+    void testCreateVillageGroundCategoryWithExistingVillage() {
         GroundCategoryDTO groundCategoryDTO = new GroundCategoryDTO();
+        groundCategoryDTO.setId(1L);
         when(groundCategoryService.getByGroundCategoryName(anyString())).thenReturn(groundCategoryDTO);
-        addVillageFormResultService.createVillageGroundCategoryFromAddVillageFormResult(villageId, addVillageFormResult);
-        verify(villageGroundCategoryService).createVillageGroundCategoryDTO(any(VillageGroundCategoryDTO.class));
+
+        VillageGroundCategoryDTO existingVillageGroundCategoryDTO = new VillageGroundCategoryDTO();
+        existingVillageGroundCategoryDTO.setId(1L);
+        when(villageGroundCategoryService.findVillageGroundCategoryDTOByVillageId(anyLong())).thenReturn(existingVillageGroundCategoryDTO);
+
+        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
+        addVillageFormResult.setGroundCategoryName("Test Ground Category Name");
+        addVillageFormResultService.createVillageGroundCategoryFromAddVillageFormResult(1L, addVillageFormResult);
+
+        verify(villageGroundCategoryService).updateVillageGroundCategory(anyLong(), any(VillageGroundCategoryDTO.class));
+        verify(villageGroundCategoryService, never()).createVillageGroundCategoryDTO(any(VillageGroundCategoryDTO.class));
     }
+
     @Test
     void testGetNumberOfPopulationByAddVillageFormResultWhenLessThanOrEqualTo10(){
         AddVillageFormResult result = new AddVillageFormResult();
