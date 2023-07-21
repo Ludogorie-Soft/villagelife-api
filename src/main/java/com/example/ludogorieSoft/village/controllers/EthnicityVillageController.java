@@ -29,8 +29,9 @@ public class EthnicityVillageController {
         return ResponseEntity.ok(ethnicityVillageService.getEthnicityVillageById(id));
     }
 
+
     @GetMapping("/village/{id}")
-    public ResponseEntity<EthnicityVillageDTO> getEthnicityVillageByVillageId(@PathVariable("id") Long id) {
+    public ResponseEntity<List<EthnicityVillageDTO>> getVillageEthnicityByVillageId(@PathVariable("id") Long id) {
         return ResponseEntity.ok(ethnicityVillageService.getVillageEthnicityByVillageId(id));
     }
 

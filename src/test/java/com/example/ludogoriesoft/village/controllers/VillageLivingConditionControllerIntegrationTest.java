@@ -196,7 +196,7 @@ class VillageLivingConditionControllerIntegrationTest {
 
         List<VillageLivingConditionDTO> conditionDTOList = Arrays.asList(condition1, condition2);
 
-        when(villageLivingConditionService.getVillagePopulationAssertionByVillageId(villageId))
+        when(villageLivingConditionService.getVillageLivingConditionByVillageId(villageId))
                 .thenReturn(conditionDTOList);
 
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageLivingConditions/village/{id}", villageId)
@@ -221,7 +221,7 @@ class VillageLivingConditionControllerIntegrationTest {
         Long villageId = 1L;
         double populationAssertion = 12345.67;
 
-        when(villageLivingConditionService.getVillagePopulationAssertionByVillageIdValue(villageId))
+        when(villageLivingConditionService.getVVillageLivingConditionByVillageIdValue(villageId))
                 .thenReturn(populationAssertion);
 
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageLivingConditions/village/value/{id}", villageId)
@@ -240,7 +240,7 @@ class VillageLivingConditionControllerIntegrationTest {
         Long villageId = 1L;
         double delinquencyValue = 0.123;
 
-        when(villageLivingConditionService.getVillagePopulationAssertionByVillageIdDelinquencyValue(villageId))
+        when(villageLivingConditionService.getVillageLivingConditionByVillageIdDelinquencyValue(villageId))
                 .thenReturn(delinquencyValue);
 
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageLivingConditions/village/delinquencyValue/{id}", villageId)
@@ -259,7 +259,7 @@ class VillageLivingConditionControllerIntegrationTest {
         Long villageId = 1L;
         double ecoValue = 0.456;
 
-        when(villageLivingConditionService.getVillagePopulationAssertionByVillageIdEcoValue(villageId))
+        when(villageLivingConditionService.getVillageLivingConditionByVillageIdEcoValue(villageId))
                 .thenReturn(ecoValue);
 
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageLivingConditions/village/ecoValue/{id}", villageId)
@@ -272,4 +272,26 @@ class VillageLivingConditionControllerIntegrationTest {
         assertNotNull(response);
         Assertions.assertEquals(String.valueOf(ecoValue), response);
     }
+
+
+    @Test
+    void testDeleteVillageLivingConditionsByIdWhenDeletedSuccessfully() throws Exception {
+        Long idToDelete = 1L;
+
+        when(villageLivingConditionService.deleteVillageLivingConditions(idToDelete)).thenReturn(1);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/villageLivingConditions/{id}", idToDelete))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void testDeleteVillageLivingConditionsByIdWhenNotExists() throws Exception {
+        Long nonExistentId = 100L;
+
+        when(villageLivingConditionService.deleteVillageLivingConditions(nonExistentId)).thenReturn(0);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/villageLivingConditions/{id}", nonExistentId))
+                .andExpect(status().isNotFound());
+    }
+
 }

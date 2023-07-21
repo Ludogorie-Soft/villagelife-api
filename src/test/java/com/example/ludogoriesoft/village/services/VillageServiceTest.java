@@ -8,6 +8,7 @@ import com.example.ludogorieSoft.village.enums.Residents;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.*;
 import com.example.ludogorieSoft.village.repositories.VillageRepository;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -349,4 +351,28 @@ class VillageServiceTest {
 
         verify(villageRepository, times(1)).findById(villageId);
     }
+
+
+    @Test
+    void testCreateVillageWhitNullValues() {
+        Village village = new Village();
+        village.setName("null");
+        village.setPopulationCount(0);
+        village.setStatus(false);
+
+        Village savedVillage = new Village();
+        savedVillage.setId(1L);
+
+        when(villageRepository.save(any(Village.class))).thenAnswer(invocation -> {
+            Village createdVillage = invocation.getArgument(0);
+            createdVillage.setId(1L);
+            return createdVillage;
+        });
+
+        Long createdVillageId = villageService.createVillageWhitNullValues();
+
+        Assertions.assertEquals(1L, createdVillageId);
+    }
+
+
 }
