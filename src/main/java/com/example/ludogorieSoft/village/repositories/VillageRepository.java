@@ -22,6 +22,12 @@ public interface VillageRepository extends JpaRepository<Village, Long> {
     @Query("SELECT v FROM Village v JOIN v.region r WHERE r.regionName = :regionName AND LOWER(v.name) LIKE %:keyword% AND v.status = 1")
     List<Village> findByNameContainingIgnoreCaseAndRegionName(@Param("regionName") String regionName, @Param("keyword") String keyword);
 
+//     @Query("SELECT v FROM Village v JOIN v.region r WHERE r.regionName = :regionName AND v.name LIKE %:keyword%")
+//     List<Village> findByNameAndRegionName(@Param("regionName") String regionName, @Param("keyword") String keyword);
+
+    @Query("SELECT v FROM Village v JOIN v.region r WHERE v.name = :villageName AND r.regionName = :regionName")
+    Village findSingleVillageByNameAndRegionName(@Param("villageName") String villageName, @Param("regionName") String regionName);
+
     @Query(value = "SELECT DISTINCT v FROM Village v " +
             "JOIN v.objectVillages ov " +
             "JOIN ov.object o " +

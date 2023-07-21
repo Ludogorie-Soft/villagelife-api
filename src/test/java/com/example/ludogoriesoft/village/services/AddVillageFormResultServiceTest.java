@@ -2,6 +2,11 @@ package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.*;
 import com.example.ludogorieSoft.village.enums.*;
+
+import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
+import com.example.ludogorieSoft.village.model.Population;
+import org.junit.internal.runners.statements.FailOnTimeout;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,6 +18,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -37,6 +43,8 @@ class AddVillageFormResultServiceTest {
     GroundCategoryService groundCategoryService;
     @Mock
     VillageGroundCategoryService villageGroundCategoryService;
+    @Mock
+    PopulationService populationService;
 
     @Test
     void testCreateVillageLivingConditionFromAddVillageFormResultWhenVillageLivingConditionDTOSIsEmpty() {
@@ -76,6 +84,7 @@ class AddVillageFormResultServiceTest {
 
         verify(villageLivingConditionService, times(1)).createVillageLivingCondition(any(VillageLivingConditionDTO.class));
     }
+
     @Test
     void testCreateVillageLivingConditionFromAddVillageFormResultWhenVillageLivingConditionDTOSHasMixedConsents() {
         Long villageId = 12345L;
@@ -112,6 +121,7 @@ class AddVillageFormResultServiceTest {
 
         verifyNoInteractions(villagePopulationAssertionService);
     }
+
     @Test
     void testCreateVillagePopulationAssertionsFromAddVillageFormResultWhenVillagePopulationAssertionDTOSHasNullAnswers() {
         Long villageId = 12345L;
@@ -124,6 +134,7 @@ class AddVillageFormResultServiceTest {
 
         verifyNoInteractions(villagePopulationAssertionService);
     }
+
     @Test
     void testCreateVillagePopulationAssertionsFromAddVillageFormResultWhenVillagePopulationAssertionDTOSHasNonNullAnswers() {
         Long villageId = 12345L;
@@ -163,11 +174,17 @@ class AddVillageFormResultServiceTest {
 
         addVillageFormResult.setVillagePopulationAssertionDTOS(dtos);
 
+        when(villagePopulationAssertionService.existsByVillageIdAndPopulatedAssertionIdAndAnswer(villageId, dto1.getPopulatedAssertionId(), dto1.getAnswer())).thenReturn(false);
+        when(villagePopulationAssertionService.existsByVillageIdAndPopulatedAssertionIdAndAnswer(villageId, dto3.getPopulatedAssertionId(), dto3.getAnswer())).thenReturn(false);
+
         addVillageFormResultService.createVillagePopulationAssertionsFromAddVillageFormResult(villageId, addVillageFormResult);
 
-        verify(villagePopulationAssertionService, times(2)).createVillagePopulationAssertionDTO(any(VillagePopulationAssertionDTO.class));
-        verify(villagePopulationAssertionService).createVillagePopulationAssertionDTO(dto1);
-        verify(villagePopulationAssertionService).createVillagePopulationAssertionDTO(dto3);
+        verify(villagePopulationAssertionService, times(1)).existsByVillageIdAndPopulatedAssertionIdAndAnswer(villageId, dto1.getPopulatedAssertionId(), dto1.getAnswer());
+        verify(villagePopulationAssertionService, times(1)).existsByVillageIdAndPopulatedAssertionIdAndAnswer(villageId, dto3.getPopulatedAssertionId(), dto3.getAnswer());
+
+        verify(villagePopulationAssertionService, times(1)).createVillagePopulationAssertionDTO(dto1);
+        verify(villagePopulationAssertionService, times(1)).createVillagePopulationAssertionDTO(dto3);
+
         verifyNoMoreInteractions(villagePopulationAssertionService);
     }
 
@@ -242,6 +259,7 @@ class AddVillageFormResultServiceTest {
         verify(objectVillageService, times(1)).createObjectVillage(dto1);
         verify(objectVillageService, never()).createObjectVillage(dto2);
     }
+
     @Test
     void createVillageAnswerQuestionsFromAddVillageFormResultValidDataCreatesVillageAnswerQuestions() {
         Long villageId = 1L;
@@ -272,6 +290,7 @@ class AddVillageFormResultServiceTest {
             Assertions.assertEquals(questionResponses.get(i), capturedDTO.getAnswer(), "Answer should match.");
         }
     }
+
     @Test
     void createVillageAnswerQuestionsFromAddVillageFormResultEmptyQuestionResponsesNoVillageAnswerQuestionsCreated() {
         Long villageId = 1L;
@@ -339,38 +358,43 @@ class AddVillageFormResultServiceTest {
             Mockito.verify(ethnicityVillageService).createEthnicityVillage(expectedDTO);
         }
     }
-    @Test
-    void createVillageGroundCategoryFromAddVillageFormResultTest() {
-        Long villageId = 1L;
-        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
-        addVillageFormResult.setGroundCategoryName("Ground Category Name");
-
-        GroundCategoryDTO groundCategoryDTO = new GroundCategoryDTO();
-        groundCategoryDTO.setId(2L);
-        Mockito.when(groundCategoryService.getByGroundCategoryName(addVillageFormResult.getGroundCategoryName())).thenReturn(groundCategoryDTO);
-
-        addVillageFormResultService.createVillageGroundCategoryFromAddVillageFormResult(villageId, addVillageFormResult);
-
-        ArgumentCaptor<VillageGroundCategoryDTO> villageGroundCategoryDTOCaptor = ArgumentCaptor.forClass(VillageGroundCategoryDTO.class);
-        Mockito.verify(villageGroundCategoryService).createVillageGroundCategoryDTO(villageGroundCategoryDTOCaptor.capture());
-
-        VillageGroundCategoryDTO capturedDTO = villageGroundCategoryDTOCaptor.getValue();
-        Assertions.assertEquals(villageId, capturedDTO.getVillageId());
-        Assertions.assertEquals(groundCategoryDTO.getId(), capturedDTO.getGroundCategoryId());
-    }
 
     @Test
-    void testCreateVillageGroundCategoryFromAddVillageFormResult() {
-        Long villageId = 1L;
-        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
-        addVillageFormResult.setGroundCategoryName("Category");
+    void testCreateVillageGroundCategoryWithNewVillage() {
         GroundCategoryDTO groundCategoryDTO = new GroundCategoryDTO();
+        groundCategoryDTO.setId(1L);
         when(groundCategoryService.getByGroundCategoryName(anyString())).thenReturn(groundCategoryDTO);
-        addVillageFormResultService.createVillageGroundCategoryFromAddVillageFormResult(villageId, addVillageFormResult);
+
+        when(villageGroundCategoryService.findVillageGroundCategoryDTOByVillageId(anyLong())).thenThrow(new ApiRequestException("Not found"));
+
+        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
+        addVillageFormResult.setGroundCategoryName("Test Ground Category Name");
+        addVillageFormResultService.createVillageGroundCategoryFromAddVillageFormResult(1L, addVillageFormResult);
+
         verify(villageGroundCategoryService).createVillageGroundCategoryDTO(any(VillageGroundCategoryDTO.class));
+        verify(villageGroundCategoryService, never()).updateVillageGroundCategory(anyLong(), any(VillageGroundCategoryDTO.class));
     }
+
     @Test
-    void testGetNumberOfPopulationByAddVillageFormResultWhenLessThanOrEqualTo10(){
+    void testCreateVillageGroundCategoryWithExistingVillage() {
+        GroundCategoryDTO groundCategoryDTO = new GroundCategoryDTO();
+        groundCategoryDTO.setId(1L);
+        when(groundCategoryService.getByGroundCategoryName(anyString())).thenReturn(groundCategoryDTO);
+
+        VillageGroundCategoryDTO existingVillageGroundCategoryDTO = new VillageGroundCategoryDTO();
+        existingVillageGroundCategoryDTO.setId(1L);
+        when(villageGroundCategoryService.findVillageGroundCategoryDTOByVillageId(anyLong())).thenReturn(existingVillageGroundCategoryDTO);
+
+        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
+        addVillageFormResult.setGroundCategoryName("Test Ground Category Name");
+        addVillageFormResultService.createVillageGroundCategoryFromAddVillageFormResult(1L, addVillageFormResult);
+
+        verify(villageGroundCategoryService).updateVillageGroundCategory(anyLong(), any(VillageGroundCategoryDTO.class));
+        verify(villageGroundCategoryService, never()).createVillageGroundCategoryDTO(any(VillageGroundCategoryDTO.class));
+    }
+
+    @Test
+    void testGetNumberOfPopulationByAddVillageFormResultWhenLessThanOrEqualTo10() {
         AddVillageFormResult result = new AddVillageFormResult();
         VillageDTO villageDTO = new VillageDTO();
         villageDTO.setPopulationCount(10);
@@ -381,8 +405,9 @@ class AddVillageFormResultServiceTest {
 
         Assertions.assertEquals(expected, actual);
     }
+
     @Test
-    void testGetNumberOfPopulationByAddVillageFormResultWhenBetween11And50(){
+    void testGetNumberOfPopulationByAddVillageFormResultWhenBetween11And50() {
         AddVillageFormResult result = new AddVillageFormResult();
         VillageDTO villageDTO = new VillageDTO();
         villageDTO.setPopulationCount(35);
@@ -394,8 +419,9 @@ class AddVillageFormResultServiceTest {
         Assertions.assertEquals(expected, actual);
 
     }
+
     @Test
-    void testGetNumberOfPopulationByAddVillageFormResultWhenBetween51And200(){
+    void testGetNumberOfPopulationByAddVillageFormResultWhenBetween51And200() {
         AddVillageFormResult result = new AddVillageFormResult();
         VillageDTO villageDTO = new VillageDTO();
         villageDTO.setPopulationCount(125);
@@ -406,8 +432,9 @@ class AddVillageFormResultServiceTest {
 
         Assertions.assertEquals(expected, actual);
     }
+
     @Test
-    void testGetNumberOfPopulationByAddVillageFormResultWhenBetween201And500(){
+    void testGetNumberOfPopulationByAddVillageFormResultWhenBetween201And500() {
         AddVillageFormResult result = new AddVillageFormResult();
         VillageDTO villageDTO = new VillageDTO();
         villageDTO.setPopulationCount(450);
@@ -418,8 +445,9 @@ class AddVillageFormResultServiceTest {
 
         Assertions.assertEquals(expected, actual);
     }
+
     @Test
-    void testGetNumberOfPopulationByAddVillageFormResultWhenBetween501And1000(){
+    void testGetNumberOfPopulationByAddVillageFormResultWhenBetween501And1000() {
         AddVillageFormResult result = new AddVillageFormResult();
         VillageDTO villageDTO = new VillageDTO();
         villageDTO.setPopulationCount(800);
@@ -430,8 +458,9 @@ class AddVillageFormResultServiceTest {
 
         Assertions.assertEquals(expected, actual);
     }
+
     @Test
-    void testGetNumberOfPopulationByAddVillageFormResultWhenBetween1001And2000(){
+    void testGetNumberOfPopulationByAddVillageFormResultWhenBetween1001And2000() {
         AddVillageFormResult result = new AddVillageFormResult();
         VillageDTO villageDTO = new VillageDTO();
         villageDTO.setPopulationCount(1500);
@@ -442,8 +471,9 @@ class AddVillageFormResultServiceTest {
 
         Assertions.assertEquals(expected, actual);
     }
+
     @Test
-    void testGetNumberOfPopulationByAddVillageFormResultWhenGreaterThan2000(){
+    void testGetNumberOfPopulationByAddVillageFormResultWhenGreaterThan2000() {
         AddVillageFormResult result = new AddVillageFormResult();
         VillageDTO villageDTO = new VillageDTO();
         villageDTO.setPopulationCount(3000);
@@ -454,6 +484,7 @@ class AddVillageFormResultServiceTest {
 
         Assertions.assertEquals(expected, actual);
     }
+
 
 
     @Test
@@ -477,5 +508,95 @@ class AddVillageFormResultServiceTest {
 
 
 
+
+
+    @Test
+    void testCreatePopulationFromAddVillageFormResultWithExistingPopulation() {
+        String villageName = "Sample Village";
+        String regionName = "Sample Region";
+        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
+
+        VillageDTO villageDTO = new VillageDTO();
+        villageDTO.setName(villageName);
+        villageDTO.setRegion(regionName);
+        addVillageFormResult.setVillageDTO(villageDTO);
+
+        PopulationDTO populationDTO = new PopulationDTO();
+        populationDTO.setNumberOfPopulation(NumberOfPopulation.UP_TO_10_PEOPLE);
+        populationDTO.setResidents(Residents.FROM_21_TO_30_PERCENT);
+        populationDTO.setChildren(Children.BELOW_10);
+        populationDTO.setForeigners(Foreigners.I_DONT_KNOW);
+        addVillageFormResult.setPopulationDTO(populationDTO);
+
+        Population existingPopulation = new Population();
+        existingPopulation.setId(1L);
+        existingPopulation.setNumberOfPopulation(NumberOfPopulation.FROM_51_TO_200_PEOPLE);
+        existingPopulation.setResidents(Residents.FROM_11_TO_20_PERCENT);
+        existingPopulation.setChildren(Children.FROM_11_TO_20);
+        existingPopulation.setForeigners(Foreigners.YES);
+
+        when(populationService.findPopulationByVillageNameAndRegion(villageName, regionName)).thenReturn(existingPopulation);
+
+        PopulationDTO updatedPopulation = new PopulationDTO();
+        updatedPopulation.setId(existingPopulation.getId());
+        updatedPopulation.setNumberOfPopulation(populationDTO.getNumberOfPopulation());
+        updatedPopulation.setResidents(populationDTO.getResidents());
+        updatedPopulation.setChildren(populationDTO.getChildren());
+        updatedPopulation.setForeigners(populationDTO.getForeigners());
+
+        when(populationService.updatePopulation(existingPopulation.getId(), populationDTO)).thenReturn(updatedPopulation);
+
+        PopulationDTO resultDTO = addVillageFormResultService.createPopulationFromAddVillageFormResult(addVillageFormResult);
+
+        verify(populationService, times(1)).findPopulationByVillageNameAndRegion(villageName, regionName);
+        verify(populationService, times(1)).updatePopulation(existingPopulation.getId(), populationDTO);
+
+        Assertions.assertEquals(updatedPopulation.getId(), resultDTO.getId());
+        Assertions.assertEquals(updatedPopulation.getNumberOfPopulation(), resultDTO.getNumberOfPopulation());
+        Assertions.assertEquals(updatedPopulation.getResidents(), resultDTO.getResidents());
+        Assertions.assertEquals(updatedPopulation.getChildren(), resultDTO.getChildren());
+        Assertions.assertEquals(updatedPopulation.getForeigners(), resultDTO.getForeigners());
+    }
+
+    @Test
+    void testCreatePopulationFromAddVillageFormResultWithNewPopulation() {
+        String villageName = "Sample Village";
+        String regionName = "Sample Region";
+        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
+
+        VillageDTO villageDTO = new VillageDTO();
+        villageDTO.setName(villageName);
+        villageDTO.setRegion(regionName);
+        addVillageFormResult.setVillageDTO(villageDTO);
+
+        PopulationDTO populationDTO = new PopulationDTO();
+        populationDTO.setNumberOfPopulation(NumberOfPopulation.UP_TO_10_PEOPLE);
+        populationDTO.setResidents(Residents.FROM_21_TO_30_PERCENT);
+        populationDTO.setChildren(Children.BELOW_10);
+        populationDTO.setForeigners(Foreigners.I_DONT_KNOW);
+        addVillageFormResult.setPopulationDTO(populationDTO);
+
+        when(populationService.findPopulationByVillageNameAndRegion(villageName, regionName)).thenReturn(null);
+
+        PopulationDTO createdPopulation = new PopulationDTO();
+        createdPopulation.setId(1L);
+        createdPopulation.setNumberOfPopulation(populationDTO.getNumberOfPopulation());
+        createdPopulation.setResidents(populationDTO.getResidents());
+        createdPopulation.setChildren(populationDTO.getChildren());
+        createdPopulation.setForeigners(populationDTO.getForeigners());
+
+        when(populationService.createPopulation(populationDTO)).thenReturn(createdPopulation);
+
+        PopulationDTO resultDTO = addVillageFormResultService.createPopulationFromAddVillageFormResult(addVillageFormResult);
+
+        verify(populationService, times(1)).findPopulationByVillageNameAndRegion(villageName, regionName);
+        verify(populationService, times(1)).createPopulation(populationDTO);
+
+        Assertions.assertEquals(createdPopulation.getId(), resultDTO.getId());
+        Assertions.assertEquals(createdPopulation.getNumberOfPopulation(), resultDTO.getNumberOfPopulation());
+        Assertions.assertEquals(createdPopulation.getResidents(), resultDTO.getResidents());
+        Assertions.assertEquals(createdPopulation.getChildren(), resultDTO.getChildren());
+        Assertions.assertEquals(createdPopulation.getForeigners(), resultDTO.getForeigners());
+    }
 
 }

@@ -21,8 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 class VillageLivingConditionServiceTest {
@@ -353,4 +352,27 @@ class VillageLivingConditionServiceTest {
     }
 
 
+    @Test
+    void testExistsByVillageIdAndLivingConditionIdAndConsentsWhenRecordExists() {
+        Long villageId = 1L;
+        Long livingConditionId = 10L;
+        Consents consent = Consents.COMPLETELY_AGREED;
+        when(villageLivingConditionRepository.existsByVillageIdAndLivingConditionIdAndConsents(villageId, livingConditionId, consent))
+                .thenReturn(true);
+        boolean result = villageLivingConditionService.existsByVillageIdAndLivingConditionIdAndConsents(villageId, livingConditionId, consent);
+        Assertions.assertTrue(result);
+        verify(villageLivingConditionRepository, times(1)).existsByVillageIdAndLivingConditionIdAndConsents(villageId, livingConditionId, consent);
+    }
+
+    @Test
+    void testExistsByVillageIdAndLivingConditionIdAndConsentsWhenRecordDoesNotExist() {
+        Long villageId = 1L;
+        Long livingConditionId = 10L;
+        Consents consent = Consents.COMPLETELY_AGREED;
+        when(villageLivingConditionRepository.existsByVillageIdAndLivingConditionIdAndConsents(villageId, livingConditionId, consent))
+                .thenReturn(false);
+        boolean result = villageLivingConditionService.existsByVillageIdAndLivingConditionIdAndConsents(villageId, livingConditionId, consent);
+        Assertions.assertFalse(result);
+        verify(villageLivingConditionRepository, times(1)).existsByVillageIdAndLivingConditionIdAndConsents(villageId, livingConditionId, consent);
+    }
 }

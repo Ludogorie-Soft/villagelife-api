@@ -29,8 +29,8 @@ public class VillageService {
     private final VillageRepository villageRepository;
     private final ModelMapper modelMapper;
     private final RegionService regionService;
-    private final String errorMessage1="Village with id ";
-    private final String errorMessage2=" not found  ";
+    private static final String ERROR_MESSAGE1="Village with id ";
+    private static final String ERROR_MESSAGE2=" not found  ";
 
 
 
@@ -51,20 +51,23 @@ public class VillageService {
         if (optionalVillage.isPresent()) {
             return villageToVillageDTO(optionalVillage.get());
         } else {
-            throw new ApiRequestException(errorMessage1 + id + errorMessage2);
+            throw new ApiRequestException(ERROR_MESSAGE1 + id + ERROR_MESSAGE2);
         }
     }
 
     public VillageDTO createVillage(VillageDTO villageDTO) {
-        Village village = new Village();
+        Village village = villageRepository.findSingleVillageByNameAndRegionName(villageDTO.getName(), villageDTO.getRegion());
+        if (village == null) {
+            village = new Village();
+            village.setName(villageDTO.getName());
+            RegionDTO regionDTO = regionService.findRegionByName(villageDTO.getRegion());
+            village.setRegion(regionService.checkRegion(regionDTO.getId()));
+        }
         village.setPopulation(modelMapper.map(villageDTO.getPopulationDTO(), Population.class));
-        village.setName(villageDTO.getName());
-        RegionDTO regionDTO = regionService.findRegionByName(villageDTO.getRegion());
-        village.setRegion(regionService.checkRegion(regionDTO.getId()));
         village.setPopulationCount(villageDTO.getPopulationCount());
+        village.setStatus(false);
         Village savedVillage = villageRepository.save(village);
-        villageDTO.setId(savedVillage.getId());
-        return modelMapper.map(village, VillageDTO.class);
+        return modelMapper.map(savedVillage, VillageDTO.class);
     }
 
     public Long createVillageWhitNullValues() {
@@ -89,7 +92,7 @@ public class VillageService {
             villageRepository.save(village);
             return modelMapper.map(village, VillageDTO.class);
         } else {
-            throw new ApiRequestException(errorMessage1 + id + errorMessage2);
+            throw new ApiRequestException(ERROR_MESSAGE1 + id + ERROR_MESSAGE2);
         }
     }
 
@@ -98,7 +101,7 @@ public class VillageService {
         if (villageRepository.existsById(id)) {
             villageRepository.deleteById(id);
         } else {
-            throw new ApiRequestException(errorMessage1 + id + errorMessage2);
+            throw new ApiRequestException(ERROR_MESSAGE1 + id + ERROR_MESSAGE2);
         }
     }
 

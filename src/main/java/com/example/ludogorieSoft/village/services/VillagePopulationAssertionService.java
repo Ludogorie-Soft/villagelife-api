@@ -1,6 +1,7 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.VillagePopulationAssertionDTO;
+import com.example.ludogorieSoft.village.enums.Consents;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.PopulatedAssertion;
 import com.example.ludogorieSoft.village.model.Village;
@@ -99,4 +100,7 @@ public class VillagePopulationAssertionService {
                 .toList();
     }
 
+    public boolean existsByVillageIdAndPopulatedAssertionIdAndAnswer(Long villageId, Long populatedAssertionId, Consents answer){
+        return villagePopulationAssertionRepository.existsByVillageIdAndPopulatedAssertionIDIdAndAnswer(villageId, populatedAssertionId, answer);
+    }
 }

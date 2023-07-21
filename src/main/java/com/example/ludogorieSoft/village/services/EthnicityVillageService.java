@@ -94,4 +94,7 @@ public class EthnicityVillageService {
         }
         return filteredList;
     }
+    public boolean existsByVillageIdAndEthnicityId(Long villageId, Long ethnicityId){
+        return ethnicityVillageRepository.existsByEthnicityIdAndVillageId(ethnicityId, villageId);
+    }
 }

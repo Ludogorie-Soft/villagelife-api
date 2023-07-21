@@ -1,6 +1,7 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.ObjectVillageDTO;
+import com.example.ludogorieSoft.village.enums.Distance;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.ObjectAroundVillage;
 import com.example.ludogorieSoft.village.model.ObjectVillage;
@@ -241,5 +242,32 @@ class ObjectVillageServiceTest {
         verify(modelMapper, times(0)).map(any(), eq(ObjectVillageDTO.class));
     }
 
+    @Test
+    void testExistsByVillageIdAndObjectIdAndDistanceWhenExistsThenReturnsTrue() {
+        Long villageId = 1L;
+        Long objectId = 2L;
+        Distance distance = Distance.IN_THE_VILLAGE;
+
+        when(objectVillageRepository.existsByVillageIdAndObjectIdAndDistance(villageId, objectId, distance)).thenReturn(true);
+
+        boolean result = objectVillageService.existsByVillageIdAndObjectIdAndDistance(villageId, objectId, distance);
+
+        assertTrue(result);
+        verify(objectVillageRepository, times(1)).existsByVillageIdAndObjectIdAndDistance(villageId, objectId, distance);
+    }
+
+    @Test
+    void testExistsByVillageIdAndObjectIdAndDistanceWhenNotExistsThenReturnsFalse() {
+        Long villageId = 1L;
+        Long objectId = 2L;
+        Distance distance = Distance.ON_10_KM;
+
+        when(objectVillageRepository.existsByVillageIdAndObjectIdAndDistance(villageId, objectId, distance)).thenReturn(false);
+
+        boolean result = objectVillageService.existsByVillageIdAndObjectIdAndDistance(villageId, objectId, distance);
+
+        assertFalse(result);
+        verify(objectVillageRepository, times(1)).existsByVillageIdAndObjectIdAndDistance(villageId, objectId, distance);
+    }
 
 }

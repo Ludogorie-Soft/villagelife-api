@@ -1,10 +1,14 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.*;
+import com.example.ludogorieSoft.village.enums.Children;
+import com.example.ludogorieSoft.village.enums.Foreigners;
 import com.example.ludogorieSoft.village.enums.NumberOfPopulation;
+import com.example.ludogorieSoft.village.enums.Residents;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.*;
 import com.example.ludogorieSoft.village.repositories.VillageRepository;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,6 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 
@@ -36,6 +41,72 @@ class VillageServiceTest {
     @Mock
     private RegionService regionService;
 
+
+    @Test
+    void convertToObjectAroundVillageDTOList_ShouldConvertObjectVillagesToObjectAroundVillageDTOList() {
+        ObjectAroundVillage objectAroundVillage = new ObjectAroundVillage(1L, "TYPE");
+        List<ObjectVillage> objectVillages = new ArrayList<>();
+        ObjectVillage ov1 = new ObjectVillage();
+        ov1.setId(1L);
+        ov1.setObject(objectAroundVillage);
+        objectVillages.add(ov1);
+
+        ObjectVillage ov2 = new ObjectVillage();
+        ov2.setId(2L);
+        ov2.setObject(objectAroundVillage);
+        objectVillages.add(ov2);
+
+        VillageService villageService = new VillageService(villageRepository, modelMapper, regionService);
+
+        List<ObjectAroundVillageDTO> result = villageService.convertToObjectAroundVillageDTOList(objectVillages);
+
+        Assertions.assertEquals(objectVillages.size(), result.size());
+        for (int i = 0; i < result.size(); i++) {
+            ObjectVillage ov = objectVillages.get(i);
+            ObjectAroundVillageDTO dto = result.get(i);
+            Assertions.assertEquals(ov.getObject().getId(), dto.getId());
+            Assertions.assertEquals(ov.getObject().getType(), dto.getType());
+        }
+    }
+
+
+    @Test
+    void convertToLivingConditionDTOList_ShouldConvertVillageLivingConditionsToLivingConditionDTOList() {
+        List<VillageLivingConditions> villageLivingConditionsList = new ArrayList<>();
+        VillageLivingConditions vl1 = new VillageLivingConditions();
+        vl1.setId(1L);
+        LivingCondition lc1 = new LivingCondition();
+        lc1.setId(1L);
+        lc1.setLivingConditionName("Condition 1");
+        vl1.setLivingCondition(lc1);
+        villageLivingConditionsList.add(vl1);
+
+        VillageLivingConditions vl2 = new VillageLivingConditions();
+        vl2.setId(2L);
+        LivingCondition lc2 = new LivingCondition();
+        lc2.setId(2L);
+        lc2.setLivingConditionName("Condition 2");
+        vl2.setLivingCondition(lc2);
+        villageLivingConditionsList.add(vl2);
+
+        List<LivingConditionDTO> result = villageService.convertToLivingConditionDTOList(villageLivingConditionsList);
+
+        Assertions.assertEquals(villageLivingConditionsList.size(), result.size());
+        for (int i = 0; i < result.size(); i++) {
+            VillageLivingConditions vl = villageLivingConditionsList.get(i);
+            LivingConditionDTO dto = result.get(i);
+            Assertions.assertEquals(vl.getLivingCondition().getId(), dto.getId());
+            Assertions.assertEquals(vl.getLivingCondition().getLivingConditionName(), dto.getLivingConditionName());
+        }
+    }
+
+
+    @Test
+    void convertToPopulationDTO_ShouldConvertChildrenToPopulationDTO() {
+        Children children = Children.BELOW_10;
+        PopulationDTO result = villageService.convertToPopulationDTO(children);
+        Assertions.assertEquals(children, result.getChildren());
+    }
 
     @Test
     void testVillageToVillageDTO() {
@@ -105,38 +176,85 @@ class VillageServiceTest {
     }
 
     @Test
-    void createVillageValidVillageDTOReturnsCreatedVillageDTO() {
+    void testCreateVillageWhenVillageExists() {
+        String villageName = "Sample Village";
+        String regionName = "Sample Region";
         VillageDTO villageDTO = new VillageDTO();
-        villageDTO.setName("Test Village");
-        Region region = new Region(1L, "testRegion");
-        RegionDTO regionDTO = new RegionDTO(region.getId(), region.getRegionName());
-        PopulationDTO populationDTO = new PopulationDTO();
-        populationDTO.setNumberOfPopulation(NumberOfPopulation.UP_TO_10_PEOPLE);
-        villageDTO.setPopulationDTO(populationDTO);
-        villageDTO.setRegion(region.getRegionName());
+        villageDTO.setName(villageName);
+        villageDTO.setRegion(regionName);
 
-        Village village = new Village();
-        village.setName("Test Village");
-        Population population = new Population();
-        population.setNumberOfPopulation(NumberOfPopulation.UP_TO_10_PEOPLE);
-        village.setPopulation(population);
-        village.setRegion(region);
+        Village existingVillage = new Village();
+        existingVillage.setId(1L);
+        existingVillage.setName(villageName);
+        existingVillage.setStatus(true);
+        existingVillage.setRegion(new Region(1L, regionName));
 
-        Village savedVillage = new Village();
-        savedVillage.setId(1L);
-        when(modelMapper.map(villageDTO.getPopulationDTO(), Population.class)).thenReturn(population);
-        when(villageRepository.save(any(Village.class))).thenReturn(savedVillage);
-        when(modelMapper.map(village, VillageDTO.class)).thenReturn(villageDTO);
-        when(regionService.findRegionByName(region.getRegionName())).thenReturn(regionDTO);
-        when(regionService.checkRegion(region.getId())).thenReturn(region);
-        VillageDTO result = villageService.createVillage(villageDTO);
+        VillageDTO savedVillageDTO = new VillageDTO();
+        savedVillageDTO.setId(1L);
+        savedVillageDTO.setName(villageName);
+        savedVillageDTO.setRegion(regionName);
+        savedVillageDTO.setPopulationDTO(new PopulationDTO(1L, NumberOfPopulation.UP_TO_10_PEOPLE, Residents.FROM_21_TO_30_PERCENT, Children.BELOW_10, Foreigners.I_DONT_KNOW));
 
+        when(villageRepository.findSingleVillageByNameAndRegionName(villageName, regionName)).thenReturn(existingVillage);
+        when(modelMapper.map(villageDTO.getPopulationDTO(), Population.class)).thenReturn(new Population(1L, NumberOfPopulation.UP_TO_10_PEOPLE, Residents.FROM_21_TO_30_PERCENT, Children.BELOW_10, Foreigners.I_DONT_KNOW));
+        when(villageRepository.save(existingVillage)).thenReturn(existingVillage);
+        when(modelMapper.map(existingVillage, VillageDTO.class)).thenReturn(savedVillageDTO);
+
+        VillageDTO resultDTO = villageService.createVillage(villageDTO);
+
+        verify(villageRepository, times(1)).findSingleVillageByNameAndRegionName(villageName, regionName);
         verify(modelMapper, times(1)).map(villageDTO.getPopulationDTO(), Population.class);
         verify(villageRepository, times(1)).save(any(Village.class));
-        verify(modelMapper, times(1)).map(village, VillageDTO.class);
-        Assertions.assertEquals(savedVillage.getId(), result.getId());
-        Assertions.assertEquals(villageDTO.getName(), result.getName());
-        Assertions.assertEquals(villageDTO.getPopulationDTO(), result.getPopulationDTO());
+        verify(modelMapper, times(1)).map(existingVillage, VillageDTO.class);
+        verify(regionService, times(0)).findRegionByName(regionName);
+
+        Assertions.assertEquals(savedVillageDTO.getId(), resultDTO.getId());
+        Assertions.assertEquals(savedVillageDTO.getName(), resultDTO.getName());
+        Assertions.assertEquals(savedVillageDTO.getPopulationDTO(), resultDTO.getPopulationDTO());
+        Assertions.assertNotNull(resultDTO);
+        Assertions.assertFalse(resultDTO.isStatus());
+    }
+
+    @Test
+    void testCreateVillageWhenVillageNotExists() {
+        String villageName = "Sample Village";
+        String regionName = "Sample Region";
+        VillageDTO villageDTO = new VillageDTO();
+        villageDTO.setName(villageName);
+        villageDTO.setRegion(regionName);
+        villageDTO.setPopulationDTO(new PopulationDTO(1L, NumberOfPopulation.UP_TO_10_PEOPLE, Residents.FROM_21_TO_30_PERCENT, Children.BELOW_10, Foreigners.I_DONT_KNOW));
+
+        VillageDTO savedVillageDTO = new VillageDTO();
+        savedVillageDTO.setId(1L);
+        savedVillageDTO.setName(villageName);
+        savedVillageDTO.setRegion(regionName);
+        savedVillageDTO.setPopulationDTO(new PopulationDTO(1L, NumberOfPopulation.UP_TO_10_PEOPLE, Residents.FROM_21_TO_30_PERCENT, Children.BELOW_10, Foreigners.I_DONT_KNOW));
+
+        when(villageRepository.findSingleVillageByNameAndRegionName(villageName, regionName)).thenReturn(null);
+        when(regionService.findRegionByName(regionName)).thenReturn(new RegionDTO(1L, regionName));
+        when(regionService.checkRegion(1L)).thenReturn(new Region(1L, regionName));
+        when(modelMapper.map(villageDTO.getPopulationDTO(), Population.class)).thenReturn(new Population(1L, NumberOfPopulation.UP_TO_10_PEOPLE, Residents.FROM_21_TO_30_PERCENT, Children.BELOW_10, Foreigners.I_DONT_KNOW));
+        when(villageRepository.save(any(Village.class))).thenAnswer(invocation -> {
+            Village villageToSave = invocation.getArgument(0);
+            villageToSave.setId(1L);
+            return villageToSave;
+        });
+        when(modelMapper.map(any(Village.class), eq(VillageDTO.class))).thenReturn(savedVillageDTO);
+
+        VillageDTO resultDTO = villageService.createVillage(villageDTO);
+
+        verify(villageRepository, times(1)).findSingleVillageByNameAndRegionName(villageName, regionName);
+        verify(modelMapper, times(1)).map(villageDTO.getPopulationDTO(), Population.class);
+        verify(villageRepository, times(1)).save(any(Village.class));
+        verify(modelMapper, times(1)).map(any(Village.class), eq(VillageDTO.class));
+        verify(regionService, times(1)).findRegionByName(regionName);
+        verify(regionService, times(1)).checkRegion(1L);
+
+        Assertions.assertEquals(savedVillageDTO.getId(), resultDTO.getId());
+        Assertions.assertEquals(savedVillageDTO.getName(), resultDTO.getName());
+        Assertions.assertEquals(savedVillageDTO.getPopulationDTO(), resultDTO.getPopulationDTO());
+        Assertions.assertNotNull(resultDTO);
+        Assertions.assertFalse(resultDTO.isStatus());
     }
 
     @Test

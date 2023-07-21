@@ -403,4 +403,32 @@ class VillageAnswerQuestionServiceTest {
     }
 
 
+    @Test
+    void testExistsByVillageIdAndQuestionIdAndAnswerWhenExistsThenReturnsTrue() {
+        Long villageId = 1L;
+        Long questionId = 2L;
+        String answer = "Yes";
+
+        when(villageAnswerQuestionRepository.existsByVillageIdAndQuestionIdAndAnswer(villageId, questionId, answer)).thenReturn(true);
+
+        boolean result = villageAnswerQuestionService.existsByVillageIdAndQuestionIdAndAnswer(villageId, questionId, answer);
+
+        assertTrue(result);
+        verify(villageAnswerQuestionRepository, times(1)).existsByVillageIdAndQuestionIdAndAnswer(villageId, questionId, answer);
+    }
+
+    @Test
+    void testExistsByVillageIdAndQuestionIdAndAnswerWhenNotExistsThenReturnsFalse() {
+        Long villageId = 1L;
+        Long questionId = 2L;
+        String answer = "No";
+
+        when(villageAnswerQuestionRepository.existsByVillageIdAndQuestionIdAndAnswer(villageId, questionId, answer)).thenReturn(false);
+
+        boolean result = villageAnswerQuestionService.existsByVillageIdAndQuestionIdAndAnswer(villageId, questionId, answer);
+
+        assertFalse(result);
+        verify(villageAnswerQuestionRepository, times(1)).existsByVillageIdAndQuestionIdAndAnswer(villageId, questionId, answer);
+    }
+
 }
