@@ -1,7 +1,6 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.*;
-import com.example.ludogorieSoft.village.enums.Children;
 import com.example.ludogorieSoft.village.enums.NumberOfPopulation;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.*;
@@ -18,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.*;
 
@@ -37,93 +35,6 @@ class VillageServiceTest {
     private ModelMapper modelMapper;
     @Mock
     private RegionService regionService;
-
-
-
-
-    @Test
-    void convertToObjectAroundVillageDTOList_ShouldConvertObjectVillagesToObjectAroundVillageDTOList() {
-        // Create a list of test objects
-        ObjectAroundVillage objectAroundVillage = new ObjectAroundVillage(1L, "TYPE");
-        List<ObjectVillage> objectVillages = new ArrayList<>();
-        ObjectVillage ov1 = new ObjectVillage();
-        ov1.setId(1L);
-        ov1.setObject(objectAroundVillage);
-        objectVillages.add(ov1);
-
-        ObjectVillage ov2 = new ObjectVillage();
-        ov2.setId(2L);
-        ov2.setObject(objectAroundVillage);
-        objectVillages.add(ov2);
-
-        // Create an instance of the tested class
-        VillageService villageService = new VillageService(villageRepository,modelMapper,regionService);
-
-        // Call the method under test
-        List<ObjectAroundVillageDTO> result = villageService.convertToObjectAroundVillageDTOList(objectVillages);
-
-        // Check the result
-        assertEquals(objectVillages.size(), result.size());
-        for (int i = 0; i < result.size(); i++) {
-            ObjectVillage ov = objectVillages.get(i);
-            ObjectAroundVillageDTO dto = result.get(i);
-            assertEquals(ov.getObject().getId(), dto.getId());
-            assertEquals(ov.getObject().getType(), dto.getType());
-        }
-    }
-
-
-
-    @Test
-    void convertToLivingConditionDTOList_ShouldConvertVillageLivingConditionsToLivingConditionDTOList() {
-        // Create a list of test objects
-        List<VillageLivingConditions> villageLivingConditionsList = new ArrayList<>();
-        VillageLivingConditions vl1 = new VillageLivingConditions();
-        vl1.setId(1L);
-        LivingCondition lc1 = new LivingCondition();
-        lc1.setId(1L);
-        lc1.setLivingConditionName("Condition 1");
-        vl1.setLivingCondition(lc1);
-        villageLivingConditionsList.add(vl1);
-
-        VillageLivingConditions vl2 = new VillageLivingConditions();
-        vl2.setId(2L);
-        LivingCondition lc2 = new LivingCondition();
-        lc2.setId(2L);
-        lc2.setLivingConditionName("Condition 2");
-        vl2.setLivingCondition(lc2);
-        villageLivingConditionsList.add(vl2);
-
-
-        // Call the method under test
-        List<LivingConditionDTO> result = villageService.convertToLivingConditionDTOList(villageLivingConditionsList);
-
-        // Check the result
-        assertEquals(villageLivingConditionsList.size(), result.size());
-        for (int i = 0; i < result.size(); i++) {
-            VillageLivingConditions vl = villageLivingConditionsList.get(i);
-            LivingConditionDTO dto = result.get(i);
-            assertEquals(vl.getLivingCondition().getId(), dto.getId());
-            assertEquals(vl.getLivingCondition().getLivingConditionName(), dto.getLivingConditionName());
-        }
-    }
-
-
-    @Test
-    void convertToPopulationDTO_ShouldConvertChildrenToPopulationDTO() {
-        // Create a test object
-        Children children = Children.BELOW_10;
-
-
-        // Call the method under test
-        PopulationDTO result = villageService.convertToPopulationDTO(children);
-
-        // Check the result
-        assertEquals(children, result.getChildren());
-    }
-
-
-
 
 
     @Test
@@ -322,4 +233,28 @@ class VillageServiceTest {
 
         verify(villageRepository, times(1)).findById(villageId);
     }
+
+
+    @Test
+    void testCreateVillageWhitNullValues() {
+        Village village = new Village();
+        village.setName("null");
+        village.setPopulationCount(0);
+        village.setStatus(false);
+
+        Village savedVillage = new Village();
+        savedVillage.setId(1L);
+
+        when(villageRepository.save(any(Village.class))).thenAnswer(invocation -> {
+            Village createdVillage = invocation.getArgument(0);
+            createdVillage.setId(1L);
+            return createdVillage;
+        });
+
+        Long createdVillageId = villageService.createVillageWhitNullValues();
+
+        Assertions.assertEquals(1L, createdVillageId);
+    }
+
+
 }

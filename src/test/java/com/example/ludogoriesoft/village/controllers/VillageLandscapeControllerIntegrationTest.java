@@ -162,4 +162,25 @@ class VillageLandscapeControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/villageLandscapes/{id}", 1))
                 .andExpect(status().isNoContent());
     }
+
+    @Test
+    void testDeleteVillageLandscapeByIdWhenDeletedSuccessfully() throws Exception {
+        Long idToDelete = 1L;
+
+        when(villageLandscapeService.deleteVillageLandscapeById(idToDelete)).thenReturn(1);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/villageLandscapes/{id}", idToDelete))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void testDeleteVillageLandscapeByIdWhenNotExists() throws Exception {
+        Long nonExistentId = 100L;
+
+        when(villageLandscapeService.deleteVillageLandscapeById(nonExistentId)).thenReturn(0);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/villageLandscapes/{id}", nonExistentId))
+                .andExpect(status().isNotFound());
+    }
+
 }

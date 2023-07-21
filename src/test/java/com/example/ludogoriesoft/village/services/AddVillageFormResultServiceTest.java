@@ -1,16 +1,11 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.*;
-import com.example.ludogorieSoft.village.enums.Consents;
-import com.example.ludogorieSoft.village.enums.Distance;
-import com.example.ludogorieSoft.village.enums.NumberOfPopulation;
+import com.example.ludogorieSoft.village.enums.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
@@ -20,6 +15,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+
 @ExtendWith(MockitoExtension.class)
 class AddVillageFormResultServiceTest {
 
@@ -458,4 +454,28 @@ class AddVillageFormResultServiceTest {
 
         Assertions.assertEquals(expected, actual);
     }
+
+
+    @Test
+    void testCreateVillageAnswerQuestionsFromAddVillageFormResultDifferentSizes() {
+        Long villageId = 12345L;
+        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
+        addVillageFormResult.setQuestionResponses(Arrays.asList("Answer 1", "Answer 2"));
+
+        List<QuestionDTO> questionsDTO = Arrays.asList(
+                new QuestionDTO(1L, "Question 1"),
+                new QuestionDTO(2L, "Question 2"),
+                new QuestionDTO(3L, "Question 3")
+        );
+        when(questionService.getAllQuestions()).thenReturn(questionsDTO);
+
+        addVillageFormResultService.createVillageAnswerQuestionsFromAddVillageFormResult(villageId, addVillageFormResult);
+
+        verify(villageAnswerQuestionService, times(2)).createVillageAnswerQuestion(any(VillageAnswerQuestionDTO.class));
+    }
+
+
+
+
+
 }

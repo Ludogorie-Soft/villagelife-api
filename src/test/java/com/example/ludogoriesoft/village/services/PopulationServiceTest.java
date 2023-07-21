@@ -39,23 +39,24 @@ class PopulationServiceTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    public PopulationDTO populationToPopulationDTO(Population population){
-        return modelMapper.map(population, PopulationDTO.class);
-    }
-
-
 
     @Test
-     void testCreatePopulationWithNullValues() {
+    void testCreatePopulationWithNullValues() {
         Population population = new Population();
         population.setNumberOfPopulation(NumberOfPopulation.UP_TO_10_PEOPLE);
 
-        when(populationRepository.save(population)).thenReturn(population);
+        when(populationRepository.save(any(Population.class))).thenAnswer(invocation -> {
+            Population savedPopulation = invocation.getArgument(0);
+            savedPopulation.setId(1L);
+            return savedPopulation;
+        });
 
-        Long populationId = populationService.createPopulationWithNullValues();
+        Long resultId = populationService.createPopulationWithNullValues();
 
-        assertEquals(population.getId(), populationId);
-        verify(populationRepository).save(population);
+        assertNotNull(resultId);
+        assertEquals(1L, resultId);
+
+        verify(populationRepository, times(1)).save(any(Population.class));
     }
 
     @Test
@@ -138,9 +139,7 @@ class PopulationServiceTest {
         Optional<Population> optionalPopulation = Optional.empty();
         when(populationRepository.findById(populationId)).thenReturn(optionalPopulation);
 
-        Assertions.assertThrows(ApiRequestException.class, () -> {
-            populationService.getPopulationById(populationId);
-        });
+        Assertions.assertThrows(ApiRequestException.class, () -> populationService.getPopulationById(populationId));
 
         verify(populationRepository, times(1)).findById(populationId);
     }
@@ -179,9 +178,7 @@ class PopulationServiceTest {
         Long populationId = 1L;
         when(populationRepository.findById(populationId)).thenReturn(Optional.empty());
 
-        assertThrows(ApiRequestException.class, () -> {
-            populationService.getPopulationById(populationId);
-        });
+        assertThrows(ApiRequestException.class, () -> populationService.getPopulationById(populationId));
         verify(populationRepository, times(1)).findById(populationId);
     }
 
@@ -191,9 +188,7 @@ class PopulationServiceTest {
         Long populationId = 1L;
         when(populationRepository.findById(populationId)).thenReturn(Optional.empty());
 
-        assertThrows(ApiRequestException.class, () -> {
-            populationService.deletePopulationById(populationId);
-        });
+        assertThrows(ApiRequestException.class, () -> populationService.deletePopulationById(populationId));
         verify(populationRepository, times(1)).findById(populationId);
         verify(populationRepository, never()).delete(any(Population.class));
     }
@@ -224,9 +219,7 @@ class PopulationServiceTest {
         populationDTO.setNumberOfPopulation(NumberOfPopulation.FROM_2000_PEOPLE);
         when(populationRepository.findById(populationId)).thenReturn(Optional.empty());
 
-        assertThrows(ApiRequestException.class, () -> {
-            populationService.updatePopulation(populationId, populationDTO);
-        });
+        assertThrows(ApiRequestException.class, () -> populationService.updatePopulation(populationId, populationDTO));
         verify(populationRepository, times(1)).findById(populationId);
         verify(populationRepository, never()).save(any(Population.class));
     }
@@ -258,6 +251,23 @@ class PopulationServiceTest {
         verify(populationRepository, times(1)).findById(populationId);
         verify(populationRepository, never()).delete(any(Population.class));
     }
+
+
+    @Test
+    void testUpdatePopulationWithInvalidId() {
+        Long populationId = 1L;
+
+        PopulationDTO populationDTO = new PopulationDTO();
+        populationDTO.setNumberOfPopulation(NumberOfPopulation.FROM_51_TO_200_PEOPLE);
+
+        when(populationRepository.findById(populationId)).thenReturn(Optional.empty());
+
+        assertThrows(ApiRequestException.class, () -> populationService.updatePopulation(populationId, populationDTO));
+
+        verify(populationRepository, times(1)).findById(populationId);
+        verify(populationRepository, never()).save(any(Population.class));
+    }
+
 
 
 }

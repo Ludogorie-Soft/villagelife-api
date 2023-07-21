@@ -221,4 +221,22 @@ class VillageAnswerQuestionControllerIntegrationTest {
         String response = mvcResult.getResponse().getContentAsString();
         assertNotNull(response);
     }
+
+
+    @Test
+    void testGetVillageAnswerQuestionByVillageIdWhenNoneExist() throws Exception {
+        Long villageId = 1L;
+
+        when(villageAnswerQuestionService.getVillageAnswerQuestionByVillageId(villageId)).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageAnswerQuestion/village/{id}", villageId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(0))
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isEmpty())
+                .andReturn();
+    }
+
+
 }

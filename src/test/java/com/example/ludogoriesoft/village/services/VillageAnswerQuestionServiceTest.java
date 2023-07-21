@@ -10,10 +10,7 @@ import com.example.ludogorieSoft.village.repositories.VillageAnswerQuestionRepos
 import com.example.ludogorieSoft.village.repositories.VillageRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.mockito.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 
@@ -90,7 +87,6 @@ class VillageAnswerQuestionServiceTest {
     }
 
 
-
     @Test
     void testCreateVillageAnswerQuestionInvalidVillageThrowsException() {
         VillageAnswerQuestionDTO inputDTO = new VillageAnswerQuestionDTO();
@@ -141,7 +137,7 @@ class VillageAnswerQuestionServiceTest {
 
 
     @Test
-     void createVillageAnswerQuestionWhenInvalidVillageIdShouldThrowApiRequestException() {
+    void createVillageAnswerQuestionWhenInvalidVillageIdShouldThrowApiRequestException() {
         VillageAnswerQuestionDTO villageAnswerQuestionDTO = new VillageAnswerQuestionDTO();
         villageAnswerQuestionDTO.setVillageId(1L);
         villageAnswerQuestionDTO.setQuestionId(2L);
@@ -153,7 +149,7 @@ class VillageAnswerQuestionServiceTest {
     }
 
     @Test
-     void createVillageAnswerQuestionWhenInvalidQuestionIdShouldThrowApiRequestException() {
+    void createVillageAnswerQuestionWhenInvalidQuestionIdShouldThrowApiRequestException() {
         VillageAnswerQuestionDTO villageAnswerQuestionDTO = new VillageAnswerQuestionDTO();
         villageAnswerQuestionDTO.setVillageId(1L);
         villageAnswerQuestionDTO.setQuestionId(2L);
@@ -168,7 +164,7 @@ class VillageAnswerQuestionServiceTest {
     }
 
     @Test
-     void getVillageAnswerQuestionByIdWhenValidIdShouldReturnVillageAnswerQuestionDTO() {
+    void getVillageAnswerQuestionByIdWhenValidIdShouldReturnVillageAnswerQuestionDTO() {
         Long id = 1L;
         VillageAnswerQuestion villageAnswerQuestion = new VillageAnswerQuestion();
         villageAnswerQuestion.setId(id);
@@ -186,7 +182,7 @@ class VillageAnswerQuestionServiceTest {
     }
 
     @Test
-     void getVillageAnswerQuestionByIdWhenInvalidIdShouldThrowApiRequestException() {
+    void getVillageAnswerQuestionByIdWhenInvalidIdShouldThrowApiRequestException() {
         Long id = 1L;
         when(villageAnswerQuestionRepository.findById(id)).thenReturn(Optional.empty());
 
@@ -195,7 +191,7 @@ class VillageAnswerQuestionServiceTest {
 
 
     @Test
-     void deleteVillageAnswerQuestionByIdWhenValidIdShouldReturn1() {
+    void deleteVillageAnswerQuestionByIdWhenValidIdShouldReturn1() {
         Long id = 1L;
 
         int result = villageAnswerQuestionService.deleteVillageAnswerQuestionById(id);
@@ -205,7 +201,7 @@ class VillageAnswerQuestionServiceTest {
     }
 
     @Test
-     void deleteVillageAnswerQuestionByIdWhenInvalidIdShouldReturn0() {
+    void deleteVillageAnswerQuestionByIdWhenInvalidIdShouldReturn0() {
         Long id = 1L;
         Mockito.doThrow(new EmptyResultDataAccessException(1)).when(villageAnswerQuestionRepository).deleteById(id);
 
@@ -216,7 +212,7 @@ class VillageAnswerQuestionServiceTest {
 
 
     @Test
-     void updateVillageAnswerQuestionWhenInvalidIdShouldThrowApiRequestException() {
+    void updateVillageAnswerQuestionWhenInvalidIdShouldThrowApiRequestException() {
         Long id = 1L;
         VillageAnswerQuestionDTO villageAnswerQuestionDTO = new VillageAnswerQuestionDTO();
         villageAnswerQuestionDTO.setVillageId(1L);
@@ -227,6 +223,7 @@ class VillageAnswerQuestionServiceTest {
 
         assertThrows(ApiRequestException.class, () -> villageAnswerQuestionService.updateVillageAnswerQuestion(id, villageAnswerQuestionDTO));
     }
+
     @Test
     void testGetVillageAnswerQuestionByVillageId() {
         Village village = new Village();
@@ -256,4 +253,154 @@ class VillageAnswerQuestionServiceTest {
         assertEquals("Answer 1", result.get(0).getAnswer());
         assertEquals("Answer 2", result.get(1).getAnswer());
     }
+
+
+    @Test
+    void testUpdateVillageAnswerQuestionWhenInvalidVillageIdShouldThrowApiRequestException() {
+        Long id = 1L;
+        VillageAnswerQuestionDTO inputDTO = new VillageAnswerQuestionDTO();
+        inputDTO.setVillageId(2L);
+        inputDTO.setQuestionId(3L);
+        inputDTO.setAnswer("Updated answer");
+
+        VillageAnswerQuestion existingVillageAnswerQuestion = new VillageAnswerQuestion();
+        existingVillageAnswerQuestion.setId(id);
+
+        when(villageAnswerQuestionRepository.findById(id)).thenReturn(Optional.of(existingVillageAnswerQuestion));
+        when(villageService.checkVillage(2L)).thenThrow(new ApiRequestException("Village not found"));
+
+        assertThrows(ApiRequestException.class, () -> villageAnswerQuestionService.updateVillageAnswerQuestion(id, inputDTO));
+
+        verify(villageAnswerQuestionRepository, times(1)).findById(id);
+        verify(villageService, times(1)).checkVillage(2L);
+        verify(questionService, never()).checkQuestion(anyLong());
+        verify(villageAnswerQuestionRepository, never()).save(any(VillageAnswerQuestion.class));
+    }
+
+    @Test
+    void testUpdateVillageAnswerQuestionWhenInvalidQuestionIdShouldThrowApiRequestException() {
+        Long id = 1L;
+        VillageAnswerQuestionDTO inputDTO = new VillageAnswerQuestionDTO();
+        inputDTO.setVillageId(2L);
+        inputDTO.setQuestionId(3L);
+        inputDTO.setAnswer("Updated answer");
+
+        VillageAnswerQuestion existingVillageAnswerQuestion = new VillageAnswerQuestion();
+        existingVillageAnswerQuestion.setId(id);
+
+        Village village = new Village();
+        village.setId(2L);
+        when(villageService.checkVillage(2L)).thenReturn(village);
+        existingVillageAnswerQuestion.setVillage(village);
+
+        when(villageAnswerQuestionRepository.findById(id)).thenReturn(Optional.of(existingVillageAnswerQuestion));
+        when(questionService.checkQuestion(3L)).thenThrow(new ApiRequestException("Question not found"));
+
+        assertThrows(ApiRequestException.class, () -> villageAnswerQuestionService.updateVillageAnswerQuestion(id, inputDTO));
+
+        verify(villageAnswerQuestionRepository, times(1)).findById(id);
+        verify(villageService, times(1)).checkVillage(2L);
+        verify(questionService, times(1)).checkQuestion(3L);
+        verify(villageAnswerQuestionRepository, never()).save(any(VillageAnswerQuestion.class));
+    }
+
+    @Test
+    void testUpdateVillageAnswerQuestionWhenNotFoundShouldThrowApiRequestException() {
+        Long id = 1L;
+        VillageAnswerQuestionDTO inputDTO = new VillageAnswerQuestionDTO();
+        inputDTO.setVillageId(2L);
+        inputDTO.setQuestionId(3L);
+        inputDTO.setAnswer("Updated answer");
+
+        when(villageAnswerQuestionRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(ApiRequestException.class, () -> villageAnswerQuestionService.updateVillageAnswerQuestion(id, inputDTO));
+
+        verify(villageAnswerQuestionRepository, times(1)).findById(id);
+        verify(villageService, never()).checkVillage(anyLong());
+        verify(questionService, never()).checkQuestion(anyLong());
+        verify(villageAnswerQuestionRepository, never()).save(any(VillageAnswerQuestion.class));
+    }
+
+    @Test
+    void testUpdateVillageAnswerQuestionWithInvalidId() {
+        Long id = 1L;
+        VillageAnswerQuestionDTO inputDTO = new VillageAnswerQuestionDTO();
+        inputDTO.setVillageId(2L);
+        inputDTO.setQuestionId(3L);
+        inputDTO.setAnswer("Updated answer");
+
+        when(villageAnswerQuestionRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(ApiRequestException.class, () -> villageAnswerQuestionService.updateVillageAnswerQuestion(id, inputDTO));
+
+        verify(villageService, never()).checkVillage(anyLong());
+        verify(questionService, never()).checkQuestion(anyLong());
+        verify(villageAnswerQuestionRepository, never()).save(any(VillageAnswerQuestion.class));
+    }
+
+    @Test
+    void testUpdateVillageAnswerQuestionWithInvalidVillageId() {
+        Long id = 1L;
+        VillageAnswerQuestionDTO inputDTO = new VillageAnswerQuestionDTO();
+        inputDTO.setVillageId(999L);
+        inputDTO.setQuestionId(3L);
+        inputDTO.setAnswer("Updated answer");
+
+        when(villageAnswerQuestionRepository.findById(id)).thenReturn(Optional.of(new VillageAnswerQuestion()));
+        when(villageService.checkVillage(anyLong())).thenThrow(new ApiRequestException("Invalid VillageId"));
+
+        assertThrows(ApiRequestException.class, () -> villageAnswerQuestionService.updateVillageAnswerQuestion(id, inputDTO));
+
+        verify(questionService, never()).checkQuestion(anyLong());
+        verify(villageAnswerQuestionRepository, never()).save(any(VillageAnswerQuestion.class));
+    }
+
+    @Test
+    void testUpdateVillageAnswerQuestionWithInvalidQuestionId() {
+        Long id = 1L;
+        VillageAnswerQuestionDTO inputDTO = new VillageAnswerQuestionDTO();
+        inputDTO.setVillageId(2L);
+        inputDTO.setQuestionId(999L);
+        inputDTO.setAnswer("Updated answer");
+
+        when(villageAnswerQuestionRepository.findById(id)).thenReturn(Optional.of(new VillageAnswerQuestion()));
+        when(villageService.checkVillage(anyLong())).thenReturn(new Village());
+        when(questionService.checkQuestion(anyLong())).thenThrow(new ApiRequestException("Invalid QuestionId"));
+
+        assertThrows(ApiRequestException.class, () -> villageAnswerQuestionService.updateVillageAnswerQuestion(id, inputDTO));
+
+        verify(villageAnswerQuestionRepository, never()).save(any(VillageAnswerQuestion.class));
+    }
+
+
+    @Test
+    void testUpdateVillageAnswerQuestion() {
+        Long villageAnswerQuestionId = 1L;
+        Long villageId = 10L;
+        Long questionId = 20L;
+        String answer = "Test Answer";
+
+        VillageAnswerQuestionDTO villageAnswerQuestionDTO = new VillageAnswerQuestionDTO();
+        villageAnswerQuestionDTO.setVillageId(villageId);
+        villageAnswerQuestionDTO.setQuestionId(questionId);
+        villageAnswerQuestionDTO.setAnswer(answer);
+
+        VillageAnswerQuestion foundVillageAnswerQuestion = new VillageAnswerQuestion();
+        foundVillageAnswerQuestion.setId(villageAnswerQuestionId);
+
+        when(villageAnswerQuestionRepository.findById(villageAnswerQuestionId)).thenReturn(Optional.of(foundVillageAnswerQuestion));
+        when(villageService.checkVillage(villageId)).thenReturn(new Village());
+        when(questionService.checkQuestion(questionId)).thenReturn(new Question());
+        when(villageAnswerQuestionRepository.save(foundVillageAnswerQuestion)).thenReturn(foundVillageAnswerQuestion);
+
+        VillageAnswerQuestionDTO result = villageAnswerQuestionService.updateVillageAnswerQuestion(villageAnswerQuestionId, villageAnswerQuestionDTO);
+
+        verify(villageAnswerQuestionRepository, times(1)).findById(villageAnswerQuestionId);
+        verify(villageService, times(1)).checkVillage(villageId);
+        verify(questionService, times(1)).checkQuestion(questionId);
+        verify(villageAnswerQuestionRepository, times(1)).save(foundVillageAnswerQuestion);
+    }
+
+
 }
