@@ -1,6 +1,7 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.VillageLivingConditionDTO;
+import com.example.ludogorieSoft.village.enums.Consents;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.LivingCondition;
 import com.example.ludogorieSoft.village.model.Village;
@@ -148,5 +149,8 @@ public class VillageLivingConditionService {
         }
         double average = sum / (count - 11);
         return Math.round(average * 100) / 100.0;
+    }
+    public boolean existsByVillageIdAndLivingConditionIdAndConsents(Long villageId, Long livingConditionId, Consents consent){
+        return villageLivingConditionRepository.existsByVillageIdAndLivingConditionIdAndConsents(villageId, livingConditionId, consent);
     }
 }

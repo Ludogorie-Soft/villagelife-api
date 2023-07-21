@@ -22,8 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 class VillageLivingConditionServiceTest {
@@ -326,5 +325,29 @@ void getVillagePopulationAssertionByVillageIdDelinquencyValue_ShouldReturnValue(
         int result = villageLivingConditionService.deleteVillageLivingConditions(id);
         verify(villageLivingConditionRepository, times(1)).deleteById(id);
         Assertions.assertEquals(0, result);
+    }
+
+    @Test
+    void testExistsByVillageIdAndLivingConditionIdAndConsentsWhenRecordExists() {
+        Long villageId = 1L;
+        Long livingConditionId = 10L;
+        Consents consent = Consents.COMPLETELY_AGREED;
+        when(villageLivingConditionRepository.existsByVillageIdAndLivingConditionIdAndConsents(villageId, livingConditionId, consent))
+                .thenReturn(true);
+        boolean result = villageLivingConditionService.existsByVillageIdAndLivingConditionIdAndConsents(villageId, livingConditionId, consent);
+        Assertions.assertTrue(result);
+        verify(villageLivingConditionRepository, times(1)).existsByVillageIdAndLivingConditionIdAndConsents(villageId, livingConditionId, consent);
+    }
+
+    @Test
+    void testExistsByVillageIdAndLivingConditionIdAndConsentsWhenRecordDoesNotExist() {
+        Long villageId = 1L;
+        Long livingConditionId = 10L;
+        Consents consent = Consents.COMPLETELY_AGREED;
+        when(villageLivingConditionRepository.existsByVillageIdAndLivingConditionIdAndConsents(villageId, livingConditionId, consent))
+                .thenReturn(false);
+        boolean result = villageLivingConditionService.existsByVillageIdAndLivingConditionIdAndConsents(villageId, livingConditionId, consent);
+        Assertions.assertFalse(result);
+        verify(villageLivingConditionRepository, times(1)).existsByVillageIdAndLivingConditionIdAndConsents(villageId, livingConditionId, consent);
     }
 }

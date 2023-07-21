@@ -41,18 +41,8 @@ public class Village {
     private Administrator admin;
     @CreationTimestamp
     private LocalDateTime dateApproved;
-
-
-
-
     @OneToMany(mappedBy = "village")
     private List<ObjectVillage> objectVillages;
-
-
     @OneToMany(mappedBy = "village")
     private List<VillageLivingConditions> villageLivingConditions;
-
-
-
-
 }

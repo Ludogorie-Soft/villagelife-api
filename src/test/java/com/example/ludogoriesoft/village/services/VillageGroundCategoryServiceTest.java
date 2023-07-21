@@ -270,5 +270,34 @@ class VillageGroundCategoryServiceTest {
         verify(villageGroundCategoryRepository, never()).save(any(VillageGroundCategory.class));
     }
 
+    @Test
+    void testFindVillageGroundCategoryDTOByVillageIdWhenExists() {
+        Long villageId = 1L;
+        VillageGroundCategory villageGroundCategory = new VillageGroundCategory();
+        Village village = new Village();
+        village.setId(1L);
+        villageGroundCategory.setVillage(village);
+        villageGroundCategory.setGroundCategory(new GroundCategory(1L, "test ground category"));
 
+        VillageGroundCategoryDTO expectedDTO = new VillageGroundCategoryDTO();
+        expectedDTO.setVillageId(1L);
+        expectedDTO.setGroundCategoryId(1L);
+
+        when(villageGroundCategoryRepository.findByVillageId(villageId)).thenReturn(villageGroundCategory);
+        when(villageGroundCategoryService.toDTO(villageGroundCategory)).thenReturn(expectedDTO);
+        VillageGroundCategoryDTO resultDTO = villageGroundCategoryService.findVillageGroundCategoryDTOByVillageId(villageId);
+
+        assertNotNull(resultDTO);
+        assertEquals(villageGroundCategory.getVillage().getId(), resultDTO.getVillageId());
+        assertEquals(villageGroundCategory.getGroundCategory().getId(), resultDTO.getGroundCategoryId());
+    }
+
+    @Test
+    void testFindVillageGroundCategoryDTOByVillageIdWhenNotExists() {
+        Long villageId = 1L;
+        when(villageGroundCategoryRepository.findByVillageId(villageId)).thenReturn(null);
+        assertThrows(ApiRequestException.class, () -> {
+            villageGroundCategoryService.findVillageGroundCategoryDTOByVillageId(villageId);
+        });
+    }
 }
