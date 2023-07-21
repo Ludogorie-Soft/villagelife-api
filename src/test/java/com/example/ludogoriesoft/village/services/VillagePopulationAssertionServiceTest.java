@@ -290,8 +290,8 @@ class VillagePopulationAssertionServiceTest {
 
         verify(villagePopulationAssertionRepository, times(1)).findById(1L);
         verify(villagePopulationAssertionRepository, times(1)).save(any(VillagePopulationAssertion.class));
-
-      @Test
+    }
+        @Test
     void testExistsByVillageIdAndPopulatedAssertionIdAndAnswerWhenRecordExists() {
         Long villageId = 1L;
         Long populatedAssertionId = 10L;
