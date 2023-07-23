@@ -6,9 +6,7 @@ import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.PopulatedAssertion;
 import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.model.VillagePopulationAssertion;
-import com.example.ludogorieSoft.village.repositories.PopulatedAssertionRepository;
 import com.example.ludogorieSoft.village.repositories.VillagePopulationAssertionRepository;
-import com.example.ludogorieSoft.village.repositories.VillageRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -22,8 +20,6 @@ import java.util.Optional;
 @AllArgsConstructor
 public class VillagePopulationAssertionService {
     private final VillagePopulationAssertionRepository villagePopulationAssertionRepository;
-    private final VillageRepository villageRepository;
-    private final PopulatedAssertionRepository populatedAssertionRepository;
     private final PopulatedAssertionService populatedAssertionService;
     private final VillageService villageService;
     private final ModelMapper modelMapper;

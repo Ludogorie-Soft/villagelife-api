@@ -38,7 +38,10 @@ class VillageServiceTest {
     private ModelMapper modelMapper;
     @Mock
     private RegionService regionService;
-
+    @Mock
+    private PopulatedAssertionService populationAssertionService;
+    @Mock
+    private LivingConditionService livingConditionService;
 
     @Test
     void convertToObjectAroundVillageDTOList_ShouldConvertObjectVillagesToObjectAroundVillageDTOList() {
@@ -54,7 +57,7 @@ class VillageServiceTest {
         ov2.setObject(objectAroundVillage);
         objectVillages.add(ov2);
 
-        VillageService villageService = new VillageService(villageRepository, modelMapper, regionService);
+        VillageService villageService = new VillageService(villageRepository, modelMapper, regionService, populationAssertionService, livingConditionService);
 
         List<ObjectAroundVillageDTO> result = villageService.convertToObjectAroundVillageDTOList(objectVillages);
 

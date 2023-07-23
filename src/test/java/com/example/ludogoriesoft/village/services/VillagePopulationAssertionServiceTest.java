@@ -3,9 +3,7 @@ import com.example.ludogorieSoft.village.dtos.VillagePopulationAssertionDTO;
 import com.example.ludogorieSoft.village.enums.Consents;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.*;
-import com.example.ludogorieSoft.village.repositories.PopulatedAssertionRepository;
 import com.example.ludogorieSoft.village.repositories.VillagePopulationAssertionRepository;
-import com.example.ludogorieSoft.village.repositories.VillageRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,8 +21,6 @@ import static org.mockito.Mockito.*;
 
 class VillagePopulationAssertionServiceTest {
     private VillagePopulationAssertionRepository villagePopulationAssertionRepository;
-    private VillageRepository villageRepository;
-    private PopulatedAssertionRepository populatedAssertionRepository;
     private PopulatedAssertionService populatedAssertionService;
     private VillageService villageService;
     @Mock
@@ -34,15 +30,11 @@ class VillagePopulationAssertionServiceTest {
     @BeforeEach
     void setUp() {
         villagePopulationAssertionRepository = Mockito.mock(VillagePopulationAssertionRepository.class);
-        villageRepository = Mockito.mock(VillageRepository.class);
-        populatedAssertionRepository = Mockito.mock(PopulatedAssertionRepository.class);
         populatedAssertionService = Mockito.mock(PopulatedAssertionService.class);
         villageService = Mockito.mock(VillageService.class);
         modelMapper = Mockito.mock(ModelMapper.class);
         villagePopulationAssertionService = new VillagePopulationAssertionService(
                 villagePopulationAssertionRepository,
-                villageRepository,
-                populatedAssertionRepository,
                 populatedAssertionService,
                 villageService,
                 modelMapper

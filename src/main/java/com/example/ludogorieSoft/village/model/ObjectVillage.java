@@ -1,14 +1,13 @@
 package com.example.ludogorieSoft.village.model;
 
 import com.example.ludogorieSoft.village.enums.Distance;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name = "village_objects")
 @AllArgsConstructor
 @NoArgsConstructor

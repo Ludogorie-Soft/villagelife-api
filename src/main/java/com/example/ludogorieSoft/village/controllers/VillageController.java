@@ -1,6 +1,7 @@
 package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.dtos.VillageDTO;
+import com.example.ludogorieSoft.village.dtos.response.VillageInfo;
 import com.example.ludogorieSoft.village.services.VillageService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,11 @@ public class VillageController {
     public ResponseEntity<VillageDTO> getVillageById(@PathVariable("id") Long id) {
         VillageDTO village = villageService.getVillageById(id);
         return ResponseEntity.ok(village);
+    }
+    @GetMapping("/info/{id}")
+    public ResponseEntity<VillageInfo> getVillageInfoById(@PathVariable("id") Long id) {
+        VillageInfo villageInfo = villageService.getVillageInfoByVillageId(id);
+        return ResponseEntity.ok(villageInfo);
     }
 
     @PostMapping

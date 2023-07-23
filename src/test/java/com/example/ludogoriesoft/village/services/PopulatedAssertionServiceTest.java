@@ -4,6 +4,7 @@ import com.example.ludogorieSoft.village.dtos.PopulatedAssertionDTO;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.PopulatedAssertion;
 import com.example.ludogorieSoft.village.repositories.PopulatedAssertionRepository;
+import com.example.ludogorieSoft.village.repositories.VillagePopulationAssertionRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,6 +27,8 @@ class PopulatedAssertionServiceTest {
     @InjectMocks
     private PopulatedAssertionService populatedAssertionService;
     @Mock
+    private VillagePopulationAssertionRepository villagePopulationAssertionRepository;
+    @Mock
     private ModelMapper modelMapper;
 
 
@@ -33,7 +36,7 @@ class PopulatedAssertionServiceTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         ModelMapper modelMapper = new ModelMapper();
-        populatedAssertionService = new PopulatedAssertionService(populatedAssertionRepository, modelMapper);
+        populatedAssertionService = new PopulatedAssertionService(populatedAssertionRepository, villagePopulationAssertionRepository, modelMapper);
     }
 
     @Test

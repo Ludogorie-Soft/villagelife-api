@@ -1,6 +1,7 @@
 package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.dtos.PopulatedAssertionDTO;
+import com.example.ludogorieSoft.village.dtos.response.PopulationAssertionResponse;
 import com.example.ludogorieSoft.village.services.PopulatedAssertionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -44,5 +45,10 @@ public class PopulatedAssertionController {
     public ResponseEntity<String> deletePopulatedAssertionById(@PathVariable("id") Long id) {
         populatedAssertionService.deletePopulatedAssertionById(id);
         return new ResponseEntity<>("PopulatedAssertion with id: " + id + " has been deleted successfully!!", HttpStatus.OK);
+    }
+
+    @GetMapping("/assertions/village/{villageId}")
+    public ResponseEntity<List<PopulationAssertionResponse>> getPopulationAssertionResponseByVillageId(@PathVariable("villageId") Long villageId) {
+        return ResponseEntity.ok(populatedAssertionService.getPopulationAssertionResponse(villageId));
     }
 }
