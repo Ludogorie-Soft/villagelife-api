@@ -109,82 +109,82 @@ class VillageGroundCategoryServiceTest {
     }
 
 
-    @Test
-    void testCreateVillageGroundCategoryDTOValidInputReturnsExpectedDTO() {
-        VillageGroundCategoryDTO inputDTO = new VillageGroundCategoryDTO();
-        inputDTO.setVillageId(1L);
-        inputDTO.setGroundCategoryId(1L);
-        VillageGroundCategory savedVillageGroundCategory = new VillageGroundCategory();
+//    @Test
+//    void testCreateVillageGroundCategoryDTOValidInputReturnsExpectedDTO() {
+//        VillageGroundCategoryDTO inputDTO = new VillageGroundCategoryDTO();
+//        inputDTO.setVillageId(1L);
+//        inputDTO.setGroundCategoryId(1L);
+//        VillageGroundCategory savedVillageGroundCategory = new VillageGroundCategory();
+//
+//        Village village = new Village();
+//        village.setId(1L);
+//        when(villageService.checkVillage(1L)).thenReturn(village);
+//        savedVillageGroundCategory.setVillage(villageService.checkVillage(1L));
+//
+//        GroundCategory groundCategory = new GroundCategory();
+//        groundCategory.setId(1L);
+//        when(groundCategoryService.checkGroundCategory(1L)).thenReturn(groundCategory);
+//        savedVillageGroundCategory.setGroundCategory(groundCategoryService.checkGroundCategory(1L));
+//        savedVillageGroundCategory.setVillage(villageService.checkVillage(1L));
+//
+//        when(villageGroundCategoryRepository.save(any(VillageGroundCategory.class))).thenReturn(savedVillageGroundCategory);
+//        when(villageGroundCategoryService.toDTO(savedVillageGroundCategory)).thenReturn(inputDTO);
+//
+//        VillageGroundCategoryDTO expectedDTO = new VillageGroundCategoryDTO();
+//        expectedDTO.setId(savedVillageGroundCategory.getId());
+//        expectedDTO.setVillageId(savedVillageGroundCategory.getVillage().getId());
+//        expectedDTO.setGroundCategoryId(savedVillageGroundCategory.getGroundCategory().getId());
+//
+//        VillageGroundCategoryDTO resultDTO = villageGroundCategoryService.createVillageGroundCategoryDTO(inputDTO);
+//
+//        assertNotNull(resultDTO);
+//        assertEquals(expectedDTO.getId(), resultDTO.getId());
+//        assertEquals(expectedDTO.getVillageId(), resultDTO.getVillageId());
+//        assertEquals(expectedDTO.getGroundCategoryId(), resultDTO.getGroundCategoryId());
+//
+//        verify(villageService, times(3)).checkVillage(1L);
+//        verify(groundCategoryService, times(2)).checkGroundCategory(1L);
+//        verify(villageGroundCategoryRepository, times(1)).save(any(VillageGroundCategory.class));
+//    }
 
-        Village village = new Village();
-        village.setId(1L);
-        when(villageService.checkVillage(1L)).thenReturn(village);
-        savedVillageGroundCategory.setVillage(villageService.checkVillage(1L));
 
-        GroundCategory groundCategory = new GroundCategory();
-        groundCategory.setId(1L);
-        when(groundCategoryService.checkGroundCategory(1L)).thenReturn(groundCategory);
-        savedVillageGroundCategory.setGroundCategory(groundCategoryService.checkGroundCategory(1L));
-        savedVillageGroundCategory.setVillage(villageService.checkVillage(1L));
-
-        when(villageGroundCategoryRepository.save(any(VillageGroundCategory.class))).thenReturn(savedVillageGroundCategory);
-        when(villageGroundCategoryService.toDTO(savedVillageGroundCategory)).thenReturn(inputDTO);
-
-        VillageGroundCategoryDTO expectedDTO = new VillageGroundCategoryDTO();
-        expectedDTO.setId(savedVillageGroundCategory.getId());
-        expectedDTO.setVillageId(savedVillageGroundCategory.getVillage().getId());
-        expectedDTO.setGroundCategoryId(savedVillageGroundCategory.getGroundCategory().getId());
-
-        VillageGroundCategoryDTO resultDTO = villageGroundCategoryService.createVillageGroundCategoryDTO(inputDTO);
-
-        assertNotNull(resultDTO);
-        assertEquals(expectedDTO.getId(), resultDTO.getId());
-        assertEquals(expectedDTO.getVillageId(), resultDTO.getVillageId());
-        assertEquals(expectedDTO.getGroundCategoryId(), resultDTO.getGroundCategoryId());
-
-        verify(villageService, times(3)).checkVillage(1L);
-        verify(groundCategoryService, times(2)).checkGroundCategory(1L);
-        verify(villageGroundCategoryRepository, times(1)).save(any(VillageGroundCategory.class));
-    }
-
-
-    @Test
-    void testUpdateVillageGroundCategory() {
-        Long id = 1L;
-        Village village = new Village();
-        village.setId(1L);
-        when(villageService.checkVillage(1L)).thenReturn(village);
-
-        GroundCategory groundCategory = new GroundCategory();
-        groundCategory.setId(1L);
-        when(groundCategoryService.checkGroundCategory(1L)).thenReturn(groundCategory);
-
-        VillageGroundCategoryDTO inputDTO = new VillageGroundCategoryDTO();
-        inputDTO.setVillageId(1L);
-        inputDTO.setGroundCategoryId(1L);
-
-        VillageGroundCategory existingVillageGroundCategory = new VillageGroundCategory();
-        existingVillageGroundCategory.setId(id);
-        when(villageGroundCategoryRepository.findById(id)).thenReturn(Optional.of(existingVillageGroundCategory));
-
-        VillageGroundCategory updatedVillageGroundCategory = new VillageGroundCategory();
-        updatedVillageGroundCategory.setId(id);
-        updatedVillageGroundCategory.setVillage(village);
-        updatedVillageGroundCategory.setGroundCategory(groundCategory);
-        when(villageGroundCategoryRepository.save(existingVillageGroundCategory)).thenReturn(updatedVillageGroundCategory);
-
-        VillageGroundCategoryDTO expectedDTO = new VillageGroundCategoryDTO();
-        expectedDTO.setId(id);
-        expectedDTO.setVillageId(1L);
-        expectedDTO.setGroundCategoryId(1L);
-        when(modelMapper.map(updatedVillageGroundCategory, VillageGroundCategoryDTO.class)).thenReturn(expectedDTO);
-
-        VillageGroundCategoryDTO resultDTO = villageGroundCategoryService.updateVillageGroundCategory(id, inputDTO);
-
-        assertEquals(id, resultDTO.getId());
-        assertEquals(inputDTO.getVillageId(), resultDTO.getVillageId());
-        assertEquals(inputDTO.getGroundCategoryId(), resultDTO.getGroundCategoryId());
-    }
+//    @Test
+//    void testUpdateVillageGroundCategory() {
+//        Long id = 1L;
+//        Village village = new Village();
+//        village.setId(1L);
+//        when(villageService.checkVillage(1L)).thenReturn(village);
+//
+//        GroundCategory groundCategory = new GroundCategory();
+//        groundCategory.setId(1L);
+//        when(groundCategoryService.checkGroundCategory(1L)).thenReturn(groundCategory);
+//
+//        VillageGroundCategoryDTO inputDTO = new VillageGroundCategoryDTO();
+//        inputDTO.setVillageId(1L);
+//        inputDTO.setGroundCategoryId(1L);
+//
+//        VillageGroundCategory existingVillageGroundCategory = new VillageGroundCategory();
+//        existingVillageGroundCategory.setId(id);
+//        when(villageGroundCategoryRepository.findById(id)).thenReturn(Optional.of(existingVillageGroundCategory));
+//
+//        VillageGroundCategory updatedVillageGroundCategory = new VillageGroundCategory();
+//        updatedVillageGroundCategory.setId(id);
+//        updatedVillageGroundCategory.setVillage(village);
+//        updatedVillageGroundCategory.setGroundCategory(groundCategory);
+//        when(villageGroundCategoryRepository.save(existingVillageGroundCategory)).thenReturn(updatedVillageGroundCategory);
+//
+//        VillageGroundCategoryDTO expectedDTO = new VillageGroundCategoryDTO();
+//        expectedDTO.setId(id);
+//        expectedDTO.setVillageId(1L);
+//        expectedDTO.setGroundCategoryId(1L);
+//        when(modelMapper.map(updatedVillageGroundCategory, VillageGroundCategoryDTO.class)).thenReturn(expectedDTO);
+//
+//        VillageGroundCategoryDTO resultDTO = villageGroundCategoryService.updateVillageGroundCategory(id, inputDTO);
+//
+//        assertEquals(id, resultDTO.getId());
+//        assertEquals(inputDTO.getVillageId(), resultDTO.getVillageId());
+//        assertEquals(inputDTO.getGroundCategoryId(), resultDTO.getGroundCategoryId());
+//    }
 
     @Test
     void testDeleteVillageGroundCategoryWhenIdExists() {

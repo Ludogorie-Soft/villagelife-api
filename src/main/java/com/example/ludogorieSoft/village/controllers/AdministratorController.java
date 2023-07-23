@@ -1,11 +1,12 @@
 package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.dtos.AdministratorDTO;
+import com.example.ludogorieSoft.village.dtos.VillageDTO;
 import com.example.ludogorieSoft.village.dtos.request.AdministratorRequest;
 import com.example.ludogorieSoft.village.dtos.response.VillageResponse;
 import com.example.ludogorieSoft.village.services.AdministratorService;
 import com.example.ludogorieSoft.village.services.VillageService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/admins")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AdministratorController {
     private final AdministratorService administratorService;
     private final VillageService villageService;
@@ -55,4 +56,11 @@ public class AdministratorController {
         villageService.deleteVillage(villageId);
         return new ResponseEntity<>("Village with id: " + villageId + " has been deleted successfully!!", HttpStatus.OK);
     }
+    @PostMapping("/approve/{id}")
+    public ResponseEntity<String> changeVillageStatus(@PathVariable(name = "id") Long id){
+        VillageDTO villageDTO = villageService.getVillageById(id);
+        villageService.updateVillage(id,villageDTO);
+        return new ResponseEntity<>("Status of village with ID: " + id + " changed successfully!!!", HttpStatus.OK);
+    }
+
 }
