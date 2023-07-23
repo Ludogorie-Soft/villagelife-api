@@ -1,16 +1,9 @@
 package com.example.ludogorieSoft.village.services;
 
-import com.example.ludogorieSoft.village.dtos.RegionDTO;
-import com.example.ludogorieSoft.village.dtos.LivingConditionDTO;
-import com.example.ludogorieSoft.village.dtos.ObjectAroundVillageDTO;
-import com.example.ludogorieSoft.village.dtos.PopulationDTO;
-import com.example.ludogorieSoft.village.dtos.VillageDTO;
+import com.example.ludogorieSoft.village.dtos.*;
 import com.example.ludogorieSoft.village.enums.Children;
 
-import com.example.ludogorieSoft.village.model.ObjectVillage;
-import com.example.ludogorieSoft.village.model.Population;
-import com.example.ludogorieSoft.village.model.Village;
-import com.example.ludogorieSoft.village.model.VillageLivingConditions;
+import com.example.ludogorieSoft.village.model.*;
 import com.example.ludogorieSoft.village.repositories.VillageRepository;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import lombok.AllArgsConstructor;
@@ -21,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static java.time.LocalDateTime.now;
+
 
 @Service
 @AllArgsConstructor
@@ -29,9 +24,9 @@ public class VillageService {
     private final VillageRepository villageRepository;
     private final ModelMapper modelMapper;
     private final RegionService regionService;
-    private final String errorMessage1="Village with id ";
-    private final String errorMessage2=" not found  ";
-
+    private final AuthService authService;
+    private static final String ERROR_MESSAGE1 = "Village with id ";
+    private static final String ERROR_MESSAGE2 = " not found  ";
 
 
     public VillageDTO villageToVillageDTO(Village village) {
@@ -49,9 +44,11 @@ public class VillageService {
     public VillageDTO getVillageById(Long id) {
         Optional<Village> optionalVillage = villageRepository.findById(id);
         if (optionalVillage.isPresent()) {
-            return villageToVillageDTO(optionalVillage.get());
+            VillageDTO villageDTO = villageToVillageDTO(optionalVillage.get());
+            villageDTO.setPopulationDTO(modelMapper.map(optionalVillage.get().getPopulation(), PopulationDTO.class));
+            return villageDTO;
         } else {
-            throw new ApiRequestException(errorMessage1 + id + errorMessage2);
+            throw new ApiRequestException(ERROR_MESSAGE1 + id + ERROR_MESSAGE2);
         }
     }
 
@@ -77,7 +74,7 @@ public class VillageService {
     }
 
 
-    public VillageDTO updateVillage(Long id, VillageDTO villageDTO) {
+    public VillageDTO updateVillage(Long id, VillageDTO villageDTO) { // approve village status and set admin and date approved
         Optional<Village> optionalVillage = villageRepository.findById(id);
         if (optionalVillage.isPresent()) {
             Village village = optionalVillage.get();
@@ -86,10 +83,22 @@ public class VillageService {
             village.setRegion(regionService.checkRegion(regionDTO.getId()));
             village.setPopulationCount(villageDTO.getPopulationCount());
             village.setPopulation(modelMapper.map(villageDTO.getPopulationDTO(), Population.class));
+
+            AdministratorDTO administratorDTO = authService.getAdministratorInfo();
+
+            if (village.getStatus().equals(true)){
+                throw new ApiRequestException("This village already approved!");
+
+            }else {
+                village.setAdmin(modelMapper.map(administratorDTO, Administrator.class));
+                village.setStatus(true);
+                village.setDateApproved(now());
+            }
+
             villageRepository.save(village);
             return modelMapper.map(village, VillageDTO.class);
         } else {
-            throw new ApiRequestException(errorMessage1 + id + errorMessage2);
+            throw new ApiRequestException(ERROR_MESSAGE1 + id + ERROR_MESSAGE2);
         }
     }
 
@@ -98,7 +107,7 @@ public class VillageService {
         if (villageRepository.existsById(id)) {
             villageRepository.deleteById(id);
         } else {
-            throw new ApiRequestException(errorMessage1 + id + errorMessage2);
+            throw new ApiRequestException(ERROR_MESSAGE1 + id + ERROR_MESSAGE2);
         }
     }
 
@@ -212,6 +221,7 @@ public class VillageService {
 
         return villageDTOs;
     }
+
     private List<VillageDTO> convertToDTOChildren(List<Village> villages) {
         List<VillageDTO> villageDTOs = new ArrayList<>();
 
@@ -228,6 +238,7 @@ public class VillageService {
 
         return villageDTOs;
     }
+
     private List<VillageDTO> convertToDTOWithoutChildren(List<Village> villages) {
         List<VillageDTO> villageDTOs = new ArrayList<>();
 
@@ -341,7 +352,6 @@ public class VillageService {
 
         return populationDTO;
     }
-
 
 
 }

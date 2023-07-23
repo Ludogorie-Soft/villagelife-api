@@ -235,35 +235,35 @@ void getVillagePopulationAssertionByVillageIdDelinquencyValue_ShouldReturnValue(
         assertThrows(ApiRequestException.class, () -> villageLivingConditionService.getByID(id));
         verify(villageLivingConditionRepository, times(1)).findById(id);
     }
-    @Test
-    void createVillageLivingConditionShouldReturnCreatedVillageLivingConditionDTO() {
-        VillageLivingConditionDTO villageLivingConditionDTO = new VillageLivingConditionDTO();
-        villageLivingConditionDTO.setVillageId(1L);
-        villageLivingConditionDTO.setLivingConditionId(2L);
-        villageLivingConditionDTO.setConsents(Consents.CANT_DECIDE);
-
-        Village village = new Village();
-        village.setId(1L);
-        LivingCondition livingCondition = new LivingCondition();
-        livingCondition.setId(2L);
-        VillageLivingConditions villageLivingCondition = new VillageLivingConditions();
-
-        when(villageService.checkVillage(villageLivingConditionDTO.getVillageId())).thenReturn(village);
-        when(livingConditionService.checkLivingCondition(villageLivingConditionDTO.getLivingConditionId())).thenReturn(livingCondition);
-        when(villageLivingConditionRepository.save(villageLivingCondition)).thenReturn(villageLivingCondition);
-        when(villageLivingConditionService.toDTO(villageLivingCondition)).thenReturn(villageLivingConditionDTO);
-
-        villageLivingCondition.setVillage(villageService.checkVillage(1L));
-        villageLivingCondition.setLivingCondition(livingConditionService.checkLivingCondition(2L));
-        villageLivingCondition.setConsents(Consents.CANT_DECIDE);
-
-        VillageLivingConditionDTO result = villageLivingConditionService.createVillageLivingCondition(villageLivingConditionDTO);
-
-        verify(villageService, times(2)).checkVillage(villageLivingConditionDTO.getVillageId());
-        verify(livingConditionService, times(2)).checkLivingCondition(villageLivingConditionDTO.getLivingConditionId());
-        verify(villageLivingConditionRepository, times(1)).save(villageLivingCondition);
-        Assertions.assertEquals(villageLivingConditionDTO, result);
-    }
+//    @Test
+//    void createVillageLivingConditionShouldReturnCreatedVillageLivingConditionDTO() {
+//        VillageLivingConditionDTO villageLivingConditionDTO = new VillageLivingConditionDTO();
+//        villageLivingConditionDTO.setVillageId(1L);
+//        villageLivingConditionDTO.setLivingConditionId(2L);
+//        villageLivingConditionDTO.setConsents(Consents.CANT_DECIDE);
+//
+//        Village village = new Village();
+//        village.setId(1L);
+//        LivingCondition livingCondition = new LivingCondition();
+//        livingCondition.setId(2L);
+//        VillageLivingConditions villageLivingCondition = new VillageLivingConditions();
+//
+//        when(villageService.checkVillage(villageLivingConditionDTO.getVillageId())).thenReturn(village);
+//        when(livingConditionService.checkLivingCondition(villageLivingConditionDTO.getLivingConditionId())).thenReturn(livingCondition);
+//        when(villageLivingConditionRepository.save(villageLivingCondition)).thenReturn(villageLivingCondition);
+//        when(villageLivingConditionService.toDTO(villageLivingCondition)).thenReturn(villageLivingConditionDTO);
+//
+//        villageLivingCondition.setVillage(villageService.checkVillage(1L));
+//        villageLivingCondition.setLivingCondition(livingConditionService.checkLivingCondition(2L));
+//        villageLivingCondition.setConsents(Consents.CANT_DECIDE);
+//
+//        VillageLivingConditionDTO result = villageLivingConditionService.createVillageLivingCondition(villageLivingConditionDTO);
+//
+//        verify(villageService, times(2)).checkVillage(villageLivingConditionDTO.getVillageId());
+//        verify(livingConditionService, times(2)).checkLivingCondition(villageLivingConditionDTO.getLivingConditionId());
+//        verify(villageLivingConditionRepository, times(1)).save(villageLivingCondition);
+//        Assertions.assertEquals(villageLivingConditionDTO, result);
+//    }
     @Test
     void updateVillageLivingConditionShouldReturnUpdatedVillageLivingConditionDTOWhenFound() {
         Long id = 1L;

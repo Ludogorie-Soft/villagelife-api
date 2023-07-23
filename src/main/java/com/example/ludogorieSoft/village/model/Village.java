@@ -34,7 +34,7 @@ public class Village {
     private Population population;
     @CreationTimestamp
     private LocalDateTime dateUpload;
-    private boolean status;
+    private Boolean status;
     @ManyToOne
     @JoinColumn(name = "admin_id")
     private Administrator admin;
@@ -56,8 +56,5 @@ public class Village {
     private List<VillageLandscape> villageLandscapes;
     @OneToMany(mappedBy = "village", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<VillagePopulationAssertion> villagePopulationAssertions;
-
-
-
 
 }

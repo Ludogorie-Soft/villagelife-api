@@ -1,5 +1,6 @@
 package com.example.ludogorieSoft.village.controllers;
 
+import com.example.ludogorieSoft.village.authorization.JWTService;
 import com.example.ludogorieSoft.village.dtos.AdministratorDTO;
 import com.example.ludogorieSoft.village.dtos.request.AdministratorRequest;
 import com.example.ludogorieSoft.village.dtos.response.VillageResponse;
@@ -27,6 +28,7 @@ class AdministratorControllerTest {
     private VillageService villageService;
 
     private AdministratorController administratorController;
+    private  JWTService jwtService;
 
     @BeforeEach
     void setUp() {

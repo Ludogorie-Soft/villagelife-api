@@ -26,9 +26,7 @@ import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.times;
 
 class AdministratorServiceTest {
-
     private AdministratorService administratorService;
-
     private VillageRepository villageRepository;
     private AdministratorRepository administratorRepository;
     private ModelMapper modelMapper;
@@ -77,14 +75,18 @@ class AdministratorServiceTest {
         Administrator administrator = new Administrator();
         administrator.setUsername(username);
 
+        AdministratorDTO expectedAdminDTO = new AdministratorDTO();
+        expectedAdminDTO.setUsername(username);
+
         Mockito.when(administratorRepository.findByUsername(username))
                 .thenReturn(administrator);
+        Mockito.when(administratorService.administratorToAdministratorDTO(administrator)).thenReturn(expectedAdminDTO);
 
-        Administrator actualAdmin = administratorService.findAdminByUsername(username);
+        AdministratorDTO actualAdminDTO = administratorService.findAdminByUsername(username);
 
-        Assertions.assertEquals(administrator, actualAdmin);
-        Mockito.verify(administratorRepository, Mockito.times(1))
-                .findByUsername(username);
+        assertEquals(expectedAdminDTO.getUsername(), actualAdminDTO.getUsername());
+
+        Mockito.verify(administratorRepository, Mockito.times(1)).findByUsername(username);
     }
     @Test
     void testCreateAdministratorWhenUsernameDoesNotExist() {
@@ -279,6 +281,7 @@ class AdministratorServiceTest {
 
         assertEquals("oldPassword", foundAdministrator.get().getPassword());
     }
+
     @Test
     void testUpdateAdministratorWithNewPassword() {
         Long id = 1L;
