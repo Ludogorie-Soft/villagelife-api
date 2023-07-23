@@ -180,4 +180,55 @@ class VillageLandscapeServiceTest {
         verify(villageLandscapeRepository, never()).save(any(VillageLandscape.class));
     }
 
+
+    @Test
+    void createVillageLandscapeShouldThrowExceptionWhenVillageNotFound() {
+        VillageLandscapeDTO villageLandscapeDTO = new VillageLandscapeDTO();
+        villageLandscapeDTO.setVillageId(1L);
+        villageLandscapeDTO.setLandscapeId(2L);
+
+        when(villageService.checkVillage(anyLong())).thenThrow(ApiRequestException.class);
+
+        assertThrows(ApiRequestException.class, () -> villageLandscapeService.createVillageLandscape(villageLandscapeDTO));
+
+        verify(villageService, times(1)).checkVillage(anyLong());
+        verify(landscapeService, never()).checkLandscape(anyLong());
+        verify(villageLandscapeRepository, never()).save(any(VillageLandscape.class));
+    }
+
+
+    @Test
+    void createVillageLandscapeShouldThrowExceptionWhenLandscapeNotFound() {
+        VillageLandscapeDTO villageLandscapeDTO = new VillageLandscapeDTO();
+        villageLandscapeDTO.setVillageId(1L);
+        villageLandscapeDTO.setLandscapeId(2L);
+
+        when(villageService.checkVillage(anyLong())).thenReturn(new Village());
+        when(landscapeService.checkLandscape(anyLong())).thenThrow(ApiRequestException.class);
+
+        assertThrows(ApiRequestException.class, () -> villageLandscapeService.createVillageLandscape(villageLandscapeDTO));
+
+        verify(villageService, times(1)).checkVillage(anyLong());
+        verify(landscapeService, times(1)).checkLandscape(anyLong());
+        verify(villageLandscapeRepository, never()).save(any(VillageLandscape.class));
+    }
+
+
+    @Test
+    void updateVillageLandscapeShouldThrowExceptionWhenVillageLandscapeNotFound() {
+        Long id = 1L;
+        VillageLandscapeDTO villageLandscapeDTO = new VillageLandscapeDTO();
+        villageLandscapeDTO.setVillageId(2L);
+        villageLandscapeDTO.setLandscapeId(3L);
+
+        when(villageLandscapeRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(ApiRequestException.class, () -> villageLandscapeService.updateVillageLandscape(id, villageLandscapeDTO));
+
+        verify(villageLandscapeRepository, times(1)).findById(id);
+        verify(villageService, never()).checkVillage(anyLong());
+        verify(landscapeService, never()).checkLandscape(anyLong());
+        verify(villageLandscapeRepository, never()).save(any(VillageLandscape.class));
+    }
+
 }

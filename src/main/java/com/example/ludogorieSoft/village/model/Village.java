@@ -56,5 +56,22 @@ public class Village {
     private List<VillageLandscape> villageLandscapes;
     @OneToMany(mappedBy = "village", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<VillagePopulationAssertion> villagePopulationAssertions;
+//    Village village2 = new Village(2L, "Village2", new Region(2L, "Region2"), 2000, new Population(),
+//            LocalDateTime.now(), true, new Administrator(), null, null, null);
 
+//     Village(Long id, String name, Region region, int populationCount, Population population, LocalDateTime dateUpload, Boolean status, Administrator admin, LocalDateTime dateApproved,
+//                   List<ObjectVillage> objectVillages, List<VillageLivingConditions> villageLivingConditions, List<VillageAnswerQuestion> villageAnswerQuestions) {
+//        this.id = id;
+//        this.name = name;
+//        this.region = region;
+//        this.populationCount = populationCount;
+//        this.population = population;
+//        this.dateUpload = dateUpload;
+//        this.status = status;
+//        this.admin = admin;
+//        this.dateApproved = dateApproved;
+//    }
+
+    public Village(long l, String village2, Region region2, int i, Population population, LocalDateTime now, boolean b, Administrator administrator, Object o, Object o1, Object o2) {
+    }
 }

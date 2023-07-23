@@ -12,10 +12,16 @@ import java.util.List;
 @RestController
 @RequestMapping("api/v1/filter")
 public class FilterController {
-//test
+
     @Autowired
     private VillageService villageSearchService;
 
+
+    @GetMapping
+    public ResponseEntity<List<VillageDTO>> getAllApprovedVillages() {
+        List<VillageDTO> approvedVillages = villageSearchService.getAllApprovedVillages();
+        return ResponseEntity.ok(approvedVillages);
+    }
 
     @GetMapping("/byName")
     public ResponseEntity<List<VillageDTO>> getVillageByName(@RequestParam("name") String name) {
@@ -23,11 +29,13 @@ public class FilterController {
         return ResponseEntity.ok(villages);
     }
 
+
     @GetMapping("/byRegion")
     public ResponseEntity<List<VillageDTO>> getVillageByRegion(@RequestParam("region") String region) {
         List<VillageDTO> villages = villageSearchService.getAllSearchVillagesByRegionName(region);
         return ResponseEntity.ok(villages);
     }
+
 
     @GetMapping("/searchAll")
     public ResponseEntity<List<VillageDTO>> getVillageByNameAndRegion(@RequestParam String region, @RequestParam String keyword) {
@@ -77,6 +85,7 @@ public class FilterController {
         return ResponseEntity.ok(villages);
     }
 
+
     @GetMapping("/searchVillagesByChildrenCount")
     public ResponseEntity<List<VillageDTO>> searchVillagesByChildrenCount(@RequestParam("children") String children) {
         Children childrenEnum = Children.valueOf(children);
@@ -84,12 +93,14 @@ public class FilterController {
         return ResponseEntity.ok(villages);
     }
 
+
     @GetMapping("/searchVillagesByObject")
     public ResponseEntity<List<VillageDTO>> searchVillagesByObject(
             @RequestParam("objectAroundVillageDTOS") List<String> objectAroundVillageDTOS) {
         List<VillageDTO> villages = villageSearchService.getSearchVillagesByObject(objectAroundVillageDTOS);
         return ResponseEntity.ok(villages);
     }
+
 
     @GetMapping("/searchVillagesByLivingCondition")
     public ResponseEntity<List<VillageDTO>> searchVillagesByLivingCondition(@RequestParam("livingConditionDTOS") List<String> livingConditionDTOS) {

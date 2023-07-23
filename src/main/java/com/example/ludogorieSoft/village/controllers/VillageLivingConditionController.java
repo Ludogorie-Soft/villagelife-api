@@ -1,7 +1,6 @@
 package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.dtos.VillageLivingConditionDTO;
-import com.example.ludogorieSoft.village.dtos.VillagePopulationAssertionDTO;
 import com.example.ludogorieSoft.village.model.VillageLivingConditions;
 import com.example.ludogorieSoft.village.services.VillageLivingConditionService;
 import lombok.AllArgsConstructor;
@@ -30,24 +29,23 @@ public class VillageLivingConditionController {
 
     @GetMapping("/village/{id}")
     public ResponseEntity<List<VillageLivingConditionDTO>> getVillageLivingConditionsByVillageId(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(villageLivingConditionService.getVillagePopulationAssertionByVillageId(id));
+        return ResponseEntity.ok(villageLivingConditionService.getVillageLivingConditionByVillageId(id));
     }
+
     @GetMapping("/village/value/{id}")
     public ResponseEntity<Double> getVillagePopulationAssertionByVillageIdValue(@PathVariable("id") Long id){
-        return ResponseEntity.ok(villageLivingConditionService.getVillagePopulationAssertionByVillageIdValue(id));
+        return ResponseEntity.ok(villageLivingConditionService.getVVillageLivingConditionByVillageIdValue(id));
     }
-    //getVillagePopulationAssertionByVillageIdDelinquencyValue
+
     @GetMapping("/village/delinquencyValue/{id}")
     public ResponseEntity<Double> getVillagePopulationAssertionByVillageIdDelinquencyValue(@PathVariable("id") Long id){
-        return ResponseEntity.ok(villageLivingConditionService.getVillagePopulationAssertionByVillageIdDelinquencyValue(id));
+        return ResponseEntity.ok(villageLivingConditionService.getVillageLivingConditionByVillageIdDelinquencyValue(id));
     }
 
     @GetMapping("/village/ecoValue/{id}")
     public ResponseEntity<Double> getVillagePopulationAssertionByVillageIdEcoValue(@PathVariable("id") Long id){
-        return ResponseEntity.ok(villageLivingConditionService.getVillagePopulationAssertionByVillageIdEcoValue(id));
+        return ResponseEntity.ok(villageLivingConditionService.getVillageLivingConditionByVillageIdEcoValue(id));
     }
-
-
 
     @PostMapping
     public ResponseEntity<VillageLivingConditionDTO> createVillageLivingConditions(@Valid @RequestBody VillageLivingConditionDTO villageLivingConditionsDTO) {

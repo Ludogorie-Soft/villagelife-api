@@ -86,9 +86,7 @@ class QuestionServiceTest {
 
         when(questionRepository.findById(questionId)).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(ApiRequestException.class, () -> {
-            questionService.getQuestionById(questionId);
-        });
+        Assertions.assertThrows(ApiRequestException.class, () -> questionService.getQuestionById(questionId));
 
         verify(questionRepository, times(1)).findById(questionId);
     }
@@ -119,9 +117,7 @@ class QuestionServiceTest {
 
         when(questionRepository.existsByQuestionName(questionDTO.getQuestion())).thenReturn(true);
 
-        Assertions.assertThrows(ApiRequestException.class, () -> {
-            questionService.createQuestion(questionDTO);
-        });
+        Assertions.assertThrows(ApiRequestException.class, () -> questionService.createQuestion(questionDTO));
 
         verify(questionRepository, times(1)).existsByQuestionName(questionDTO.getQuestion());
         verifyNoMoreInteractions(questionRepository);
@@ -154,9 +150,7 @@ class QuestionServiceTest {
 
         when(questionRepository.findById(id)).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(ApiRequestException.class, () -> {
-            questionService.updateQuestion(id, questionDTO);
-        });
+        Assertions.assertThrows(ApiRequestException.class, () -> questionService.updateQuestion(id, questionDTO));
 
         verify(questionRepository, times(1)).findById(id);
         verifyNoMoreInteractions(questionRepository);
@@ -178,9 +172,7 @@ class QuestionServiceTest {
         when(questionRepository.findById(id)).thenReturn(optionalQuestion);
         when(questionRepository.existsByQuestionName(questionDTO.getQuestion())).thenReturn(true);
 
-        Assertions.assertThrows(ApiRequestException.class, () -> {
-            questionService.updateQuestion(id, questionDTO);
-        });
+        Assertions.assertThrows(ApiRequestException.class, () -> questionService.updateQuestion(id, questionDTO));
 
         verify(questionRepository, times(1)).findById(id);
         verify(questionRepository, times(1)).existsByQuestionName(questionDTO.getQuestion());
@@ -195,9 +187,7 @@ class QuestionServiceTest {
         QuestionDTO questionDTO = new QuestionDTO();
         questionDTO.setQuestion(null);
 
-        assertThrows(ApiRequestException.class, () -> {
-            questionService.updateQuestion(questionId, questionDTO);
-        });
+        assertThrows(ApiRequestException.class, () -> questionService.updateQuestion(questionId, questionDTO));
     }
 
 
@@ -222,9 +212,7 @@ class QuestionServiceTest {
 
         when(questionRepository.findById(questionId)).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(ApiRequestException.class, () -> {
-            questionService.deleteQuestionById(questionId);
-        });
+        Assertions.assertThrows(ApiRequestException.class, () -> questionService.deleteQuestionById(questionId));
 
         verify(questionRepository, times(1)).findById(questionId);
         verify(questionRepository, never()).delete(any(Question.class));
@@ -255,5 +243,35 @@ class QuestionServiceTest {
 
         verify(questionRepository, times(1)).findById(questionId);
     }
+
+
+    @Test
+    void testUpdateQuestionSuccessfully() {
+        Long id = 1L;
+        String newQuestionName = "New Question";
+
+        QuestionDTO questionDTO = new QuestionDTO();
+        questionDTO.setQuestion(newQuestionName);
+
+        Question existingQuestion = new Question();
+        existingQuestion.setId(id);
+        existingQuestion.setQuestionName("Old Question");
+
+        when(questionRepository.findById(id)).thenReturn(Optional.of(existingQuestion));
+        when(questionRepository.existsByQuestionName(newQuestionName)).thenReturn(false);
+
+        Question updatedQuestion = new Question();
+        updatedQuestion.setId(id);
+        updatedQuestion.setQuestionName(newQuestionName);
+
+        when(questionRepository.save(any(Question.class))).thenReturn(updatedQuestion);
+
+        QuestionDTO result = questionService.updateQuestion(id, questionDTO);
+
+        verify(questionRepository, times(1)).findById(id);
+        verify(questionRepository, times(1)).existsByQuestionName(newQuestionName);
+        verify(questionRepository, times(1)).save(updatedQuestion);
+    }
+
 
 }

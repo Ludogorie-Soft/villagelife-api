@@ -83,4 +83,7 @@ public class PopulationService {
         return populationToPopulationDTO(population.get());
     }
 
+    public Population findPopulationByVillageNameAndRegion(String name, String regionName){
+        return populationRepository.findByVillageNameAndRegionName(name, regionName);
+    }
 }

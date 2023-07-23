@@ -5,7 +5,6 @@ import com.example.ludogorieSoft.village.model.VillageImage;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
 
 class VillageImageTest {
 

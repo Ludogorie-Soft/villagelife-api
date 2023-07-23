@@ -135,9 +135,7 @@ class ObjectAroundVillageServiceTest {
 
         when(objectAroundVillageRepository.existsByType("Test Type")).thenReturn(true);
 
-        assertThrows(ApiRequestException.class, () -> {
-            objectAroundVillageService.createObjectAroundVillage(objectAroundVillageDTO);
-        });
+        assertThrows(ApiRequestException.class, () -> objectAroundVillageService.createObjectAroundVillage(objectAroundVillageDTO));
 
         verify(objectAroundVillageRepository, times(1)).existsByType("Test Type");
         verify(objectAroundVillageRepository, never()).save(any(ObjectAroundVillage.class));
@@ -175,9 +173,7 @@ class ObjectAroundVillageServiceTest {
 
         when(objectAroundVillageRepository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(ApiRequestException.class, () -> {
-            objectAroundVillageService.updateObjectAroundVillage(id, objectAroundVillageDTO);
-        });
+        assertThrows(ApiRequestException.class, () -> objectAroundVillageService.updateObjectAroundVillage(id, objectAroundVillageDTO));
 
         verify(objectAroundVillageRepository, times(1)).findById(id);
         verify(objectAroundVillageRepository, never()).existsByType(anyString());
@@ -198,9 +194,7 @@ class ObjectAroundVillageServiceTest {
         when(objectAroundVillageRepository.findById(id)).thenReturn(optionalObjectAroundVillage);
         when(objectAroundVillageRepository.existsByType("Updated Type")).thenReturn(true);
 
-        assertThrows(ApiRequestException.class, () -> {
-            objectAroundVillageService.updateObjectAroundVillage(id, objectAroundVillageDTO);
-        });
+        assertThrows(ApiRequestException.class, () -> objectAroundVillageService.updateObjectAroundVillage(id, objectAroundVillageDTO));
 
         verify(objectAroundVillageRepository, times(1)).findById(id);
         verify(objectAroundVillageRepository, times(1)).existsByType("Updated Type");
@@ -257,5 +251,40 @@ class ObjectAroundVillageServiceTest {
         Assertions.assertThrows(ApiRequestException.class, () -> objectAroundVillageService.checkObject(objectId));
 
         verify(objectAroundVillageRepository, times(1)).findById(objectId);
+    }
+
+
+    @Test
+    void testCreateObjectAroundVillageWithBlankType() {
+        ObjectAroundVillageDTO objectAroundVillageDTO = new ObjectAroundVillageDTO();
+        objectAroundVillageDTO.setType("");
+
+        assertThrows(ApiRequestException.class, () -> objectAroundVillageService.createObjectAroundVillage(objectAroundVillageDTO),
+                "Object Around Village is blank");
+
+        verify(objectAroundVillageRepository, never()).save(any(ObjectAroundVillage.class));
+    }
+
+    @Test
+    void testUpdateObjectAroundVillageWithBlankType() {
+        Long objectId = 1L;
+        ObjectAroundVillageDTO objectAroundVillageDTO = new ObjectAroundVillageDTO();
+        objectAroundVillageDTO.setType("");
+
+        assertThrows(ApiRequestException.class, () -> objectAroundVillageService.updateObjectAroundVillage(objectId, objectAroundVillageDTO),
+                "Invalid Landscape data");
+
+        verify(objectAroundVillageRepository, never()).save(any(ObjectAroundVillage.class));
+    }
+
+    @Test
+    void testUpdateObjectAroundVillageWithNullDTO() {
+        Long objectId = 1L;
+        ObjectAroundVillageDTO objectAroundVillageDTO = null;
+
+        assertThrows(ApiRequestException.class, () -> objectAroundVillageService.updateObjectAroundVillage(objectId, objectAroundVillageDTO),
+                "Invalid Landscape data");
+
+        verify(objectAroundVillageRepository, never()).save(any(ObjectAroundVillage.class));
     }
 }

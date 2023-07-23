@@ -9,9 +9,8 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @EnableFeignClients
 public class VillageApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(VillageApplication.class, args);
-
-    }
+	public static void main(String[] args) {
+		SpringApplication.run(VillageApplication.class, args);
+	}
 
 }

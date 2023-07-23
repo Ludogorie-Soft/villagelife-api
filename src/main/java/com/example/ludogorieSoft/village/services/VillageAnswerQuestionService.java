@@ -1,11 +1,9 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.VillageAnswerQuestionDTO;
-import com.example.ludogorieSoft.village.dtos.VillagePopulationAssertionDTO;
 import com.example.ludogorieSoft.village.model.Question;
 import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.model.VillageAnswerQuestion;
-import com.example.ludogorieSoft.village.model.VillagePopulationAssertion;
 import com.example.ludogorieSoft.village.repositories.QuestionRepository;
 import com.example.ludogorieSoft.village.repositories.VillageAnswerQuestionRepository;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
@@ -17,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -106,5 +103,8 @@ public class VillageAnswerQuestionService {
         return villageAnswerQuestionList.stream()
                 .map(this::toDTO)
                 .toList();
+    }
+    public boolean existsByVillageIdAndQuestionIdAndAnswer(Long villageId, Long questionId, String answer){
+        return villageAnswerQuestionRepository.existsByVillageIdAndQuestionIdAndAnswer(villageId, questionId, answer);
     }
 }

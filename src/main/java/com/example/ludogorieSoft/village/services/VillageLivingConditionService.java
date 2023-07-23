@@ -1,6 +1,7 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.VillageLivingConditionDTO;
+import com.example.ludogorieSoft.village.enums.Consents;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.LivingCondition;
 import com.example.ludogorieSoft.village.model.Village;
@@ -88,7 +89,7 @@ public class VillageLivingConditionService {
         }
     }
 
-    public List<VillageLivingConditionDTO> getVillagePopulationAssertionByVillageId(Long id) {
+    public List<VillageLivingConditionDTO> getVillageLivingConditionByVillageId(Long id) {
         List<VillageLivingConditions> villageLivingConditionsList = villageLivingConditionRepository.findAll();
         if (id != null) {
             villageLivingConditionsList = villageLivingConditionsList.stream()
@@ -100,7 +101,7 @@ public class VillageLivingConditionService {
                 .toList();
     }
 
-    public double getVillagePopulationAssertionByVillageIdValue(Long id) {
+    public double getVVillageLivingConditionByVillageIdValue(Long id) {
         List<VillageLivingConditions> villageLivingConditionsList = villageLivingConditionRepository.findAll();
         if (id != null) {
             villageLivingConditionsList = villageLivingConditionsList.stream()
@@ -108,16 +109,16 @@ public class VillageLivingConditionService {
                     .toList();
         }
         double sum = 0;
-        int count = Math.min(8, villageLivingConditionsList.size()); // Вземаме минимумът между 8 и броя на отговорите
-        for (int i = 0; i < count; i++) { // Променено условие за цикъла
+        int count = Math.min(8, villageLivingConditionsList.size());
+        for (int i = 0; i < count; i++) {
             sum += villageLivingConditionsList.get(i).getConsents().getValue();
         }
-        double average = sum / count; // Променен делител
+        double average = sum / count;
         return Math.round(average * 100) / 100.0;
     }
 
 
-    public double getVillagePopulationAssertionByVillageIdDelinquencyValue(Long id) {
+    public double getVillageLivingConditionByVillageIdDelinquencyValue(Long id) {
         List<VillageLivingConditions> villageLivingConditionsList = villageLivingConditionRepository.findAll();
         if (id != null) {
             villageLivingConditionsList = villageLivingConditionsList.stream()
@@ -132,7 +133,7 @@ public class VillageLivingConditionService {
         return 50;
     }
 
-    public double getVillagePopulationAssertionByVillageIdEcoValue(Long id) {
+    public double getVillageLivingConditionByVillageIdEcoValue(Long id) {
         List<VillageLivingConditions> villageLivingConditionsList = villageLivingConditionRepository.findAll();
         if (id != null) {
             villageLivingConditionsList = villageLivingConditionsList.stream()
@@ -148,5 +149,8 @@ public class VillageLivingConditionService {
         }
         double average = sum / (count - 11);
         return Math.round(average * 100) / 100.0;
+    }
+    public boolean existsByVillageIdAndLivingConditionIdAndConsents(Long villageId, Long livingConditionId, Consents consent){
+        return villageLivingConditionRepository.existsByVillageIdAndLivingConditionIdAndConsents(villageId, livingConditionId, consent);
     }
 }

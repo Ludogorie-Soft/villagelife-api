@@ -165,4 +165,24 @@ class VillageGroundCategoryControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/villageGroundCategory/{id}", 1))
                 .andExpect(status().isNoContent());
     }
+
+    @Test
+    void testDeleteVillageGroundCategoryByIdWhenDeletedSuccessfully() throws Exception {
+        Long idToDelete = 1L;
+
+        when(villageGroundCategoryService.deleteVillageGroundCategory(idToDelete)).thenReturn(1);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/villageGroundCategory/{id}", idToDelete))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void testDeleteVillageGroundCategoryByIdWhenNotExists() throws Exception {
+        Long nonExistentId = 100L;
+
+        when(villageGroundCategoryService.deleteVillageGroundCategory(nonExistentId)).thenReturn(0);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/villageGroundCategory/{id}", nonExistentId))
+                .andExpect(status().isNotFound());
+    }
 }

@@ -4,14 +4,13 @@ import com.example.ludogorieSoft.village.dtos.VillageGroundCategoryDTO;
 import com.example.ludogorieSoft.village.model.GroundCategory;
 import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.model.VillageGroundCategory;
-import com.example.ludogorieSoft.village.repositories.GroundCategoryRepository;
 import com.example.ludogorieSoft.village.repositories.VillageGroundCategoryRepository;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
-import com.example.ludogorieSoft.village.repositories.VillageRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -21,17 +20,13 @@ import java.util.Optional;
 public class VillageGroundCategoryService {
 
     private final VillageGroundCategoryRepository villageGroundCategoryRepository;
-    private final VillageRepository villageRepository;
-    private final GroundCategoryRepository groundCategoryRepository;
     private final ModelMapper modelMapper;
     private final VillageService villageService;
     private final GroundCategoryService groundCategoryService;
-    private final  String errorMessage="Village not found";
 
     public VillageGroundCategoryDTO toDTO(VillageGroundCategory forMap) {
         return modelMapper.map(forMap, VillageGroundCategoryDTO.class);
     }
-
 
     public List<VillageGroundCategoryDTO> getAllVillageGroundCategories() {
         List<VillageGroundCategory> villageGroundCategories = villageGroundCategoryRepository.findAll();
@@ -47,6 +42,7 @@ public class VillageGroundCategoryService {
         }
         return toDTO(optionalVillageGroundCategory.get());
     }
+
     public VillageGroundCategoryDTO createVillageGroundCategoryDTO(VillageGroundCategoryDTO villageGroundCategoryDTO) {
         VillageGroundCategory villageGroundCategory = new VillageGroundCategory();
 
@@ -59,7 +55,6 @@ public class VillageGroundCategoryService {
         villageGroundCategoryRepository.save(villageGroundCategory);
         return toDTO(villageGroundCategory);
     }
-
 
     public VillageGroundCategoryDTO updateVillageGroundCategory(Long id, VillageGroundCategoryDTO villageGroundCategoryDTO) {
         Optional<VillageGroundCategory> foundVillageGroundCategory = villageGroundCategoryRepository.findById(id);
@@ -76,6 +71,7 @@ public class VillageGroundCategoryService {
         villageGroundCategoryRepository.save(foundVillageGroundCategory.get());
         return toDTO(foundVillageGroundCategory.get());
     }
+
     public int deleteVillageGroundCategory(Long id) {
         try {
             villageGroundCategoryRepository.deleteById(id);
@@ -85,4 +81,11 @@ public class VillageGroundCategoryService {
         }
     }
 
+    public VillageGroundCategoryDTO findVillageGroundCategoryDTOByVillageId(Long villageId){
+        VillageGroundCategory villageGroundCategory = villageGroundCategoryRepository.findByVillageId(villageId);
+        if(villageGroundCategory == null){
+            throw new ApiRequestException("Village ground category with village id " + villageId + " not found");
+        }
+        return toDTO(villageGroundCategory);
+    }
 }

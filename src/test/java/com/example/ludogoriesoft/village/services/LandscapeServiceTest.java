@@ -218,4 +218,102 @@ class LandscapeServiceTest {
 
         verify(landscapeRepository, times(1)).findById(landscapeId);
     }
+
+
+    @Test
+    void testCreateLandscapeWithBlankLandscapeName() {
+        LandscapeDTO landscapeDTO = new LandscapeDTO();
+        landscapeDTO.setLandscapeName(""); // Setting blank landscape name
+
+        ApiRequestException exception = assertThrows(ApiRequestException.class, () -> landscapeService.createLandscape(landscapeDTO));
+        assertEquals("Landscape is blank", exception.getMessage());
+        verify(landscapeRepository, never()).existsByLandscapeName(anyString());
+        verify(landscapeRepository, never()).save(any(Landscape.class));
+    }
+
+    @Test
+    void testUpdateLandscapeWithNullLandscapeDTO() {
+        Long id = 1L;
+        LandscapeDTO landscapeDTO = null;
+
+        Landscape existingLandscape = new Landscape();
+        existingLandscape.setId(id);
+
+        when(landscapeRepository.findById(id)).thenReturn(Optional.of(existingLandscape));
+
+        ApiRequestException exception = assertThrows(ApiRequestException.class, () -> landscapeService.updateLandscape(id, landscapeDTO));
+        assertEquals("Invalid Landscape data", exception.getMessage());
+
+        verify(landscapeRepository, times(1)).findById(id);
+        verify(landscapeRepository, never()).existsByLandscapeName(anyString());
+        verify(landscapeRepository, never()).save(any(Landscape.class));
+    }
+
+
+    @Test
+    void testUpdateLandscapeWithBlankLandscapeName() {
+        Long id = 1L;
+        LandscapeDTO landscapeDTO = new LandscapeDTO();
+        landscapeDTO.setLandscapeName("");
+
+        Landscape existingLandscape = new Landscape();
+        existingLandscape.setId(id);
+
+        when(landscapeRepository.findById(id)).thenReturn(Optional.of(existingLandscape));
+
+        ApiRequestException exception = assertThrows(ApiRequestException.class, () -> landscapeService.updateLandscape(id, landscapeDTO));
+        assertEquals("Invalid Landscape data", exception.getMessage());
+
+        verify(landscapeRepository, times(1)).findById(id);
+        verify(landscapeRepository, never()).existsByLandscapeName(anyString());
+        verify(landscapeRepository, never()).save(any(Landscape.class));
+    }
+
+    @Test
+    void testUpdateLandscapeWithExistingLandscapeName() {
+        Long id = 1L;
+        String existingName = "Existing Landscape";
+        LandscapeDTO landscapeDTO = new LandscapeDTO();
+        landscapeDTO.setLandscapeName(existingName);
+
+        Landscape existingLandscape = new Landscape();
+        existingLandscape.setId(id);
+        existingLandscape.setLandscapeName("Some other name");
+
+        when(landscapeRepository.findById(id)).thenReturn(Optional.of(existingLandscape));
+        when(landscapeRepository.existsByLandscapeName(existingName)).thenReturn(true);
+
+        ApiRequestException exception = assertThrows(ApiRequestException.class, () -> landscapeService.updateLandscape(id, landscapeDTO));
+        assertEquals("Landscape with name: " + existingName + " already exists", exception.getMessage());
+        verify(landscapeRepository, times(1)).findById(id);
+        verify(landscapeRepository, times(1)).existsByLandscapeName(existingName);
+        verify(landscapeRepository, never()).save(any(Landscape.class));
+    }
+
+    @Test
+    void testUpdateLandscapeSuccessfully() {
+        Long id = 1L;
+        String newName = "New Landscape";
+        LandscapeDTO landscapeDTO = new LandscapeDTO();
+        landscapeDTO.setLandscapeName(newName);
+
+        Landscape existingLandscape = new Landscape();
+        existingLandscape.setId(id);
+        existingLandscape.setLandscapeName("Old Name");
+
+        when(landscapeRepository.findById(id)).thenReturn(Optional.of(existingLandscape));
+        when(landscapeRepository.existsByLandscapeName(newName)).thenReturn(false);
+
+        Landscape updatedLandscape = new Landscape();
+        updatedLandscape.setId(id);
+        updatedLandscape.setLandscapeName(newName);
+
+        when(landscapeRepository.save(any(Landscape.class))).thenReturn(updatedLandscape);
+
+        LandscapeDTO result = landscapeService.updateLandscape(id, landscapeDTO);
+
+        verify(landscapeRepository, times(1)).findById(id);
+        verify(landscapeRepository, times(1)).existsByLandscapeName(newName);
+        verify(landscapeRepository, times(1)).save(updatedLandscape);
+    }
 }
