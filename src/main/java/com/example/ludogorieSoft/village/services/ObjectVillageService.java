@@ -13,8 +13,9 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.*;
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -100,5 +101,19 @@ public class ObjectVillageService {
 
     public boolean existsByVillageIdAndObjectIdAndDistance(Long villageId, Long objectId, Distance distance){
         return objectVillageRepository.existsByVillageIdAndObjectIdAndDistance(villageId, objectId, distance);
+    }
+    public List<ObjectVillage> getDistinctObjectVillagesByVillageId(Long villageId){
+        List<ObjectVillage> allObjectVillages = objectVillageRepository.findByVillageId(villageId);
+        Set<String> uniqueCombinations = new HashSet<>();
+        List<ObjectVillage> filteredObjectVillages = new ArrayList<>();
+
+        for (ObjectVillage objectVillage : allObjectVillages) {
+            String key = objectVillage.getObject().getId() + "-" + objectVillage.getDistance();
+            if (uniqueCombinations.add(key)) {
+                filteredObjectVillages.add(objectVillage);
+            }
+        }
+
+        return filteredObjectVillages;
     }
 }

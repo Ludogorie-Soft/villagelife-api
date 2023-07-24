@@ -1,7 +1,6 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.*;
-import com.example.ludogorieSoft.village.dtos.response.VillageInfo;
 import com.example.ludogorieSoft.village.enums.Children;
 
 import com.example.ludogorieSoft.village.model.*;
@@ -25,8 +24,6 @@ public class VillageService {
     private final RegionService regionService;
     private static final String ERROR_MESSAGE1="Village with id ";
     private static final String ERROR_MESSAGE2=" not found  ";
-    private final PopulatedAssertionService populationAssertionService;
-    private final LivingConditionService livingConditionService;
 
 
 
@@ -343,17 +340,4 @@ public class VillageService {
         return populationDTO;
     }
 
-    public VillageInfo getVillageInfoByVillageId(Long villageId){
-        VillageInfo villageInfo = new VillageInfo();
-        villageInfo.setVillageDTO(getVillageById(villageId));
-
-        villageInfo.setPopulationAssertionResponses(populationAssertionService.getPopulationAssertionResponse(villageId));
-        villageInfo.setLivingConditionResponses(livingConditionService.getLivingConditionResponses(villageId));
-        villageInfo.getLivingConditionResponses().add(livingConditionService.getAccessibilityByVillageId(villageId));
-        villageInfo.getLivingConditionResponses().add(livingConditionService.getCrimeByVillageId(villageId));
-        villageInfo.getLivingConditionResponses().add(livingConditionService.getTotalLivingConditionsByVillageId(villageId));
-        villageInfo.getLivingConditionResponses().add(livingConditionService.getEcoFriendlinessByVillageId(villageId));
-
-        return villageInfo;
-    }
 }

@@ -6,9 +6,7 @@ import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.LivingCondition;
 import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.model.VillageLivingConditions;
-import com.example.ludogorieSoft.village.repositories.LivingConditionRepository;
 import com.example.ludogorieSoft.village.repositories.VillageLivingConditionRepository;
-import com.example.ludogorieSoft.village.repositories.VillageRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,11 +29,7 @@ class VillageLivingConditionServiceTest {
     @Mock
     private VillageService villageService;
     @Mock
-    private VillageRepository villageRepository;
-    @Mock
     private LivingConditionService livingConditionService;
-    @Mock
-    private LivingConditionRepository livingConditionRepository;
     @Mock
     private ModelMapper modelMapper;
     @InjectMocks
@@ -68,7 +62,7 @@ class VillageLivingConditionServiceTest {
         when(villageLivingConditionRepository.findAll()).thenReturn(villageLivingConditionsList);
 
         // Create an instance of the tested class
-        VillageLivingConditionService villageLivingConditionService = new VillageLivingConditionService(villageLivingConditionRepository, livingConditionRepository, villageRepository, villageService, livingConditionService, modelMapper);
+        VillageLivingConditionService villageLivingConditionService = new VillageLivingConditionService(villageLivingConditionRepository, villageService, livingConditionService, modelMapper);
 
         // Call the method under test
         double result = villageLivingConditionService.getVillagePopulationAssertionByVillageIdEcoValue(villageId);
@@ -131,7 +125,7 @@ class VillageLivingConditionServiceTest {
         when(villageLivingConditionRepository.findAll()).thenReturn(villageLivingConditionsList);
 
         // Create an instance of the tested class
-        VillageLivingConditionService villageLivingConditionService = new VillageLivingConditionService(villageLivingConditionRepository, livingConditionRepository, villageRepository, villageService, livingConditionService, modelMapper);
+        VillageLivingConditionService villageLivingConditionService = new VillageLivingConditionService(villageLivingConditionRepository, villageService, livingConditionService, modelMapper);
 
         // Call the method under test
         double result = villageLivingConditionService.getVillagePopulationAssertionByVillageIdDelinquencyValue(villageId);
@@ -319,29 +313,5 @@ class VillageLivingConditionServiceTest {
         int result = villageLivingConditionService.deleteVillageLivingConditions(id);
         verify(villageLivingConditionRepository, times(1)).deleteById(id);
         Assertions.assertEquals(0, result);
-    }
-
-    @Test
-    void testExistsByVillageIdAndLivingConditionIdAndConsentsWhenRecordExists() {
-        Long villageId = 1L;
-        Long livingConditionId = 10L;
-        Consents consent = Consents.COMPLETELY_AGREED;
-        when(villageLivingConditionRepository.existsByVillageIdAndLivingConditionIdAndConsents(villageId, livingConditionId, consent))
-                .thenReturn(true);
-        boolean result = villageLivingConditionService.existsByVillageIdAndLivingConditionIdAndConsents(villageId, livingConditionId, consent);
-        Assertions.assertTrue(result);
-        verify(villageLivingConditionRepository, times(1)).existsByVillageIdAndLivingConditionIdAndConsents(villageId, livingConditionId, consent);
-    }
-
-    @Test
-    void testExistsByVillageIdAndLivingConditionIdAndConsentsWhenRecordDoesNotExist() {
-        Long villageId = 1L;
-        Long livingConditionId = 10L;
-        Consents consent = Consents.COMPLETELY_AGREED;
-        when(villageLivingConditionRepository.existsByVillageIdAndLivingConditionIdAndConsents(villageId, livingConditionId, consent))
-                .thenReturn(false);
-        boolean result = villageLivingConditionService.existsByVillageIdAndLivingConditionIdAndConsents(villageId, livingConditionId, consent);
-        Assertions.assertFalse(result);
-        verify(villageLivingConditionRepository, times(1)).existsByVillageIdAndLivingConditionIdAndConsents(villageId, livingConditionId, consent);
     }
 }

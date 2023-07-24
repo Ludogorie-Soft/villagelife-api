@@ -187,28 +187,4 @@ class VillagePopulationAssertionServiceTest {
         List<VillagePopulationAssertionDTO> result = villagePopulationAssertionService.getVillagePopulationAssertionByVillageId(villageId);
         Assertions.assertEquals(0, result.size());
     }
-
-    @Test
-    void testExistsByVillageIdAndPopulatedAssertionIdAndAnswerWhenRecordExists() {
-        Long villageId = 1L;
-        Long populatedAssertionId = 10L;
-        Consents answer = Consents.COMPLETELY_AGREED;
-        when(villagePopulationAssertionRepository.existsByVillageIdAndPopulatedAssertionIDIdAndAnswer(villageId, populatedAssertionId, answer))
-                .thenReturn(true);
-        boolean result = villagePopulationAssertionService.existsByVillageIdAndPopulatedAssertionIdAndAnswer(villageId, populatedAssertionId, answer);
-        Assertions.assertTrue(result);
-        verify(villagePopulationAssertionRepository, times(1)).existsByVillageIdAndPopulatedAssertionIDIdAndAnswer(villageId, populatedAssertionId, answer);
-    }
-
-    @Test
-    void testExistsByVillageIdAndPopulatedAssertionIdAndAnswerWhenRecordDoesNotExist() {
-        Long villageId = 1L;
-        Long populatedAssertionId = 10L;
-        Consents answer = Consents.COMPLETELY_AGREED;
-        when(villagePopulationAssertionRepository.existsByVillageIdAndPopulatedAssertionIDIdAndAnswer(villageId, populatedAssertionId, answer))
-                .thenReturn(false);
-        boolean result = villagePopulationAssertionService.existsByVillageIdAndPopulatedAssertionIdAndAnswer(villageId, populatedAssertionId, answer);
-        Assertions.assertFalse(result);
-        verify(villagePopulationAssertionRepository, times(1)).existsByVillageIdAndPopulatedAssertionIDIdAndAnswer(villageId, populatedAssertionId, answer);
-    }
 }

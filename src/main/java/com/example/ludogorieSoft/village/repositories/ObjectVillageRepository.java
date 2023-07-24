@@ -10,5 +10,6 @@ public interface ObjectVillageRepository extends JpaRepository<ObjectVillage,Lon
     boolean existsByVillageIdAndObjectIdAndDistance(Long villageId, Long objectId, Distance distance);
     boolean existsByVillageIdAndObjectId(Long villageId, Long objectId);
     List<ObjectVillage> findByVillageIdAndObjectId(Long villageId, Long objectId);
+    List<ObjectVillage> findByVillageId(Long villageId);
 
 }
