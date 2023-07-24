@@ -27,7 +27,7 @@ public class VillageInfoService {
         villageInfo.getLivingConditionResponses().add(livingConditionService.getEcoFriendlinessByVillageId(village.getId()));
         villageInfo.setObjectVillages(objectVillageService.getDistinctObjectVillagesByVillageId(villageId));
         villageInfo.setVillageAnswerQuestionDTOs(villageAnswerQuestionService.getVillageAnswerQuestionByVillageId(village.getId()));
-        villageInfo.setEthnicityVillageDTOS(ethnicityVillageService.getUniqueEthnicityVillagesByVillageId(village.getId()));
+        villageInfo.setEthnicities(ethnicityVillageService.getUniqueEthnicityVillagesByVillageId(village.getId()));
 
         return villageInfo;
     }
