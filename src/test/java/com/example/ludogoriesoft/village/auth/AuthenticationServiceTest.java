@@ -21,28 +21,20 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 class AuthenticationServiceTest {
-
     @Mock
     private AdministratorRepository administratorRepository;
-
     @Mock
     private PasswordEncoder passwordEncoder;
-
     @Mock
     private JWTService jwtService;
-
     @Mock
     private AuthenticationManager authenticationManager;
-
     @InjectMocks
     private AuthenticationService authenticationService;
-
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
-
-
     @Test
     void registerShouldReturnAuthenticationResponse() {
         RegisterRequest request = new RegisterRequest("John Doe", "john@example.com", "username", "password", "1234567890", Role.ADMIN);
