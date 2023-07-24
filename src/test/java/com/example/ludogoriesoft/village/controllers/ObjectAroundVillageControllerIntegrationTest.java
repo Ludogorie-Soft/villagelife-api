@@ -269,4 +269,19 @@ class ObjectAroundVillageControllerIntegrationTest {
         assertNotNull(response);
     }
 
+
+    @Test
+    void testGetObjectAroundVillageByVillageIDWithInvalidId() throws Exception {
+        Long invalidId = 100000L;
+
+        when(objectAroundVillageService.getObjectAroundVillageById(anyLong()))
+                .thenThrow(new ApiRequestException("Object Around Village with id: " + invalidId + " Not Found"));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/objectsAroundVillage/village/{id}", invalidId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Object Around Village with id: " + invalidId + " Not Found"))
+                .andReturn();
+    }
+
 }

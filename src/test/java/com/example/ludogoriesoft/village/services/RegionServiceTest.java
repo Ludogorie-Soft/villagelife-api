@@ -1,7 +1,5 @@
 package com.example.ludogorieSoft.village.services;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyLong;
@@ -17,13 +15,12 @@ import com.example.ludogorieSoft.village.repositories.RegionRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
@@ -64,7 +61,7 @@ class RegionServiceTest {
 
         List<RegionDTO> result = regionService.getAllRegions();
 
-        assertEquals(0, result.size());
+        Assertions.assertEquals(0, result.size());
     }
 
     @Test
@@ -78,19 +75,17 @@ class RegionServiceTest {
         when(regionService.regionToRegionDTO(region)).thenReturn(expectedRegionDTO);
 
         RegionDTO actualRegionDTO = regionService.getRegionById(1L);
-        assertNotNull(actualRegionDTO);
-        assertEquals(expectedRegionDTO, actualRegionDTO);
+        Assertions.assertNotNull(actualRegionDTO);
+        Assertions.assertEquals(expectedRegionDTO, actualRegionDTO);
     }
 
     @Test
     void testGetRegionByIdThrowsExceptionForNonExistingId() {
         when(regionRepository.findById(3L)).thenReturn(Optional.empty());
 
-        ApiRequestException exception = assertThrows(ApiRequestException.class, () -> {
-            regionService.getRegionById(3L);
-        });
+        ApiRequestException exception = assertThrows(ApiRequestException.class, () -> regionService.getRegionById(3L));
 
-        assertEquals("Region not found", exception.getMessage());
+        Assertions.assertEquals("Region not found", exception.getMessage());
     }
     @Test
     void testCreateRegionReturnsRegionDTO() {
@@ -100,8 +95,8 @@ class RegionServiceTest {
         when(regionRepository.existsByRegionName(regionDTO.getRegionName())).thenReturn(false);
 
         RegionDTO createdRegionDTO = regionService.createRegion(regionDTO);
-        assertNotNull(createdRegionDTO);
-        assertEquals(regionDTO, createdRegionDTO);
+        Assertions.assertNotNull(createdRegionDTO);
+        Assertions.assertEquals(regionDTO, createdRegionDTO);
 
         verify(regionRepository, times(1)).save(any(Region.class));
     }
@@ -111,11 +106,9 @@ class RegionServiceTest {
         RegionDTO regionDTO = new RegionDTO();
         regionDTO.setRegionName("");
 
-        ApiRequestException exception = assertThrows(ApiRequestException.class, () -> {
-            regionService.createRegion(regionDTO);
-        });
+        ApiRequestException exception = assertThrows(ApiRequestException.class, () -> regionService.createRegion(regionDTO));
 
-        assertEquals("Region name is blank", exception.getMessage());
+        Assertions.assertEquals("Region name is blank", exception.getMessage());
 
         verify(regionRepository, never()).save(any(Region.class));
     }
@@ -127,11 +120,9 @@ class RegionServiceTest {
 
         when(regionRepository.existsByRegionName(regionDTO.getRegionName())).thenReturn(true);
 
-        ApiRequestException exception = assertThrows(ApiRequestException.class, () -> {
-            regionService.createRegion(regionDTO);
-        });
+        ApiRequestException exception = assertThrows(ApiRequestException.class, () -> regionService.createRegion(regionDTO));
 
-        assertEquals("Region with name: Existing Region already exists", exception.getMessage());
+        Assertions.assertEquals("Region with name: Existing Region already exists", exception.getMessage());
 
         verify(regionRepository, never()).save(any(Region.class));
     }
@@ -150,8 +141,8 @@ class RegionServiceTest {
         when(regionRepository.existsByRegionName(regionDTO.getRegionName())).thenReturn(false);
 
         RegionDTO updatedRegionDTO = regionService.updateRegion(1L, regionDTO);
-        assertNotNull(updatedRegionDTO);
-        assertEquals(regionDTO.getRegionName(), updatedRegionDTO.getRegionName());
+        Assertions.assertNotNull(updatedRegionDTO);
+        Assertions.assertEquals(regionDTO.getRegionName(), updatedRegionDTO.getRegionName());
 
         verify(regionRepository, times(1)).save(region);
     }
@@ -163,15 +154,11 @@ class RegionServiceTest {
         RegionDTO regionDTO = new RegionDTO();
         regionDTO.setRegionName("");
 
-        assertThrows(ApiRequestException.class, () -> {
-            regionService.updateRegion(1L, regionDTO);
-        });
+        assertThrows(ApiRequestException.class, () -> regionService.updateRegion(1L, regionDTO));
 
         RegionDTO regionDTOWithoutName = new RegionDTO();
 
-        assertThrows(ApiRequestException.class, () -> {
-            regionService.updateRegion(1L, regionDTOWithoutName);
-        });
+        assertThrows(ApiRequestException.class, () -> regionService.updateRegion(1L, regionDTOWithoutName));
 
         verify(regionRepository, never()).save(any(Region.class));
     }
@@ -189,10 +176,8 @@ class RegionServiceTest {
 
         when(regionRepository.existsByRegionName(regionDTO.getRegionName())).thenReturn(true);
 
-        ApiRequestException exception = assertThrows(ApiRequestException.class, () -> {
-            regionService.updateRegion(1L, regionDTO);
-        });
-        assertEquals("Region: Existing Region already exists", exception.getMessage());
+        ApiRequestException exception = assertThrows(ApiRequestException.class, () -> regionService.updateRegion(1L, regionDTO));
+        Assertions.assertEquals("Region: Existing Region already exists", exception.getMessage());
 
         verify(regionRepository, never()).save(any(Region.class));
     }
@@ -212,10 +197,8 @@ class RegionServiceTest {
     void testDeleteRegionByIdThrowsExceptionForNonExistingRegion() {
         when(regionRepository.existsById(1L)).thenReturn(false);
 
-        ApiRequestException exception = assertThrows(ApiRequestException.class, () -> {
-            regionService.deleteRegionById(1L);
-        });
-        assertEquals("Region with id: 1 not found", exception.getMessage());
+        ApiRequestException exception = assertThrows(ApiRequestException.class, () -> regionService.deleteRegionById(1L));
+        Assertions.assertEquals("Region with id: 1 not found", exception.getMessage());
 
         verify(regionRepository, never()).deleteById(anyLong());
     }
@@ -234,8 +217,8 @@ class RegionServiceTest {
 
         verify(regionRepository).findByRegionName(regionName);
 
-        assertNotNull(result);
-        assertEquals(regionName, result.getRegionName());
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(regionName, result.getRegionName());
     }
 
     @Test
@@ -244,12 +227,10 @@ class RegionServiceTest {
 
         when(regionRepository.findByRegionName(regionName)).thenReturn(null);
 
-        ApiRequestException exception = assertThrows(ApiRequestException.class, () -> {
-            regionService.findRegionByName(regionName);
-        });
+        ApiRequestException exception = assertThrows(ApiRequestException.class, () -> regionService.findRegionByName(regionName));
 
         verify(regionRepository).findByRegionName(regionName);
 
-        assertEquals("Region not found", exception.getMessage());
+        Assertions.assertEquals("Region not found", exception.getMessage());
     }
 }

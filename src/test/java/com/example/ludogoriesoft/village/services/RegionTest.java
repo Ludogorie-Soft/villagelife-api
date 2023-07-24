@@ -1,6 +1,7 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.model.Region;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import javax.persistence.*;
@@ -12,125 +13,101 @@ import java.lang.reflect.Field;
 import java.util.Set;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 class RegionTest {
 
 
     @Test
     void hasEntityAnnotation() {
-        // Arrange
         Class<?> regionClass = Region.class;
         boolean hasEntityAnnotation = regionClass.isAnnotationPresent(Entity.class);
 
-        // Assert
-        assertTrue(hasEntityAnnotation);
+        Assertions.assertTrue(hasEntityAnnotation);
     }
 
     @Test
     void hasTableAnnotationWithCorrectName() {
-        // Arrange
         Class<?> regionClass = Region.class;
         Table tableAnnotation = regionClass.getAnnotation(Table.class);
 
-        // Assert
         assertNotNull(tableAnnotation);
-        assertEquals("regions", tableAnnotation.name());
+        Assertions.assertEquals("regions", tableAnnotation.name());
     }
 
     @Test
     void hasAllArgsConstructor() {
-        // Arrange
         Class<?> regionClass = Region.class;
         boolean hasAllArgsConstructor = false;
         try {
             regionClass.getDeclaredConstructor(Long.class, String.class);
             hasAllArgsConstructor = true;
         } catch (NoSuchMethodException e) {
-            // Ignore
         }
 
-        // Assert
-        assertTrue(hasAllArgsConstructor);
+        Assertions.assertTrue(hasAllArgsConstructor);
     }
 
     @Test
     void hasNoArgsConstructor() {
-        // Arrange
         Class<?> regionClass = Region.class;
         boolean hasNoArgsConstructor = false;
         try {
             regionClass.getDeclaredConstructor();
             hasNoArgsConstructor = true;
         } catch (NoSuchMethodException e) {
-            // Ignore
         }
 
-        // Assert
-        assertTrue(hasNoArgsConstructor);
+        Assertions.assertTrue(hasNoArgsConstructor);
     }
 
     @Test
     void idFieldHasIdAnnotation() throws NoSuchFieldException {
-        // Arrange
         Field idField = Region.class.getDeclaredField("id");
         Id idAnnotation = idField.getAnnotation(Id.class);
 
-        // Assert
         assertNotNull(idAnnotation);
     }
 
     @Test
     void idFieldHasGeneratedValueAnnotationWithIdentityStrategy() throws NoSuchFieldException {
-        // Arrange
         Field idField = Region.class.getDeclaredField("id");
         GeneratedValue generatedValueAnnotation = idField.getAnnotation(GeneratedValue.class);
 
-        // Assert
         assertNotNull(generatedValueAnnotation);
-        assertEquals(GenerationType.IDENTITY, generatedValueAnnotation.strategy());
+        Assertions.assertEquals(GenerationType.IDENTITY, generatedValueAnnotation.strategy());
     }
 
 
     @Test
     void regionNameFieldHasNotBlankAnnotation() throws NoSuchFieldException {
-        // Arrange
         Field regionNameField = Region.class.getDeclaredField("regionName");
         NotBlank notBlankAnnotation = regionNameField.getAnnotation(NotBlank.class);
 
-        // Assert
         assertNotNull(notBlankAnnotation);
     }
 
 
     @Test
-    void validateNotBlankRegionName_ValidValue_NoValidationErrors() {
-        // Arrange
+    void validateNotBlankRegionNameValidValueNoValidationErrors() {
         Region region = new Region();
         region.setRegionName("Europe");
 
-        // Validate
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<Region>> violations = validator.validateProperty(region, "regionName");
 
-        // Assert
-        assertEquals(0, violations.size());
+        Assertions.assertEquals(0, violations.size());
     }
 
     @Test
-    void validateNotBlankRegionName_NullValue_ValidationErrors() {
-        // Arrange
+    void validateNotBlankRegionNameNullValueValidationErrors() {
         Region region = new Region();
         region.setRegionName(null);
 
-        // Validate
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<Region>> violations = validator.validateProperty(region, "regionName");
 
-        // Assert
-        assertEquals(1, violations.size());
+        Assertions.assertEquals(1, violations.size());
         ConstraintViolation<Region> violation = violations.iterator().next();
-        assertEquals("must not be blank", violation.getMessage());
+        Assertions.assertEquals("must not be blank", violation.getMessage());
     }
 }

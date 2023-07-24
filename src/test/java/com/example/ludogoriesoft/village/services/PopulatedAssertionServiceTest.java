@@ -93,9 +93,7 @@ class PopulatedAssertionServiceTest {
 
         when(populatedAssertionRepository.existsByPopulatedAssertionName(populationDTO.getPopulatedAssertionName())).thenReturn(true);
 
-        Assertions.assertThrows(ApiRequestException.class, () -> {
-            populatedAssertionService.createPopulatedAssertion(populationDTO);
-        });
+        Assertions.assertThrows(ApiRequestException.class, () -> populatedAssertionService.createPopulatedAssertion(populationDTO));
 
         verify(populatedAssertionRepository, times(1)).existsByPopulatedAssertionName(populationDTO.getPopulatedAssertionName());
         verify(populatedAssertionRepository, never()).save(any(PopulatedAssertion.class));
@@ -127,9 +125,7 @@ class PopulatedAssertionServiceTest {
 
         when(populatedAssertionRepository.findById(populationId)).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(ApiRequestException.class, () -> {
-            populatedAssertionService.getPopulatedAssertionById(populationId);
-        });
+        Assertions.assertThrows(ApiRequestException.class, () -> populatedAssertionService.getPopulatedAssertionById(populationId));
 
         verify(populatedAssertionRepository, times(1)).findById(populationId);
     }
@@ -143,9 +139,7 @@ class PopulatedAssertionServiceTest {
 
         when(populatedAssertionRepository.existsByPopulatedAssertionName(populatedAssertionName)).thenReturn(true);
 
-        assertThrows(ApiRequestException.class, () -> {
-            populatedAssertionService.createPopulatedAssertion(populatedAssertionDTO);
-        });
+        assertThrows(ApiRequestException.class, () -> populatedAssertionService.createPopulatedAssertion(populatedAssertionDTO));
 
         verify(populatedAssertionRepository, times(1)).existsByPopulatedAssertionName(populatedAssertionName);
         verify(populatedAssertionRepository, never()).save(any(PopulatedAssertion.class));
@@ -184,9 +178,7 @@ class PopulatedAssertionServiceTest {
 
         when(populatedAssertionRepository.findById(invalidPopulatedAssertionId)).thenReturn(Optional.empty());
 
-        assertThrows(ApiRequestException.class, () -> {
-            populatedAssertionService.updatePopulatedAssertion(invalidPopulatedAssertionId, populatedAssertionDTO);
-        });
+        assertThrows(ApiRequestException.class, () -> populatedAssertionService.updatePopulatedAssertion(invalidPopulatedAssertionId, populatedAssertionDTO));
 
         verify(populatedAssertionRepository, times(1)).findById(invalidPopulatedAssertionId);
         verify(populatedAssertionRepository, never()).existsByPopulatedAssertionName(anyString());
@@ -207,9 +199,7 @@ class PopulatedAssertionServiceTest {
         when(populatedAssertionRepository.findById(populatedAssertionId)).thenReturn(Optional.of(existingPopulatedAssertion));
         when(populatedAssertionRepository.existsByPopulatedAssertionName(updatedName)).thenReturn(true);
 
-        assertThrows(ApiRequestException.class, () -> {
-            populatedAssertionService.updatePopulatedAssertion(populatedAssertionId, populatedAssertionDTO);
-        });
+        assertThrows(ApiRequestException.class, () -> populatedAssertionService.updatePopulatedAssertion(populatedAssertionId, populatedAssertionDTO));
 
         verify(populatedAssertionRepository, times(1)).findById(populatedAssertionId);
         verify(populatedAssertionRepository, times(1)).existsByPopulatedAssertionName(updatedName);
@@ -237,12 +227,135 @@ class PopulatedAssertionServiceTest {
 
         when(populatedAssertionRepository.findById(populationId)).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(ApiRequestException.class, () -> {
-            populatedAssertionService.deletePopulatedAssertionById(populationId);
-        });
+        Assertions.assertThrows(ApiRequestException.class, () -> populatedAssertionService.deletePopulatedAssertionById(populationId));
 
         verify(populatedAssertionRepository, times(1)).findById(populationId);
         verify(populatedAssertionRepository, never()).delete(any());
     }
+
+
+    @Test
+    void testCheckPopulatedAssertionWithExistingId() {
+        Long populatedAssertionId = 1L;
+        PopulatedAssertion populatedAssertion = new PopulatedAssertion();
+        populatedAssertion.setId(populatedAssertionId);
+
+        when(populatedAssertionRepository.findById(populatedAssertionId)).thenReturn(Optional.of(populatedAssertion));
+
+        PopulatedAssertion result = populatedAssertionService.checkPopulatedAssertion(populatedAssertionId);
+
+        assertNotNull(result);
+        assertEquals(populatedAssertionId, result.getId());
+
+        verify(populatedAssertionRepository, times(1)).findById(populatedAssertionId);
+    }
+
+
+
+    @Test
+    void testCheckPopulatedAssertionWithNonExistingId() {
+        Long nonExistingPopulatedAssertionId = 100L;
+
+        when(populatedAssertionRepository.findById(nonExistingPopulatedAssertionId)).thenReturn(Optional.empty());
+
+        assertThrows(ApiRequestException.class, () -> populatedAssertionService.checkPopulatedAssertion(nonExistingPopulatedAssertionId));
+
+        verify(populatedAssertionRepository, times(1)).findById(nonExistingPopulatedAssertionId);
+    }
+
+
+    @Test
+    void testCreatePopulatedAssertionWithBlankPopulatedAssertionName() {
+        PopulatedAssertionDTO populatedAssertionDTO = new PopulatedAssertionDTO();
+        populatedAssertionDTO.setPopulatedAssertionName("");
+
+        Assertions.assertThrows(ApiRequestException.class, () -> populatedAssertionService.createPopulatedAssertion(populatedAssertionDTO));
+
+        verify(populatedAssertionRepository, never()).existsByPopulatedAssertionName(anyString());
+        verify(populatedAssertionRepository, never()).save(any(PopulatedAssertion.class));
+    }
+
+    @Test
+    void testCreatePopulatedAssertionWithExistingPopulatedAssertionName() {
+        String existingPopulatedAssertionName = "Existing Populated Assertion";
+        PopulatedAssertionDTO populatedAssertionDTO = new PopulatedAssertionDTO();
+        populatedAssertionDTO.setPopulatedAssertionName(existingPopulatedAssertionName);
+
+        when(populatedAssertionRepository.existsByPopulatedAssertionName(existingPopulatedAssertionName)).thenReturn(true);
+
+        Assertions.assertThrows(ApiRequestException.class, () -> populatedAssertionService.createPopulatedAssertion(populatedAssertionDTO));
+
+        verify(populatedAssertionRepository, times(1)).existsByPopulatedAssertionName(existingPopulatedAssertionName);
+        verify(populatedAssertionRepository, never()).save(any(PopulatedAssertion.class));
+    }
+
+    @Test
+    void testCreatePopulatedAssertionWithValidData() {
+        PopulatedAssertionDTO populatedAssertionDTO = new PopulatedAssertionDTO();
+        populatedAssertionDTO.setPopulatedAssertionName("New Populated Assertion");
+
+        when(populatedAssertionRepository.existsByPopulatedAssertionName(anyString())).thenReturn(false);
+
+        PopulatedAssertionDTO result = populatedAssertionService.createPopulatedAssertion(populatedAssertionDTO);
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(populatedAssertionDTO.getPopulatedAssertionName(), result.getPopulatedAssertionName());
+
+        verify(populatedAssertionRepository, times(1)).existsByPopulatedAssertionName(populatedAssertionDTO.getPopulatedAssertionName());
+        verify(populatedAssertionRepository, times(1)).save(any(PopulatedAssertion.class));
+    }
+
+
+    @Test
+    void testUpdatePopulatedAssertionWithValidData() {
+        long populatedAssertionId = 1L;
+        String newPopulatedAssertionName = "New Populated Assertion";
+        PopulatedAssertionDTO populatedAssertionDTO = new PopulatedAssertionDTO();
+        populatedAssertionDTO.setPopulatedAssertionName(newPopulatedAssertionName);
+
+        PopulatedAssertion populatedAssertion = new PopulatedAssertion();
+        populatedAssertion.setPopulatedAssertionName("Old Populated Assertion");
+
+        when(populatedAssertionRepository.findById(populatedAssertionId)).thenReturn(Optional.of(populatedAssertion));
+        when(populatedAssertionRepository.existsByPopulatedAssertionName(newPopulatedAssertionName)).thenReturn(false);
+
+        PopulatedAssertionDTO result = populatedAssertionService.updatePopulatedAssertion(populatedAssertionId, populatedAssertionDTO);
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(newPopulatedAssertionName, result.getPopulatedAssertionName());
+
+        verify(populatedAssertionRepository, times(1)).findById(populatedAssertionId);
+        verify(populatedAssertionRepository, times(1)).existsByPopulatedAssertionName(newPopulatedAssertionName);
+        verify(populatedAssertionRepository, times(1)).save(any(PopulatedAssertion.class));
+    }
+
+
+    @Test
+    void testUpdatePopulatedAssertionWithNullDTO() {
+        Long id = 1L;
+        PopulatedAssertionDTO populatedAssertionDTO = null;
+
+        Assertions.assertThrows(ApiRequestException.class, () -> populatedAssertionService.updatePopulatedAssertion(id, populatedAssertionDTO));
+    }
+
+    @Test
+    void testUpdatePopulatedAssertionWithEmptyName() {
+        Long id = 1L;
+        PopulatedAssertionDTO populatedAssertionDTO = new PopulatedAssertionDTO();
+        populatedAssertionDTO.setPopulatedAssertionName("");
+
+        Assertions.assertThrows(ApiRequestException.class, () -> populatedAssertionService.updatePopulatedAssertion(id, populatedAssertionDTO));
+    }
+
+
+    @Test
+    void testUpdatePopulatedAssertionWithInvalidData() {
+        Long id = 1L;
+        PopulatedAssertionDTO populatedAssertionDTO = new PopulatedAssertionDTO();
+        populatedAssertionDTO.setPopulatedAssertionName(" ");
+
+        Assertions.assertThrows(ApiRequestException.class, () -> populatedAssertionService.updatePopulatedAssertion(id, populatedAssertionDTO));
+    }
+
 
 }

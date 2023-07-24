@@ -16,10 +16,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -168,7 +165,7 @@ class ObjectVillageServiceTest {
     }
 
     @Test
-    void testDeleteObjectVillageById_WhenObjectVillageDoesNotExist() {
+    void testDeleteObjectVillageByIdWhenObjectVillageDoesNotExist() {
         Long objectId = 1L;
         when(objectVillageRepository.findById(objectId)).thenReturn(Optional.empty());
 
@@ -178,8 +175,7 @@ class ObjectVillageServiceTest {
     }
 
     @Test
-    void getObjectVillageByVillageId_ValidId_ReturnsFilteredObjectVillageDTOList() {
-        // Arrange
+    void getObjectVillageByVillageIdValidIdReturnsFilteredObjectVillageDTOList() {
         Long villageId = 1L;
         Village village = new Village();
         village.setId(villageId);
@@ -202,14 +198,48 @@ class ObjectVillageServiceTest {
         when(modelMapper.map(objectVillage1, ObjectVillageDTO.class)).thenReturn(objectVillageDTO1);
         when(modelMapper.map(objectVillage2, ObjectVillageDTO.class)).thenReturn(objectVillageDTO2);
 
-        // Act
         List<ObjectVillageDTO> result = objectVillageService.getObjectVillageByVillageId(villageId);
 
-        // Assert
         assertEquals(expectedObjectVillageDTOList, result);
         verify(objectVillageRepository, times(1)).findAll();
         verify(modelMapper, times(1)).map(objectVillage1, ObjectVillageDTO.class);
         verify(modelMapper, times(1)).map(objectVillage2, ObjectVillageDTO.class);
+    }
+
+    @Test
+    void testGetObjectVillageByVillageIdWithValidId() {
+        Long villageId = 1L;
+
+        List<ObjectVillage> objectVillages = new ArrayList<>();
+        objectVillages.add(new ObjectVillage());
+        objectVillages.add(new ObjectVillage());
+        objectVillages.add(new ObjectVillage());
+
+        Village village = new Village();
+        village.setId(villageId);
+        objectVillages.forEach(obj -> obj.setVillage(village));
+
+        when(objectVillageRepository.findAll()).thenReturn(objectVillages);
+
+        List<ObjectVillageDTO> resultDTOs = objectVillageService.getObjectVillageByVillageId(villageId);
+
+        assertEquals(objectVillages.size(), resultDTOs.size());
+        verify(objectVillageRepository, times(1)).findAll();
+        verify(modelMapper, times(objectVillages.size())).map(any(), eq(ObjectVillageDTO.class));
+    }
+
+
+    @Test
+    void testGetObjectVillageByVillageIdWhenDatabaseIsEmpty() {
+        Long villageId = 1L;
+
+        when(objectVillageRepository.findAll()).thenReturn(Collections.emptyList());
+
+        List<ObjectVillageDTO> resultDTOs = objectVillageService.getObjectVillageByVillageId(villageId);
+
+        assertTrue(resultDTOs.isEmpty());
+        verify(objectVillageRepository, times(1)).findAll();
+        verify(modelMapper, times(0)).map(any(), eq(ObjectVillageDTO.class));
     }
 
     @Test
