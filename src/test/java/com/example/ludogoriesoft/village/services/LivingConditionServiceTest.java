@@ -12,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 
 import java.util.ArrayList;
@@ -32,9 +33,7 @@ class LivingConditionServiceTest {
 
     @BeforeEach
     public void setup() {
-        livingConditionRepository = mock(LivingConditionRepository.class);
-        modelMapper = mock(ModelMapper.class);
-        livingConditionService = new LivingConditionService(livingConditionRepository, modelMapper);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test

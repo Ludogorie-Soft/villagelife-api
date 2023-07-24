@@ -10,10 +10,7 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
+import java.util.*;
 
 
 @Service
@@ -90,6 +87,24 @@ public class EthnicityVillageService {
         for (EthnicityVillage ethnicityVillage : ethnicityVillages) {
             if (ethnicityVillage.getVillage().getId().equals(villageId)) {
                 filteredList.add(getEthnicityVillageById(ethnicityVillage.getId()));
+            }
+        }
+        return filteredList;
+    }
+    public List<EthnicityVillageDTO> getUniqueEthnicityVillagesByVillageId(Long villageId) {
+        List<EthnicityVillage> ethnicityVillages = ethnicityVillageRepository.findAll();
+        List<EthnicityVillageDTO> filteredList = new ArrayList<>();
+
+        for (EthnicityVillage ethnicityVillage : ethnicityVillages) {
+            if (ethnicityVillage.getVillage().getId().equals(villageId) && !ethnicityVillage.getEthnicity().getEthnicityName().equals("няма малцинствени групи")) {
+                filteredList.add(ethnicityVillageToEthnicityVillageDTO(ethnicityVillage));
+            }
+        }
+        if(filteredList.isEmpty()){
+            for (EthnicityVillage ethnicityVillage : ethnicityVillages) {
+                if (ethnicityVillage.getVillage().getId().equals(villageId) && ethnicityVillage.getEthnicity().getEthnicityName().equals("няма малцинствени групи")) {
+                    filteredList.add(ethnicityVillageToEthnicityVillageDTO(ethnicityVillage));
+                }
             }
         }
         return filteredList;
