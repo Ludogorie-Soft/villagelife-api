@@ -145,4 +145,19 @@ public class VillageImageService {
         }
         return villageDTOs;
     }
+
+    public List<VillageDTO> getAllApprovedVillageDTOsWithImages() {
+        List<VillageDTO> villageDTOsWithImages = new ArrayList<>();
+        List<VillageDTO> allVillageDTOs = villageService.getVillagesByStatus(true);
+
+        for (VillageDTO village : allVillageDTOs) {
+            List<String> images = getAllImagesForVillage(village.getId());
+            village.setImages(images);
+            villageDTOsWithImages.add(village);
+        }
+
+        return villageDTOsWithImages;
+    }
+
+
 }
