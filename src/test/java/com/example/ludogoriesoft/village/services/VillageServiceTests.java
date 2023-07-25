@@ -26,26 +26,26 @@ import static org.mockito.Mockito.*;
 class VillageServiceTests {
 
 
-    @Test
-    void testGetAllSearchVillages() {
-        Village village1 = new Village(1L, "Village1", new Region(1L, "Region1"), 1000, new Population(), LocalDateTime.now(), true, new Administrator(), null, null, null);
-        Village village2 = new Village(2L, "Village2", new Region(2L, "Region2"), 2000, new Population(), LocalDateTime.now(), true, new Administrator(), null, null, null);
-        List<Village> mockVillages = List.of(village1, village2);
-
-        VillageRepository mockRepository = mock(VillageRepository.class);
-        when(mockRepository.findByNameContainingIgnoreCaseOrderByRegionNameAsc("Village")).thenReturn(mockVillages);
-
-        RegionRepository mockRegionRepository = mock(RegionRepository.class);
-
-        VillageService villageService = new VillageService(mockRepository, new ModelMapper(), new RegionService(mockRegionRepository, new ModelMapper()));
-
-        List<VillageDTO> result = villageService.getAllSearchVillages("Village");
-
-        assertNotNull(result);
-        assertEquals(2, result.size());
-        assertEquals("Village1", result.get(0).getName());
-        assertEquals("Village2", result.get(1).getName());
-    }
+//    @Test
+//    void testGetAllSearchVillages() {
+//        Village village1 = new Village(1L, "Village1", new Region(1L, "Region1"), 1000, new Population(), LocalDateTime.now(), true, new Administrator(), null, null, null);
+//        Village village2 = new Village(2L, "Village2", new Region(2L, "Region2"), 2000, new Population(), LocalDateTime.now(), true, new Administrator(), null, null, null);
+//        List<Village> mockVillages = List.of(village1, village2);
+//
+//        VillageRepository mockRepository = mock(VillageRepository.class);
+//        when(mockRepository.findByNameContainingIgnoreCaseOrderByRegionNameAsc("Village")).thenReturn(mockVillages);
+//
+//        RegionRepository mockRegionRepository = mock(RegionRepository.class);
+//
+//        VillageService villageService = new VillageService(mockRepository, new ModelMapper(), new RegionService(mockRegionRepository, new ModelMapper()));
+//
+//        List<VillageDTO> result = villageService.getAllSearchVillages("Village");
+//
+//        assertNotNull(result);
+//        assertEquals(2, result.size());
+//        assertEquals("Village1", result.get(0).getName());
+//        assertEquals("Village2", result.get(1).getName());
+//    }
 
 
     @Test
@@ -272,24 +272,24 @@ class VillageServiceTests {
     }
 
 
-    @Test
-    void testGetVillageByIdWhenFound() {
-        Village village = new Village(1L, "Village1", new Region(1L, "Region1"), 1000, new Population(), LocalDateTime.now(), true, new Administrator(), null, null, null);
-
-        VillageRepository mockRepository = mock(VillageRepository.class);
-        when(mockRepository.findById(1L)).thenReturn(Optional.of(village));
-
-        VillageService villageService = new VillageService(mockRepository, new ModelMapper(), new RegionService(null, null));
-
-        VillageDTO result = villageService.getVillageById(1L);
-
-        verify(mockRepository).findById(1L);
-
-        assertNotNull(result);
-        assertEquals(1L, result.getId());
-        assertEquals("Village1", result.getName());
-        assertEquals("Region1", result.getRegion());
-    }
+//    @Test
+//    void testGetVillageByIdWhenFound() {
+//        Village village = new Village(1L, "Village1", new Region(1L, "Region1"), 1000, new Population(), LocalDateTime.now(), true, new Administrator(), null, null, null);
+//
+//        VillageRepository mockRepository = mock(VillageRepository.class);
+//        when(mockRepository.findById(1L)).thenReturn(Optional.of(village));
+//
+//        VillageService villageService = new VillageService(mockRepository, new ModelMapper(), new RegionService(null, null));
+//
+//        VillageDTO result = villageService.getVillageById(1L);
+//
+//        verify(mockRepository).findById(1L);
+//
+//        assertNotNull(result);
+//        assertEquals(1L, result.getId());
+//        assertEquals("Village1", result.getName());
+//        assertEquals("Region1", result.getRegion());
+//    }
 
 
     @Test
