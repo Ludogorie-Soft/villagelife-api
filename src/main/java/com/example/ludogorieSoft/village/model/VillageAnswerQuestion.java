@@ -22,4 +22,5 @@ public class VillageAnswerQuestion {
     @JoinColumn(name = "question_id")
     private Question question;
     private String answer;
+    private Boolean villageStatus;
 }

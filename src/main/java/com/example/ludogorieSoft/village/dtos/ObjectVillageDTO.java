@@ -14,5 +14,6 @@ public class ObjectVillageDTO {
     private Long villageId;
     private Long objectAroundVillageId;
     private Distance distance;
+    private Boolean villageStatus;
 
 }

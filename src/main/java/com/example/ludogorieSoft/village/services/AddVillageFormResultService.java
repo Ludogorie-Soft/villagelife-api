@@ -86,11 +86,11 @@ public class AddVillageFormResultService {
     public void createEthnicityVillagesFromAddVillageFormResult(Long villageId, AddVillageFormResult addVillageFormResult){
         List<Long> ethnicityDTOIds = addVillageFormResult.getEthnicityDTOIds();
         if (ethnicityDTOIds == null && !ethnicityVillageService.existsByVillageIdAndEthnicityId(villageId, ethnicityService.findEthnicityByName("няма малцинствени групи").getId())) {
-            ethnicityVillageService.createEthnicityVillage(new EthnicityVillageDTO(null, villageId, ethnicityService.findEthnicityByName("няма малцинствени групи").getId()));
+            ethnicityVillageService.createEthnicityVillage(new EthnicityVillageDTO(null, villageId, ethnicityService.findEthnicityByName("няма малцинствени групи").getId(),false));
         }else if(ethnicityDTOIds != null){
             for (Long id : ethnicityDTOIds) {
                 if(!ethnicityVillageService.existsByVillageIdAndEthnicityId(villageId, id)){
-                    EthnicityVillageDTO ethnicityVillageDTO = new EthnicityVillageDTO(null, villageId, id);
+                    EthnicityVillageDTO ethnicityVillageDTO = new EthnicityVillageDTO(null, villageId, id,false);
                     ethnicityVillageService.createEthnicityVillage(ethnicityVillageDTO);
                 }
             }
@@ -105,7 +105,7 @@ public class AddVillageFormResultService {
                             villageId, questionsDTO.get(i).getId(), addVillageFormResult.getQuestionResponses().get(i))) {
 
                 VillageAnswerQuestionDTO villageAnswerQuestionDTO = new VillageAnswerQuestionDTO(
-                        null, villageId, questionsDTO.get(i).getId(), addVillageFormResult.getQuestionResponses().get(i));
+                        null, villageId, questionsDTO.get(i).getId(), addVillageFormResult.getQuestionResponses().get(i),false);
 
                 villageAnswerQuestionService.createVillageAnswerQuestion(villageAnswerQuestionDTO);
             }
@@ -114,7 +114,7 @@ public class AddVillageFormResultService {
     public void createObjectVillagesFromAddVillageFormResult(Long villageId, AddVillageFormResult addVillageFormResult){
         List<ObjectVillageDTO> objectVillageDTOS = addVillageFormResult.getObjectVillageDTOS();
         for (int i = 1; i < objectVillageDTOS.size(); i++) {
-            ObjectVillageDTO objectVillageToSave = new ObjectVillageDTO(null, villageId, objectVillageDTOS.get(i).getObjectAroundVillageId(), objectVillageDTOS.get(i).getDistance());
+            ObjectVillageDTO objectVillageToSave = new ObjectVillageDTO(null, villageId, objectVillageDTOS.get(i).getObjectAroundVillageId(), objectVillageDTOS.get(i).getDistance(),false);
             if(objectVillageToSave.getDistance() != null && !objectVillageService.existsByVillageIdAndObjectIdAndDistance(villageId, objectVillageDTOS.get(i).getObjectAroundVillageId(), objectVillageDTOS.get(i).getDistance())){
                 objectVillageService.createObjectVillage(objectVillageToSave);
             }
@@ -123,7 +123,7 @@ public class AddVillageFormResultService {
     public void createVillagePopulationAssertionsFromAddVillageFormResult(Long villageId, AddVillageFormResult addVillageFormResult){
         List<VillagePopulationAssertionDTO> villagePopulationAssertionDTOS = addVillageFormResult.getVillagePopulationAssertionDTOS();
         for (int i = 1; i < villagePopulationAssertionDTOS.size(); i++) {
-            VillagePopulationAssertionDTO villagePopulationAssertionDTO = new VillagePopulationAssertionDTO(null, villageId, villagePopulationAssertionDTOS.get(i).getPopulatedAssertionId(), villagePopulationAssertionDTOS.get(i).getAnswer());
+            VillagePopulationAssertionDTO villagePopulationAssertionDTO = new VillagePopulationAssertionDTO(null, villageId, villagePopulationAssertionDTOS.get(i).getPopulatedAssertionId(), villagePopulationAssertionDTOS.get(i).getAnswer(),false);
             if(villagePopulationAssertionDTO.getAnswer() != null && !villagePopulationAssertionService.existsByVillageIdAndPopulatedAssertionIdAndAnswer(villageId, villagePopulationAssertionDTOS.get(i).getPopulatedAssertionId(), villagePopulationAssertionDTOS.get(i).getAnswer())){
                 villagePopulationAssertionService.createVillagePopulationAssertionDTO(villagePopulationAssertionDTO);
             }
@@ -132,7 +132,7 @@ public class AddVillageFormResultService {
     public void createVillageLivingConditionFromAddVillageFormResult(Long villageId, AddVillageFormResult addVillageFormResult){
         List<VillageLivingConditionDTO> villageLivingConditionDTOS = addVillageFormResult.getVillageLivingConditionDTOS();
         for (int i = 1; i < villageLivingConditionDTOS.size(); i++) {
-            VillageLivingConditionDTO villageLivingConditionDTO = new VillageLivingConditionDTO(null, villageId, villageLivingConditionDTOS.get(i).getLivingConditionId(), villageLivingConditionDTOS.get(i).getConsents());
+            VillageLivingConditionDTO villageLivingConditionDTO = new VillageLivingConditionDTO(null, villageId, villageLivingConditionDTOS.get(i).getLivingConditionId(), villageLivingConditionDTOS.get(i).getConsents(),false);
             if(villageLivingConditionDTO.getConsents() != null && !villageLivingConditionService.existsByVillageIdAndLivingConditionIdAndConsents(villageId, villageLivingConditionDTOS.get(i).getLivingConditionId(), villageLivingConditionDTOS.get(i).getConsents())){
                 villageLivingConditionService.createVillageLivingCondition(villageLivingConditionDTO);
             }

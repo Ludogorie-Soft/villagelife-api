@@ -22,4 +22,5 @@ public class ObjectVillage {
     private ObjectAroundVillage object;
     @Enumerated(EnumType.STRING)
     private Distance distance;
+    private Boolean villageStatus;
 }

@@ -12,4 +12,5 @@ public class EthnicityVillageDTO {
     private Long id;
     private Long villageId;
     private Long ethnicityId;
+    private Boolean villageStatus;
 }

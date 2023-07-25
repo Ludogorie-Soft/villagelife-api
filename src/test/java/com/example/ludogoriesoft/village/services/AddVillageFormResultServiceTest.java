@@ -60,7 +60,7 @@ class AddVillageFormResultServiceTest {
         Long villageId = 12345L;
         AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
         List<VillageLivingConditionDTO> dtos = new ArrayList<>();
-        dtos.add(new VillageLivingConditionDTO(null, villageId, 1L, null));
+        dtos.add(new VillageLivingConditionDTO(null, villageId, 1L, null,true));
         addVillageFormResult.setVillageLivingConditionDTOS(dtos);
 
         addVillageFormResultService.createVillageLivingConditionFromAddVillageFormResult(villageId, addVillageFormResult);
@@ -75,7 +75,7 @@ class AddVillageFormResultServiceTest {
         AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
         List<VillageLivingConditionDTO> dtos = new ArrayList<>();
         dtos.add(new VillageLivingConditionDTO());
-        dtos.add(new VillageLivingConditionDTO(null, villageId, 1L, Consents.COMPLETELY_AGREED));
+        dtos.add(new VillageLivingConditionDTO(null, villageId, 1L, Consents.COMPLETELY_AGREED,true));
         addVillageFormResult.setVillageLivingConditionDTOS(dtos);
 
         addVillageFormResultService.createVillageLivingConditionFromAddVillageFormResult(villageId, addVillageFormResult);
@@ -89,9 +89,9 @@ class AddVillageFormResultServiceTest {
         AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
         List<VillageLivingConditionDTO> dtos = new ArrayList<>();
 
-        VillageLivingConditionDTO dto1 = new VillageLivingConditionDTO(null, villageId, 1L, Consents.COMPLETELY_AGREED);
-        VillageLivingConditionDTO dto2 = new VillageLivingConditionDTO(null, villageId, 2L, Consents.DISAGREE);
-        VillageLivingConditionDTO dto3 = new VillageLivingConditionDTO(null, villageId, 3L, Consents.CANT_DECIDE);
+        VillageLivingConditionDTO dto1 = new VillageLivingConditionDTO(null, villageId, 1L, Consents.COMPLETELY_AGREED,false);
+        VillageLivingConditionDTO dto2 = new VillageLivingConditionDTO(null, villageId, 2L, Consents.DISAGREE,false);
+        VillageLivingConditionDTO dto3 = new VillageLivingConditionDTO(null, villageId, 3L, Consents.CANT_DECIDE,false);
 
         dtos.add(new VillageLivingConditionDTO());
         dtos.add(dto1);
@@ -125,7 +125,7 @@ class AddVillageFormResultServiceTest {
         Long villageId = 12345L;
         AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
         List<VillagePopulationAssertionDTO> dtos = new ArrayList<>();
-        dtos.add(new VillagePopulationAssertionDTO(null, villageId, 1L, null));
+        dtos.add(new VillagePopulationAssertionDTO(null, villageId, 1L, null,false));
         addVillageFormResult.setVillagePopulationAssertionDTOS(dtos);
 
         addVillageFormResultService.createVillagePopulationAssertionsFromAddVillageFormResult(villageId, addVillageFormResult);
@@ -139,8 +139,8 @@ class AddVillageFormResultServiceTest {
         AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
         List<VillagePopulationAssertionDTO> dtos = new ArrayList<>();
 
-        VillagePopulationAssertionDTO dto1 = new VillagePopulationAssertionDTO(null, villageId, 1L, Consents.DISAGREE);
-        VillagePopulationAssertionDTO dto2 = new VillagePopulationAssertionDTO(null, villageId, 2L, Consents.RATHER_AGREE);
+        VillagePopulationAssertionDTO dto1 = new VillagePopulationAssertionDTO(null, villageId, 1L, Consents.DISAGREE,false);
+        VillagePopulationAssertionDTO dto2 = new VillagePopulationAssertionDTO(null, villageId, 2L, Consents.RATHER_AGREE,false);
 
         dtos.add(new VillagePopulationAssertionDTO());
         dtos.add(dto1);
@@ -161,9 +161,9 @@ class AddVillageFormResultServiceTest {
         AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
         List<VillagePopulationAssertionDTO> dtos = new ArrayList<>();
 
-        VillagePopulationAssertionDTO dto1 = new VillagePopulationAssertionDTO(null, villageId, 1L, Consents.CANT_DECIDE);
-        VillagePopulationAssertionDTO dto2 = new VillagePopulationAssertionDTO(null, villageId, 2L, null);
-        VillagePopulationAssertionDTO dto3 = new VillagePopulationAssertionDTO(null, villageId, 3L, Consents.COMPLETELY_AGREED);
+        VillagePopulationAssertionDTO dto1 = new VillagePopulationAssertionDTO(null, villageId, 1L, Consents.CANT_DECIDE,false);
+        VillagePopulationAssertionDTO dto2 = new VillagePopulationAssertionDTO(null, villageId, 2L, null,false);
+        VillagePopulationAssertionDTO dto3 = new VillagePopulationAssertionDTO(null, villageId, 3L, Consents.COMPLETELY_AGREED,false);
 
         dtos.add(new VillagePopulationAssertionDTO());
         dtos.add(dto1);
@@ -193,9 +193,9 @@ class AddVillageFormResultServiceTest {
         AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
         List<ObjectVillageDTO> objectVillageDTOS = new ArrayList<>();
 
-        ObjectVillageDTO dto1 = new ObjectVillageDTO(null, villageId, 1L, Distance.IN_THE_VILLAGE);
-        ObjectVillageDTO dto2 = new ObjectVillageDTO(null, villageId, 2L, Distance.ON_10_KM);
-        ObjectVillageDTO dto3 = new ObjectVillageDTO(null, villageId, 3L, null);
+        ObjectVillageDTO dto1 = new ObjectVillageDTO(null, villageId, 1L, Distance.IN_THE_VILLAGE,false);
+        ObjectVillageDTO dto2 = new ObjectVillageDTO(null, villageId, 2L, Distance.ON_10_KM,false);
+        ObjectVillageDTO dto3 = new ObjectVillageDTO(null, villageId, 3L, null,false);
 
         objectVillageDTOS.add(new ObjectVillageDTO());
         objectVillageDTOS.add(dto1);
@@ -243,8 +243,8 @@ class AddVillageFormResultServiceTest {
         AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
         List<ObjectVillageDTO> objectVillageDTOS = new ArrayList<>();
 
-        ObjectVillageDTO dto1 = new ObjectVillageDTO(null, villageId, 1L, Distance.ON_31_TO_50_KM);
-        ObjectVillageDTO dto2 = new ObjectVillageDTO(null, villageId, 2L, null);
+        ObjectVillageDTO dto1 = new ObjectVillageDTO(null, villageId, 1L, Distance.ON_31_TO_50_KM,false);
+        ObjectVillageDTO dto2 = new ObjectVillageDTO(null, villageId, 2L, null,false);
 
         objectVillageDTOS.add(new ObjectVillageDTO());
         objectVillageDTOS.add(dto1);
@@ -322,7 +322,7 @@ class AddVillageFormResultServiceTest {
         addVillageFormResultService.createEthnicityVillagesFromAddVillageFormResult(villageId, addVillageFormResult);
 
         for (Long id : ethnicityDTOIds) {
-            EthnicityVillageDTO expectedDTO = new EthnicityVillageDTO(null, villageId, id);
+            EthnicityVillageDTO expectedDTO = new EthnicityVillageDTO(null, villageId, id,false);
             Mockito.verify(ethnicityVillageService).createEthnicityVillage(expectedDTO);
         }
     }
@@ -352,7 +352,7 @@ class AddVillageFormResultServiceTest {
         addVillageFormResultService.createEthnicityVillagesFromAddVillageFormResult(villageId, addVillageFormResult);
 
         for (Long id : ethnicityDTOIds) {
-            EthnicityVillageDTO expectedDTO = new EthnicityVillageDTO(null, villageId, id);
+            EthnicityVillageDTO expectedDTO = new EthnicityVillageDTO(null, villageId, id,false);
             Mockito.verify(ethnicityVillageService).createEthnicityVillage(expectedDTO);
         }
     }

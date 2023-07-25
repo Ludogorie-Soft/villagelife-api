@@ -11,4 +11,5 @@ public class VillageImageDTO {
     private Long id;
     private Long villageId;
     private String imageName;
+    private Boolean villageStatus;
 }

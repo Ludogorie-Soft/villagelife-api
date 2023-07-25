@@ -82,7 +82,7 @@ public class VillageImageService {
     }
 
     public void createVillageImageDTO(Long villageId, String fileName) {
-        VillageImageDTO villageImageDTO = new VillageImageDTO(null, villageId, fileName);
+        VillageImageDTO villageImageDTO = new VillageImageDTO(null, villageId, fileName,false);//added false for status column /ddd
         createVillageImageDTO(villageImageDTO);
     }
 

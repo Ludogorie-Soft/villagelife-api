@@ -22,4 +22,5 @@ public class VillageImage {
     private Village village;
     @NotBlank
     private String imageName;
+    private Boolean villageStatus;
 }

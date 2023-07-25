@@ -149,7 +149,7 @@ class VillageImageServiceTest {
     void testCreateVillageImageDTOWithVillageIdAndFileName() {
         Long villageId = 123L;
         String fileName = "image.jpg";
-        VillageImageDTO villageImageDTO = new VillageImageDTO(null, villageId, fileName);
+        VillageImageDTO villageImageDTO = new VillageImageDTO(null, villageId, fileName,false);
 
         Village village = new Village();
         VillageService villageService = Mockito.mock(VillageService.class);

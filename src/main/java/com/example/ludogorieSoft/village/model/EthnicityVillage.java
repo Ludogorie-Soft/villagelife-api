@@ -22,4 +22,5 @@ public class EthnicityVillage {
     @ManyToOne
     @JoinColumn(name = "ethnicity_id")
     private Ethnicity ethnicity;
+    private Boolean villageStatus;
 }

@@ -21,6 +21,7 @@ public class VillagePopulationAssertion {
     private PopulatedAssertion populatedAssertionID;
     @Enumerated(EnumType.STRING)
     private Consents answer;
+    private Boolean villageStatus;
 
 
 }

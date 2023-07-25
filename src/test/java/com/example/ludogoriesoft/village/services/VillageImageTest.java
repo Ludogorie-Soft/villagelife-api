@@ -14,7 +14,7 @@ class VillageImageTest {
         Village village = new Village();
         String imageName = "image.jpg";
 
-        VillageImage villageImage = new VillageImage(id, village, imageName);
+        VillageImage villageImage = new VillageImage(id, village, imageName,true);
 
         Assertions.assertEquals(id, villageImage.getId());
         Assertions.assertEquals(village, villageImage.getVillage());

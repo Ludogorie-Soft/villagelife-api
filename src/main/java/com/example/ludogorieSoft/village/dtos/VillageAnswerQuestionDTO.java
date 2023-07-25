@@ -13,4 +13,5 @@ public class VillageAnswerQuestionDTO {
     private Long villageId;
     private Long questionId;
     private String answer;
+    private Boolean villageStatus;
 }
