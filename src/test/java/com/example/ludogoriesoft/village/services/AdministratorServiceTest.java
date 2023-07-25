@@ -9,7 +9,6 @@ import com.example.ludogorieSoft.village.model.Region;
 import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.repositories.AdministratorRepository;
 import com.example.ludogorieSoft.village.repositories.VillageRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -165,8 +164,60 @@ class AdministratorServiceTest {
         }
         verify(villageRepository, times(1)).findAllVillagesWithPopulation();
     }
+    @Test
+    void testGetAllVillagesWithRegion2() {
+        Village village1 = new Village();
+        village1.setId(1L);
+
+        Region population1 = new Region();
+        population1.setId(1L);
+
+        Administrator administrator1 = null;
+
+        Village village2 = new Village();
+        village2.setId(2L);
+
+        Region population2 = new Region();
+        population2.setId(3L);
+
+        Administrator administrator2 = null;
 
 
+        List<Object[]> mockResults = new ArrayList<>();
+        Object[] result1 = {village1, population1, administrator1};
+        Object[] result2 = {village2, population2, administrator2};
+        mockResults.add(result1);
+        mockResults.add(result2);
+        when(villageRepository.findAllVillagesWithPopulation()).thenReturn(mockResults);
+
+        List<VillageResponse> expectedResponses = new ArrayList<>();
+
+        VillageResponse response1 = new VillageResponse();
+        response1.setId(1L);
+        response1.setRegion(population1);
+        response1.setAdmin(administrator1);
+        expectedResponses.add(response1);
+
+        VillageResponse response2 = new VillageResponse();
+        response2.setId(2L);
+        response2.setRegion(population2);
+        response2.setAdmin(administrator2);
+        expectedResponses.add(response2);
+
+        List<VillageResponse> actualResponses = administratorService.getAllVillagesWithPopulation();
+
+        assertEquals(expectedResponses.size(), actualResponses.size());
+        for (int i = 0; i < expectedResponses.size(); i++) {
+            VillageResponse expectedResponse = expectedResponses.get(i);
+            VillageResponse actualResponse = actualResponses.get(i);
+            assertEquals(expectedResponse.getId(), actualResponse.getId());
+            assertEquals(expectedResponse.getName(), actualResponse.getName());
+            assertEquals(expectedResponse.getDateUpload(), actualResponse.getDateUpload());
+            assertNull(expectedResponse.getAdmin());
+            assertNull(expectedResponse.getDateApproved());
+        }
+        verify(villageRepository, times(1)).findAllVillagesWithPopulation();
+    }
     @Test
     void testCreateAdministratorWhenUsernameExists() {
         com.example.ludogorieSoft.village.dtos.request.AdministratorRequest administratorRequest = new com.example.ludogorieSoft.village.dtos.request.AdministratorRequest();

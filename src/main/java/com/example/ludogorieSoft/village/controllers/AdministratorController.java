@@ -36,10 +36,12 @@ public class AdministratorController {
     public ResponseEntity<AdministratorDTO> createAdministrator(@Valid @RequestBody AdministratorRequest administratorRequest) {
         return ResponseEntity.ok(administratorService.createAdministrator(administratorRequest));
     }
+
     @PutMapping("/update/{id}")
     public ResponseEntity<AdministratorDTO> updateAdministrator(@PathVariable("id") Long id, @Valid @RequestBody AdministratorRequest administratorRequest) {
         return ResponseEntity.ok(administratorService.updateAdministrator(id, administratorRequest));
     }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteAdministratorById(@PathVariable("id") Long id) {
         administratorService.deleteAdministratorById(id);
@@ -47,7 +49,7 @@ public class AdministratorController {
     }
 
     @GetMapping("village")
-    public List<VillageResponse> getAllVillages(){
+    public List<VillageResponse> getAllVillages() {
         return administratorService.getAllVillagesWithPopulation();
     }
 
@@ -56,11 +58,18 @@ public class AdministratorController {
         villageService.deleteVillage(villageId);
         return new ResponseEntity<>("Village with id: " + villageId + " has been deleted successfully!!", HttpStatus.OK);
     }
+
     @PostMapping("/approve/{id}")
-    public ResponseEntity<String> changeVillageStatus(@PathVariable(name = "id") Long id){
+    public ResponseEntity<String> changeVillageStatus(@PathVariable(name = "id") Long id) {
         VillageDTO villageDTO = villageService.getVillageById(id);
-        villageService.updateVillage(id,villageDTO);
+        villageService.updateVillage(id, villageDTO);
         return new ResponseEntity<>("Status of village with ID: " + id + " changed successfully!!!", HttpStatus.OK);
     }
 
+    @GetMapping("/update/{villageId}")
+    public ResponseEntity<VillageDTO> findVillageById(@PathVariable(name = "villageId") Long id) {
+        VillageDTO village = villageService.getVillageById(id);
+
+        return new ResponseEntity<>(village,HttpStatus.OK);
+    }
 }
