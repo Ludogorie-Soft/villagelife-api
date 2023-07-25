@@ -12,4 +12,5 @@ public class VillageGroundCategoryDTO {
     private Long id;
     private Long villageId;
     private Long groundCategoryId;
+    private Boolean villageStatus;
 }

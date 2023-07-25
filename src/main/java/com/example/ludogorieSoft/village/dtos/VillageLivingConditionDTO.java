@@ -14,4 +14,5 @@ public class VillageLivingConditionDTO {
     private Long villageId;
     private Long livingConditionId;
     private Consents consents;
+    private Boolean villageStatus;
 }

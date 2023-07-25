@@ -52,14 +52,15 @@ class VillageLivingConditionServiceTest {
         Long villageId = 1L;
         Village village = new Village();
         village.setId(villageId);
+        boolean status = true;
 
         VillageLivingConditionRepository villageLivingConditionRepository = mock(VillageLivingConditionRepository.class);
 
         List<VillageLivingConditions> villageLivingConditionsList = new ArrayList<>();
-        villageLivingConditionsList.add(new VillageLivingConditions(1L, village, new LivingCondition(1L, "Condition 1"), Consents.DISAGREE)); // 0
-        villageLivingConditionsList.add(new VillageLivingConditions(2L, village, new LivingCondition(2L, "Condition 2"), Consents.DISAGREE)); // 0
-        villageLivingConditionsList.add(new VillageLivingConditions(3L, village, new LivingCondition(3L, "Condition 3"), Consents.DISAGREE)); // 0
-        villageLivingConditionsList.add(new VillageLivingConditions(4L, village, new LivingCondition(4L, "Condition 4"), Consents.DISAGREE)); // 0
+        villageLivingConditionsList.add(new VillageLivingConditions(1L, village, new LivingCondition(1L, "Condition 1"), Consents.DISAGREE,status)); // 0
+        villageLivingConditionsList.add(new VillageLivingConditions(2L, village, new LivingCondition(2L, "Condition 2"), Consents.DISAGREE,status)); // 0
+        villageLivingConditionsList.add(new VillageLivingConditions(3L, village, new LivingCondition(3L, "Condition 3"), Consents.DISAGREE,status)); // 0
+        villageLivingConditionsList.add(new VillageLivingConditions(4L, village, new LivingCondition(4L, "Condition 4"), Consents.DISAGREE,status)); // 0
 
         when(villageLivingConditionRepository.findAll()).thenReturn(villageLivingConditionsList);
 
@@ -78,13 +79,13 @@ class VillageLivingConditionServiceTest {
         Long villageId = 1L;
         Village village = new Village();
         village.setId(villageId);
-
+        boolean status = true;
         VillageLivingConditionRepository villageLivingConditionRepository = mock(VillageLivingConditionRepository.class);
 
         List<VillageLivingConditions> villageLivingConditionsList = new ArrayList<>();
-        villageLivingConditionsList.add(new VillageLivingConditions(1L, village, new LivingCondition(1L, "в селото няма престъпност"), Consents.DISAGREE)); // 0
-        villageLivingConditionsList.add(new VillageLivingConditions(2L, village, new LivingCondition(1L, "Some other condition"), Consents.DISAGREE)); // not relevant
-        villageLivingConditionsList.add(new VillageLivingConditions(3L, village, new LivingCondition(1L, "Some other condition"), Consents.DISAGREE)); // not relevant
+        villageLivingConditionsList.add(new VillageLivingConditions(1L, village, new LivingCondition(1L, "в селото няма престъпност"), Consents.DISAGREE, status)); // 0
+        villageLivingConditionsList.add(new VillageLivingConditions(2L, village, new LivingCondition(1L, "Some other condition"), Consents.DISAGREE,status)); // not relevant
+        villageLivingConditionsList.add(new VillageLivingConditions(3L, village, new LivingCondition(1L, "Some other condition"), Consents.DISAGREE,status)); // not relevant
 
         when(villageLivingConditionRepository.findAll()).thenReturn(villageLivingConditionsList);
 
@@ -102,13 +103,14 @@ class VillageLivingConditionServiceTest {
         Long villageId = 1L;
         Village village = new Village();
         village.setId(villageId);
+        boolean status = true;
 
         VillageLivingConditionRepository villageLivingConditionRepository = mock(VillageLivingConditionRepository.class);
 
         List<VillageLivingConditions> villageLivingConditionsList = new ArrayList<>();
-        villageLivingConditionsList.add(new VillageLivingConditions(1L, village, new LivingCondition(1L, "Some other condition"), Consents.DISAGREE)); // not relevant
-        villageLivingConditionsList.add(new VillageLivingConditions(2L, village, new LivingCondition(1L, "Some other condition"), Consents.DISAGREE)); // not relevant
-        villageLivingConditionsList.add(new VillageLivingConditions(3L, village, new LivingCondition(1L, "Some other condition"), Consents.DISAGREE)); // not relevant
+        villageLivingConditionsList.add(new VillageLivingConditions(1L, village, new LivingCondition(1L, "Some other condition"), Consents.DISAGREE,status)); // not relevant
+        villageLivingConditionsList.add(new VillageLivingConditions(2L, village, new LivingCondition(1L, "Some other condition"), Consents.DISAGREE,status)); // not relevant
+        villageLivingConditionsList.add(new VillageLivingConditions(3L, village, new LivingCondition(1L, "Some other condition"), Consents.DISAGREE,status)); // not relevant
 
         when(villageLivingConditionRepository.findAll()).thenReturn(villageLivingConditionsList);
 
@@ -127,14 +129,15 @@ class VillageLivingConditionServiceTest {
         Long villageId = 1L;
         Village village = new Village();
         village.setId(villageId);
+        boolean status = true;
 
         VillageLivingConditionRepository villageLivingConditionRepository = mock(VillageLivingConditionRepository.class);
 
         List<VillageLivingConditions> villageLivingConditionsList = new ArrayList<>();
-        villageLivingConditionsList.add(new VillageLivingConditions(1L, village, new LivingCondition(1L, "Name"), Consents.DISAGREE)); //-0
-        villageLivingConditionsList.add(new VillageLivingConditions(1L, village, new LivingCondition(1L, "Name"), Consents.CANT_DECIDE));//-50
-        villageLivingConditionsList.add(new VillageLivingConditions(1L, village, new LivingCondition(1L, "Name"), Consents.CANT_DECIDE));//-50
-        villageLivingConditionsList.add(new VillageLivingConditions(1L, village, new LivingCondition(1L, "Name"), Consents.COMPLETELY_AGREED));//-100
+        villageLivingConditionsList.add(new VillageLivingConditions(1L, village, new LivingCondition(1L, "Name"), Consents.DISAGREE,status)); //-0
+        villageLivingConditionsList.add(new VillageLivingConditions(1L, village, new LivingCondition(1L, "Name"), Consents.CANT_DECIDE,status));//-50
+        villageLivingConditionsList.add(new VillageLivingConditions(1L, village, new LivingCondition(1L, "Name"), Consents.CANT_DECIDE,status));//-50
+        villageLivingConditionsList.add(new VillageLivingConditions(1L, village, new LivingCondition(1L, "Name"), Consents.COMPLETELY_AGREED,status));//-100
 
         when(villageLivingConditionRepository.findAll()).thenReturn(villageLivingConditionsList);
 

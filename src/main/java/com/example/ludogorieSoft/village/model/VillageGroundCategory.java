@@ -20,5 +20,6 @@ public class VillageGroundCategory {
     private Village village;
     @ManyToOne
     private GroundCategory groundCategory;
+    private Boolean villageStatus;
 
 }

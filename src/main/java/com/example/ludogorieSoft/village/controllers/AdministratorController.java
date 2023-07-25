@@ -62,7 +62,7 @@ public class AdministratorController {
     @PostMapping("/approve/{id}")
     public ResponseEntity<String> changeVillageStatus(@PathVariable(name = "id") Long id) {
         VillageDTO villageDTO = villageService.getVillageById(id);
-        villageService.updateVillage(id, villageDTO);
+        villageService.updateVillageStatus(id, villageDTO);
         return new ResponseEntity<>("Status of village with ID: " + id + " changed successfully!!!", HttpStatus.OK);
     }
 
