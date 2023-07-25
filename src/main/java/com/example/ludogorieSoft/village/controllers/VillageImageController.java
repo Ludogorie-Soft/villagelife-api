@@ -35,4 +35,14 @@ public class VillageImageController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("/approved")
+    public ResponseEntity<List<VillageDTO>> getAllApprovedVillageDTOsWithImages() {
+        List<VillageDTO> villageDTOS = villageImageService.getAllApprovedVillageDTOsWithImages();
+        if (!villageDTOS.isEmpty()) {
+            return new ResponseEntity<>(villageDTOS, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }

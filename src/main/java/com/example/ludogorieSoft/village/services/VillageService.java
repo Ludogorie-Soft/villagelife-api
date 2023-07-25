@@ -22,9 +22,8 @@ public class VillageService {
     private final VillageRepository villageRepository;
     private final ModelMapper modelMapper;
     private final RegionService regionService;
-    private static final String ERROR_MESSAGE1="Village with id ";
-    private static final String ERROR_MESSAGE2=" not found  ";
-
+    private static final String ERROR_MESSAGE1 = "Village with id ";
+    private static final String ERROR_MESSAGE2 = " not found  ";
 
 
     public VillageDTO villageToVillageDTO(Village village) {
@@ -135,7 +134,6 @@ public class VillageService {
     }
 
 
-
     public List<VillageDTO> getSearchVillages(List<String> objectAroundVillageDTOS, List<String> livingConditionDTOS, Children children) {
         List<Village> villages = villageRepository.searchVillages(objectAroundVillageDTOS, livingConditionDTOS, children.getEnumValue());
         return convertToDTO(villages);
@@ -171,7 +169,6 @@ public class VillageService {
         List<Village> villages = villageRepository.searchVillagesByLivingCondition(livingConditionDTOS);
         return villageToVillageDTOLivingCondition(villages);
     }
-
 
 
     protected List<ObjectAroundVillageDTO> convertToObjectAroundVillageDTOList(List<ObjectVillage> objectVillages) {
@@ -314,7 +311,6 @@ public class VillageService {
     }
 
 
-
     protected List<LivingConditionDTO> convertToLivingConditionDTOList(List<VillageLivingConditions> villageLivingConditions) {
         List<LivingConditionDTO> livingConditionDTOs = new ArrayList<>();
 
@@ -347,5 +343,14 @@ public class VillageService {
                 .toList();
     }
 
+    public List<VillageDTO> getVillagesByStatus(boolean status) {
+        List<Village> villagesWithStatus = villageRepository.findByStatus(status);
+        List<VillageDTO> villageDTOsWithStatus = new ArrayList<>();
+        for (Village village : villagesWithStatus) {
+            VillageDTO villageDTO = modelMapper.map(village, VillageDTO.class);
+            villageDTOsWithStatus.add(villageDTO);
+        }
+        return villageDTOsWithStatus;
+    }
 
 }
