@@ -281,7 +281,7 @@ class VillageServiceTest {
         when(regionService.findRegionByName(region.getRegionName())).thenReturn(regionDTO);
         when(regionService.checkRegion(region.getId())).thenReturn(region);
 
-        VillageDTO result = villageService.updateVillage(villageId, updatedVillage);
+        VillageDTO result = villageService.updateVillageStatus(villageId, updatedVillage);
 
         verify(villageRepository, times(1)).findById(villageId);
         verify(villageRepository, times(1)).save(existingVillage);
@@ -298,7 +298,7 @@ class VillageServiceTest {
 
         when(villageRepository.findById(villageId)).thenReturn(Optional.empty());
 
-        assertThrows(ApiRequestException.class, () -> villageService.updateVillage(villageId, villageDTO));
+        assertThrows(ApiRequestException.class, () -> villageService.updateVillageStatus(villageId, villageDTO));
         verify(villageRepository, times(1)).findById(villageId);
         verify(villageRepository, never()).save(any(Village.class));
     }

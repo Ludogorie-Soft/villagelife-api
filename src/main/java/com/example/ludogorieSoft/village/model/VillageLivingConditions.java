@@ -26,6 +26,7 @@ public class VillageLivingConditions {
 
     @Enumerated(EnumType.STRING)
     private Consents consents;
+    private Boolean villageStatus;
 
     private Boolean villageStatus;
     private LocalDateTime dateUpload;

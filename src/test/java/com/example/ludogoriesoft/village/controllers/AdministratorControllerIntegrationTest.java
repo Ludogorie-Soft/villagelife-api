@@ -1,6 +1,7 @@
 package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.dtos.AdministratorDTO;
+import com.example.ludogorieSoft.village.dtos.VillageDTO;
 import com.example.ludogorieSoft.village.dtos.request.AdministratorRequest;
 import com.example.ludogorieSoft.village.dtos.response.VillageResponse;
 import com.example.ludogorieSoft.village.services.AdministratorService;
@@ -160,6 +161,31 @@ class AdministratorControllerIntegrationTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].name").value("village2"));
 
         verify(administratorService, times(1)).getAllVillagesWithPopulation();
+    }
+
+    @Test
+    void testDeleteVillageById() throws Exception {
+        Long villageId = 1L;
+        doNothing().when(villageService).deleteVillage(villageId);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/admins/village-delete/{villageId}", villageId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string("Village with id: " + villageId + " has been deleted successfully!!"));
+    }
+
+    @Test
+    void testChangeVillageStatus() throws Exception {
+        Long villageId = 1L;
+        VillageDTO villageDTO = new VillageDTO();
+
+        when(villageService.getVillageById(villageId)).thenReturn(villageDTO);
+        when(villageService.updateVillageStatus(villageId, villageDTO)).thenReturn(villageDTO);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/admins/approve/{id}", villageId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string("Status of village with ID: " + villageId + " changed successfully!!!"));
     }
 
 }

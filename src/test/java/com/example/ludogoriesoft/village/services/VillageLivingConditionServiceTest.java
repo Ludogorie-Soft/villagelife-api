@@ -52,6 +52,7 @@ class VillageLivingConditionServiceTest {
         Long villageId = 1L;
         Village village = new Village();
         village.setId(villageId);
+        boolean status = true;
 
         VillageLivingConditionRepository villageLivingConditionRepository = mock(VillageLivingConditionRepository.class);
 
@@ -78,7 +79,7 @@ class VillageLivingConditionServiceTest {
         Long villageId = 1L;
         Village village = new Village();
         village.setId(villageId);
-
+        boolean status = true;
         VillageLivingConditionRepository villageLivingConditionRepository = mock(VillageLivingConditionRepository.class);
 
         List<VillageLivingConditions> villageLivingConditionsList = new ArrayList<>();
@@ -102,6 +103,7 @@ class VillageLivingConditionServiceTest {
         Long villageId = 1L;
         Village village = new Village();
         village.setId(villageId);
+        boolean status = true;
 
         VillageLivingConditionRepository villageLivingConditionRepository = mock(VillageLivingConditionRepository.class);
 
@@ -127,6 +129,7 @@ class VillageLivingConditionServiceTest {
         Long villageId = 1L;
         Village village = new Village();
         village.setId(villageId);
+        boolean status = true;
 
         VillageLivingConditionRepository villageLivingConditionRepository = mock(VillageLivingConditionRepository.class);
 

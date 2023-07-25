@@ -15,6 +15,7 @@ class VillageImageTest {
         Long id = 1L;
         Village village = new Village();
         String imageName = "image.jpg";
+        boolean status = true;
 
         VillageImage villageImage = new VillageImage(id, village, imageName,true,now());
 
