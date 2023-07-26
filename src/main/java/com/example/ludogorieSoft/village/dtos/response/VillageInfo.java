@@ -1,7 +1,5 @@
 package com.example.ludogorieSoft.village.dtos.response;
 
-import com.example.ludogorieSoft.village.dtos.ObjectVillageDTO;
-import com.example.ludogorieSoft.village.dtos.VillageAnswerQuestionDTO;
 import com.example.ludogorieSoft.village.dtos.VillageDTO;
 import lombok.*;
 
@@ -17,6 +15,6 @@ public class VillageInfo {
     private String ethnicities;
     private List<PopulationAssertionResponse> populationAssertionResponses;
     private List<LivingConditionResponse> livingConditionResponses;
-    private List<ObjectVillageDTO> objectVillages;
-    private List<VillageAnswerQuestionDTO> villageAnswerQuestionDTOs;
+    private List<ObjectVillageResponse> objectVillageResponses;
+    private List<AnswersQuestionResponse> answersQuestionResponses;
 }

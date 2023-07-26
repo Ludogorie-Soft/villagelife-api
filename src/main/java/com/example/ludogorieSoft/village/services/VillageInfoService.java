@@ -25,8 +25,8 @@ public class VillageInfoService {
         villageInfo.getLivingConditionResponses().add(livingConditionService.getCrimeByVillageId(village.getId()));
         villageInfo.getLivingConditionResponses().add(livingConditionService.getTotalLivingConditionsByVillageId(village.getId()));
         villageInfo.getLivingConditionResponses().add(livingConditionService.getEcoFriendlinessByVillageId(village.getId()));
-        villageInfo.setObjectVillages(objectVillageService.getDistinctObjectVillagesByVillageId(villageId));
-        villageInfo.setVillageAnswerQuestionDTOs(villageAnswerQuestionService.getVillageAnswerQuestionByVillageId(village.getId()));
+        villageInfo.setObjectVillageResponses(objectVillageService.getObjectVillageResponses(objectVillageService.getDistinctObjectVillagesByVillageId(village.getId())));
+        villageInfo.setAnswersQuestionResponses(villageAnswerQuestionService.getAnswersQuestionResponsesByVillageId(village.getId()));
         villageInfo.setEthnicities(ethnicityVillageService.getUniqueEthnicityVillagesByVillageId(village.getId()));
 
         return villageInfo;
