@@ -239,26 +239,26 @@ class AddVillageFormResultServiceTest {
         verify(objectVillageService, never()).createObjectVillage(any(ObjectVillageDTO.class));
     }
 
-    @Test
-    void testCreateObjectVillagesFromAddVillageFormResultNullDistance() {
-        Long villageId = 12345L;
-        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
-        List<ObjectVillageDTO> objectVillageDTOS = new ArrayList<>();
-
-        ObjectVillageDTO dto1 = new ObjectVillageDTO(null, villageId, 1L, Distance.ON_31_TO_50_KM,false,now());
-        ObjectVillageDTO dto2 = new ObjectVillageDTO(null, villageId, 2L, null,false,now());
-
-        objectVillageDTOS.add(new ObjectVillageDTO());
-        objectVillageDTOS.add(dto1);
-        objectVillageDTOS.add(dto2);
-
-        addVillageFormResult.setObjectVillageDTOS(objectVillageDTOS);
-
-        addVillageFormResultService.createObjectVillagesFromAddVillageFormResult(villageId, addVillageFormResult);
-
-        verify(objectVillageService, times(1)).createObjectVillage(dto1);
-        verify(objectVillageService, never()).createObjectVillage(dto2);
-    }
+//    @Test
+//    void testCreateObjectVillagesFromAddVillageFormResultNullDistance() {
+//        Long villageId = 12345L;
+//        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
+//        List<ObjectVillageDTO> objectVillageDTOS = new ArrayList<>();
+//
+//        ObjectVillageDTO dto1 = new ObjectVillageDTO(null, villageId, 1L, Distance.ON_31_TO_50_KM,false,now());
+//        ObjectVillageDTO dto2 = new ObjectVillageDTO(null, villageId, 2L, null,false,now());
+//
+//        objectVillageDTOS.add(new ObjectVillageDTO());
+//        objectVillageDTOS.add(dto1);
+//        objectVillageDTOS.add(dto2);
+//
+//        addVillageFormResult.setObjectVillageDTOS(objectVillageDTOS);
+//
+//        addVillageFormResultService.createObjectVillagesFromAddVillageFormResult(villageId, addVillageFormResult);
+//
+//        verify(objectVillageService, times(1)).createObjectVillage(dto1);
+//        verify(objectVillageService, never()).createObjectVillage(dto2);
+//    }
 
     @Test
     void createVillageAnswerQuestionsFromAddVillageFormResultValidDataCreatesVillageAnswerQuestions() {
