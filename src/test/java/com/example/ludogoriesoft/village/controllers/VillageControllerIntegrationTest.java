@@ -2,6 +2,7 @@ package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.dtos.PopulationDTO;
 import com.example.ludogorieSoft.village.dtos.VillageDTO;
+import com.example.ludogorieSoft.village.services.VillageInfoService;
 import com.example.ludogorieSoft.village.services.VillageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,6 +46,8 @@ class VillageControllerIntegrationTest {
 
     @MockBean
     private VillageService villageService;
+    @MockBean
+    private VillageInfoService villageInfoService;
 
     @BeforeEach
     public void setup() {
@@ -203,4 +206,5 @@ class VillageControllerIntegrationTest {
         String response = mvcResult.getResponse().getContentAsString();
         assertNotNull(response);
     }
+
 }
