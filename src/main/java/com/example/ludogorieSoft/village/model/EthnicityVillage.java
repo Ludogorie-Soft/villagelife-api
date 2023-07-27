@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -23,4 +24,5 @@ public class EthnicityVillage {
     @JoinColumn(name = "ethnicity_id")
     private Ethnicity ethnicity;
     private Boolean villageStatus;
+    private LocalDateTime dateUpload;
 }

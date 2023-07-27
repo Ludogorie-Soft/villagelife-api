@@ -5,6 +5,8 @@ import com.example.ludogorieSoft.village.model.VillageImage;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import static java.time.LocalDateTime.now;
+
 
 class VillageImageTest {
 
@@ -14,7 +16,7 @@ class VillageImageTest {
         Village village = new Village();
         String imageName = "image.jpg";
 
-        VillageImage villageImage = new VillageImage(id, village, imageName,true);
+        VillageImage villageImage = new VillageImage(id, village, imageName,true,now());
 
         Assertions.assertEquals(id, villageImage.getId());
         Assertions.assertEquals(village, villageImage.getVillage());

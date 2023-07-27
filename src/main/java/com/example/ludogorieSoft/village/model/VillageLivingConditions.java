@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+
 @Entity
 @Data
 @Table(name = "village_living_conditions")
@@ -27,5 +29,6 @@ public class VillageLivingConditions {
     private Consents consents;
 
     private Boolean villageStatus;
+    private LocalDateTime dateUpload;
 
 }
