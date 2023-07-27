@@ -1,7 +1,6 @@
 package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.dtos.LivingConditionDTO;
-import com.example.ludogorieSoft.village.dtos.response.LivingConditionResponse;
 import com.example.ludogorieSoft.village.services.LivingConditionService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -42,11 +41,6 @@ public class LivingConditionController {
     public ResponseEntity<String> deleteLivingConditionById(@PathVariable("id") Long id) {
         livingConditionService.deleteLivingCondition(id);
         return new ResponseEntity<>("LivingCondition with id: " + id + " has been deleted successfully!!", HttpStatus.OK);
-    }
-
-    @GetMapping("/conditions/village/{villageId}")
-    public ResponseEntity<List<LivingConditionResponse>> getLivingConditionResponseByVillageId(@PathVariable("villageId") Long villageId) {
-        return ResponseEntity.ok(livingConditionService.getLivingConditionResponses(villageId));
     }
 
 }
