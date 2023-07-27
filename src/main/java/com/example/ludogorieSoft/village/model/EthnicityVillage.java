@@ -3,6 +3,7 @@ package com.example.ludogorieSoft.village.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -22,4 +23,5 @@ public class EthnicityVillage {
     @JoinColumn(name = "ethnicity_id")
     private Ethnicity ethnicity;
     private Boolean villageStatus;
+    private LocalDateTime dateUpload;
 }

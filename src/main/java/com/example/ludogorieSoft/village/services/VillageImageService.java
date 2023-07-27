@@ -22,6 +22,8 @@ import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 
+import static java.time.LocalDateTime.now;
+
 @Service
 @AllArgsConstructor
 public class VillageImageService {
@@ -82,7 +84,7 @@ public class VillageImageService {
     }
 
     public void createVillageImageDTO(Long villageId, String fileName) {
-        VillageImageDTO villageImageDTO = new VillageImageDTO(null, villageId, fileName);
+        VillageImageDTO villageImageDTO = new VillageImageDTO(null, villageId, fileName,false,now());
         createVillageImageDTO(villageImageDTO);
     }
 

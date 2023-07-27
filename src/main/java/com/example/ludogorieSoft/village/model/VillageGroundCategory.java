@@ -3,6 +3,7 @@ package com.example.ludogorieSoft.village.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -21,5 +22,6 @@ public class VillageGroundCategory {
     @ManyToOne
     private GroundCategory groundCategory;
     private Boolean villageStatus;
+    private LocalDateTime dateUpload;
 
 }

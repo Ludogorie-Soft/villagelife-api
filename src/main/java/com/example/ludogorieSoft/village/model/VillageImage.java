@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -22,4 +23,5 @@ public class VillageImage {
     @NotBlank
     private String imageName;
     private Boolean villageStatus;
+    private LocalDateTime dateUpload;
 }

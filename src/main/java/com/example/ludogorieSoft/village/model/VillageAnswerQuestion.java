@@ -3,6 +3,7 @@ package com.example.ludogorieSoft.village.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -22,4 +23,5 @@ public class VillageAnswerQuestion {
     private Question question;
     private String answer;
     private Boolean villageStatus;
+    private LocalDateTime dateUpload;
 }

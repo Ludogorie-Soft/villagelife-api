@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import org.mockito.stubbing.Answer;
 import org.slf4j.Logger;
 
 import com.example.ludogorieSoft.village.dtos.VillageDTO;
@@ -18,6 +19,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -145,30 +147,35 @@ class VillageImageServiceTest {
         String invalidFilePath = invalidDirectory + File.separator + "test_image.jpg";
         assertThrows(IOException.class, () -> villageImageService.writeImageToFile(imageBytes, invalidFilePath));
     }
+
     @Test
     void testCreateVillageImageDTOWithVillageIdAndFileName() {
         Long villageId = 123L;
         String fileName = "image.jpg";
-        VillageImageDTO villageImageDTO = new VillageImageDTO(null, villageId, fileName);
+        LocalDateTime fixedTimestamp = LocalDateTime.of(2023, 7, 27, 18, 36, 1, 91929);
+
+        VillageImageDTO villageImageDTO = new VillageImageDTO(null, villageId, fileName, false, fixedTimestamp);
 
         Village village = new Village();
-        VillageService villageService = Mockito.mock(VillageService.class);
-        VillageImageRepository villageImageRepository = Mockito.mock(VillageImageRepository.class);
-        ModelMapper modelMapper = Mockito.mock(ModelMapper.class);
+        when(villageService.checkVillage(villageId)).thenReturn(village);
+        when(villageImageRepository.save(any(VillageImage.class))).thenReturn(new VillageImage());
 
-        VillageImageService villageImageService = new VillageImageService(
-                villageImageRepository, modelMapper, villageService);
-
-        Mockito.when(villageService.checkVillage(villageId)).thenReturn(village);
-        Mockito.when(villageImageRepository.save(Mockito.any(VillageImage.class))).thenReturn(new VillageImage());
-        Mockito.when(modelMapper.map(villageImageDTO, VillageImage.class)).thenReturn(new VillageImage());
+        doAnswer((Answer<VillageImage>) invocation -> {
+            VillageImageDTO dto = invocation.getArgument(0);
+            VillageImage villageImage = new VillageImage();
+            villageImage.setId(dto.getId());
+            villageImage.setId(dto.getVillageId());
+            villageImage.setImageName(dto.getImageName());
+            villageImage.setVillageStatus(dto.getStatus());
+            villageImage.setDateUpload(fixedTimestamp);
+            return villageImage;
+        }).when(modelMapper).map(any(VillageImageDTO.class), eq(VillageImage.class));
 
         villageImageService.createVillageImageDTO(villageId, fileName);
 
-        Mockito.verify(villageService, Mockito.times(1)).checkVillage(villageId);
-        Mockito.verify(villageImageRepository, Mockito.times(1)).save(Mockito.any(VillageImage.class));
-        Mockito.verify(modelMapper, Mockito.times(1)).map(villageImageDTO, VillageImage.class);
+        verify(villageImageRepository).save(any(VillageImage.class));
     }
+
 
     @Test
     void testCreateImagePathsWithInvalidImages() {

@@ -4,6 +4,8 @@ import com.example.ludogorieSoft.village.enums.Consents;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Setter
@@ -25,5 +27,6 @@ public class VillageLivingConditions {
     @Enumerated(EnumType.STRING)
     private Consents consents;
     private Boolean villageStatus;
+    private LocalDateTime dateUpload;
 
 }
