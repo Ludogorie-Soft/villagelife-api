@@ -177,6 +177,7 @@ class VillageImageServiceTest {
         verify(villageImageRepository).save(any(VillageImage.class));
     }
 
+
     @Test
     void testCreateImagePathsWithInvalidImages() {
         byte[] emptyImage = {};
