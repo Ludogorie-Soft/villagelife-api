@@ -16,6 +16,7 @@ import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -45,176 +46,110 @@ class VillageLivingConditionServiceTest {
         MockitoAnnotations.openMocks(this);
     }
 
+    @Test
+    void getVillagePopulationAssertionByVillageIdEcoValue_ShouldCalculateAverage() {
+        Long villageId = 1L;
+        Village village = new Village();
+        village.setId(villageId);
+
+        List<VillageLivingConditions> villageLivingConditionsList = new ArrayList<>();
+        villageLivingConditionsList.add(new VillageLivingConditions(1L, village, new LivingCondition(1L, "Condition 1"), Consents.DISAGREE)); // 0
+        villageLivingConditionsList.add(new VillageLivingConditions(2L, village, new LivingCondition(2L, "Condition 2"), Consents.DISAGREE)); // 0
+        villageLivingConditionsList.add(new VillageLivingConditions(3L, village, new LivingCondition(3L, "Condition 3"), Consents.DISAGREE)); // 0
+        villageLivingConditionsList.add(new VillageLivingConditions(4L, village, new LivingCondition(4L, "Condition 4"), Consents.DISAGREE)); // 0
+
+        when(villageLivingConditionRepository.findAll()).thenReturn(villageLivingConditionsList);
+
+        double result = villageLivingConditionService.getVillageLivingConditionByVillageIdEcoValue(villageId);
+
+        Assertions.assertEquals(0, result, 0.01);
+
+        verify(villageLivingConditionRepository, times(1)).findAll();
+    }
 
 
+    @Test
+    void getVillagePopulationAssertionByVillageIdDelinquencyValue_ShouldReturnValue() {
+        Long villageId = 1L;
+        Village village = new Village();
+        village.setId(villageId);
+
+        VillageLivingConditionRepository villageLivingConditionRepository = mock(VillageLivingConditionRepository.class);
+
+        List<VillageLivingConditions> villageLivingConditionsList = new ArrayList<>();
+        villageLivingConditionsList.add(new VillageLivingConditions(1L, village, new LivingCondition(1L, "в селото няма престъпност"), Consents.DISAGREE)); // 0
+        villageLivingConditionsList.add(new VillageLivingConditions(2L, village, new LivingCondition(1L, "Some other condition"), Consents.DISAGREE)); // not relevant
+        villageLivingConditionsList.add(new VillageLivingConditions(3L, village, new LivingCondition(1L, "Some other condition"), Consents.DISAGREE)); // not relevant
+
+        when(villageLivingConditionRepository.findAll()).thenReturn(villageLivingConditionsList);
+        VillageLivingConditionService villageLivingConditionService = new VillageLivingConditionService(villageLivingConditionRepository, villageService, livingConditionService, modelMapper);
+
+        double result = villageLivingConditionService.getVillageLivingConditionByVillageIdDelinquencyValue(villageId);
+
+        Assertions.assertEquals(80, result, 0.01);
+
+        verify(villageLivingConditionRepository, times(1)).findAll();
+    }
+    @Test
+    void testGetVillageLivingConditionByVillageIdDelinquencyValueShouldReturnValue() {
+        Long villageId = 1L;
+        Village village = new Village();
+        village.setId(villageId);
+
+        List<VillageLivingConditions> villageLivingConditionsList = new ArrayList<>();
+        villageLivingConditionsList.add(new VillageLivingConditions(1L, village, new LivingCondition(1L, "в селото няма престъпност"), Consents.DISAGREE)); // 0
+        villageLivingConditionsList.add(new VillageLivingConditions(2L, village, new LivingCondition(1L, "Some other condition"), Consents.DISAGREE)); // not relevant
+        villageLivingConditionsList.add(new VillageLivingConditions(3L, village, new LivingCondition(1L, "Some other condition"), Consents.DISAGREE)); // not relevant
+
+        when(villageLivingConditionRepository.findAll()).thenReturn(villageLivingConditionsList);
+
+        double result = villageLivingConditionService.getVillageLivingConditionByVillageIdDelinquencyValue(villageId);
+        Assertions.assertEquals(80, result, 0.01);
+
+        verify(villageLivingConditionRepository, times(1)).findAll();
+    }
 
 
+    @Test
+    void getVillagePopulationAssertionByVillageIdDelinquencyValue_ShouldReturnExpectedValue() {
+        Long villageId = 1L;
+        Village village = new Village();
+        village.setId(villageId);
 
-    //@Test
-    //void getVillagePopulationAssertionByVillageIdEcoValue_ShouldCalculateAverage() {
-    //    Long villageId = 1L;
-    //    Village village = new Village();
-    //    village.setId(villageId);
-//
-    //    // Create a mock repository
-    //    VillageLivingConditionRepository villageLivingConditionRepository = mock(VillageLivingConditionRepository.class);
-//
-    //    // Create a list of test objects
-    //    List<VillageLivingConditions> villageLivingConditionsList = new ArrayList<>();
-    //    villageLivingConditionsList.add(new VillageLivingConditions(1L, village, new LivingCondition(1L, "Condition 1"), Consents.DISAGREE)); // 0
-    //    villageLivingConditionsList.add(new VillageLivingConditions(2L, village, new LivingCondition(2L, "Condition 2"), Consents.DISAGREE)); // 0
-    //    villageLivingConditionsList.add(new VillageLivingConditions(3L, village, new LivingCondition(3L, "Condition 3"), Consents.DISAGREE)); // 0
-    //    villageLivingConditionsList.add(new VillageLivingConditions(4L, village, new LivingCondition(4L, "Condition 4"), Consents.DISAGREE)); // 0
-//
-    //    // Set up the behavior of the mock repository
-    //    when(villageLivingConditionRepository.findAll()).thenReturn(villageLivingConditionsList);
-//
-    //    // Create an instance of the tested class
-//
-    //    // Call the method under test
-    //    double result = villageLivingConditionService.getVillageLivingConditionByVillageIdEcoValue(villageId);
-//
-    //    // Check the result
-    //    assertEquals(0, result, 0.01);
-//
-    //    // Check if the findAll method of the repository has been called exactly once
-    //    verify(villageLivingConditionRepository, times(1)).findAll();
-    //}
+        List<VillageLivingConditions> villageLivingConditionsList = new ArrayList<>();
+        villageLivingConditionsList.add(new VillageLivingConditions(1L, village, new LivingCondition(1L, "Some other condition"), Consents.DISAGREE)); // not relevant
+        villageLivingConditionsList.add(new VillageLivingConditions(2L, village, new LivingCondition(1L, "Some other condition"), Consents.DISAGREE)); // not relevant
+        villageLivingConditionsList.add(new VillageLivingConditions(3L, village, new LivingCondition(1L, "Some other condition"), Consents.DISAGREE)); // not relevant
+
+        when(villageLivingConditionRepository.findAll()).thenReturn(villageLivingConditionsList);
 
 
-    //@Test
-    //void getVillagePopulationAssertionByVillageIdDelinquencyValue_ShouldReturnValue() {
-    //    Long villageId = 1L;
-    //    Village village = new Village();
-    //    village.setId(villageId);
-//
-    //    // Create a mock repository
-    //    VillageLivingConditionRepository villageLivingConditionRepository = mock(VillageLivingConditionRepository.class);
-//
-    //    // Create a list of test objects
-    //    List<VillageLivingConditions> villageLivingConditionsList = new ArrayList<>();
-    //    villageLivingConditionsList.add(new VillageLivingConditions(1L, village, new LivingCondition(1L, "в селото няма престъпност"), Consents.DISAGREE)); // 0
-    //    villageLivingConditionsList.add(new VillageLivingConditions(2L, village, new LivingCondition(1L, "Some other condition"), Consents.DISAGREE)); // not relevant
-    //    villageLivingConditionsList.add(new VillageLivingConditions(3L, village, new LivingCondition(1L, "Some other condition"), Consents.DISAGREE)); // not relevant
-//
-    //    // Set up the behavior of the mock repository
-    //    when(villageLivingConditionRepository.findAll()).thenReturn(villageLivingConditionsList);
-//
-    //    // Create an instance of the tested class
-    //    VillageLivingConditionService villageLivingConditionService = new VillageLivingConditionService(villageLivingConditionRepository, livingConditionRepository, villageRepository, villageService, livingConditionService, modelMapper);
-//
-    //    // Call the method under test
-    //    double result = villageLivingConditionService.getVillagePopulationAssertionByVillageIdDelinquencyValue(villageId);
-//
-    //    // Check the result
-    //    assertEquals(100, result, 0.01);
-//
-    //    // Check if the findAll method of the repository has been called exactly once
-    //    verify(villageLivingConditionRepository, times(1)).findAll();
-    //}
-    //@Test
-    //void getVillagePopulationAssertionByVillageIdDelinquencyValue_ShouldReturnValue() {
-    //    Long villageId = 1L;
-    //    Village village = new Village();
-    //    village.setId(villageId);
-//
-    //    VillageLivingConditionRepository villageLivingConditionRepository = mock(VillageLivingConditionRepository.class);
-//
-    //    List<VillageLivingConditions> villageLivingConditionsList = new ArrayList<>();
-    //    villageLivingConditionsList.add(new VillageLivingConditions(1L, village, new LivingCondition(1L, "в селото няма престъпност"), Consents.DISAGREE)); // 0
-    //    villageLivingConditionsList.add(new VillageLivingConditions(2L, village, new LivingCondition(1L, "Some other condition"), Consents.DISAGREE)); // not relevant
-    //    villageLivingConditionsList.add(new VillageLivingConditions(3L, village, new LivingCondition(1L, "Some other condition"), Consents.DISAGREE)); // not relevant
-//
-    //    when(villageLivingConditionRepository.findAll()).thenReturn(villageLivingConditionsList);
-//
-//
-    //    double result = villageLivingConditionService.getVillageLivingConditionByVillageIdDelinquencyValue(villageId);
-//
-    //    assertEquals(100, result, 0.01);
-//
-    //    verify(villageLivingConditionRepository, times(1)).findAll();
-    //}
+        double result = villageLivingConditionService.getVillageLivingConditionByVillageIdDelinquencyValue(villageId);
+        Assertions.assertEquals(50, result, 0.01);
+        verify(villageLivingConditionRepository, times(1)).findAll();
+    }
+    @Test
+    void getVillagePopulationAssertionByVillageIdValueShouldCalculateAverage() {
+        Long villageId = 1L;
+        Village village = new Village();
+        village.setId(villageId);
 
-    //@Test
-    //void getVillagePopulationAssertionByVillageIdDelinquencyValue_ShouldReturnExpectedValue() {
-    //    Long villageId = 1L;
-    //    Village village = new Village();
-    //    village.setId(villageId);
-//
-    //    VillageLivingConditionRepository villageLivingConditionRepository = mock(VillageLivingConditionRepository.class);
-//
-    //    List<VillageLivingConditions> villageLivingConditionsList = new ArrayList<>();
-    //    villageLivingConditionsList.add(new VillageLivingConditions(1L, village, new LivingCondition(1L, "Some other condition"), Consents.DISAGREE)); // not relevant
-    //    villageLivingConditionsList.add(new VillageLivingConditions(2L, village, new LivingCondition(1L, "Some other condition"), Consents.DISAGREE)); // not relevant
-    //    villageLivingConditionsList.add(new VillageLivingConditions(3L, village, new LivingCondition(1L, "Some other condition"), Consents.DISAGREE)); // not relevant
-//
-    //    when(villageLivingConditionRepository.findAll()).thenReturn(villageLivingConditionsList);
-//
-//
-    //    double result = villageLivingConditionService.getVillageLivingConditionByVillageIdDelinquencyValue(villageId);
-//
-    //    assertEquals(50, result, 0.01);
-//
-    //    verify(villageLivingConditionRepository, times(1)).findAll();
-    //}
+        VillageLivingConditionRepository villageLivingConditionRepository = mock(VillageLivingConditionRepository.class);
+        List<VillageLivingConditions> villageLivingConditionsList = new ArrayList<>();
 
+        villageLivingConditionsList.add(new VillageLivingConditions(1L, village, new LivingCondition(1L, "Name"), Consents.DISAGREE));
+        villageLivingConditionsList.add(new VillageLivingConditions(1L, village, new LivingCondition(1L, "Name"), Consents.CANT_DECIDE));
+        villageLivingConditionsList.add(new VillageLivingConditions(1L, village, new LivingCondition(1L, "Name"), Consents.CANT_DECIDE));
+        villageLivingConditionsList.add(new VillageLivingConditions(1L, village, new LivingCondition(1L, "Name"), Consents.COMPLETELY_AGREED));
 
-    //@Test
-    //void getVillagePopulationAssertionByVillageIdValue_ShouldCalculateAverage() {
-    //    Long villageId = 1L;
-    //    Village village = new Village();
-    //    village.setId(villageId);
-//
-    //    VillageLivingConditionRepository villageLivingConditionRepository = mock(VillageLivingConditionRepository.class);
-//
-    //    List<VillageLivingConditions> villageLivingConditionsList = new ArrayList<>();
-    //    villageLivingConditionsList.add(new VillageLivingConditions(1L, village, new LivingCondition(1L, "Name"), Consents.DISAGREE)); //-0
-    //    villageLivingConditionsList.add(new VillageLivingConditions(1L, village, new LivingCondition(1L, "Name"), Consents.CANT_DECIDE));//-50
-    //    villageLivingConditionsList.add(new VillageLivingConditions(1L, village, new LivingCondition(1L, "Name"), Consents.CANT_DECIDE));//-50
-    //    villageLivingConditionsList.add(new VillageLivingConditions(1L, village, new LivingCondition(1L, "Name"), Consents.COMPLETELY_AGREED));//-100
-//
-    //    when(villageLivingConditionRepository.findAll()).thenReturn(villageLivingConditionsList);
-//
-//
-//
-    //    double result = villageLivingConditionService.getVVillageLivingConditionByVillageIdValue(villageId);
-//
-    //    assertEquals(50, result, 0.01);
-//
-    //    verify(villageLivingConditionRepository, times(1)).findAll();
-    //}
-    //@Test
-    //void getVillagePopulationAssertionByVillageIdValue_ShouldCalculateAverage() {
-    //    Long villageId = 1L;
-    //    Village village = new Village();
-    //    village.setId(villageId);
-//
-    //    // Create a mock repository
-    //    VillageLivingConditionRepository villageLivingConditionRepository = mock(VillageLivingConditionRepository.class);
-//
-    //    // Create a list of test objects
-    //    List<VillageLivingConditions> villageLivingConditionsList = new ArrayList<>();
-    //    villageLivingConditionsList.add(new VillageLivingConditions(1L, village, new LivingCondition(1L, "Name"), Consents.DISAGREE)); //-0
-    //    villageLivingConditionsList.add(new VillageLivingConditions(1L, village, new LivingCondition(1L, "Name"), Consents.CANT_DECIDE));//-50
-    //    villageLivingConditionsList.add(new VillageLivingConditions(1L, village, new LivingCondition(1L, "Name"), Consents.CANT_DECIDE));//-50
-    //    villageLivingConditionsList.add(new VillageLivingConditions(1L, village, new LivingCondition(1L, "Name"), Consents.COMPLETELY_AGREED));//-100
-//
-    //    // Set up the behavior of the mock repository
-    //    when(villageLivingConditionRepository.findAll()).thenReturn(villageLivingConditionsList);
-//
-    //    // Create an instance of the tested class
-    //    VillageLivingConditionService villageLivingConditionService = new VillageLivingConditionService(villageLivingConditionRepository, livingConditionRepository, villageRepository, villageService, livingConditionService, modelMapper);
-//
-    //    // Call the method under test
-    //    double result = villageLivingConditionService.getVillagePopulationAssertionByVillageIdValue(villageId);
-//
-    //    // Check the result
-    //    assertEquals(50, result, 0.01);
-    //    // and so on, according to the expected values
-//
-    //    // Check if the findAll method of the repository has been called exactly once
-    //    verify(villageLivingConditionRepository, times(1)).findAll();
-    //}
+        when(villageLivingConditionRepository.findAll()).thenReturn(villageLivingConditionsList);
+
+        VillageLivingConditionService villageLivingConditionService = new VillageLivingConditionService(villageLivingConditionRepository, villageService, livingConditionService, modelMapper);
+        double result = villageLivingConditionService.getVillageLivingConditionByVillageIdValue(villageId);
+
+        Assertions.assertEquals(60, result, 0.01);
+        verify(villageLivingConditionRepository, times(1)).findAll();
+    }
 
     @Test
     void getAllVillageLivingConditionsShouldReturnListOfVillageLivingConditionDTOs() {
@@ -265,67 +200,6 @@ class VillageLivingConditionServiceTest {
         assertThrows(ApiRequestException.class, () -> villageLivingConditionService.getByID(id));
         verify(villageLivingConditionRepository, times(1)).findById(id);
     }
-
-    //@Test
-    //void createVillageLivingConditionShouldReturnCreatedVillageLivingConditionDTO() {
-    //    VillageLivingConditionDTO villageLivingConditionDTO = new VillageLivingConditionDTO();
-    //    villageLivingConditionDTO.setVillageId(1L);
-    //    villageLivingConditionDTO.setLivingConditionId(2L);
-    //    villageLivingConditionDTO.setConsents(Consents.CANT_DECIDE);
-//
-    //    Village village = new Village();
-    //    village.setId(1L);
-    //    LivingCondition livingCondition = new LivingCondition();
-    //    livingCondition.setId(2L);
-    //    VillageLivingConditions villageLivingCondition = new VillageLivingConditions();
-//
-    //    when(villageService.checkVillage(villageLivingConditionDTO.getVillageId())).thenReturn(village);
-    //    when(livingConditionService.checkLivingCondition(villageLivingConditionDTO.getLivingConditionId())).thenReturn(livingCondition);
-    //    when(villageLivingConditionRepository.save(villageLivingCondition)).thenReturn(villageLivingCondition);
-    //    when(villageLivingConditionService.toDTO(villageLivingCondition)).thenReturn(villageLivingConditionDTO);
-//
-    //    villageLivingCondition.setVillage(villageService.checkVillage(1L));
-    //    villageLivingCondition.setLivingCondition(livingConditionService.checkLivingCondition(2L));
-    //    villageLivingCondition.setConsents(Consents.CANT_DECIDE);
-//
-    //    VillageLivingConditionDTO result = villageLivingConditionService.createVillageLivingCondition(villageLivingConditionDTO);
-//
-    //    verify(villageService, times(2)).checkVillage(villageLivingConditionDTO.getVillageId());
-    //    verify(livingConditionService, times(2)).checkLivingCondition(villageLivingConditionDTO.getLivingConditionId());
-    //    verify(villageLivingConditionRepository, times(1)).save(villageLivingCondition);
-    //    Assertions.assertEquals(villageLivingConditionDTO, result);
-    //}
-
-    //@Test
-    //void createVillageLivingConditionShouldReturnCreatedVillageLivingConditionDTO() {
-    //    VillageLivingConditionDTO villageLivingConditionDTO = new VillageLivingConditionDTO();
-    //    villageLivingConditionDTO.setVillageId(1L);
-    //    villageLivingConditionDTO.setLivingConditionId(2L);
-    //    villageLivingConditionDTO.setConsents(Consents.CANT_DECIDE);
-//
-    //    Village village = new Village();
-    //    village.setId(1L);
-    //    LivingCondition livingCondition = new LivingCondition();
-    //    livingCondition.setId(2L);
-    //    VillageLivingConditions villageLivingCondition = new VillageLivingConditions();
-//
-    //    when(villageService.checkVillage(villageLivingConditionDTO.getVillageId())).thenReturn(village);
-    //    when(livingConditionService.checkLivingCondition(villageLivingConditionDTO.getLivingConditionId())).thenReturn(livingCondition);
-    //    when(villageLivingConditionRepository.save(villageLivingCondition)).thenReturn(villageLivingCondition);
-    //    when(villageLivingConditionService.toDTO(villageLivingCondition)).thenReturn(villageLivingConditionDTO);
-//
-    //    villageLivingCondition.setVillage(villageService.checkVillage(1L));
-    //    villageLivingCondition.setLivingCondition(livingConditionService.checkLivingCondition(2L));
-    //    villageLivingCondition.setConsents(Consents.CANT_DECIDE);
-//
-    //    VillageLivingConditionDTO result = villageLivingConditionService.createVillageLivingCondition(villageLivingConditionDTO);
-//
-    //    verify(villageService, times(2)).checkVillage(villageLivingConditionDTO.getVillageId());
-    //    verify(livingConditionService, times(2)).checkLivingCondition(villageLivingConditionDTO.getLivingConditionId());
-    //    verify(villageLivingConditionRepository, times(1)).save(villageLivingCondition);
-    //    Assertions.assertEquals(villageLivingConditionDTO, result);
-    //}
-
     @Test
     void updateVillageLivingConditionShouldReturnUpdatedVillageLivingConditionDTOWhenFound() {
         Long id = 1L;
@@ -392,36 +266,41 @@ class VillageLivingConditionServiceTest {
     }
 
 
-//    @Test
-//    void testGetVillageLivingConditionByVillageIdWithValidId() {
-//        Long villageId = 1L;
-//
-//        VillageLivingConditions condition1 = new VillageLivingConditions();
-//        condition1.setId(1L);
-//        condition1.setVillage(new Village(1L, "Village1", new Region(1L, "Region1"), 1000, new Population(), LocalDateTime.now(), true, new Administrator(), null, null, null));
-//
-//        VillageLivingConditions condition2 = new VillageLivingConditions();
-//        condition2.setId(2L);
-//        condition2.setVillage(new Village(2L, "Village2", new Region(1L, "Region1"), 1000, new Population(), LocalDateTime.now(), true, new Administrator(), null, null, null));
-//
-//        List<VillageLivingConditions> villageLivingConditionsList = List.of(condition1, condition2);
-//
-//        when(villageLivingConditionRepository.findAll()).thenReturn(villageLivingConditionsList);
-//
-//        VillageLivingConditionDTO dto1 = new VillageLivingConditionDTO();
-//        VillageLivingConditionDTO dto2 = new VillageLivingConditionDTO();
-//
-//        when(modelMapper.map(any(VillageLivingConditions.class), eq(VillageLivingConditionDTO.class)))
-//                .thenReturn(dto1, dto2);
-//
-//        List<VillageLivingConditionDTO> result = villageLivingConditionService.getVillageLivingConditionByVillageId(villageId);
-//
-//        verify(villageLivingConditionRepository, times(1)).findAll();
-//
-//        verify(modelMapper, times(1)).map(condition1, VillageLivingConditionDTO.class);
-//        verify(modelMapper, times(0)).map(condition2, VillageLivingConditionDTO.class);
-//
-//    }
+    @Test
+    void testGetVillageLivingConditionByVillageIdWithValidId() {
+        Long villageId = 1L;
+
+        VillageLivingConditions condition1 = new VillageLivingConditions();
+        condition1.setId(1L);
+        Village village1 = new Village(1L, "Village1", new Region(1L, "Region1"),
+                1000, new Population(), LocalDateTime.now(), true, new Administrator(), LocalDateTime.now(), null, null, null, null, null, null, null, null);
+        condition1.setVillage(village1);
+
+
+        VillageLivingConditions condition2 = new VillageLivingConditions();
+        condition2.setId(2L);
+        Village village2 = new Village(2L, "Village2", new Region(1L, "Region1"),
+                1000, new Population(), LocalDateTime.now(), true, new Administrator(), LocalDateTime.now(), null, null, null, null, null, null, null, null);
+        condition2.setVillage(village2);
+
+        List<VillageLivingConditions> villageLivingConditionsList = List.of(condition1, condition2);
+
+        when(villageLivingConditionRepository.findAll()).thenReturn(villageLivingConditionsList);
+
+        VillageLivingConditionDTO dto1 = new VillageLivingConditionDTO();
+        VillageLivingConditionDTO dto2 = new VillageLivingConditionDTO();
+
+        when(modelMapper.map(any(VillageLivingConditions.class), eq(VillageLivingConditionDTO.class)))
+                .thenReturn(dto1, dto2);
+
+        List<VillageLivingConditionDTO> result = villageLivingConditionService.getVillageLivingConditionByVillageId(villageId);
+
+        verify(villageLivingConditionRepository, times(1)).findAll();
+
+        verify(modelMapper, times(1)).map(condition1, VillageLivingConditionDTO.class);
+        verify(modelMapper, times(0)).map(condition2, VillageLivingConditionDTO.class);
+
+    }
 
     @Test
     void testGetVillageLivingConditionByVillageIdWithNullId() {

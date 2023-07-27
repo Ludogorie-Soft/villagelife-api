@@ -95,7 +95,7 @@ public class VillageLivingConditionService {
                 .toList();
     }
 
-    public double getVVillageLivingConditionByVillageIdValue(Long id) {
+    public double getVillageLivingConditionByVillageIdValue(Long id) {
         List<VillageLivingConditions> villageLivingConditionsList = villageLivingConditionRepository.findAll();
         if (id != null) {
             villageLivingConditionsList = villageLivingConditionsList.stream()
