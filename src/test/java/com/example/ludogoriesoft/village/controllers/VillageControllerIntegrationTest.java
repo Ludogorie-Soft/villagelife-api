@@ -2,6 +2,8 @@ package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.dtos.PopulationDTO;
 import com.example.ludogorieSoft.village.dtos.VillageDTO;
+import com.example.ludogorieSoft.village.dtos.response.VillageInfo;
+import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.services.VillageInfoService;
 import com.example.ludogorieSoft.village.services.VillageService;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,10 +21,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.mockito.ArgumentMatchers.*;
@@ -201,6 +200,42 @@ class VillageControllerIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$").value(villageId))
+                .andReturn();
+
+        String response = mvcResult.getResponse().getContentAsString();
+        assertNotNull(response);
+    }
+
+    @Test
+    void testGetVillageInfoById() throws Exception {
+        VillageDTO villageDTO = new VillageDTO();
+        villageDTO.setId(2L);
+        villageDTO.setName("Village Name 2");
+        villageDTO.setPopulationDTO(new PopulationDTO());
+        villageDTO.setDateUpload(new Date());
+        villageDTO.setStatus(false);
+        VillageInfo villageInfo = new VillageInfo();
+        villageInfo.setVillageDTO(villageDTO);
+        villageInfo.setEthnicities("няма малцинствени групи");
+        villageInfo.setPopulationAssertionResponses(new ArrayList<>());
+        villageInfo.setLivingConditionResponses(new ArrayList<>());
+        villageInfo.setObjectVillageResponses(new ArrayList<>());
+        villageInfo.setAnswersQuestionResponses(new ArrayList<>());
+        when(villageInfoService.getVillageInfoByVillageId(anyLong())).thenReturn(villageInfo);
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villages/info/{id}", 2)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.villageDTO.id").value(2))
+                .andExpect(jsonPath("$.villageDTO.name").value("Village Name 2"))
+                .andExpect(jsonPath("$.villageDTO.populationDTO").exists())
+                .andExpect(jsonPath("$.villageDTO.dateUpload").exists())
+                .andExpect(jsonPath("$.villageDTO.status").value(false))
+                .andExpect(jsonPath("$.ethnicities").value(villageInfo.getEthnicities()))
+                .andExpect(jsonPath("$.populationAssertionResponses").value(villageInfo.getPopulationAssertionResponses()))
+                .andExpect(jsonPath("$.livingConditionResponses").value(villageInfo.getLivingConditionResponses()))
+                .andExpect(jsonPath("$.objectVillageResponses").value(villageInfo.getObjectVillageResponses()))
+                .andExpect(jsonPath("$.answersQuestionResponses").value(villageInfo.getAnswersQuestionResponses()))
                 .andReturn();
 
         String response = mvcResult.getResponse().getContentAsString();
