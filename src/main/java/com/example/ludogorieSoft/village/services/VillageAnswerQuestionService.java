@@ -111,7 +111,7 @@ public class VillageAnswerQuestionService {
         return createAnswersQuestionResponses(questionToAnswersMap);
     }
 
-    private Map<String, List<String>> groupAnswersByQuestion(List<VillageAnswerQuestion> villageAnswerQuestions) {
+    public Map<String, List<String>> groupAnswersByQuestion(List<VillageAnswerQuestion> villageAnswerQuestions) {
         Map<String, List<String>> questionToAnswersMap = new HashMap<>();
         for (VillageAnswerQuestion villageAnswerQuestion : villageAnswerQuestions) {
             String questionName = villageAnswerQuestion.getQuestion().getQuestionName();
@@ -122,7 +122,7 @@ public class VillageAnswerQuestionService {
         return questionToAnswersMap;
     }
 
-    private List<AnswersQuestionResponse> createAnswersQuestionResponses(Map<String, List<String>> questionToAnswersMap) {
+    public List<AnswersQuestionResponse> createAnswersQuestionResponses(Map<String, List<String>> questionToAnswersMap) {
         List<AnswersQuestionResponse> answersQuestionResponses = new ArrayList<>();
         for (Map.Entry<String, List<String>> entry : questionToAnswersMap.entrySet()) {
             AnswersQuestionResponse response = new AnswersQuestionResponse();
