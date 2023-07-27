@@ -104,8 +104,8 @@ public class LivingConditionService {
     }
 
     public List<LivingConditionResponse> getLivingConditionResponses(Long villageId){
-        List<String> names = new ArrayList<>(Arrays.asList("Инфраструктура", "Чистота", "Обществен транспорт",
-                "Електрозахранване", "Водоснабдяване", "Мобилен обхват", "Интернет", "ТВ"));
+        List<String> names = new ArrayList<>(Arrays.asList("Инфраструктура", "Обществен транспорт",
+                "Електрозахранване", "Водоснабдяване", "Мобилен обхват", "Интернет", "ТВ", "Чистота"));
         List<Long> livingConditionIds = new ArrayList<>(Arrays.asList(1L, 3L, 4L, 5L, 6L, 7L, 8L, 9L));
         List<LivingConditionResponse> livingConditionResponses = new ArrayList<>();
 

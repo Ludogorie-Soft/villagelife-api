@@ -2,13 +2,14 @@ package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.LandscapeDTO;
 import com.example.ludogorieSoft.village.dtos.LivingConditionDTO;
+import com.example.ludogorieSoft.village.dtos.ObjectAroundVillageDTO;
+import com.example.ludogorieSoft.village.dtos.response.LivingConditionResponse;
 import com.example.ludogorieSoft.village.enums.Consents;
+import com.example.ludogorieSoft.village.enums.Distance;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
-import com.example.ludogorieSoft.village.model.Landscape;
-import com.example.ludogorieSoft.village.model.LivingCondition;
-import com.example.ludogorieSoft.village.model.Village;
-import com.example.ludogorieSoft.village.model.VillageLivingConditions;
+import com.example.ludogorieSoft.village.model.*;
 import com.example.ludogorieSoft.village.repositories.LivingConditionRepository;
+import com.example.ludogorieSoft.village.repositories.ObjectVillageRepository;
 import com.example.ludogorieSoft.village.repositories.VillageLivingConditionRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,9 +19,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -39,6 +38,10 @@ class LivingConditionServiceTest {
     private VillageLivingConditionService villageLivingConditionsService;
     @Mock
     private LivingConditionService livingConditionsService;
+    @Mock
+    private ObjectAroundVillageService objectAroundVillageService;
+    @Mock
+    private ObjectVillageRepository objectVillageRepository;
 
     @BeforeEach
     public void setup() {
@@ -336,6 +339,61 @@ class LivingConditionServiceTest {
 
         double result = livingConditionsService.getPercentage(villageId, conditionId);
         assertEquals(0.0, result, 0.0001);
+    }
+    @Test
+    void testGetLivingConditionsForumPercentageWhenObjectsFound() {
+        List<ObjectAroundVillageDTO> objectAroundVillageDTOS = Arrays.asList(
+                new ObjectAroundVillageDTO(1L, "Object 1"),
+                new ObjectAroundVillageDTO(2L, "Object 2")
+        );
+        when(objectAroundVillageService.getAllObjectsAroundVillage()).thenReturn(objectAroundVillageDTOS);
+
+        when(objectVillageRepository.existsByVillageIdAndObjectId(100L, 1L)).thenReturn(true);
+        when(objectVillageRepository.existsByVillageIdAndObjectId(100L, 2L)).thenReturn(true);
+
+        Village village = new Village();
+        village.setId(100L);
+
+        ObjectAroundVillage objectAroundVillage1 = new ObjectAroundVillage(1L, "Object 1");
+        ObjectAroundVillage objectAroundVillage2 = new ObjectAroundVillage(1L, "Object 2");
+
+        List<ObjectVillage> objectVillages1 = Arrays.asList(
+                new ObjectVillage(1L, village, objectAroundVillage1, Distance.IN_THE_VILLAGE),
+                new ObjectVillage(2L, village, objectAroundVillage1, Distance.ON_31_TO_50_KM)
+        );
+        List<ObjectVillage> objectVillages2 = Arrays.asList(
+                new ObjectVillage(3L, village, objectAroundVillage2, Distance.ON_10_KM),
+                new ObjectVillage(4L, village, objectAroundVillage2, Distance.OVER_50_KM)
+        );
+        when(objectVillageRepository.findByVillageIdAndObjectId(100L, 1L)).thenReturn(objectVillages1);
+        when(objectVillageRepository.findByVillageIdAndObjectId(100L, 2L)).thenReturn(objectVillages2);
+
+        double result = livingConditionService.getLivingConditionsForumPercentage(100L);
+
+        assertEquals(60, result, 0.01);
+    }
+
+    @Test
+    void testGetLivingConditionsForumPercentageWhenNoObjectsFound() {
+        when(objectAroundVillageService.getAllObjectsAroundVillage()).thenReturn(Collections.emptyList());
+        double result = livingConditionService.getLivingConditionsForumPercentage(100L);
+        assertEquals(0.0, result, 0.01);
+    }
+
+    @Test
+    void testGetLivingConditionsForumPercentageWhenNoMatchingObjects() {
+        List<ObjectAroundVillageDTO> objectAroundVillageDTOS = Arrays.asList(
+                new ObjectAroundVillageDTO(1L, "Object 1"),
+                new ObjectAroundVillageDTO(2L, "Object 2")
+        );
+        when(objectAroundVillageService.getAllObjectsAroundVillage()).thenReturn(objectAroundVillageDTOS);
+
+        when(objectVillageRepository.existsByVillageIdAndObjectId(100L, 1L)).thenReturn(false);
+        when(objectVillageRepository.existsByVillageIdAndObjectId(100L, 2L)).thenReturn(false);
+
+        double result = livingConditionService.getLivingConditionsForumPercentage(100L);
+
+        assertEquals(0.0, result, 0.01);
     }
 
 }

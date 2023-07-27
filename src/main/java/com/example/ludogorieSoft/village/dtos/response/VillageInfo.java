@@ -7,8 +7,6 @@ import java.util.List;
 
 @Getter
 @Setter
-@ToString
-@AllArgsConstructor
 @NoArgsConstructor
 public class VillageInfo {
     private VillageDTO villageDTO;
