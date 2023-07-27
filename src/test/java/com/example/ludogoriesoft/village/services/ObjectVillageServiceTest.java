@@ -1,14 +1,14 @@
 package com.example.ludogorieSoft.village.services;
 
+import com.example.ludogorieSoft.village.dtos.ObjectAroundVillageDTO;
 import com.example.ludogorieSoft.village.dtos.ObjectVillageDTO;
+import com.example.ludogorieSoft.village.dtos.response.ObjectVillageResponse;
 import com.example.ludogorieSoft.village.enums.Distance;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.ObjectAroundVillage;
 import com.example.ludogorieSoft.village.model.ObjectVillage;
 import com.example.ludogorieSoft.village.model.Village;
-import com.example.ludogorieSoft.village.repositories.ObjectAroundVillageRepository;
 import com.example.ludogorieSoft.village.repositories.ObjectVillageRepository;
-import com.example.ludogorieSoft.village.repositories.VillageRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -24,12 +24,6 @@ import static org.mockito.Mockito.*;
 class ObjectVillageServiceTest {
     @Mock
     private ModelMapper modelMapper;
-
-    @Mock
-    private ObjectAroundVillageRepository objectAroundVillageRepository;
-
-    @Mock
-    private VillageRepository villageRepository;
 
     @Mock
     private ObjectVillageRepository objectVillageRepository;
@@ -268,6 +262,134 @@ class ObjectVillageServiceTest {
 
         assertFalse(result);
         verify(objectVillageRepository, times(1)).existsByVillageIdAndObjectIdAndDistance(villageId, objectId, distance);
+    }
+
+    @Test
+    void testGetDistinctObjectVillagesWithDuplicateCombinations() {
+        Long villageId = 1L;
+        List<ObjectVillage> mockData = new ArrayList<>();
+        Village village = new Village();
+        village.setId(villageId);
+        mockData.add(new ObjectVillage(1L, village, new ObjectAroundVillage(101L, "Object A"), Distance.ON_31_TO_50_KM));
+        mockData.add(new ObjectVillage(2L, village, new ObjectAroundVillage(102L, "Object B"), Distance.ON_10_KM));
+        mockData.add(new ObjectVillage(3L, village, new ObjectAroundVillage(101L, "Object A"), Distance.ON_31_TO_50_KM));
+
+        when(objectVillageRepository.findByVillageId(villageId)).thenReturn(mockData);
+
+        List<ObjectVillageDTO> result = objectVillageService.getDistinctObjectVillagesByVillageId(villageId);
+        assertEquals(2, result.size());
+    }
+
+    @Test
+    void testGetDistinctObjectVillagesWithUniqueCombinations() {
+        Long villageId = 2L;
+        List<ObjectVillage> mockData = new ArrayList<>();
+        Village village = new Village();
+        village.setId(villageId);
+        mockData.add(new ObjectVillage(4L, village, new ObjectAroundVillage(201L, "Object X"), Distance.ON_31_TO_50_KM));
+        mockData.add(new ObjectVillage(5L, village, new ObjectAroundVillage(202L, "Object Y"), Distance.ON_10_KM));
+
+        when(objectVillageRepository.findByVillageId(villageId)).thenReturn(mockData);
+
+        List<ObjectVillageDTO> result = objectVillageService.getDistinctObjectVillagesByVillageId(villageId);
+        assertEquals(2, result.size());
+    }
+
+    @Test
+    void testGetDistinctObjectVillagesWithNoData() {
+        Long villageId = 3L;
+        List<ObjectVillage> mockData = new ArrayList<>();
+
+        when(objectVillageRepository.findByVillageId(villageId)).thenReturn(mockData);
+
+        List<ObjectVillageDTO> result = objectVillageService.getDistinctObjectVillagesByVillageId(villageId);
+        assertEquals(0, result.size());
+    }
+
+
+    @Test
+    void testGetObjectVillageResponsesWithObjectsForAllDistances() {
+        List<ObjectVillageDTO> mockData = new ArrayList<>();
+        mockData.add(new ObjectVillageDTO(1L, 1L, 101L,  Distance.ON_10_KM));
+        mockData.add(new ObjectVillageDTO(2L, 1L, 102L,  Distance.ON_10_KM));
+        mockData.add(new ObjectVillageDTO(3L, 1L, 201L,  Distance.ON_11_TO_30KM));
+        mockData.add(new ObjectVillageDTO(4L, 1L, 202L,  Distance.ON_11_TO_30KM));
+        mockData.add(new ObjectVillageDTO(5L, 1L, 301L,  Distance.ON_31_TO_50_KM));
+        mockData.add(new ObjectVillageDTO(6L, 1L, 302L,  Distance.ON_31_TO_50_KM));
+        mockData.add(new ObjectVillageDTO(7L, 1L, 401L,  Distance.OVER_50_KM));
+
+        ObjectAroundVillageDTO object1 = new ObjectAroundVillageDTO(101L, "Type A");
+        ObjectAroundVillageDTO object2 = new ObjectAroundVillageDTO(102L, "Type B");
+        ObjectAroundVillageDTO object3 = new ObjectAroundVillageDTO(201L, "Type X");
+        ObjectAroundVillageDTO object4 = new ObjectAroundVillageDTO(202L, "Type Y");
+        ObjectAroundVillageDTO object5 = new ObjectAroundVillageDTO(301L, "Type P");
+        ObjectAroundVillageDTO object6 = new ObjectAroundVillageDTO(302L, "Type Q");
+        ObjectAroundVillageDTO object7 = new ObjectAroundVillageDTO(401L, "Type M");
+
+        when(objectAroundVillageService.getObjectAroundVillageById(101L)).thenReturn(object1);
+        when(objectAroundVillageService.getObjectAroundVillageById(102L)).thenReturn(object2);
+        when(objectAroundVillageService.getObjectAroundVillageById(201L)).thenReturn(object3);
+        when(objectAroundVillageService.getObjectAroundVillageById(202L)).thenReturn(object4);
+        when(objectAroundVillageService.getObjectAroundVillageById(301L)).thenReturn(object5);
+        when(objectAroundVillageService.getObjectAroundVillageById(302L)).thenReturn(object6);
+        when(objectAroundVillageService.getObjectAroundVillageById(401L)).thenReturn(object7);
+
+        List<ObjectVillageResponse> result = objectVillageService.getObjectVillageResponses(mockData);
+        assertEquals(3, result.size());
+
+        ObjectVillageResponse response1 = result.get(0);
+        assertEquals(Distance.ON_10_KM, response1.getDistance());
+        assertEquals("Type A, Type B", response1.getObjects());
+
+        ObjectVillageResponse response2 = result.get(1);
+        assertEquals(Distance.ON_11_TO_30KM, response2.getDistance());
+        assertEquals("Type X, Type Y", response2.getObjects());
+
+        ObjectVillageResponse response3 = result.get(2);
+        assertEquals(Distance.ON_31_TO_50_KM, response3.getDistance());
+        assertEquals("Type P, Type Q", response3.getObjects());
+    }
+
+
+    @Test
+    void testGetObjectVillageResponsesWithNoData() {
+        List<ObjectVillageDTO> mockData = new ArrayList<>();
+
+        List<ObjectVillageResponse> result = objectVillageService.getObjectVillageResponses(mockData);
+        assertEquals(0, result.size());
+    }
+
+    @Test
+    void testGetObjectVillageResponsesWithObjectsForSpecificDistances() {
+        List<ObjectVillageDTO> mockData = new ArrayList<>();
+        mockData.add(new ObjectVillageDTO(1L, 1L, 101L, Distance.ON_11_TO_30KM));
+        mockData.add(new ObjectVillageDTO(2L, 1L, 102L, Distance.ON_11_TO_30KM));
+        mockData.add(new ObjectVillageDTO(3L, 1L, 201L,  Distance.ON_31_TO_50_KM));
+        mockData.add(new ObjectVillageDTO(4L, 1L, 202L,  Distance.ON_31_TO_50_KM));
+        mockData.add(new ObjectVillageDTO(5L, 1L, 301L,  Distance.OVER_50_KM));
+
+        ObjectAroundVillageDTO object1 = new ObjectAroundVillageDTO(101L, "Type A");
+        ObjectAroundVillageDTO object2 = new ObjectAroundVillageDTO(102L, "Type B");
+        ObjectAroundVillageDTO object3 = new ObjectAroundVillageDTO(201L, "Type X");
+        ObjectAroundVillageDTO object4 = new ObjectAroundVillageDTO(202L, "Type Y");
+        ObjectAroundVillageDTO object5 = new ObjectAroundVillageDTO(301L, "Type P");
+
+        when(objectAroundVillageService.getObjectAroundVillageById(101L)).thenReturn(object1);
+        when(objectAroundVillageService.getObjectAroundVillageById(102L)).thenReturn(object2);
+        when(objectAroundVillageService.getObjectAroundVillageById(201L)).thenReturn(object3);
+        when(objectAroundVillageService.getObjectAroundVillageById(202L)).thenReturn(object4);
+        when(objectAroundVillageService.getObjectAroundVillageById(301L)).thenReturn(object5);
+
+        List<ObjectVillageResponse> result = objectVillageService.getObjectVillageResponses(mockData);
+        assertEquals(2, result.size());
+
+        ObjectVillageResponse response1 = result.get(0);
+        assertEquals(Distance.ON_11_TO_30KM, response1.getDistance());
+        assertEquals("Type A, Type B", response1.getObjects());
+
+        ObjectVillageResponse response2 = result.get(1);
+        assertEquals(Distance.ON_31_TO_50_KM, response2.getDistance());
+        assertEquals("Type X, Type Y", response2.getObjects());
     }
 
 }

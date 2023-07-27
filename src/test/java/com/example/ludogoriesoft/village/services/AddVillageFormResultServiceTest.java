@@ -155,36 +155,30 @@ class AddVillageFormResultServiceTest {
         verify(villagePopulationAssertionService).createVillagePopulationAssertionDTO(dto2);
     }
 
-    //@Test
-    //void testCreateVillagePopulationAssertionsFromAddVillageFormResultWhenVillagePopulationAssertionDTOSHasMixedAnswers() {
-    //    Long villageId = 12345L;
-    //    AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
-    //    List<VillagePopulationAssertionDTO> dtos = new ArrayList<>();
-//
-    //    VillagePopulationAssertionDTO dto1 = new VillagePopulationAssertionDTO(null, villageId, 1L, Consents.CANT_DECIDE);
-    //    VillagePopulationAssertionDTO dto2 = new VillagePopulationAssertionDTO(null, villageId, 2L, null);
-    //    VillagePopulationAssertionDTO dto3 = new VillagePopulationAssertionDTO(null, villageId, 3L, Consents.COMPLETELY_AGREED);
-//
-    //    dtos.add(new VillagePopulationAssertionDTO());
-    //    dtos.add(dto1);
-    //    dtos.add(dto2);
-    //    dtos.add(dto3);
-//
-    //    addVillageFormResult.setVillagePopulationAssertionDTOS(dtos);
-//
-    //    when(villagePopulationAssertionService.existsByVillageIdAndPopulatedAssertionIdAndAnswer(villageId, dto1.getPopulatedAssertionId(), dto1.getAnswer())).thenReturn(false);
-    //    when(villagePopulationAssertionService.existsByVillageIdAndPopulatedAssertionIdAndAnswer(villageId, dto3.getPopulatedAssertionId(), dto3.getAnswer())).thenReturn(false);
-//
-    //    addVillageFormResultService.createVillagePopulationAssertionsFromAddVillageFormResult(villageId, addVillageFormResult);
-//
-    //    verify(villagePopulationAssertionService, times(1)).existsByVillageIdAndPopulatedAssertionIdAndAnswer(villageId, dto1.getPopulatedAssertionId(), dto1.getAnswer());
-    //    verify(villagePopulationAssertionService, times(1)).existsByVillageIdAndPopulatedAssertionIdAndAnswer(villageId, dto3.getPopulatedAssertionId(), dto3.getAnswer());
-//
-    //    verify(villagePopulationAssertionService, times(1)).createVillagePopulationAssertionDTO(dto1);
-    //    verify(villagePopulationAssertionService, times(1)).createVillagePopulationAssertionDTO(dto3);
-//
-    //    verifyNoMoreInteractions(villagePopulationAssertionService);
-    //}
+    @Test
+    void testCreateVillagePopulationAssertionsFromAddVillageFormResultWhenVillagePopulationAssertionDTOSHasMixedAnswers() {
+        Long villageId = 12345L;
+        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
+        List<VillagePopulationAssertionDTO> dtos = new ArrayList<>();
+
+        VillagePopulationAssertionDTO dto1 = new VillagePopulationAssertionDTO(null, villageId, 1L, Consents.CANT_DECIDE);
+        VillagePopulationAssertionDTO dto2 = new VillagePopulationAssertionDTO(null, villageId, 2L, null);
+        VillagePopulationAssertionDTO dto3 = new VillagePopulationAssertionDTO(null, villageId, 3L, Consents.COMPLETELY_AGREED);
+
+        dtos.add(new VillagePopulationAssertionDTO());
+        dtos.add(dto1);
+        dtos.add(dto2);
+        dtos.add(dto3);
+
+        addVillageFormResult.setVillagePopulationAssertionDTOS(dtos);
+
+        addVillageFormResultService.createVillagePopulationAssertionsFromAddVillageFormResult(villageId, addVillageFormResult);
+
+        verify(villagePopulationAssertionService, times(2)).createVillagePopulationAssertionDTO(any(VillagePopulationAssertionDTO.class));
+        verify(villagePopulationAssertionService).createVillagePopulationAssertionDTO(dto1);
+        verify(villagePopulationAssertionService).createVillagePopulationAssertionDTO(dto3);
+        verifyNoMoreInteractions(villagePopulationAssertionService);
+    }
 
 
     @Test
@@ -484,7 +478,6 @@ class AddVillageFormResultServiceTest {
     }
 
 
-
     @Test
     void testCreateVillageAnswerQuestionsFromAddVillageFormResultDifferentSizes() {
         Long villageId = 12345L;
@@ -502,10 +495,6 @@ class AddVillageFormResultServiceTest {
 
         verify(villageAnswerQuestionService, times(2)).createVillageAnswerQuestion(any(VillageAnswerQuestionDTO.class));
     }
-
-
-
-
 
 
     @Test
