@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -21,5 +22,7 @@ public class VillageGroundCategory {
     private Village village;
     @ManyToOne
     private GroundCategory groundCategory;
+    private Boolean villageStatus;
+    private LocalDateTime dateUpload;
 
 }

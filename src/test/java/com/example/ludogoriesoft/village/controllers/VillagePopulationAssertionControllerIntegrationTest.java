@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.example.ludogorieSoft.village.enums.Consents.*;
+import static java.time.LocalDateTime.now;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -176,8 +177,8 @@ class VillagePopulationAssertionControllerIntegrationTest {
 
         VillagePopulationAssertionService villagePopulationAssertionService = mock(VillagePopulationAssertionService.class);
         List<VillagePopulationAssertionDTO> populationAssertions = new ArrayList<>();
-        populationAssertions.add(new VillagePopulationAssertionDTO(1L, 1L, 1L, Consents.COMPLETELY_AGREED));
-        populationAssertions.add(new VillagePopulationAssertionDTO(2L, 1L, 2L, Consents.DISAGREE));
+        populationAssertions.add(new VillagePopulationAssertionDTO(1L, 1L, 1L, Consents.COMPLETELY_AGREED,true,now()));
+        populationAssertions.add(new VillagePopulationAssertionDTO(2L, 1L, 2L, Consents.DISAGREE,true,now()));
         when(villagePopulationAssertionService.getVillagePopulationAssertionByVillageId(villageId))
                 .thenReturn(populationAssertions);
 

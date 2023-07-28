@@ -4,6 +4,7 @@ import com.example.ludogorieSoft.village.enums.Distance;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -22,4 +23,6 @@ public class ObjectVillage {
     private ObjectAroundVillage object;
     @Enumerated(EnumType.STRING)
     private Distance distance;
+    private Boolean villageStatus;
+    private LocalDateTime dateUpload;
 }
