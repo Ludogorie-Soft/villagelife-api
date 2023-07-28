@@ -50,6 +50,7 @@ public class VillageAnswerQuestionService {
 
         villageAnswerQuestion.setAnswer(villageAnswerQuestionDTO.getAnswer());
         villageAnswerQuestion.setVillageStatus(villageAnswerQuestionDTO.getStatus());
+        villageAnswerQuestion.setDateUpload(villageAnswerQuestionDTO.getDateUpload());
         villageAnswerQuestionRepository.save(villageAnswerQuestion);
         return toDTO(villageAnswerQuestion);
     }

@@ -68,6 +68,7 @@ public class EthnicityVillageService {
         ethnicityVillage.setEthnicity(ethnicity);
 
         ethnicityVillage.setVillageStatus(ethnicityVillageDTO.getStatus());
+        ethnicityVillage.setDateUpload(ethnicityVillageDTO.getDateUpload());
         ethnicityVillageRepository.save(ethnicityVillage);
         return ethnicityVillageDTO;
     }

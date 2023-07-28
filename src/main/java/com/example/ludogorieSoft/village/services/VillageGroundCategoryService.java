@@ -53,6 +53,7 @@ public class VillageGroundCategoryService {
         villageGroundCategory.setGroundCategory(groundCategory);
 
         villageGroundCategory.setVillageStatus(villageGroundCategoryDTO.getStatus());
+        villageGroundCategory.setDateUpload(villageGroundCategoryDTO.getDateUpload());
         villageGroundCategoryRepository.save(villageGroundCategory);
         return toDTO(villageGroundCategory);
     }
