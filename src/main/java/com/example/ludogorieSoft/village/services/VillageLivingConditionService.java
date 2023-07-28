@@ -1,14 +1,11 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.VillageLivingConditionDTO;
-import com.example.ludogorieSoft.village.enums.Consents;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.LivingCondition;
 import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.model.VillageLivingConditions;
-import com.example.ludogorieSoft.village.repositories.LivingConditionRepository;
 import com.example.ludogorieSoft.village.repositories.VillageLivingConditionRepository;
-import com.example.ludogorieSoft.village.repositories.VillageRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -21,9 +18,6 @@ import java.util.Optional;
 @AllArgsConstructor
 public class VillageLivingConditionService {
     private final VillageLivingConditionRepository villageLivingConditionRepository;
-
-    private final LivingConditionRepository livingConditionRepository;
-    private final VillageRepository villageRepository;
     private final VillageService villageService;
     private final LivingConditionService livingConditionService;
 
@@ -101,7 +95,7 @@ public class VillageLivingConditionService {
                 .toList();
     }
 
-    public double getVVillageLivingConditionByVillageIdValue(Long id) {
+    public double getVillageLivingConditionByVillageIdValue(Long id) {
         List<VillageLivingConditions> villageLivingConditionsList = villageLivingConditionRepository.findAll();
         if (id != null) {
             villageLivingConditionsList = villageLivingConditionsList.stream()
@@ -149,8 +143,5 @@ public class VillageLivingConditionService {
         }
         double average = sum / (count - 11);
         return Math.round(average * 100) / 100.0;
-    }
-    public boolean existsByVillageIdAndLivingConditionIdAndConsents(Long villageId, Long livingConditionId, Consents consent){
-        return villageLivingConditionRepository.existsByVillageIdAndLivingConditionIdAndConsents(villageId, livingConditionId, consent);
     }
 }

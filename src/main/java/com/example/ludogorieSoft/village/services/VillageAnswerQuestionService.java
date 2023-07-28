@@ -1,6 +1,7 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.VillageAnswerQuestionDTO;
+import com.example.ludogorieSoft.village.dtos.response.AnswersQuestionResponse;
 import com.example.ludogorieSoft.village.model.Question;
 import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.model.VillageAnswerQuestion;
@@ -13,8 +14,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -104,6 +104,35 @@ public class VillageAnswerQuestionService {
                 .map(this::toDTO)
                 .toList();
     }
+
+    public List<AnswersQuestionResponse> getAnswersQuestionResponsesByVillageId(Long villageId) {
+        List<VillageAnswerQuestion> villageAnswerQuestions = villageAnswerQuestionRepository.findByVillageId(villageId);
+        Map<String, List<String>> questionToAnswersMap = groupAnswersByQuestion(villageAnswerQuestions);
+        return createAnswersQuestionResponses(questionToAnswersMap);
+    }
+
+    public Map<String, List<String>> groupAnswersByQuestion(List<VillageAnswerQuestion> villageAnswerQuestions) {
+        Map<String, List<String>> questionToAnswersMap = new HashMap<>();
+        for (VillageAnswerQuestion villageAnswerQuestion : villageAnswerQuestions) {
+            String questionName = villageAnswerQuestion.getQuestion().getQuestionName();
+            String answer = villageAnswerQuestion.getAnswer();
+
+            questionToAnswersMap.computeIfAbsent(questionName, k -> new ArrayList<>()).add(answer);
+        }
+        return questionToAnswersMap;
+    }
+
+    public List<AnswersQuestionResponse> createAnswersQuestionResponses(Map<String, List<String>> questionToAnswersMap) {
+        List<AnswersQuestionResponse> answersQuestionResponses = new ArrayList<>();
+        for (Map.Entry<String, List<String>> entry : questionToAnswersMap.entrySet()) {
+            AnswersQuestionResponse response = new AnswersQuestionResponse();
+            response.setQuestion(entry.getKey());
+            response.setAnswers(entry.getValue());
+            answersQuestionResponses.add(response);
+        }
+        return answersQuestionResponses;
+    }
+    
     public boolean existsByVillageIdAndQuestionIdAndAnswer(Long villageId, Long questionId, String answer){
         return villageAnswerQuestionRepository.existsByVillageIdAndQuestionIdAndAnswer(villageId, questionId, answer);
     }

@@ -41,7 +41,6 @@ class VillageServiceTest {
     @Mock
     private RegionService regionService;
 
-
     @Test
     void convertToObjectAroundVillageDTOList_ShouldConvertObjectVillagesToObjectAroundVillageDTOList() {
         ObjectAroundVillage objectAroundVillage = new ObjectAroundVillage(1L, "TYPE");

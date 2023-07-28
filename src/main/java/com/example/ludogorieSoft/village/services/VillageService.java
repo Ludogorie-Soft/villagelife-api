@@ -1,10 +1,6 @@
 package com.example.ludogorieSoft.village.services;
 
-import com.example.ludogorieSoft.village.dtos.RegionDTO;
-import com.example.ludogorieSoft.village.dtos.LivingConditionDTO;
-import com.example.ludogorieSoft.village.dtos.ObjectAroundVillageDTO;
-import com.example.ludogorieSoft.village.dtos.PopulationDTO;
-import com.example.ludogorieSoft.village.dtos.VillageDTO;
+import com.example.ludogorieSoft.village.dtos.*;
 import com.example.ludogorieSoft.village.enums.Children;
 
 import com.example.ludogorieSoft.village.model.*;
@@ -45,7 +41,9 @@ public class VillageService {
     public VillageDTO getVillageById(Long id) {
         Optional<Village> optionalVillage = villageRepository.findById(id);
         if (optionalVillage.isPresent()) {
-            return villageToVillageDTO(optionalVillage.get());
+            VillageDTO villageDTO = villageToVillageDTO(optionalVillage.get());
+            villageDTO.setPopulationDTO(modelMapper.map(optionalVillage.get().getPopulation(), PopulationDTO.class));
+            return villageDTO;
         } else {
             throw new ApiRequestException(ERROR_MESSAGE1 + id + ERROR_MESSAGE2);
         }

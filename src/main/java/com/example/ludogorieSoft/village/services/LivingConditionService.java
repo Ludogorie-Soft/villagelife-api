@@ -1,14 +1,22 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.LivingConditionDTO;
+import com.example.ludogorieSoft.village.dtos.ObjectAroundVillageDTO;
+import com.example.ludogorieSoft.village.dtos.response.LivingConditionResponse;
 import com.example.ludogorieSoft.village.model.LivingCondition;
+import com.example.ludogorieSoft.village.model.ObjectVillage;
+import com.example.ludogorieSoft.village.model.VillageLivingConditions;
 import com.example.ludogorieSoft.village.repositories.LivingConditionRepository;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
+import com.example.ludogorieSoft.village.repositories.ObjectVillageRepository;
+import com.example.ludogorieSoft.village.repositories.VillageLivingConditionRepository;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +25,9 @@ import java.util.Optional;
 public class LivingConditionService {
     private final LivingConditionRepository livingConditionsRepository;
     private final ModelMapper modelMapper;
+    private final VillageLivingConditionRepository villageLivingConditionRepository;
+    private final ObjectVillageRepository objectVillageRepository;
+    private final ObjectAroundVillageService objectAroundVillageService;
 
     public LivingConditionDTO livingConditionToLivingConditionDTO(LivingCondition livingCondition) {
         return modelMapper.map(livingCondition, LivingConditionDTO.class);
@@ -90,5 +101,117 @@ public class LivingConditionService {
         }else {
             throw new ApiRequestException("Living Condition not found");
         }
+    }
+
+    public List<LivingConditionResponse> getLivingConditionResponses(Long villageId){
+        List<String> names = new ArrayList<>(Arrays.asList("Инфраструктура", "Обществен транспорт",
+                "Електрозахранване", "Водоснабдяване", "Мобилен обхват", "Интернет", "ТВ", "Чистота"));
+        List<Long> livingConditionIds = new ArrayList<>(Arrays.asList(1L, 3L, 4L, 5L, 6L, 7L, 8L, 9L));
+        List<LivingConditionResponse> livingConditionResponses = new ArrayList<>();
+
+        for (int i = 0; i < names.size(); i++) {
+            if (!villageLivingConditionRepository.existsByVillageIdAndLivingConditionId(villageId, livingConditionIds.get(i))){
+                continue;
+            }
+            LivingConditionResponse livingConditionResponse = new LivingConditionResponse();
+            livingConditionResponse.setLivingCondition(names.get(i));
+            double percentage = getPercentage(villageId, livingConditionIds.get(i));
+            livingConditionResponse.setPercentage(Math.round(percentage * 100.0) / 100.0);
+            livingConditionResponses.add(livingConditionResponse);
+        }
+
+        return  livingConditionResponses;
+    }
+    public LivingConditionResponse getAccessibilityByVillageId(Long villageId){
+        LivingConditionResponse livingConditionResponse = new LivingConditionResponse();
+        livingConditionResponse.setLivingCondition("Достъпност");
+
+        double accessibleInWinterPercentage = getPercentage(villageId, 2L);
+        double easilyAccessiblePercentage = getPercentage(villageId, 11L);
+
+        livingConditionResponse.setPercentage(Math.round((accessibleInWinterPercentage + easilyAccessiblePercentage) / 2 * 100.0) / 100.0);
+        return livingConditionResponse;
+    }
+
+    public LivingConditionResponse getCrimeByVillageId(Long villageId){
+        LivingConditionResponse livingConditionResponse = new LivingConditionResponse();
+        livingConditionResponse.setLivingCondition("Престъпност");
+
+        double crimePercentage = getPercentage(villageId, 10L);
+        livingConditionResponse.setPercentage(Math.round((100 - crimePercentage) * 100.0) / 100.0);
+        return livingConditionResponse;
+    }
+
+    public double getLivingConditionsMainPercentage(Long villageId){
+        List<Long> conditionIds = new ArrayList<>(Arrays.asList(1L, 3L, 4L, 5L, 6L, 7L, 8L, 9L));
+        int count = 0;
+        double finalPercentage = 0;
+        for (Long conditionId : conditionIds) {
+            if (!villageLivingConditionRepository.existsByVillageIdAndLivingConditionId(villageId, conditionId)){
+                continue;
+            }
+            double percentage = 0;
+            List<VillageLivingConditions> villageLivingConditions = villageLivingConditionRepository.findByVillageIdAndLivingConditionId(villageId, conditionId);
+            for (VillageLivingConditions villageLivingCondition : villageLivingConditions) {
+                percentage += villageLivingCondition.getConsents().getValue();
+            }
+            count++;
+            finalPercentage += percentage / villageLivingConditions.size();
+        }
+        if(count != 0){
+            return finalPercentage / count;
+        }else {
+            return 0;
+        }
+    }
+
+    public double getLivingConditionsForumPercentage(Long villageId){
+        List<ObjectAroundVillageDTO> objectAroundVillageDTOS = objectAroundVillageService.getAllObjectsAroundVillage();
+        double finalPercentage = 0;
+        double count = 0;
+        for (ObjectAroundVillageDTO object: objectAroundVillageDTOS) {
+            if (!objectVillageRepository.existsByVillageIdAndObjectId(villageId, object.getId())){
+                continue;
+            }
+            double percentage = 0;
+            List<ObjectVillage> objectVillages = objectVillageRepository.findByVillageIdAndObjectId(villageId, object.getId());
+            for (ObjectVillage objectVillage : objectVillages) {
+                percentage += objectVillage.getDistance().getValue();
+            }
+            count++;
+            finalPercentage += percentage / objectVillages.size();
+        }
+        if (count != 0){
+            return finalPercentage / count;
+        }else {
+            return 0;
+        }
+    }
+    public LivingConditionResponse getTotalLivingConditionsByVillageId(Long villageId){
+        LivingConditionResponse livingConditionResponse = new LivingConditionResponse();
+        livingConditionResponse.setLivingCondition("Битови условия");
+        double percentage = (getLivingConditionsMainPercentage(villageId) + getLivingConditionsForumPercentage(villageId)) /2;
+        livingConditionResponse.setPercentage(Math.round((percentage) * 100.0) / 100.0);
+        return livingConditionResponse;
+    }
+
+    public LivingConditionResponse getEcoFriendlinessByVillageId(Long villageId){
+        LivingConditionResponse livingConditionResponse = new LivingConditionResponse();
+        livingConditionResponse.setLivingCondition("Екосъобразност");
+
+        double natureReservePercentage = getPercentage(villageId, 12L);
+        double environmentallyFriendlyLivingPercentage = getPercentage(villageId, 13L);
+        livingConditionResponse.setPercentage(Math.round((natureReservePercentage + environmentallyFriendlyLivingPercentage) / 2 * 100.0) / 100.0);
+
+        return livingConditionResponse;
+    }
+
+    public double getPercentage(Long villageId, Long conditionId){
+        List<VillageLivingConditions> villageLivingConditions = villageLivingConditionRepository.findByVillageIdAndLivingConditionId(villageId, conditionId);
+        double percentage = 0;
+        for (VillageLivingConditions villageLivingCondition : villageLivingConditions) {
+            percentage += villageLivingCondition.getConsents().getValue();
+        }
+        return percentage / villageLivingConditions.size();
     }
 }
