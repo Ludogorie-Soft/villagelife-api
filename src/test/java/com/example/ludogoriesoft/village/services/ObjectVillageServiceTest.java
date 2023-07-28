@@ -275,7 +275,7 @@ class ObjectVillageServiceTest {
         mockData.add(new ObjectVillage(2L, village, new ObjectAroundVillage(102L, "Object B"), Distance.ON_10_KM, true, LocalDateTime.now()));
         mockData.add(new ObjectVillage(3L, village, new ObjectAroundVillage(101L, "Object A"), Distance.ON_31_TO_50_KM, true, LocalDateTime.now()));
 
-        when(objectVillageRepository.findByVillageId(villageId)).thenReturn(mockData);
+        when(objectVillageRepository.findByVillageIdAndVillageStatus(villageId, true)).thenReturn(mockData);
 
         List<ObjectVillageDTO> result = objectVillageService.getDistinctObjectVillagesByVillageId(villageId);
         assertEquals(2, result.size());
@@ -290,7 +290,7 @@ class ObjectVillageServiceTest {
         mockData.add(new ObjectVillage(4L, village, new ObjectAroundVillage(201L, "Object X"), Distance.ON_31_TO_50_KM, true, LocalDateTime.now()));
         mockData.add(new ObjectVillage(5L, village, new ObjectAroundVillage(202L, "Object Y"), Distance.ON_10_KM, true, LocalDateTime.now()));
 
-        when(objectVillageRepository.findByVillageId(villageId)).thenReturn(mockData);
+        when(objectVillageRepository.findByVillageIdAndVillageStatus(villageId, true)).thenReturn(mockData);
 
         List<ObjectVillageDTO> result = objectVillageService.getDistinctObjectVillagesByVillageId(villageId);
         assertEquals(2, result.size());
