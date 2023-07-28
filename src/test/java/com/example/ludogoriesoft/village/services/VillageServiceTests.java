@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.modelmapper.ModelMapper;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
@@ -56,6 +57,7 @@ class VillageServiceTests {
         List<Village> mockVillages = new ArrayList<>();
         mockVillages.add(village1);
         mockVillages.add(village2);
+
 
         VillageDTO villageDTO1 = new VillageDTO();
         villageDTO1.setName("Village1");
@@ -1016,6 +1018,33 @@ class VillageServiceTests {
 
         assertEquals("Village1", approvedVillages.get(0).getName());
     }
+    @Test
+    void testGetVillagesByStatus() {
+        boolean status = true;
 
+        List<Village> villagesWithStatus = new ArrayList<>();
+        villagesWithStatus.add(new Village(1L, "Village1", new Region(), 100, new Population(),
+                LocalDateTime.now(), true, new Administrator(), LocalDateTime.now(), new ArrayList<>(), new ArrayList<>(),
+                new ArrayList<>(), new ArrayList<>(), new ArrayList<>(),
+                new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
+
+        when(mockRepository.findByStatus(status)).thenReturn(villagesWithStatus);
+
+        List<VillageDTO> expectedVillageDTOs = new ArrayList<>();
+        expectedVillageDTOs.add(new VillageDTO(1L, "Village1", "region", 100, new PopulationDTO()
+                , LocalDateTime.now(),true, new ArrayList<>(), new ArrayList<>(),
+                new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(),
+                new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
+
+        when(modelMapper.map(any(Village.class), eq(VillageDTO.class))).thenReturn(expectedVillageDTOs.get(0));
+
+        List<VillageDTO> result = villageService.getVillagesByStatus(status);
+
+        assertEquals(expectedVillageDTOs, result);
+        assertEquals(expectedVillageDTOs.size(), result.size());
+
+        verify(mockRepository, times(1)).findByStatus(status);
+        verify(modelMapper, times(1)).map(any(Village.class), eq(VillageDTO.class));
+    }
 }
 

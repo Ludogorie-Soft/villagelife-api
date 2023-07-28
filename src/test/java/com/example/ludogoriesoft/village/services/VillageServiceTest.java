@@ -31,11 +31,6 @@ import static org.mockito.Mockito.*;
 
 
 class VillageServiceTest {
-//    @BeforeEach
-//    public void setUp() {
-//        MockitoAnnotations.openMocks(this);
-//    }
-
     @InjectMocks
     private VillageService villageService;
     @Mock

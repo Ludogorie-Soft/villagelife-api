@@ -1,9 +1,10 @@
 package com.example.ludogorieSoft.village.model;
 
 import com.example.ludogorieSoft.village.enums.Consents;
-import lombok.Data;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -12,6 +13,8 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Table(name = "village_population_assertion")
+@AllArgsConstructor
+@NoArgsConstructor
 public class VillagePopulationAssertion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

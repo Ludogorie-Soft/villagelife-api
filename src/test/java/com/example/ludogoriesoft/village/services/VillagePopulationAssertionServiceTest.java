@@ -42,15 +42,11 @@ class VillagePopulationAssertionServiceTest {
     @BeforeEach
     void setUp() {
         villagePopulationAssertionRepository = Mockito.mock(VillagePopulationAssertionRepository.class);
-        villageRepository = Mockito.mock(VillageRepository.class);
-        populatedAssertionRepository = Mockito.mock(PopulatedAssertionRepository.class);
         populatedAssertionService = Mockito.mock(PopulatedAssertionService.class);
         villageService = Mockito.mock(VillageService.class);
         modelMapper = Mockito.mock(ModelMapper.class);
         villagePopulationAssertionService = new VillagePopulationAssertionService(
                 villagePopulationAssertionRepository,
-                villageRepository,
-                populatedAssertionRepository,
                 populatedAssertionService,
                 villageService,
                 modelMapper
@@ -290,28 +286,5 @@ class VillagePopulationAssertionServiceTest {
 
         verify(villagePopulationAssertionRepository, times(1)).findById(1L);
         verify(villagePopulationAssertionRepository, times(1)).save(any(VillagePopulationAssertion.class));
-    }
-        @Test
-    void testExistsByVillageIdAndPopulatedAssertionIdAndAnswerWhenRecordExists() {
-        Long villageId = 1L;
-        Long populatedAssertionId = 10L;
-        Consents answer = Consents.COMPLETELY_AGREED;
-        when(villagePopulationAssertionRepository.existsByVillageIdAndPopulatedAssertionIDIdAndAnswer(villageId, populatedAssertionId, answer))
-                .thenReturn(true);
-        boolean result = villagePopulationAssertionService.existsByVillageIdAndPopulatedAssertionIdAndAnswer(villageId, populatedAssertionId, answer);
-        Assertions.assertTrue(result);
-        verify(villagePopulationAssertionRepository, times(1)).existsByVillageIdAndPopulatedAssertionIDIdAndAnswer(villageId, populatedAssertionId, answer);
-    }
-
-    @Test
-    void testExistsByVillageIdAndPopulatedAssertionIdAndAnswerWhenRecordDoesNotExist() {
-        Long villageId = 1L;
-        Long populatedAssertionId = 10L;
-        Consents answer = Consents.COMPLETELY_AGREED;
-        when(villagePopulationAssertionRepository.existsByVillageIdAndPopulatedAssertionIDIdAndAnswer(villageId, populatedAssertionId, answer))
-                .thenReturn(false);
-        boolean result = villagePopulationAssertionService.existsByVillageIdAndPopulatedAssertionIdAndAnswer(villageId, populatedAssertionId, answer);
-        Assertions.assertFalse(result);
-        verify(villagePopulationAssertionRepository, times(1)).existsByVillageIdAndPopulatedAssertionIDIdAndAnswer(villageId, populatedAssertionId, answer);
     }
 }

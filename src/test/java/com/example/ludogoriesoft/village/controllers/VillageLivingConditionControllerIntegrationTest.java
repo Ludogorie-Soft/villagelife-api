@@ -221,7 +221,7 @@ class VillageLivingConditionControllerIntegrationTest {
         Long villageId = 1L;
         double populationAssertion = 12345.67;
 
-        when(villageLivingConditionService.getVVillageLivingConditionByVillageIdValue(villageId))
+        when(villageLivingConditionService.getVillageLivingConditionByVillageIdValue(villageId))
                 .thenReturn(populationAssertion);
 
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageLivingConditions/village/value/{id}", villageId)
