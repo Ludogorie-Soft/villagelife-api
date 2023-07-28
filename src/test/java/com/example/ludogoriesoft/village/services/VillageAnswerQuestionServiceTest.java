@@ -1,6 +1,7 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.VillageAnswerQuestionDTO;
+import com.example.ludogorieSoft.village.dtos.response.AnswersQuestionResponse;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.Question;
 import com.example.ludogorieSoft.village.model.Village;
@@ -14,9 +15,8 @@ import org.mockito.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -431,4 +431,88 @@ class VillageAnswerQuestionServiceTest {
         verify(villageAnswerQuestionRepository, times(1)).existsByVillageIdAndQuestionIdAndAnswer(villageId, questionId, answer);
     }
 
+    @Test
+    void testGetAnswersQuestionResponsesByVillageId() {
+        Long villageId = 1L;
+        Village village = new Village();
+        village.setId(villageId);
+        Question question1 = new Question();
+        question1.setQuestionName("Question 1");
+        question1.setId(1L);
+        Question question2 = new Question();
+        question2.setQuestionName("Question 2");
+        question2.setId(2L);
+        VillageAnswerQuestion answerQuestion1 = new VillageAnswerQuestion(1L, village, question1, "Answer 1", true, LocalDateTime.now());
+        VillageAnswerQuestion answerQuestion2 = new VillageAnswerQuestion(2L, village, question1, "Answer 2", true, LocalDateTime.now());
+        VillageAnswerQuestion answerQuestion3 = new VillageAnswerQuestion(3L, village, question2, "Answer 3", true, LocalDateTime.now());
+
+        List<VillageAnswerQuestion> villageAnswerQuestions = new ArrayList<>();
+        villageAnswerQuestions.add(answerQuestion1);
+        villageAnswerQuestions.add(answerQuestion2);
+        villageAnswerQuestions.add(answerQuestion3);
+
+        when(villageAnswerQuestionRepository.findByVillageId(villageId)).thenReturn(villageAnswerQuestions);
+
+        List<AnswersQuestionResponse> result = villageAnswerQuestionService.getAnswersQuestionResponsesByVillageId(villageId);
+
+        assertEquals(2, result.size());
+
+        AnswersQuestionResponse response1 = result.get(0);
+        assertEquals("Question 1", response1.getQuestion());
+        assertEquals(2, response1.getAnswers().size());
+        assertEquals("Answer 1", response1.getAnswers().get(0));
+        assertEquals("Answer 2", response1.getAnswers().get(1));
+
+        AnswersQuestionResponse response2 = result.get(1);
+        assertEquals("Question 2", response2.getQuestion());
+        assertEquals(1, response2.getAnswers().size());
+        assertEquals("Answer 3", response2.getAnswers().get(0));
+    }
+
+    @Test
+    void testGroupAnswersByQuestion() {
+        Village village1 = new Village();
+        village1.setId(1L);
+        VillageAnswerQuestion answerQuestion1 = new VillageAnswerQuestion(1L, village1, new Question(1L, "Question 1"), "Answer 1", true, LocalDateTime.now());
+        VillageAnswerQuestion answerQuestion2 = new VillageAnswerQuestion(2L, village1, new Question(1L,"Question 1"), "Answer 2", true, LocalDateTime.now());
+        VillageAnswerQuestion answerQuestion3 = new VillageAnswerQuestion(3L, village1, new Question(2L,"Question 2"), "Answer 3", true, LocalDateTime.now());
+        VillageAnswerQuestion answerQuestion4 = new VillageAnswerQuestion(4L, village1, new Question(2L,"Question 2"), "Answer 4", true, LocalDateTime.now());
+
+        List<VillageAnswerQuestion> villageAnswerQuestions = new ArrayList<>();
+        villageAnswerQuestions.add(answerQuestion1);
+        villageAnswerQuestions.add(answerQuestion2);
+        villageAnswerQuestions.add(answerQuestion3);
+        villageAnswerQuestions.add(answerQuestion4);
+
+        Map<String, List<String>> result = villageAnswerQuestionService.groupAnswersByQuestion(villageAnswerQuestions);
+
+        assertEquals(2, result.size());
+        assertEquals(List.of("Answer 1", "Answer 2"), result.get("Question 1"));
+        assertEquals(List.of("Answer 3", "Answer 4"), result.get("Question 2"));
+    }
+
+    @Test
+    void testCreateAnswersQuestionResponses() {
+        Map<String, List<String>> questionToAnswersMap = new HashMap<>();
+        List<String> answers1 = List.of("Answer 1", "Answer 2");
+        List<String> answers2 = List.of("Answer 3");
+        questionToAnswersMap.put("Question 1", answers1);
+        questionToAnswersMap.put("Question 2", answers2);
+
+
+        List<AnswersQuestionResponse> result = villageAnswerQuestionService.createAnswersQuestionResponses(questionToAnswersMap);
+
+        assertEquals(2, result.size());
+
+        AnswersQuestionResponse response1 = result.get(0);
+        assertEquals("Question 1", response1.getQuestion());
+        assertEquals(2, response1.getAnswers().size());
+        assertEquals("Answer 1", response1.getAnswers().get(0));
+        assertEquals("Answer 2", response1.getAnswers().get(1));
+
+        AnswersQuestionResponse response2 = result.get(1);
+        assertEquals("Question 2", response2.getQuestion());
+        assertEquals(1, response2.getAnswers().size());
+        assertEquals("Answer 3", response2.getAnswers().get(0));
+    }
 }

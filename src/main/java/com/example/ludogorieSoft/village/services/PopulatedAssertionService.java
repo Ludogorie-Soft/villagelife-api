@@ -2,14 +2,18 @@ package com.example.ludogorieSoft.village.services;
 
 
 import com.example.ludogorieSoft.village.dtos.PopulatedAssertionDTO;
+import com.example.ludogorieSoft.village.dtos.response.PopulationAssertionResponse;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.PopulatedAssertion;
+import com.example.ludogorieSoft.village.model.VillagePopulationAssertion;
 import com.example.ludogorieSoft.village.repositories.PopulatedAssertionRepository;
+import com.example.ludogorieSoft.village.repositories.VillagePopulationAssertionRepository;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +22,7 @@ import java.util.Optional;
 public class PopulatedAssertionService {
 
     private final PopulatedAssertionRepository populatedAssertionRepository;
+    private final VillagePopulationAssertionRepository villagePopulationAssertionRepository;
     private final ModelMapper modelMapper;
 
     public PopulatedAssertionDTO populatedAssertionToPopulatedAssertionDTO(PopulatedAssertion populatedAssertion){
@@ -89,5 +94,26 @@ public class PopulatedAssertionService {
         }else {
             throw new ApiRequestException("Populated Assertion not found");
         }
+    }
+
+
+    public List<PopulationAssertionResponse> getPopulationAssertionResponse(Long villageId){
+        List<PopulatedAssertionDTO> populatedAssertionDTOList = getAllPopulatedAssertion();
+        List<PopulationAssertionResponse> populationAssertionResponses = new ArrayList<>();
+        for (PopulatedAssertionDTO populatedAssertionDTO : populatedAssertionDTOList) {
+            PopulationAssertionResponse populationAssertionResponse = new PopulationAssertionResponse();
+            populationAssertionResponse.setPopulationAssertionName(getPopulatedAssertionById(populatedAssertionDTO.getId()).getPopulatedAssertionName());
+
+            List<VillagePopulationAssertion> villagePopulationAssertions = villagePopulationAssertionRepository.findByVillageIdAndPopulatedAssertionIDId(villageId, populatedAssertionDTO.getId());
+            double percentage = 0;
+            for (VillagePopulationAssertion villagePopulationAssertion : villagePopulationAssertions) {
+                percentage += villagePopulationAssertion.getAnswer().getValue();
+            }
+            populationAssertionResponse.setPercentage(Math.round(percentage / villagePopulationAssertions.size() * 100.0) / 100.0);
+            if(populationAssertionResponse.getPercentage() != 0){
+                populationAssertionResponses.add(populationAssertionResponse);
+            }
+        }
+        return  populationAssertionResponses;
     }
 }

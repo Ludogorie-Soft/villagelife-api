@@ -1,11 +1,11 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.EthnicityVillageDTO;
+import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.Ethnicity;
 import com.example.ludogorieSoft.village.model.EthnicityVillage;
 import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.repositories.EthnicityVillageRepository;
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 
 
 @Service
@@ -95,6 +94,27 @@ public class EthnicityVillageService {
         }
         return filteredList;
     }
+    public String getUniqueEthnicityVillagesByVillageId(Long villageId) {
+        List<EthnicityVillage> ethnicityVillages = ethnicityVillageRepository.findAll();
+        List<EthnicityVillageDTO> filteredList = new ArrayList<>();
+        for (EthnicityVillage ethnicityVillage : ethnicityVillages) {
+            if (ethnicityVillage.getVillage().getId().equals(villageId) && !ethnicityVillage.getEthnicity().getEthnicityName().equals("няма малцинствени групи")) {
+                filteredList.add(ethnicityVillageToEthnicityVillageDTO(ethnicityVillage));
+            }
+        }
+        StringBuilder ethnicityNames = new StringBuilder();
+        if (filteredList.isEmpty()) {
+            ethnicityNames.append("няма малцинствени групи");
+        } else {
+            for (int i = 0; i < filteredList.size() - 1; i++) {
+                ethnicityNames.append(ethnicityService.getEthnicityById(filteredList.get(i).getEthnicityId()).getEthnicityName()).append(", ");
+            }
+            ethnicityNames.append(ethnicityService.getEthnicityById(filteredList.get(filteredList.size() - 1).getEthnicityId()).getEthnicityName());
+        }
+        return ethnicityNames.toString();
+    }
+
+
     public boolean existsByVillageIdAndEthnicityId(Long villageId, Long ethnicityId){
         return ethnicityVillageRepository.existsByEthnicityIdAndVillageId(ethnicityId, villageId);
     }

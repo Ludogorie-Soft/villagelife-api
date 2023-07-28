@@ -34,7 +34,7 @@ public class VillageLivingConditionController {
 
     @GetMapping("/village/value/{id}")
     public ResponseEntity<Double> getVillagePopulationAssertionByVillageIdValue(@PathVariable("id") Long id){
-        return ResponseEntity.ok(villageLivingConditionService.getVVillageLivingConditionByVillageIdValue(id));
+        return ResponseEntity.ok(villageLivingConditionService.getVillageLivingConditionByVillageIdValue(id));
     }
 
     @GetMapping("/village/delinquencyValue/{id}")

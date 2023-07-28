@@ -1,9 +1,14 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.PopulatedAssertionDTO;
+import com.example.ludogorieSoft.village.dtos.response.PopulationAssertionResponse;
+import com.example.ludogorieSoft.village.enums.Consents;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.PopulatedAssertion;
+import com.example.ludogorieSoft.village.model.Village;
+import com.example.ludogorieSoft.village.model.VillagePopulationAssertion;
 import com.example.ludogorieSoft.village.repositories.PopulatedAssertionRepository;
+import com.example.ludogorieSoft.village.repositories.VillagePopulationAssertionRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,6 +18,7 @@ import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,14 +32,18 @@ class PopulatedAssertionServiceTest {
     @InjectMocks
     private PopulatedAssertionService populatedAssertionService;
     @Mock
+    private VillagePopulationAssertionRepository villagePopulationAssertionRepository;
+    @Mock
     private ModelMapper modelMapper;
+    @Mock
+    private VillagePopulationAssertionService villagePopulationAssertionService;
 
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
         ModelMapper modelMapper = new ModelMapper();
-        populatedAssertionService = new PopulatedAssertionService(populatedAssertionRepository, modelMapper);
+        populatedAssertionService = new PopulatedAssertionService(populatedAssertionRepository, villagePopulationAssertionRepository, modelMapper);
     }
 
     @Test
@@ -353,6 +363,4 @@ class PopulatedAssertionServiceTest {
 
         Assertions.assertThrows(ApiRequestException.class, () -> populatedAssertionService.updatePopulatedAssertion(id, populatedAssertionDTO));
     }
-
-
 }

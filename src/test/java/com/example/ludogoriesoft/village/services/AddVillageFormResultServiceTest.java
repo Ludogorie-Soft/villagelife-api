@@ -485,7 +485,6 @@ class AddVillageFormResultServiceTest {
     }
 
 
-
     @Test
     void testCreateVillageAnswerQuestionsFromAddVillageFormResultDifferentSizes() {
         Long villageId = 12345L;
@@ -503,10 +502,6 @@ class AddVillageFormResultServiceTest {
 
         verify(villageAnswerQuestionService, times(2)).createVillageAnswerQuestion(any(VillageAnswerQuestionDTO.class));
     }
-
-
-
-
 
 
     @Test
