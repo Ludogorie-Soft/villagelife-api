@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static java.time.LocalDateTime.now;
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doThrow;
@@ -241,8 +242,8 @@ class ObjectVillageControllerIntegrationTest {
     @Test
     void testGetObjectVillageByVillageID() throws Exception {
         Long villageId = 1L;
-        ObjectVillageDTO objectVillageDTO1 = new ObjectVillageDTO(1L, villageId, 1L, Distance.IN_THE_VILLAGE);
-        ObjectVillageDTO objectVillageDTO2 = new ObjectVillageDTO(2L, villageId, 2L, Distance.ON_10_KM);
+        ObjectVillageDTO objectVillageDTO1 = new ObjectVillageDTO(1L, villageId, 1L, Distance.IN_THE_VILLAGE,true,now());
+        ObjectVillageDTO objectVillageDTO2 = new ObjectVillageDTO(2L, villageId, 2L, Distance.ON_10_KM,true,now());
         List<ObjectVillageDTO> objectVillageDTOList = Arrays.asList(objectVillageDTO1, objectVillageDTO2);
 
         when(objectVillageService.getObjectVillageByVillageId(villageId)).thenReturn(objectVillageDTOList);
