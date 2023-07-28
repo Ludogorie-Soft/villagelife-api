@@ -19,6 +19,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -298,9 +299,9 @@ class LivingConditionServiceTest {
         village.setId(villageId);
         LivingCondition livingCondition = new LivingCondition(conditionId, "Test Condition");
 
-        villageLivingConditions.add(new VillageLivingConditions(1L, village, livingCondition, Consents.COMPLETELY_AGREED));
-        villageLivingConditions.add(new VillageLivingConditions(1L, village, livingCondition, Consents.DISAGREE));
-        villageLivingConditions.add(new VillageLivingConditions(1L, village, livingCondition, Consents.RATHER_DISAGREE));
+        villageLivingConditions.add(new VillageLivingConditions(1L, village, livingCondition, Consents.COMPLETELY_AGREED, true, LocalDateTime.now()));
+        villageLivingConditions.add(new VillageLivingConditions(1L, village, livingCondition, Consents.DISAGREE, true, LocalDateTime.now()));
+        villageLivingConditions.add(new VillageLivingConditions(1L, village, livingCondition, Consents.RATHER_DISAGREE, true, LocalDateTime.now()));
         when(villageLivingConditionRepository.findByVillageIdAndLivingConditionId(villageId, conditionId)).thenReturn(villageLivingConditions);
 
         double expectedPercentage = (100 + 20 + 40) / 3.0;
@@ -318,8 +319,8 @@ class LivingConditionServiceTest {
         village.setId(villageId);
         LivingCondition livingCondition = new LivingCondition(conditionId, "Test Condition");
 
-        VillageLivingConditions villageLivingCondition1 = new VillageLivingConditions(1L, village, livingCondition, Consents.RATHER_DISAGREE);
-        VillageLivingConditions villageLivingCondition2 = new VillageLivingConditions(2L, village, livingCondition, Consents.CANT_DECIDE);
+        VillageLivingConditions villageLivingCondition1 = new VillageLivingConditions(1L, village, livingCondition, Consents.RATHER_DISAGREE, true, LocalDateTime.now());
+        VillageLivingConditions villageLivingCondition2 = new VillageLivingConditions(2L, village, livingCondition, Consents.CANT_DECIDE, true, LocalDateTime.now());
         villageLivingConditions.add(villageLivingCondition1);
         villageLivingConditions.add(villageLivingCondition2);
 
@@ -358,12 +359,12 @@ class LivingConditionServiceTest {
         ObjectAroundVillage objectAroundVillage2 = new ObjectAroundVillage(1L, "Object 2");
 
         List<ObjectVillage> objectVillages1 = Arrays.asList(
-                new ObjectVillage(1L, village, objectAroundVillage1, Distance.IN_THE_VILLAGE),
-                new ObjectVillage(2L, village, objectAroundVillage1, Distance.ON_31_TO_50_KM)
+                new ObjectVillage(1L, village, objectAroundVillage1, Distance.IN_THE_VILLAGE, true, LocalDateTime.now()),
+                new ObjectVillage(2L, village, objectAroundVillage1, Distance.ON_31_TO_50_KM, true, LocalDateTime.now())
         );
         List<ObjectVillage> objectVillages2 = Arrays.asList(
-                new ObjectVillage(3L, village, objectAroundVillage2, Distance.ON_10_KM),
-                new ObjectVillage(4L, village, objectAroundVillage2, Distance.OVER_50_KM)
+                new ObjectVillage(3L, village, objectAroundVillage2, Distance.ON_10_KM, true, LocalDateTime.now()),
+                new ObjectVillage(4L, village, objectAroundVillage2, Distance.OVER_50_KM, true, LocalDateTime.now())
         );
         when(objectVillageRepository.findByVillageIdAndObjectId(100L, 1L)).thenReturn(objectVillages1);
         when(objectVillageRepository.findByVillageIdAndObjectId(100L, 2L)).thenReturn(objectVillages2);

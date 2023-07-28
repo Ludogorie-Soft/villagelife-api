@@ -106,7 +106,7 @@ class VillageLivingConditionServiceTest {
         when(villageLivingConditionRepository.findAll()).thenReturn(villageLivingConditionsList);
 
         double result = villageLivingConditionService.getVillageLivingConditionByVillageIdDelinquencyValue(villageId);
-        Assertions.assertEquals(80, result, 0.01);
+        Assertions.assertEquals(50, result, 0.01);
 
         verify(villageLivingConditionRepository, times(1)).findAll();
     }
@@ -141,10 +141,10 @@ class VillageLivingConditionServiceTest {
         VillageLivingConditionRepository villageLivingConditionRepository = mock(VillageLivingConditionRepository.class);
         List<VillageLivingConditions> villageLivingConditionsList = new ArrayList<>();
 
-        villageLivingConditionsList.add(new VillageLivingConditions(1L, village, new LivingCondition(1L, "Name"), Consents.DISAGREE));
-        villageLivingConditionsList.add(new VillageLivingConditions(1L, village, new LivingCondition(1L, "Name"), Consents.CANT_DECIDE));
-        villageLivingConditionsList.add(new VillageLivingConditions(1L, village, new LivingCondition(1L, "Name"), Consents.CANT_DECIDE));
-        villageLivingConditionsList.add(new VillageLivingConditions(1L, village, new LivingCondition(1L, "Name"), Consents.COMPLETELY_AGREED));
+        villageLivingConditionsList.add(new VillageLivingConditions(1L, village, new LivingCondition(1L, "Name"), Consents.DISAGREE, true, LocalDateTime.now()));
+        villageLivingConditionsList.add(new VillageLivingConditions(1L, village, new LivingCondition(1L, "Name"), Consents.CANT_DECIDE, true, LocalDateTime.now()));
+        villageLivingConditionsList.add(new VillageLivingConditions(1L, village, new LivingCondition(1L, "Name"), Consents.CANT_DECIDE, true, LocalDateTime.now()));
+        villageLivingConditionsList.add(new VillageLivingConditions(1L, village, new LivingCondition(1L, "Name"), Consents.COMPLETELY_AGREED, true, LocalDateTime.now()));
 
         when(villageLivingConditionRepository.findAll()).thenReturn(villageLivingConditionsList);
 

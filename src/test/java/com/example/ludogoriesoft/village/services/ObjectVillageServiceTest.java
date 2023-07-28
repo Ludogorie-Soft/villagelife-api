@@ -16,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -270,9 +271,9 @@ class ObjectVillageServiceTest {
         List<ObjectVillage> mockData = new ArrayList<>();
         Village village = new Village();
         village.setId(villageId);
-        mockData.add(new ObjectVillage(1L, village, new ObjectAroundVillage(101L, "Object A"), Distance.ON_31_TO_50_KM));
-        mockData.add(new ObjectVillage(2L, village, new ObjectAroundVillage(102L, "Object B"), Distance.ON_10_KM));
-        mockData.add(new ObjectVillage(3L, village, new ObjectAroundVillage(101L, "Object A"), Distance.ON_31_TO_50_KM));
+        mockData.add(new ObjectVillage(1L, village, new ObjectAroundVillage(101L, "Object A"), Distance.ON_31_TO_50_KM, true, LocalDateTime.now()));
+        mockData.add(new ObjectVillage(2L, village, new ObjectAroundVillage(102L, "Object B"), Distance.ON_10_KM, true, LocalDateTime.now()));
+        mockData.add(new ObjectVillage(3L, village, new ObjectAroundVillage(101L, "Object A"), Distance.ON_31_TO_50_KM, true, LocalDateTime.now()));
 
         when(objectVillageRepository.findByVillageId(villageId)).thenReturn(mockData);
 
@@ -286,8 +287,8 @@ class ObjectVillageServiceTest {
         List<ObjectVillage> mockData = new ArrayList<>();
         Village village = new Village();
         village.setId(villageId);
-        mockData.add(new ObjectVillage(4L, village, new ObjectAroundVillage(201L, "Object X"), Distance.ON_31_TO_50_KM));
-        mockData.add(new ObjectVillage(5L, village, new ObjectAroundVillage(202L, "Object Y"), Distance.ON_10_KM));
+        mockData.add(new ObjectVillage(4L, village, new ObjectAroundVillage(201L, "Object X"), Distance.ON_31_TO_50_KM, true, LocalDateTime.now()));
+        mockData.add(new ObjectVillage(5L, village, new ObjectAroundVillage(202L, "Object Y"), Distance.ON_10_KM, true, LocalDateTime.now()));
 
         when(objectVillageRepository.findByVillageId(villageId)).thenReturn(mockData);
 
@@ -310,13 +311,13 @@ class ObjectVillageServiceTest {
     @Test
     void testGetObjectVillageResponsesWithObjectsForAllDistances() {
         List<ObjectVillageDTO> mockData = new ArrayList<>();
-        mockData.add(new ObjectVillageDTO(1L, 1L, 101L,  Distance.ON_10_KM));
-        mockData.add(new ObjectVillageDTO(2L, 1L, 102L,  Distance.ON_10_KM));
-        mockData.add(new ObjectVillageDTO(3L, 1L, 201L,  Distance.ON_11_TO_30KM));
-        mockData.add(new ObjectVillageDTO(4L, 1L, 202L,  Distance.ON_11_TO_30KM));
-        mockData.add(new ObjectVillageDTO(5L, 1L, 301L,  Distance.ON_31_TO_50_KM));
-        mockData.add(new ObjectVillageDTO(6L, 1L, 302L,  Distance.ON_31_TO_50_KM));
-        mockData.add(new ObjectVillageDTO(7L, 1L, 401L,  Distance.OVER_50_KM));
+        mockData.add(new ObjectVillageDTO(1L, 1L, 101L,  Distance.ON_10_KM, true, LocalDateTime.now()));
+        mockData.add(new ObjectVillageDTO(2L, 1L, 102L,  Distance.ON_10_KM, true, LocalDateTime.now()));
+        mockData.add(new ObjectVillageDTO(3L, 1L, 201L,  Distance.ON_11_TO_30KM, true, LocalDateTime.now()));
+        mockData.add(new ObjectVillageDTO(4L, 1L, 202L,  Distance.ON_11_TO_30KM, true, LocalDateTime.now()));
+        mockData.add(new ObjectVillageDTO(5L, 1L, 301L,  Distance.ON_31_TO_50_KM, true, LocalDateTime.now()));
+        mockData.add(new ObjectVillageDTO(6L, 1L, 302L,  Distance.ON_31_TO_50_KM, true, LocalDateTime.now()));
+        mockData.add(new ObjectVillageDTO(7L, 1L, 401L,  Distance.OVER_50_KM, true, LocalDateTime.now()));
 
         ObjectAroundVillageDTO object1 = new ObjectAroundVillageDTO(101L, "Type A");
         ObjectAroundVillageDTO object2 = new ObjectAroundVillageDTO(102L, "Type B");
@@ -362,11 +363,11 @@ class ObjectVillageServiceTest {
     @Test
     void testGetObjectVillageResponsesWithObjectsForSpecificDistances() {
         List<ObjectVillageDTO> mockData = new ArrayList<>();
-        mockData.add(new ObjectVillageDTO(1L, 1L, 101L, Distance.ON_11_TO_30KM));
-        mockData.add(new ObjectVillageDTO(2L, 1L, 102L, Distance.ON_11_TO_30KM));
-        mockData.add(new ObjectVillageDTO(3L, 1L, 201L,  Distance.ON_31_TO_50_KM));
-        mockData.add(new ObjectVillageDTO(4L, 1L, 202L,  Distance.ON_31_TO_50_KM));
-        mockData.add(new ObjectVillageDTO(5L, 1L, 301L,  Distance.OVER_50_KM));
+        mockData.add(new ObjectVillageDTO(1L, 1L, 101L, Distance.ON_11_TO_30KM, true, LocalDateTime.now()));
+        mockData.add(new ObjectVillageDTO(2L, 1L, 102L, Distance.ON_11_TO_30KM, true, LocalDateTime.now()));
+        mockData.add(new ObjectVillageDTO(3L, 1L, 201L,  Distance.ON_31_TO_50_KM, true, LocalDateTime.now()));
+        mockData.add(new ObjectVillageDTO(4L, 1L, 202L,  Distance.ON_31_TO_50_KM, true, LocalDateTime.now()));
+        mockData.add(new ObjectVillageDTO(5L, 1L, 301L,  Distance.OVER_50_KM, true, LocalDateTime.now()));
 
         ObjectAroundVillageDTO object1 = new ObjectAroundVillageDTO(101L, "Type A");
         ObjectAroundVillageDTO object2 = new ObjectAroundVillageDTO(102L, "Type B");

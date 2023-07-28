@@ -15,6 +15,7 @@ import org.mockito.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -441,9 +442,9 @@ class VillageAnswerQuestionServiceTest {
         Question question2 = new Question();
         question2.setQuestionName("Question 2");
         question2.setId(2L);
-        VillageAnswerQuestion answerQuestion1 = new VillageAnswerQuestion(1L, village, question1, "Answer 1");
-        VillageAnswerQuestion answerQuestion2 = new VillageAnswerQuestion(2L, village, question1, "Answer 2");
-        VillageAnswerQuestion answerQuestion3 = new VillageAnswerQuestion(3L, village, question2, "Answer 3");
+        VillageAnswerQuestion answerQuestion1 = new VillageAnswerQuestion(1L, village, question1, "Answer 1", true, LocalDateTime.now());
+        VillageAnswerQuestion answerQuestion2 = new VillageAnswerQuestion(2L, village, question1, "Answer 2", true, LocalDateTime.now());
+        VillageAnswerQuestion answerQuestion3 = new VillageAnswerQuestion(3L, village, question2, "Answer 3", true, LocalDateTime.now());
 
         List<VillageAnswerQuestion> villageAnswerQuestions = new ArrayList<>();
         villageAnswerQuestions.add(answerQuestion1);
@@ -472,10 +473,10 @@ class VillageAnswerQuestionServiceTest {
     void testGroupAnswersByQuestion() {
         Village village1 = new Village();
         village1.setId(1L);
-        VillageAnswerQuestion answerQuestion1 = new VillageAnswerQuestion(1L, village1, new Question(1L, "Question 1"), "Answer 1");
-        VillageAnswerQuestion answerQuestion2 = new VillageAnswerQuestion(2L, village1, new Question(1L,"Question 1"), "Answer 2");
-        VillageAnswerQuestion answerQuestion3 = new VillageAnswerQuestion(3L, village1, new Question(2L,"Question 2"), "Answer 3");
-        VillageAnswerQuestion answerQuestion4 = new VillageAnswerQuestion(4L, village1, new Question(2L,"Question 2"), "Answer 4");
+        VillageAnswerQuestion answerQuestion1 = new VillageAnswerQuestion(1L, village1, new Question(1L, "Question 1"), "Answer 1", true, LocalDateTime.now());
+        VillageAnswerQuestion answerQuestion2 = new VillageAnswerQuestion(2L, village1, new Question(1L,"Question 1"), "Answer 2", true, LocalDateTime.now());
+        VillageAnswerQuestion answerQuestion3 = new VillageAnswerQuestion(3L, village1, new Question(2L,"Question 2"), "Answer 3", true, LocalDateTime.now());
+        VillageAnswerQuestion answerQuestion4 = new VillageAnswerQuestion(4L, village1, new Question(2L,"Question 2"), "Answer 4", true, LocalDateTime.now());
 
         List<VillageAnswerQuestion> villageAnswerQuestions = new ArrayList<>();
         villageAnswerQuestions.add(answerQuestion1);
