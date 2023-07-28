@@ -68,6 +68,7 @@ public class EthnicityVillageService {
         Ethnicity ethnicity = ethnicityService.checkEthnicity(ethnicityVillageDTO.getEthnicityId());
         ethnicityVillage.setEthnicity(ethnicity);
 
+        ethnicityVillage.setVillageStatus(ethnicityVillageDTO.getStatus());
         ethnicityVillageRepository.save(ethnicityVillage);
         return ethnicityVillageDTO;
     }

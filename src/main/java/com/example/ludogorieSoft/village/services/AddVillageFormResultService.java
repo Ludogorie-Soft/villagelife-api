@@ -82,6 +82,7 @@ public class AddVillageFormResultService {
         }catch (Exception e){
             villageGroundCategoryDTO.setVillageId(villageId);
             villageGroundCategoryDTO.setGroundCategoryId(groundCategoryDTO.getId());
+            villageGroundCategoryDTO.setStatus(false);
             villageGroundCategoryService.createVillageGroundCategoryDTO(villageGroundCategoryDTO);
         }
     }

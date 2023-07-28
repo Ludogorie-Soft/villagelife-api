@@ -59,6 +59,7 @@ public class VillageLivingConditionService {
         villageLivingConditions.setLivingCondition(livingCondition);
 
         villageLivingConditions.setConsents(villageLivingConditionsDTO.getConsents());
+        villageLivingConditions.setVillageStatus(villageLivingConditionsDTO.getStatus());
         villageLivingConditionRepository.save(villageLivingConditions);
         return toDTO(villageLivingConditions);
     }

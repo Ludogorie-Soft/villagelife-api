@@ -49,6 +49,7 @@ public class VillagePopulationAssertionService {
         villagePopulationAssertion.setPopulatedAssertionID(populatedAssertion);
 
         villagePopulationAssertion.setAnswer(villagePopulationAssertionDTO.getAnswer());
+        villagePopulationAssertion.setVillageStatus(villagePopulationAssertionDTO.getStatus());
         villagePopulationAssertionRepository.save(villagePopulationAssertion);
         return toDTO(villagePopulationAssertion);
     }

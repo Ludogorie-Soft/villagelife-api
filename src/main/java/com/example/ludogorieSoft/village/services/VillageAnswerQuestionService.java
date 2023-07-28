@@ -49,6 +49,7 @@ public class VillageAnswerQuestionService {
         villageAnswerQuestion.setQuestion(question);
 
         villageAnswerQuestion.setAnswer(villageAnswerQuestionDTO.getAnswer());
+        villageAnswerQuestion.setVillageStatus(villageAnswerQuestionDTO.getStatus());
         villageAnswerQuestionRepository.save(villageAnswerQuestion);
         return toDTO(villageAnswerQuestion);
     }

@@ -72,6 +72,7 @@ public class ObjectVillageService {
         objectVillage.setObject(objectAroundVillage);
 
         objectVillage.setDistance(objectVillageDTO.getDistance());
+        objectVillage.setVillageStatus(objectVillageDTO.getStatus());
         objectVillageRepository.save(objectVillage);
         return objectVillageDTO;
     }
