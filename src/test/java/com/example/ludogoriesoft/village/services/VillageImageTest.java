@@ -17,11 +17,7 @@ class VillageImageTest {
         String imageName = "image.jpg";
         boolean status = true;
 
-<<<<<<< HEAD
         VillageImage villageImage = new VillageImage(id, village, imageName,true,now());
-=======
-        VillageImage villageImage = new VillageImage(id, village, imageName, status,null);
->>>>>>> 6bdbc72 (add migrations and new fields, and fix some tests)
 
         Assertions.assertEquals(id, villageImage.getId());
         Assertions.assertEquals(village, villageImage.getVillage());

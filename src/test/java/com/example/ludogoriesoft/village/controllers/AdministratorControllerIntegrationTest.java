@@ -151,7 +151,7 @@ class AdministratorControllerIntegrationTest {
         villageResponse2.setId(2L);
         villageResponse2.setName("village2");
         List<VillageResponse> villageResponses = Arrays.asList(villageResponse1, villageResponse2);
-        when(administratorService.getAllVillagesWithPopulation()).thenReturn(villageResponses);
+        when(villageService.getAllVillagesWithAdmin()).thenReturn(villageResponses);
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/admins/village")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -160,7 +160,7 @@ class AdministratorControllerIntegrationTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(2L))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].name").value("village2"));
 
-        verify(administratorService, times(1)).getAllVillagesWithPopulation();
+        verify(villageService, times(1)).getAllVillagesWithAdmin();
     }
 
     @Test

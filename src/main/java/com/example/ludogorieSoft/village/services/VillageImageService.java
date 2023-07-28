@@ -161,5 +161,4 @@ public class VillageImageService {
         return villageDTOsWithImages;
     }
 
-
 }

@@ -118,7 +118,7 @@ class AdministratorControllerTest {
         villageResponse2.setId(3L);
         List<VillageResponse> villages = Arrays.asList(villageResponse1,villageResponse2);
 
-        when(administratorService.getAllVillagesWithPopulation()).thenReturn(villages);
+        when(villageService.getAllVillagesWithAdmin()).thenReturn(villages);
 
         List<VillageResponse> response = administratorController.getAllVillages();
 

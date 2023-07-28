@@ -404,5 +404,13 @@ public class VillageService {
                 .toList();
     }
 
-
+    public List<VillageDTO> getVillagesByStatus(boolean status) {
+        List<Village> villagesWithStatus = villageRepository.findByStatus(status);
+        List<VillageDTO> villageDTOsWithStatus = new ArrayList<>();
+        for (Village village : villagesWithStatus) {
+            VillageDTO villageDTO = modelMapper.map(village, VillageDTO.class);
+            villageDTOsWithStatus.add(villageDTO);
+        }
+        return villageDTOsWithStatus;
+    }
 }

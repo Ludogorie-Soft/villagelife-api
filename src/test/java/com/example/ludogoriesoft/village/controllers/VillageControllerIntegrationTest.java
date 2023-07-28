@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import static java.time.LocalDateTime.now;
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
@@ -57,14 +58,14 @@ class VillageControllerIntegrationTest {
         villageDTO1.setId(1L);
         villageDTO1.setName("Village Name 1");
         villageDTO1.setPopulationDTO(new PopulationDTO());
-        villageDTO1.setDateUpload(new Date());
+        villageDTO1.setDateUpload(now());
         villageDTO1.setStatus(true);
 
         VillageDTO villageDTO2 = new VillageDTO();
         villageDTO2.setId(2L);
         villageDTO2.setName("Village Name 2");
         villageDTO2.setPopulationDTO(new PopulationDTO());
-        villageDTO2.setDateUpload(new Date());
+        villageDTO2.setDateUpload(now());
         villageDTO2.setStatus(true);
 
         List<VillageDTO> villageDTOList = Arrays.asList(villageDTO1, villageDTO2);
@@ -96,7 +97,7 @@ class VillageControllerIntegrationTest {
         villageDTO.setId(2L);
         villageDTO.setName("Village Name 2");
         villageDTO.setPopulationDTO(new PopulationDTO());
-        villageDTO.setDateUpload(new Date());
+        villageDTO.setDateUpload(now());
         villageDTO.setStatus(false);
 
         when(villageService.getVillageById(anyLong())).thenReturn(villageDTO);
@@ -121,7 +122,7 @@ class VillageControllerIntegrationTest {
         villageDTO.setId(3L);
         villageDTO.setName("Created Village Name");
         villageDTO.setPopulationDTO(new PopulationDTO());
-        villageDTO.setDateUpload(new Date());
+        villageDTO.setDateUpload(now());
         villageDTO.setStatus(true);
 
         when(villageService.createVillage(any(VillageDTO.class))).thenReturn(villageDTO);
@@ -147,7 +148,7 @@ class VillageControllerIntegrationTest {
         villageDTO.setId(1L);
         villageDTO.setName("Updated Village Name");
         villageDTO.setPopulationDTO(new PopulationDTO());
-        villageDTO.setDateUpload(new Date());
+        villageDTO.setDateUpload(now());
         villageDTO.setStatus(false);
 
         when(villageService.updateVillage(anyLong(), any(VillageDTO.class))).thenReturn(villageDTO);
