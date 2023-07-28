@@ -108,7 +108,7 @@ public class VillageAnswerQuestionService {
     }
 
     public List<AnswersQuestionResponse> getAnswersQuestionResponsesByVillageId(Long villageId) {
-        List<VillageAnswerQuestion> villageAnswerQuestions = villageAnswerQuestionRepository.findByVillageId(villageId);
+        List<VillageAnswerQuestion> villageAnswerQuestions = villageAnswerQuestionRepository.findByVillageIdAndVillageStatus(villageId, true);
         Map<String, List<String>> questionToAnswersMap = groupAnswersByQuestion(villageAnswerQuestions);
         return createAnswersQuestionResponses(questionToAnswersMap);
     }

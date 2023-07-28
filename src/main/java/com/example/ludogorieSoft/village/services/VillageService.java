@@ -59,7 +59,6 @@ public class VillageService {
         }
         village.setPopulation(modelMapper.map(villageDTO.getPopulationDTO(), Population.class));
         village.setPopulationCount(villageDTO.getPopulationCount());
-        village.setStatus(false);
         Village savedVillage = villageRepository.save(village);
         return modelMapper.map(savedVillage, VillageDTO.class);
     }

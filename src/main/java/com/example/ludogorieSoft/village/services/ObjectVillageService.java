@@ -106,7 +106,7 @@ public class ObjectVillageService {
         return objectVillageRepository.existsByVillageIdAndObjectIdAndDistance(villageId, objectId, distance);
     }
     public List<ObjectVillageDTO> getDistinctObjectVillagesByVillageId(Long villageId){
-        List<ObjectVillage> allObjectVillages = objectVillageRepository.findByVillageId(villageId);
+        List<ObjectVillage> allObjectVillages = objectVillageRepository.findByVillageIdAndVillageStatus(villageId, true);
         Set<String> uniqueCombinations = new HashSet<>();
         List<ObjectVillageDTO> filteredObjectVillages = new ArrayList<>();
 

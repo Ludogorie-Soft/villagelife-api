@@ -110,7 +110,7 @@ public class LivingConditionService {
         List<LivingConditionResponse> livingConditionResponses = new ArrayList<>();
 
         for (int i = 0; i < names.size(); i++) {
-            if (!villageLivingConditionRepository.existsByVillageIdAndLivingConditionId(villageId, livingConditionIds.get(i))){
+            if (!villageLivingConditionRepository.existsByVillageIdAndLivingConditionIdAndVillageStatus(villageId, livingConditionIds.get(i), true)){
                 continue;
             }
             LivingConditionResponse livingConditionResponse = new LivingConditionResponse();
@@ -147,11 +147,11 @@ public class LivingConditionService {
         int count = 0;
         double finalPercentage = 0;
         for (Long conditionId : conditionIds) {
-            if (!villageLivingConditionRepository.existsByVillageIdAndLivingConditionId(villageId, conditionId)){
+            if (!villageLivingConditionRepository.existsByVillageIdAndLivingConditionIdAndVillageStatus(villageId, conditionId, true)){
                 continue;
             }
             double percentage = 0;
-            List<VillageLivingConditions> villageLivingConditions = villageLivingConditionRepository.findByVillageIdAndLivingConditionId(villageId, conditionId);
+            List<VillageLivingConditions> villageLivingConditions = villageLivingConditionRepository.findByVillageIdAndLivingConditionIdAndVillageStatus(villageId, conditionId, true);
             for (VillageLivingConditions villageLivingCondition : villageLivingConditions) {
                 percentage += villageLivingCondition.getConsents().getValue();
             }
@@ -170,11 +170,11 @@ public class LivingConditionService {
         double finalPercentage = 0;
         double count = 0;
         for (ObjectAroundVillageDTO object: objectAroundVillageDTOS) {
-            if (!objectVillageRepository.existsByVillageIdAndObjectId(villageId, object.getId())){
+            if (!objectVillageRepository.existsByVillageIdAndObjectIdAndVillageStatus(villageId, object.getId(), true)){
                 continue;
             }
             double percentage = 0;
-            List<ObjectVillage> objectVillages = objectVillageRepository.findByVillageIdAndObjectId(villageId, object.getId());
+            List<ObjectVillage> objectVillages = objectVillageRepository.findByVillageIdAndObjectIdAndVillageStatus(villageId, object.getId(), true);
             for (ObjectVillage objectVillage : objectVillages) {
                 percentage += objectVillage.getDistance().getValue();
             }
@@ -207,7 +207,7 @@ public class LivingConditionService {
     }
 
     public double getPercentage(Long villageId, Long conditionId){
-        List<VillageLivingConditions> villageLivingConditions = villageLivingConditionRepository.findByVillageIdAndLivingConditionId(villageId, conditionId);
+        List<VillageLivingConditions> villageLivingConditions = villageLivingConditionRepository.findByVillageIdAndLivingConditionIdAndVillageStatus(villageId, conditionId, true);
         double percentage = 0;
         for (VillageLivingConditions villageLivingCondition : villageLivingConditions) {
             percentage += villageLivingCondition.getConsents().getValue();
