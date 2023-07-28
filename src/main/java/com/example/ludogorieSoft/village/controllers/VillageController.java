@@ -53,5 +53,11 @@ public class VillageController {
         villageService.deleteVillage(id);
         return ResponseEntity.noContent().build();
     }
+    @GetMapping("/update/{villageId}")
+    public ResponseEntity<VillageDTO> findVillageById(@PathVariable(name = "villageId") Long id) {
+        VillageDTO village = villageService.getVillageById(id);
+
+        return new ResponseEntity<>(village,HttpStatus.OK);
+    }
 
 }

@@ -50,7 +50,8 @@ public class AdministratorController {
 
     @GetMapping("village")
     public List<VillageResponse> getAllVillages() {
-        return administratorService.getAllVillagesWithPopulation();
+
+        return villageService.getAllVillagesWithAdmin();//administratorService.getAllVillagesWithPopulation()
     }
 
     @DeleteMapping("/village-delete/{villageId}")

@@ -98,7 +98,7 @@ public class AdministratorService {
     }
 
 
-    public List<VillageResponse> getAllVillagesWithPopulation() {
+    public List<VillageResponse> getAllVillagesWithPopulation() { //will be deleted
         List<Object[]> results = villageRepository.findAllVillagesWithPopulation();
 
         List<VillageResponse> villageResponses = new ArrayList<>();

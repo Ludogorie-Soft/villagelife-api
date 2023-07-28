@@ -5,12 +5,12 @@ import com.example.ludogorieSoft.village.dtos.LivingConditionDTO;
 import com.example.ludogorieSoft.village.dtos.ObjectAroundVillageDTO;
 import com.example.ludogorieSoft.village.dtos.PopulationDTO;
 import com.example.ludogorieSoft.village.dtos.VillageDTO;
+
+import com.example.ludogorieSoft.village.dtos.*;
+import com.example.ludogorieSoft.village.dtos.response.VillageResponse;
 import com.example.ludogorieSoft.village.enums.Children;
 
-import com.example.ludogorieSoft.village.model.ObjectVillage;
-import com.example.ludogorieSoft.village.model.Population;
-import com.example.ludogorieSoft.village.model.Village;
-import com.example.ludogorieSoft.village.model.VillageLivingConditions;
+import com.example.ludogorieSoft.village.model.*;
 import com.example.ludogorieSoft.village.repositories.VillageRepository;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import lombok.AllArgsConstructor;
@@ -39,6 +39,9 @@ public class VillageService {
     public VillageDTO villageToVillageDTO(Village village) {
         return modelMapper.map(village, VillageDTO.class);
     }
+    public VillageResponse villageToVillageResponse(Village village){
+        return modelMapper.map(village, VillageResponse.class);
+    }
 
     public List<VillageDTO> getAllVillages() {
         List<Village> villages = villageRepository.findAll();
@@ -46,7 +49,26 @@ public class VillageService {
                 .map(this::villageToVillageDTO)
                 .toList();
     }
+    public List<VillageResponse> getAllVillagesWithAdmin() {
+        List<Village> allVillages = villageRepository.findAll();
+        List<VillageResponse> villageResponses = new ArrayList<>();
 
+        for (Village village : allVillages) {
+            VillageResponse response = villageToVillageResponse(village);
+
+            if (village.getAdmin() != null) {
+                response.setAdmin(village.getAdmin());
+                response.setDateApproved(village.getDateApproved());
+            } else {
+                response.setAdmin(null);
+                response.setDateApproved(null);
+            }
+
+            villageResponses.add(response);
+        }
+
+        return villageResponses;
+    }
 
     public VillageDTO getVillageById(Long id) {
         Optional<Village> optionalVillage = villageRepository.findById(id);
@@ -85,7 +107,6 @@ public class VillageService {
 
 
         public VillageDTO updateVillageStatus(Long id, VillageDTO villageDTO) { // approve village status and set admin and date approved
-    public VillageDTO updateVillage(Long id, VillageDTO villageDTO) {
         Optional<Village> optionalVillage = villageRepository.findById(id);
         if (optionalVillage.isPresent()) {
             Village village = optionalVillage.get();
@@ -372,6 +393,106 @@ public class VillageService {
         return populationDTO;
     }
 
+    protected List<VillageDTO> villageToVillageDTOWithoutObject(List<Village> villages) {
+        List<VillageDTO> villageDTOs = new ArrayList<>();
 
+        for (Village village : villages) {
+            VillageDTO villageDTO = new VillageDTO();
+            villageDTO.setId(village.getId());
+            villageDTO.setName(village.getName());
+            villageDTO.setRegion(String.valueOf(village.getRegion().getRegionName()));
 
+            villageDTO.setLivingConditions(convertToLivingConditionDTOList(village.getVillageLivingConditions()));
+            villageDTO.setPopulationDTO(convertToPopulationDTO(village.getPopulation().getChildren().getEnumValue()));
+
+            villageDTOs.add(villageDTO);
+        }
+
+        return villageDTOs;
+    }
+    protected List<VillageDTO> villageToVillageDTOWithoutLivingCondition(List<Village> villages) {
+        List<VillageDTO> villageDTOs = new ArrayList<>();
+
+        for (Village village : villages) {
+            VillageDTO villageDTO = new VillageDTO();
+            villageDTO.setId(village.getId());
+            villageDTO.setName(village.getName());
+            villageDTO.setRegion(String.valueOf(village.getRegion().getRegionName()));
+
+            villageDTO.setObject(convertToObjectAroundVillageDTOList(village.getObjectVillages()));
+            villageDTO.setPopulationDTO(convertToPopulationDTO(village.getPopulation().getChildren().getEnumValue()));
+
+            villageDTOs.add(villageDTO);
+        }
+
+        return villageDTOs;
+    }
+
+    protected List<VillageDTO> villageToVillageDTOChildren(List<Village> villages) {
+        List<VillageDTO> villageDTOs = new ArrayList<>();
+
+        for (Village village : villages) {
+            VillageDTO villageDTO = new VillageDTO();
+            villageDTO.setId(village.getId());
+            villageDTO.setName(village.getName());
+            villageDTO.setRegion(String.valueOf(village.getRegion().getRegionName()));
+
+            villageDTO.setPopulationDTO(convertToPopulationDTO(village.getPopulation().getChildren().getEnumValue()));
+
+            villageDTOs.add(villageDTO);
+        }
+
+        return villageDTOs;
+    }
+
+    protected List<VillageDTO> villageToVillageDTOWithoutChildren(List<Village> villages) {
+        List<VillageDTO> villageDTOs = new ArrayList<>();
+
+        for (Village village : villages) {
+            VillageDTO villageDTO = new VillageDTO();
+            villageDTO.setId(village.getId());
+            villageDTO.setName(village.getName());
+            villageDTO.setRegion(String.valueOf(village.getRegion().getRegionName()));
+
+            villageDTO.setObject(convertToObjectAroundVillageDTOList(village.getObjectVillages()));
+            villageDTO.setLivingConditions(convertToLivingConditionDTOList(village.getVillageLivingConditions()));
+
+            villageDTOs.add(villageDTO);
+        }
+
+        return villageDTOs;
+    }
+    protected List<VillageDTO> villageToVillageDTOObject(List<Village> villages) {
+        List<VillageDTO> villageDTOs = new ArrayList<>();
+
+        for (Village village : villages) {
+            VillageDTO villageDTO = new VillageDTO();
+            villageDTO.setId(village.getId());
+            villageDTO.setName(village.getName());
+            villageDTO.setRegion(String.valueOf(village.getRegion().getRegionName()));
+
+            villageDTO.setObject(convertToObjectAroundVillageDTOList(village.getObjectVillages()));
+
+            villageDTOs.add(villageDTO);
+        }
+
+        return villageDTOs;
+    }
+
+    protected List<VillageDTO> villageToVillageDTOLivingCondition(List<Village> villages) {
+        List<VillageDTO> villageDTOs = new ArrayList<>();
+
+        for (Village village : villages) {
+            VillageDTO villageDTO = new VillageDTO();
+            villageDTO.setId(village.getId());
+            villageDTO.setName(village.getName());
+            villageDTO.setRegion(String.valueOf(village.getRegion().getRegionName()));
+
+            villageDTO.setLivingConditions(convertToLivingConditionDTOList(village.getVillageLivingConditions()));
+
+            villageDTOs.add(villageDTO);
+        }
+
+        return villageDTOs;
+    }
 }
