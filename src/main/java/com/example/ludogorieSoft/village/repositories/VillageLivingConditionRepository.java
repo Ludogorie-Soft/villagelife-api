@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface VillageLivingConditionRepository extends JpaRepository<VillageLivingConditions, Long> {
-    List<VillageLivingConditions> findByVillageIdAndLivingConditionId(Long villageId, Long livingConditionId);
-    boolean existsByVillageIdAndLivingConditionId(Long villageId, Long livingConditionId);
+    List<VillageLivingConditions> findByVillageIdAndLivingConditionIdAndVillageStatus(Long villageId, Long livingConditionId, boolean villageStatus);
+    boolean existsByVillageIdAndLivingConditionIdAndVillageStatus(Long villageId, Long livingConditionId, boolean villageStatus);
 }

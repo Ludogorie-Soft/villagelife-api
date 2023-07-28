@@ -8,8 +8,9 @@ import java.util.List;
 
 public interface ObjectVillageRepository extends JpaRepository<ObjectVillage,Long> {
     boolean existsByVillageIdAndObjectIdAndDistance(Long villageId, Long objectId, Distance distance);
-    boolean existsByVillageIdAndObjectId(Long villageId, Long objectId);
-    List<ObjectVillage> findByVillageIdAndObjectId(Long villageId, Long objectId);
+    boolean existsByVillageIdAndObjectIdAndVillageStatus(Long villageId, Long objectId, boolean villageStatus);
+    List<ObjectVillage> findByVillageIdAndObjectIdAndVillageStatus(Long villageId, Long objectId, boolean villageStatus);
     List<ObjectVillage> findByVillageId(Long villageId);
+    List<ObjectVillage> findByVillageIdAndVillageStatus(Long villageId, boolean villageStatus);
 
 }

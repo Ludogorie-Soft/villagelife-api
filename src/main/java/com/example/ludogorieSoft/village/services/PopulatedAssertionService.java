@@ -104,7 +104,7 @@ public class PopulatedAssertionService {
             PopulationAssertionResponse populationAssertionResponse = new PopulationAssertionResponse();
             populationAssertionResponse.setPopulationAssertionName(getPopulatedAssertionById(populatedAssertionDTO.getId()).getPopulatedAssertionName());
 
-            List<VillagePopulationAssertion> villagePopulationAssertions = villagePopulationAssertionRepository.findByVillageIdAndPopulatedAssertionIDId(villageId, populatedAssertionDTO.getId());
+            List<VillagePopulationAssertion> villagePopulationAssertions = villagePopulationAssertionRepository.findByVillageIdAndPopulatedAssertionIDIdAndVillageStatus(villageId, populatedAssertionDTO.getId(), true);
             double percentage = 0;
             for (VillagePopulationAssertion villagePopulationAssertion : villagePopulationAssertions) {
                 percentage += villagePopulationAssertion.getAnswer().getValue();

@@ -105,7 +105,7 @@ public class VillageImageService {
     }
     public List<String> getAllImagesForVillage(Long villageId) {
         List<String> base64Images = new ArrayList<>();
-        List<VillageImage> villageImages = villageImageRepository.findByVillageId(villageId);
+        List<VillageImage> villageImages = villageImageRepository.findByVillageIdAndVillageStatus(villageId, true);
         if (villageImages.isEmpty()) {
             base64Images.add(null);
         } else {

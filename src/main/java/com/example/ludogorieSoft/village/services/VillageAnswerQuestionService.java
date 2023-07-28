@@ -49,6 +49,8 @@ public class VillageAnswerQuestionService {
         villageAnswerQuestion.setQuestion(question);
 
         villageAnswerQuestion.setAnswer(villageAnswerQuestionDTO.getAnswer());
+        villageAnswerQuestion.setVillageStatus(villageAnswerQuestionDTO.getStatus());
+        villageAnswerQuestion.setDateUpload(villageAnswerQuestionDTO.getDateUpload());
         villageAnswerQuestionRepository.save(villageAnswerQuestion);
         return toDTO(villageAnswerQuestion);
     }
@@ -106,7 +108,7 @@ public class VillageAnswerQuestionService {
     }
 
     public List<AnswersQuestionResponse> getAnswersQuestionResponsesByVillageId(Long villageId) {
-        List<VillageAnswerQuestion> villageAnswerQuestions = villageAnswerQuestionRepository.findByVillageId(villageId);
+        List<VillageAnswerQuestion> villageAnswerQuestions = villageAnswerQuestionRepository.findByVillageIdAndVillageStatus(villageId, true);
         Map<String, List<String>> questionToAnswersMap = groupAnswersByQuestion(villageAnswerQuestions);
         return createAnswersQuestionResponses(questionToAnswersMap);
     }

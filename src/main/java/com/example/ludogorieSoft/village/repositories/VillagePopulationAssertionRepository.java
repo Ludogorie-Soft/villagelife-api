@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface VillagePopulationAssertionRepository extends JpaRepository<VillagePopulationAssertion, Long>{
-    List<VillagePopulationAssertion> findByVillageIdAndPopulatedAssertionIDId(Long villageId, Long populatedAssertionId);
+    List<VillagePopulationAssertion> findByVillageIdAndPopulatedAssertionIDIdAndVillageStatus(Long villageId, Long populatedAssertionId, Boolean villageStatus);
 }

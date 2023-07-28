@@ -8,4 +8,5 @@ import java.util.List;
 public interface VillageAnswerQuestionRepository extends JpaRepository<VillageAnswerQuestion, Long> {
     boolean existsByVillageIdAndQuestionIdAndAnswer(Long villageId, Long questionId, String answer);
     List<VillageAnswerQuestion> findByVillageId(Long villageId);
+    List<VillageAnswerQuestion> findByVillageIdAndVillageStatus(Long villageId, boolean villageStatus);
 }

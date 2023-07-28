@@ -451,7 +451,7 @@ class VillageAnswerQuestionServiceTest {
         villageAnswerQuestions.add(answerQuestion2);
         villageAnswerQuestions.add(answerQuestion3);
 
-        when(villageAnswerQuestionRepository.findByVillageId(villageId)).thenReturn(villageAnswerQuestions);
+        when(villageAnswerQuestionRepository.findByVillageIdAndVillageStatus(villageId, true)).thenReturn(villageAnswerQuestions);
 
         List<AnswersQuestionResponse> result = villageAnswerQuestionService.getAnswersQuestionResponsesByVillageId(villageId);
 
