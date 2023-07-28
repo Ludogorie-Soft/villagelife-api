@@ -1,6 +1,7 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.*;
+import com.example.ludogorieSoft.village.dtos.response.VillageResponse;
 import com.example.ludogorieSoft.village.enums.Children;
 import com.example.ludogorieSoft.village.enums.Foreigners;
 import com.example.ludogorieSoft.village.enums.NumberOfPopulation;
@@ -16,20 +17,24 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
+import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import static java.time.LocalDateTime.now;
 import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 
 class VillageServiceTest {
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
+//    @BeforeEach
+//    public void setUp() {
+//        MockitoAnnotations.openMocks(this);
+//    }
 
     @InjectMocks
     private VillageService villageService;
@@ -42,7 +47,10 @@ class VillageServiceTest {
     @Mock
     private AuthService authService;
 
-
+    @BeforeEach
+    public void setup() {
+        MockitoAnnotations.openMocks(this);
+    }
     @Test
     void convertToObjectAroundVillageDTOList_ShouldConvertObjectVillagesToObjectAroundVillageDTOList() {
         ObjectAroundVillage objectAroundVillage = new ObjectAroundVillage(1L, "TYPE");
@@ -61,12 +69,12 @@ class VillageServiceTest {
 
         List<ObjectAroundVillageDTO> result = villageService.convertToObjectAroundVillageDTOList(objectVillages);
 
-        Assertions.assertEquals(objectVillages.size(), result.size());
+        assertEquals(objectVillages.size(), result.size());
         for (int i = 0; i < result.size(); i++) {
             ObjectVillage ov = objectVillages.get(i);
             ObjectAroundVillageDTO dto = result.get(i);
-            Assertions.assertEquals(ov.getObject().getId(), dto.getId());
-            Assertions.assertEquals(ov.getObject().getType(), dto.getType());
+            assertEquals(ov.getObject().getId(), dto.getId());
+            assertEquals(ov.getObject().getType(), dto.getType());
         }
     }
 
@@ -92,12 +100,12 @@ class VillageServiceTest {
 
         List<LivingConditionDTO> result = villageService.convertToLivingConditionDTOList(villageLivingConditionsList);
 
-        Assertions.assertEquals(villageLivingConditionsList.size(), result.size());
+        assertEquals(villageLivingConditionsList.size(), result.size());
         for (int i = 0; i < result.size(); i++) {
             VillageLivingConditions vl = villageLivingConditionsList.get(i);
             LivingConditionDTO dto = result.get(i);
-            Assertions.assertEquals(vl.getLivingCondition().getId(), dto.getId());
-            Assertions.assertEquals(vl.getLivingCondition().getLivingConditionName(), dto.getLivingConditionName());
+            assertEquals(vl.getLivingCondition().getId(), dto.getId());
+            assertEquals(vl.getLivingCondition().getLivingConditionName(), dto.getLivingConditionName());
         }
     }
 
@@ -106,7 +114,7 @@ class VillageServiceTest {
     void convertToPopulationDTO_ShouldConvertChildrenToPopulationDTO() {
         Children children = Children.BELOW_10;
         PopulationDTO result = villageService.convertToPopulationDTO(children);
-        Assertions.assertEquals(children, result.getChildren());
+        assertEquals(children, result.getChildren());
     }
 
     @Test
@@ -122,7 +130,7 @@ class VillageServiceTest {
 
         VillageDTO villageDTO = villageService.villageToVillageDTO(village);
 
-        Assertions.assertEquals(village.getId(), villageDTO.getId());
+        assertEquals(village.getId(), villageDTO.getId());
     }
 
     @Test
@@ -137,7 +145,7 @@ class VillageServiceTest {
 
         List<VillageDTO> villageDTOs = villageService.getAllVillages();
 
-        Assertions.assertEquals(villages.size(), villageDTOs.size());
+        assertEquals(villages.size(), villageDTOs.size());
 
         verify(villageRepository, times(1)).findAll();
     }
@@ -159,7 +167,7 @@ class VillageServiceTest {
 
         VillageDTO villageDTO = villageService.getVillageById(villageId);
 
-        Assertions.assertEquals(village.getId(), villageDTO.getId());
+        assertEquals(village.getId(), villageDTO.getId());
         verify(villageRepository, times(1)).findById(villageId);
 
 
@@ -209,10 +217,10 @@ class VillageServiceTest {
         verify(modelMapper, times(1)).map(existingVillage, VillageDTO.class);
         verify(regionService, times(0)).findRegionByName(regionName);
 
-        Assertions.assertEquals(savedVillageDTO.getId(), resultDTO.getId());
-        Assertions.assertEquals(savedVillageDTO.getName(), resultDTO.getName());
-        Assertions.assertEquals(savedVillageDTO.getPopulationDTO(), resultDTO.getPopulationDTO());
-        Assertions.assertNotNull(resultDTO);
+        assertEquals(savedVillageDTO.getId(), resultDTO.getId());
+        assertEquals(savedVillageDTO.getName(), resultDTO.getName());
+        assertEquals(savedVillageDTO.getPopulationDTO(), resultDTO.getPopulationDTO());
+        assertNotNull(resultDTO);
         Assertions.assertFalse(resultDTO.isStatus());
     }
 
@@ -251,10 +259,10 @@ class VillageServiceTest {
         verify(regionService, times(1)).findRegionByName(regionName);
         verify(regionService, times(1)).checkRegion(1L);
 
-        Assertions.assertEquals(savedVillageDTO.getId(), resultDTO.getId());
-        Assertions.assertEquals(savedVillageDTO.getName(), resultDTO.getName());
-        Assertions.assertEquals(savedVillageDTO.getPopulationDTO(), resultDTO.getPopulationDTO());
-        Assertions.assertNotNull(resultDTO);
+        assertEquals(savedVillageDTO.getId(), resultDTO.getId());
+        assertEquals(savedVillageDTO.getName(), resultDTO.getName());
+        assertEquals(savedVillageDTO.getPopulationDTO(), resultDTO.getPopulationDTO());
+        assertNotNull(resultDTO);
         Assertions.assertFalse(resultDTO.isStatus());
     }
     @Test
@@ -285,7 +293,7 @@ class VillageServiceTest {
 
         verify(villageRepository, times(1)).findById(villageId);
         verify(villageRepository, times(1)).save(existingVillage);
-        Assertions.assertEquals(expectedVillageDTO, result);
+        assertEquals(expectedVillageDTO, result);
     }
 
 
@@ -364,7 +372,7 @@ class VillageServiceTest {
         Village result = villageService.checkVillage(villageId);
 
         verify(villageRepository, times(1)).findById(villageId);
-        Assertions.assertEquals(existingVillage, result);
+        assertEquals(existingVillage, result);
     }
 
     @Test
@@ -398,8 +406,80 @@ class VillageServiceTest {
 
         Long createdVillageId = villageService.createVillageWhitNullValues();
 
-        Assertions.assertEquals(1L, createdVillageId);
+        assertEquals(1L, createdVillageId);
     }
 
+    @Test
+    void testGetAllVillagesWithAdmin() {
+        Administrator administrator = new Administrator();
+        administrator.setId(1L);
 
+        Village village1 = new Village();
+        village1.setId(1L);
+        village1.setName("name1");
+        village1.setStatus(false);
+        village1.setAdmin(administrator);
+
+        Village village2 = new Village();
+        village2.setId(2L);
+        village2.setName("name2");
+        village2.setStatus(false);
+
+        VillageResponse villageResponse1 = new VillageResponse();
+        villageResponse1.setId(1L);
+        villageResponse1.setName("name1");
+        villageResponse1.setStatus(false);
+        villageResponse1.setAdmin(administrator);
+
+        VillageResponse villageResponse2 = new VillageResponse();
+        villageResponse2.setId(2L);
+        villageResponse2.setName("name2");
+        villageResponse2.setStatus(false);
+        villageResponse2.setAdmin(administrator);
+
+        List<Village> mockVillages = new ArrayList<>();
+        mockVillages.add(village1);
+        mockVillages.add(village2);
+
+        when(villageRepository.findAll()).thenReturn(mockVillages);
+        when(modelMapper.map(any(Village.class), eq(VillageResponse.class)))
+                .thenReturn(villageResponse1)
+                .thenReturn(villageResponse2);
+
+        List<VillageResponse> result = villageService.getAllVillagesWithAdmin();
+
+        assertEquals(mockVillages.size(), result.size());
+
+        VillageResponse response1 = result.get(0);
+
+        assertEquals(mockVillages.get(0).getId(), response1.getId());
+        assertEquals(mockVillages.get(0).getName(), response1.getName());
+        assertNotNull(response1.getAdmin());
+
+        VillageResponse response2 = result.get(1);
+
+        assertEquals(mockVillages.get(1).getId(), response2.getId());
+        assertEquals(mockVillages.get(1).getName(), response2.getName());
+        assertNull(response2.getAdmin());
+    }
+
+    @Test
+    void testVillageToVillageResponse() {
+        Village village = new Village();
+        village.setId(1L);
+        village.setName("Village1");
+
+        VillageResponse villageResponse = new VillageResponse();
+        villageResponse.setId(village.getId());
+        villageResponse.setName(village.getName());
+
+        when(modelMapper.map(village, VillageResponse.class)).thenReturn(villageResponse);
+
+        VillageResponse result = villageService.villageToVillageResponse(village);
+
+        verify(modelMapper).map(village, VillageResponse.class);
+
+        assertEquals(villageResponse.getId(), result.getId());
+        assertEquals(villageResponse.getName(), result.getName());
+    }
 }
