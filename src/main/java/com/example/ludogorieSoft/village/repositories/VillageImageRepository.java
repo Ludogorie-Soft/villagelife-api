@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface VillageImageRepository extends JpaRepository<VillageImage, Long> {
-    List<VillageImage> findByVillageId(Long villageId);
+    List<VillageImage> findByVillageIdAndVillageStatus(Long villageId, boolean villageStatus);
 }

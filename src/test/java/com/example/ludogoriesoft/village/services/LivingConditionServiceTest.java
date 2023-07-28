@@ -3,7 +3,6 @@ package com.example.ludogorieSoft.village.services;
 import com.example.ludogorieSoft.village.dtos.LandscapeDTO;
 import com.example.ludogorieSoft.village.dtos.LivingConditionDTO;
 import com.example.ludogorieSoft.village.dtos.ObjectAroundVillageDTO;
-import com.example.ludogorieSoft.village.dtos.response.LivingConditionResponse;
 import com.example.ludogorieSoft.village.enums.Consents;
 import com.example.ludogorieSoft.village.enums.Distance;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
@@ -302,7 +301,7 @@ class LivingConditionServiceTest {
         villageLivingConditions.add(new VillageLivingConditions(1L, village, livingCondition, Consents.COMPLETELY_AGREED, true, LocalDateTime.now()));
         villageLivingConditions.add(new VillageLivingConditions(1L, village, livingCondition, Consents.DISAGREE, true, LocalDateTime.now()));
         villageLivingConditions.add(new VillageLivingConditions(1L, village, livingCondition, Consents.RATHER_DISAGREE, true, LocalDateTime.now()));
-        when(villageLivingConditionRepository.findByVillageIdAndLivingConditionId(villageId, conditionId)).thenReturn(villageLivingConditions);
+        when(villageLivingConditionRepository.findByVillageIdAndLivingConditionIdAndVillageStatus(villageId, conditionId, true)).thenReturn(villageLivingConditions);
 
         double expectedPercentage = (100 + 20 + 40) / 3.0;
         double result = livingConditionService.getPercentage(villageId, conditionId);
@@ -324,7 +323,7 @@ class LivingConditionServiceTest {
         villageLivingConditions.add(villageLivingCondition1);
         villageLivingConditions.add(villageLivingCondition2);
 
-        when(villageLivingConditionRepository.findByVillageIdAndLivingConditionId(villageId, conditionId)).thenReturn(villageLivingConditions);
+        when(villageLivingConditionRepository.findByVillageIdAndLivingConditionIdAndVillageStatus(villageId, conditionId, true)).thenReturn(villageLivingConditions);
         double expectedPercentage = (40 + 60) / 2.0;
         double result = livingConditionService.getPercentage(villageId, conditionId);
         assertEquals(expectedPercentage, result, 0.0001);
@@ -335,7 +334,7 @@ class LivingConditionServiceTest {
         Long villageId = 3L;
         Long conditionId = 30L;
         List<VillageLivingConditions> mockData = new ArrayList<>();
-        when(villageLivingConditionRepository.findByVillageIdAndLivingConditionId(villageId, conditionId))
+        when(villageLivingConditionRepository.findByVillageIdAndLivingConditionIdAndVillageStatus(villageId, conditionId, true))
                 .thenReturn(mockData);
 
         double result = livingConditionsService.getPercentage(villageId, conditionId);
@@ -349,8 +348,8 @@ class LivingConditionServiceTest {
         );
         when(objectAroundVillageService.getAllObjectsAroundVillage()).thenReturn(objectAroundVillageDTOS);
 
-        when(objectVillageRepository.existsByVillageIdAndObjectId(100L, 1L)).thenReturn(true);
-        when(objectVillageRepository.existsByVillageIdAndObjectId(100L, 2L)).thenReturn(true);
+        when(objectVillageRepository.existsByVillageIdAndObjectIdAndVillageStatus(100L, 1L, true)).thenReturn(true);
+        when(objectVillageRepository.existsByVillageIdAndObjectIdAndVillageStatus(100L, 2L, true)).thenReturn(true);
 
         Village village = new Village();
         village.setId(100L);
@@ -366,8 +365,8 @@ class LivingConditionServiceTest {
                 new ObjectVillage(3L, village, objectAroundVillage2, Distance.ON_10_KM, true, LocalDateTime.now()),
                 new ObjectVillage(4L, village, objectAroundVillage2, Distance.OVER_50_KM, true, LocalDateTime.now())
         );
-        when(objectVillageRepository.findByVillageIdAndObjectId(100L, 1L)).thenReturn(objectVillages1);
-        when(objectVillageRepository.findByVillageIdAndObjectId(100L, 2L)).thenReturn(objectVillages2);
+        when(objectVillageRepository.findByVillageIdAndObjectIdAndVillageStatus(100L, 1L, true)).thenReturn(objectVillages1);
+        when(objectVillageRepository.findByVillageIdAndObjectIdAndVillageStatus(100L, 2L, true)).thenReturn(objectVillages2);
 
         double result = livingConditionService.getLivingConditionsForumPercentage(100L);
 
@@ -389,8 +388,8 @@ class LivingConditionServiceTest {
         );
         when(objectAroundVillageService.getAllObjectsAroundVillage()).thenReturn(objectAroundVillageDTOS);
 
-        when(objectVillageRepository.existsByVillageIdAndObjectId(100L, 1L)).thenReturn(false);
-        when(objectVillageRepository.existsByVillageIdAndObjectId(100L, 2L)).thenReturn(false);
+        when(objectVillageRepository.existsByVillageIdAndObjectIdAndVillageStatus(100L, 1L, true)).thenReturn(false);
+        when(objectVillageRepository.existsByVillageIdAndObjectIdAndVillageStatus(100L, 2L, true)).thenReturn(false);
 
         double result = livingConditionService.getLivingConditionsForumPercentage(100L);
 
@@ -398,7 +397,7 @@ class LivingConditionServiceTest {
     }
     @Test
     void testGetLivingConditionsMainPercentageWhenNoData() {
-        when(villageLivingConditionRepository.existsByVillageIdAndLivingConditionId(eq(200L), anyLong())).thenReturn(false);
+        when(villageLivingConditionRepository.existsByVillageIdAndLivingConditionIdAndVillageStatus(eq(200L), anyLong(), eq(true))).thenReturn(false);
         double result = livingConditionService.getLivingConditionsMainPercentage(200L);
         assertEquals(0.0, result, 0.01);
     }

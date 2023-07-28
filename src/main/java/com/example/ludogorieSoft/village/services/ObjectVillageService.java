@@ -74,6 +74,8 @@ public class ObjectVillageService {
         objectVillage.setObject(objectAroundVillage);
 
         objectVillage.setDistance(objectVillageDTO.getDistance());
+        objectVillage.setVillageStatus(objectVillageDTO.getStatus());
+        objectVillage.setDateUpload(objectVillageDTO.getDateUpload());
         objectVillageRepository.save(objectVillage);
         return objectVillageDTO;
     }
@@ -104,7 +106,7 @@ public class ObjectVillageService {
         return objectVillageRepository.existsByVillageIdAndObjectIdAndDistance(villageId, objectId, distance);
     }
     public List<ObjectVillageDTO> getDistinctObjectVillagesByVillageId(Long villageId){
-        List<ObjectVillage> allObjectVillages = objectVillageRepository.findByVillageId(villageId);
+        List<ObjectVillage> allObjectVillages = objectVillageRepository.findByVillageIdAndVillageStatus(villageId, true);
         Set<String> uniqueCombinations = new HashSet<>();
         List<ObjectVillageDTO> filteredObjectVillages = new ArrayList<>();
 

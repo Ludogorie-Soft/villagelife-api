@@ -67,6 +67,8 @@ public class EthnicityVillageService {
         Ethnicity ethnicity = ethnicityService.checkEthnicity(ethnicityVillageDTO.getEthnicityId());
         ethnicityVillage.setEthnicity(ethnicity);
 
+        ethnicityVillage.setVillageStatus(ethnicityVillageDTO.getStatus());
+        ethnicityVillage.setDateUpload(ethnicityVillageDTO.getDateUpload());
         ethnicityVillageRepository.save(ethnicityVillage);
         return ethnicityVillageDTO;
     }
@@ -97,7 +99,7 @@ public class EthnicityVillageService {
         List<EthnicityVillage> ethnicityVillages = ethnicityVillageRepository.findAll();
         List<EthnicityVillageDTO> filteredList = new ArrayList<>();
         for (EthnicityVillage ethnicityVillage : ethnicityVillages) {
-            if (ethnicityVillage.getVillage().getId().equals(villageId) && !ethnicityVillage.getEthnicity().getEthnicityName().equals("няма малцинствени групи")) {
+            if (ethnicityVillage.getVillage().getId().equals(villageId) && !ethnicityVillage.getEthnicity().getEthnicityName().equals("няма малцинствени групи") && Boolean.TRUE.equals(ethnicityVillage.getVillageStatus())) {
                 filteredList.add(ethnicityVillageToEthnicityVillageDTO(ethnicityVillage));
             }
         }

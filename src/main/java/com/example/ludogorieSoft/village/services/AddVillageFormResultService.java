@@ -6,6 +6,7 @@ import com.example.ludogorieSoft.village.model.Population;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static java.time.LocalDateTime.now;
@@ -82,6 +83,8 @@ public class AddVillageFormResultService {
         }catch (Exception e){
             villageGroundCategoryDTO.setVillageId(villageId);
             villageGroundCategoryDTO.setGroundCategoryId(groundCategoryDTO.getId());
+            villageGroundCategoryDTO.setStatus(false);
+            villageGroundCategoryDTO.setDateUpload(LocalDateTime.now());
             villageGroundCategoryService.createVillageGroundCategoryDTO(villageGroundCategoryDTO);
         }
     }
