@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 
@@ -40,6 +39,8 @@ class VillageServiceTest {
     private ModelMapper modelMapper;
     @Mock
     private RegionService regionService;
+    @Mock
+    private AuthService authService;
 
 
     @Test
@@ -56,7 +57,7 @@ class VillageServiceTest {
         ov2.setObject(objectAroundVillage);
         objectVillages.add(ov2);
 
-        VillageService villageService = new VillageService(villageRepository, modelMapper, regionService);
+        VillageService villageService = new VillageService(villageRepository, modelMapper, regionService,authService);
 
         List<ObjectAroundVillageDTO> result = villageService.convertToObjectAroundVillageDTOList(objectVillages);
 
@@ -256,16 +257,15 @@ class VillageServiceTest {
         Assertions.assertNotNull(resultDTO);
         Assertions.assertFalse(resultDTO.isStatus());
     }
-
     @Test
-    void testUpdateVillageWithExistingVillageId() {
+    void testUpdateVillageWithExistingVillageId() {//me
         Long villageId = 123L;
         Village existingVillage = new Village();
         Region region = new Region(1L, "testRegion");
         RegionDTO regionDTO = new RegionDTO(region.getId(), region.getRegionName());
         existingVillage.setId(villageId);
         existingVillage.setName("Existing Village");
-
+        existingVillage.setStatus(false);
 
         VillageDTO updatedVillage = new VillageDTO();
         updatedVillage.setName("Updated Village");
@@ -288,6 +288,33 @@ class VillageServiceTest {
         Assertions.assertEquals(expectedVillageDTO, result);
     }
 
+
+    @Test
+    void testUpdateVillageWithApprovedVillage() {//me
+        Long id = 1L;
+        Region region = new Region(1L, "testRegion");
+        RegionDTO regionDTO = new RegionDTO(region.getId(), region.getRegionName());
+
+        VillageDTO villageDTO = new VillageDTO();
+        villageDTO.setName("Test Village");
+        villageDTO.setRegion(regionDTO.getRegionName());
+        villageDTO.setStatus(true);
+
+        Village village = new Village();
+        village.setName("Test Village");
+        village.setPopulationCount(1000);
+        village.setStatus(true); // Set the status as approved
+        when(villageRepository.findById(id)).thenReturn(Optional.of(village));
+        when(regionService.findRegionByName(region.getRegionName())).thenReturn(regionDTO);
+        when(regionService.checkRegion(region.getId())).thenReturn(region);
+
+        AdministratorDTO administratorDTO = new AdministratorDTO();
+        administratorDTO.setId(1L);
+        administratorDTO.setUsername("admin");
+        when(authService.getAdministratorInfo()).thenReturn(administratorDTO);
+
+        assertThrows(ApiRequestException.class, () -> villageService.updateVillageStatus(id, villageDTO));
+    }
     @Test
     void testUpdateVillageExceptionCase() {
 

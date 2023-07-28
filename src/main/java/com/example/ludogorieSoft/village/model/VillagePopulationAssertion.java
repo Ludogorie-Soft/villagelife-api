@@ -27,9 +27,4 @@ public class VillagePopulationAssertion {
     private Consents answer;
     private Boolean villageStatus;
     private LocalDateTime dateUpload;
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 6bdbc72 (add migrations and new fields, and fix some tests)
 }

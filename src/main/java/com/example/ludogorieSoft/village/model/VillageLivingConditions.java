@@ -29,7 +29,7 @@ public class VillageLivingConditions {
     private Boolean villageStatus;
     private LocalDateTime dateUpload;
 
-    private Boolean villageStatus;
+    private Boolean status;
     private LocalDateTime dateUpload;
 
 }

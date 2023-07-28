@@ -84,11 +84,7 @@ public class VillageImageService {
     }
 
     public void createVillageImageDTO(Long villageId, String fileName) {
-<<<<<<< HEAD
         VillageImageDTO villageImageDTO = new VillageImageDTO(null, villageId, fileName,false,now());//added false for status column /ddd
-=======
-        VillageImageDTO villageImageDTO = new VillageImageDTO(null, villageId, fileName,false,now());
->>>>>>> 6bdbc72 (add migrations and new fields, and fix some tests)
         createVillageImageDTO(villageImageDTO);
     }
 
