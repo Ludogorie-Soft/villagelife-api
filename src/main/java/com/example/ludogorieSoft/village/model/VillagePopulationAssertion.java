@@ -4,6 +4,7 @@ import com.example.ludogorieSoft.village.enums.Consents;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -27,6 +28,7 @@ public class VillagePopulationAssertion {
     @Enumerated(EnumType.STRING)
     private Consents answer;
     private Boolean villageStatus;
+    @CreationTimestamp
     private LocalDateTime dateUpload;
 
 

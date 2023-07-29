@@ -1062,7 +1062,7 @@ class VillageServiceTests {
 
         List<VillageDTO> expectedVillageDTOs = new ArrayList<>();
         expectedVillageDTOs.add(new VillageDTO(1L, "Village1", "region", 100, new PopulationDTO(),
-                new Date(), true, new ArrayList<>(), new ArrayList<>(),
+                LocalDateTime.now(), true, new ArrayList<>(), new ArrayList<>(),
                 new ArrayList<>()));
 
         when(modelMapper.map(any(Village.class), eq(VillageDTO.class))).thenReturn(expectedVillageDTOs.get(0));

@@ -26,6 +26,7 @@ import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
@@ -62,14 +63,14 @@ class FilterControllerIntegrationTest {
         villageDTO1.setId(1L);
         villageDTO1.setName("Village Name 1");
         villageDTO1.setPopulationDTO(new PopulationDTO());
-        villageDTO1.setDateUpload(new Date());
+        villageDTO1.setDateUpload(LocalDateTime.now());
         villageDTO1.setStatus(true);
 
         VillageDTO villageDTO2 = new VillageDTO();
         villageDTO2.setId(2L);
         villageDTO2.setName("Village Name 2");
         villageDTO2.setPopulationDTO(new PopulationDTO());
-        villageDTO2.setDateUpload(new Date());
+        villageDTO2.setDateUpload(LocalDateTime.now());
         villageDTO2.setStatus(true);
 
         List<VillageDTO> villageDTOList = Arrays.asList(villageDTO1, villageDTO2);
@@ -94,14 +95,14 @@ class FilterControllerIntegrationTest {
         villageDTO1.setId(1L);
         villageDTO1.setName("Village Name 1");
         villageDTO1.setPopulationDTO(new PopulationDTO());
-        villageDTO1.setDateUpload(new Date());
+        villageDTO1.setDateUpload(LocalDateTime.now());
         villageDTO1.setStatus(true);
 
         VillageDTO villageDTO2 = new VillageDTO();
         villageDTO2.setId(2L);
         villageDTO2.setName("Village Name 2");
         villageDTO2.setPopulationDTO(new PopulationDTO());
-        villageDTO2.setDateUpload(new Date());
+        villageDTO2.setDateUpload(LocalDateTime.now());
         villageDTO2.setStatus(true);
 
         List<VillageDTO> villageDTOList = Arrays.asList(villageDTO1, villageDTO2);
@@ -132,14 +133,14 @@ class FilterControllerIntegrationTest {
         villageDTO1.setId(1L);
         villageDTO1.setName("Village Name 1");
         villageDTO1.setPopulationDTO(new PopulationDTO());
-        villageDTO1.setDateUpload(new Date());
+        villageDTO1.setDateUpload(LocalDateTime.now());
         villageDTO1.setStatus(true);
 
         VillageDTO villageDTO2 = new VillageDTO();
         villageDTO2.setId(2L);
         villageDTO2.setName("Village Name 2");
         villageDTO2.setPopulationDTO(new PopulationDTO());
-        villageDTO2.setDateUpload(new Date());
+        villageDTO2.setDateUpload(LocalDateTime.now());
         villageDTO2.setStatus(true);
 
         List<VillageDTO> villageDTOList = Arrays.asList(villageDTO1, villageDTO2);
@@ -170,14 +171,14 @@ class FilterControllerIntegrationTest {
         villageDTO1.setId(1L);
         villageDTO1.setName("Village Name 1");
         villageDTO1.setPopulationDTO(new PopulationDTO());
-        villageDTO1.setDateUpload(new Date());
+        villageDTO1.setDateUpload(LocalDateTime.now());
         villageDTO1.setStatus(true);
 
         VillageDTO villageDTO2 = new VillageDTO();
         villageDTO2.setId(2L);
         villageDTO2.setName("Village Name 2");
         villageDTO2.setPopulationDTO(new PopulationDTO());
-        villageDTO2.setDateUpload(new Date());
+        villageDTO2.setDateUpload(LocalDateTime.now());
         villageDTO2.setStatus(true);
 
         List<VillageDTO> villageDTOList = Arrays.asList(villageDTO1, villageDTO2);
@@ -211,14 +212,14 @@ class FilterControllerIntegrationTest {
         villageDTO1.setId(1L);
         villageDTO1.setName("Village Name 1");
         villageDTO1.setPopulationDTO(new PopulationDTO());
-        villageDTO1.setDateUpload(new Date());
+        villageDTO1.setDateUpload(LocalDateTime.now());
         villageDTO1.setStatus(true);
 
         VillageDTO villageDTO2 = new VillageDTO();
         villageDTO2.setId(2L);
         villageDTO2.setName("Village Name 2");
         villageDTO2.setPopulationDTO(new PopulationDTO());
-        villageDTO2.setDateUpload(new Date());
+        villageDTO2.setDateUpload(LocalDateTime.now());
         villageDTO2.setStatus(true);
 
         List<VillageDTO> villageDTOList = Arrays.asList(villageDTO1, villageDTO2);
@@ -255,14 +256,14 @@ class FilterControllerIntegrationTest {
         villageDTO1.setId(1L);
         villageDTO1.setName("Village Name 1");
         villageDTO1.setPopulationDTO(new PopulationDTO());
-        villageDTO1.setDateUpload(new Date());
+        villageDTO1.setDateUpload(LocalDateTime.now());
         villageDTO1.setStatus(true);
 
         VillageDTO villageDTO2 = new VillageDTO();
         villageDTO2.setId(2L);
         villageDTO2.setName("Village Name 2");
         villageDTO2.setPopulationDTO(new PopulationDTO());
-        villageDTO2.setDateUpload(new Date());
+        villageDTO2.setDateUpload(LocalDateTime.now());
         villageDTO2.setStatus(true);
 
         List<VillageDTO> villageDTOList = Arrays.asList(villageDTO1, villageDTO2);
@@ -295,14 +296,14 @@ class FilterControllerIntegrationTest {
         villageDTO1.setId(1L);
         villageDTO1.setName("Village Name 1");
         villageDTO1.setPopulationDTO(new PopulationDTO());
-        villageDTO1.setDateUpload(new Date());
+        villageDTO1.setDateUpload(LocalDateTime.now());
         villageDTO1.setStatus(true);
 
         VillageDTO villageDTO2 = new VillageDTO();
         villageDTO2.setId(2L);
         villageDTO2.setName("Village Name 2");
         villageDTO2.setPopulationDTO(new PopulationDTO());
-        villageDTO2.setDateUpload(new Date());
+        villageDTO2.setDateUpload(LocalDateTime.now());
         villageDTO2.setStatus(true);
 
         List<VillageDTO> villageDTOList = Arrays.asList(villageDTO1, villageDTO2);
@@ -336,14 +337,14 @@ class FilterControllerIntegrationTest {
         villageDTO1.setId(1L);
         villageDTO1.setName("Village Name 1");
         villageDTO1.setPopulationDTO(new PopulationDTO());
-        villageDTO1.setDateUpload(new Date());
+        villageDTO1.setDateUpload(LocalDateTime.now());
         villageDTO1.setStatus(true);
 
         VillageDTO villageDTO2 = new VillageDTO();
         villageDTO2.setId(2L);
         villageDTO2.setName("Village Name 2");
         villageDTO2.setPopulationDTO(new PopulationDTO());
-        villageDTO2.setDateUpload(new Date());
+        villageDTO2.setDateUpload(LocalDateTime.now());
         villageDTO2.setStatus(true);
 
         List<VillageDTO> villageDTOList = Arrays.asList(villageDTO1, villageDTO2);
@@ -376,14 +377,14 @@ class FilterControllerIntegrationTest {
         villageDTO1.setId(1L);
         villageDTO1.setName("Village Name 1");
         villageDTO1.setPopulationDTO(new PopulationDTO());
-        villageDTO1.setDateUpload(new Date());
+        villageDTO1.setDateUpload(LocalDateTime.now());
         villageDTO1.setStatus(true);
 
         VillageDTO villageDTO2 = new VillageDTO();
         villageDTO2.setId(2L);
         villageDTO2.setName("Village Name 2");
         villageDTO2.setPopulationDTO(new PopulationDTO());
-        villageDTO2.setDateUpload(new Date());
+        villageDTO2.setDateUpload(LocalDateTime.now());
         villageDTO2.setStatus(true);
 
         List<VillageDTO> villageDTOList = Arrays.asList(villageDTO1, villageDTO2);
@@ -414,14 +415,14 @@ class FilterControllerIntegrationTest {
         villageDTO1.setId(1L);
         villageDTO1.setName("Village Name 1");
         villageDTO1.setPopulationDTO(new PopulationDTO());
-        villageDTO1.setDateUpload(new Date());
+        villageDTO1.setDateUpload(LocalDateTime.now());
         villageDTO1.setStatus(true);
 
         VillageDTO villageDTO2 = new VillageDTO();
         villageDTO2.setId(2L);
         villageDTO2.setName("Village Name 2");
         villageDTO2.setPopulationDTO(new PopulationDTO());
-        villageDTO2.setDateUpload(new Date());
+        villageDTO2.setDateUpload(LocalDateTime.now());
         villageDTO2.setStatus(true);
 
         List<VillageDTO> villageDTOList = Arrays.asList(villageDTO1, villageDTO2);
@@ -452,14 +453,14 @@ class FilterControllerIntegrationTest {
         villageDTO1.setId(1L);
         villageDTO1.setName("Village Name 1");
         villageDTO1.setPopulationDTO(new PopulationDTO());
-        villageDTO1.setDateUpload(new Date());
+        villageDTO1.setDateUpload(LocalDateTime.now());
         villageDTO1.setStatus(true);
 
         VillageDTO villageDTO2 = new VillageDTO();
         villageDTO2.setId(2L);
         villageDTO2.setName("Village Name 2");
         villageDTO2.setPopulationDTO(new PopulationDTO());
-        villageDTO2.setDateUpload(new Date());
+        villageDTO2.setDateUpload(LocalDateTime.now());
         villageDTO2.setStatus(true);
 
         List<VillageDTO> villageDTOList = Arrays.asList(villageDTO1, villageDTO2);

@@ -3,6 +3,7 @@ package com.example.ludogorieSoft.village.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -24,5 +25,6 @@ public class VillageAnswerQuestion {
     private Question question;
     private String answer;
     private Boolean villageStatus;
+    @CreationTimestamp
     private LocalDateTime dateUpload;
 }

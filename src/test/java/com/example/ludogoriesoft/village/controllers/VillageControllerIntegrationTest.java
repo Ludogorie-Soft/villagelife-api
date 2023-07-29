@@ -3,7 +3,6 @@ package com.example.ludogorieSoft.village.controllers;
 import com.example.ludogorieSoft.village.dtos.PopulationDTO;
 import com.example.ludogorieSoft.village.dtos.VillageDTO;
 import com.example.ludogorieSoft.village.dtos.response.VillageInfo;
-import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.services.VillageInfoService;
 import com.example.ludogorieSoft.village.services.VillageService;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,6 +20,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
@@ -59,14 +59,14 @@ class VillageControllerIntegrationTest {
         villageDTO1.setId(1L);
         villageDTO1.setName("Village Name 1");
         villageDTO1.setPopulationDTO(new PopulationDTO());
-        villageDTO1.setDateUpload(new Date());
+        villageDTO1.setDateUpload(LocalDateTime.now());
         villageDTO1.setStatus(true);
 
         VillageDTO villageDTO2 = new VillageDTO();
         villageDTO2.setId(2L);
         villageDTO2.setName("Village Name 2");
         villageDTO2.setPopulationDTO(new PopulationDTO());
-        villageDTO2.setDateUpload(new Date());
+        villageDTO2.setDateUpload(LocalDateTime.now());
         villageDTO2.setStatus(true);
 
         List<VillageDTO> villageDTOList = Arrays.asList(villageDTO1, villageDTO2);
@@ -98,7 +98,7 @@ class VillageControllerIntegrationTest {
         villageDTO.setId(2L);
         villageDTO.setName("Village Name 2");
         villageDTO.setPopulationDTO(new PopulationDTO());
-        villageDTO.setDateUpload(new Date());
+        villageDTO.setDateUpload(LocalDateTime.now());
         villageDTO.setStatus(false);
 
         when(villageService.getVillageById(anyLong())).thenReturn(villageDTO);
@@ -123,7 +123,7 @@ class VillageControllerIntegrationTest {
         villageDTO.setId(3L);
         villageDTO.setName("Created Village Name");
         villageDTO.setPopulationDTO(new PopulationDTO());
-        villageDTO.setDateUpload(new Date());
+        villageDTO.setDateUpload(LocalDateTime.now());
         villageDTO.setStatus(true);
 
         when(villageService.createVillage(any(VillageDTO.class))).thenReturn(villageDTO);
@@ -149,7 +149,7 @@ class VillageControllerIntegrationTest {
         villageDTO.setId(1L);
         villageDTO.setName("Updated Village Name");
         villageDTO.setPopulationDTO(new PopulationDTO());
-        villageDTO.setDateUpload(new Date());
+        villageDTO.setDateUpload(LocalDateTime.now());
         villageDTO.setStatus(false);
 
         when(villageService.updateVillage(anyLong(), any(VillageDTO.class))).thenReturn(villageDTO);
@@ -212,11 +212,11 @@ class VillageControllerIntegrationTest {
         villageDTO.setId(2L);
         villageDTO.setName("Village Name 2");
         villageDTO.setPopulationDTO(new PopulationDTO());
-        villageDTO.setDateUpload(new Date());
+        villageDTO.setDateUpload(LocalDateTime.now());
         villageDTO.setStatus(false);
         VillageInfo villageInfo = new VillageInfo();
         villageInfo.setVillageDTO(villageDTO);
-        villageInfo.setEthnicities("няма малцинствени групи");
+        villageInfo.setEthnicities("РЅСЏРјР° РјР°Р»С†РёРЅСЃС‚РІРµРЅРё РіСЂСѓРїРё");
         villageInfo.setPopulationAssertionResponses(new ArrayList<>());
         villageInfo.setLivingConditionResponses(new ArrayList<>());
         villageInfo.setObjectVillageResponses(new ArrayList<>());
