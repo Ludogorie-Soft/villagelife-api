@@ -38,13 +38,7 @@ class InquiryServiceTest {
 
     @Test
     void testCreateInquiryWhenSuccessful() {
-        InquiryDTO inquiryDTO = new InquiryDTO();
-        inquiryDTO.setUserName("John Doe");
-        inquiryDTO.setEmail("johndoe@example.com");
-        inquiryDTO.setUserMessage("Hello, this is a test inquiry message.");
-        inquiryDTO.setMobile("1234567890");
-        inquiryDTO.setVillageId(1L);
-        inquiryDTO.setInquiryType(InquiryType.JOB_OPPORTUNITIES);
+        InquiryDTO inquiryDTO = new InquiryDTO(1L, "John Doe", "johndoe@example.com", "Hello, this is a test inquiry message.", "1234567890", 1L, InquiryType.JOB_OPPORTUNITIES);
 
         Village village = new Village();
         village.setId(1L);
