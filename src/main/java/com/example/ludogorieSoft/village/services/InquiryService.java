@@ -6,19 +6,14 @@ import com.example.ludogorieSoft.village.model.Inquiry;
 import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.repositories.InquiryRepository;
 import lombok.AllArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
 public class InquiryService {
     private final InquiryRepository inquiryRepository;
-    private final ModelMapper modelMapper;
     private final EmailSenderService emailSenderService;
     private VillageService villageService;
-    public InquiryDTO inquiryToInquiryDTO(Inquiry inquiry){
-        return modelMapper.map(inquiry, InquiryDTO.class);
-    }
 
     public InquiryDTO createInquiry(InquiryDTO inquiryDTO) {
         try {
