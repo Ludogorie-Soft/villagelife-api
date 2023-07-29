@@ -70,7 +70,8 @@ public class VillageService {
         Village village = new Village();
         village.setName("null");
         village.setPopulationCount(0);
-        village.setStatus(false);
+//        village.setStatus(false);
+        village.setStatus(true);
         villageRepository.save(village);
         return village.getId();
     }
