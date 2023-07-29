@@ -32,12 +32,12 @@ public class Inquiry {
     private String userMessage;
 
     @Length(min = 10, message = "Phone number should be at least 10 numbers long!")
-    @Column(unique = true)
     private String mobile;
 
     @ManyToOne
     @JoinColumn(name = "village_id")
     private Village village;
 
+    @Enumerated(EnumType.STRING)
     private InquiryType inquiryType;
 }
