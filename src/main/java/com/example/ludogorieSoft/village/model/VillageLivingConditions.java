@@ -2,6 +2,7 @@ package com.example.ludogorieSoft.village.model;
 
 import com.example.ludogorieSoft.village.enums.Consents;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -28,6 +29,7 @@ public class VillageLivingConditions {
     private Consents consents;
 
     private Boolean villageStatus;
+    @CreationTimestamp
     private LocalDateTime dateUpload;
 
 }

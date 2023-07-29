@@ -2,6 +2,7 @@ package com.example.ludogorieSoft.village.model;
 
 import com.example.ludogorieSoft.village.enums.Distance;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -24,5 +25,6 @@ public class ObjectVillage {
     @Enumerated(EnumType.STRING)
     private Distance distance;
     private Boolean villageStatus;
+    @CreationTimestamp
     private LocalDateTime dateUpload;
 }
