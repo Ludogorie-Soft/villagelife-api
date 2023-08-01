@@ -11,6 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -89,5 +90,12 @@ public class VillageGroundCategoryService {
             throw new ApiRequestException("Village ground category with village id " + villageId + " not found");
         }
         return toDTO(villageGroundCategory);
+    }
+
+    public List<VillageGroundCategoryDTO> findByVillageIdAndVillageStatusAndDateUpload(Long id, boolean status, LocalDateTime date) {
+        List<VillageGroundCategory> villageGroundCategories = villageGroundCategoryRepository.findByVillageIdAndVillageStatusAndDateUpload(id, status, date);
+        return villageGroundCategories.stream()
+                .map(this::toDTO)
+                .toList();
     }
 }

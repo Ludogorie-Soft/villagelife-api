@@ -119,7 +119,27 @@ public class LivingConditionService {
             livingConditionResponse.setPercentage(Math.round(percentage * 100.0) / 100.0);
             livingConditionResponses.add(livingConditionResponse);
         }
+        System.out.println("livingConditionResponses " + livingConditionResponses);
+        return  livingConditionResponses;
+    }
 
+    public List<LivingConditionResponse> getLivingConditionResponses(Long villageId, boolean status){ //ddd
+        List<String> names = new ArrayList<>(Arrays.asList("Инфраструктура", "Обществен транспорт",
+                "Електрозахранване", "Водоснабдяване", "Мобилен обхват", "Интернет", "ТВ", "Чистота"));
+        List<Long> livingConditionIds = new ArrayList<>(Arrays.asList(1L, 3L, 4L, 5L, 6L, 7L, 8L, 9L));
+        List<LivingConditionResponse> livingConditionResponses = new ArrayList<>();
+
+        for (int i = 0; i < names.size(); i++) {
+            if (!villageLivingConditionRepository.existsByVillageIdAndLivingConditionIdAndVillageStatus(villageId, livingConditionIds.get(i), status)){
+                continue;
+            }
+            LivingConditionResponse livingConditionResponse = new LivingConditionResponse();
+            livingConditionResponse.setLivingCondition(names.get(i));
+            double percentage = getPercentage(villageId, livingConditionIds.get(i));
+            livingConditionResponse.setPercentage(Math.round(percentage * 100.0) / 100.0);
+            livingConditionResponses.add(livingConditionResponse);
+        }
+        System.out.println("livingConditionResponses " + livingConditionResponses);
         return  livingConditionResponses;
     }
     public LivingConditionResponse getAccessibilityByVillageId(Long villageId){
@@ -130,6 +150,7 @@ public class LivingConditionService {
         double easilyAccessiblePercentage = getPercentage(villageId, 11L);
 
         livingConditionResponse.setPercentage(Math.round((accessibleInWinterPercentage + easilyAccessiblePercentage) / 2 * 100.0) / 100.0);
+        System.out.println("livingConditionResponse " + livingConditionResponse);
         return livingConditionResponse;
     }
 

@@ -21,10 +21,10 @@ public class ApiExceptionHandler {
         );
         return new ResponseEntity<>(apiException, badRequest);
     }
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<String> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
-        String errorMessage = "Duplicate entry error";
-
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorMessage);
-    }
+//    @ExceptionHandler(DataIntegrityViolationException.class)
+//    public ResponseEntity<String> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+//        String errorMessage = "Duplicate entry error";
+//
+//        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorMessage);
+//    }
 }

@@ -28,10 +28,13 @@ public class AddVillageFormResultService {
     private VillageImageService villageImageService;
 
     public AddVillageFormResult create(AddVillageFormResult addVillageFormResult){
+        System.out.println("add village addVillageForm.create " + addVillageFormResult);
+
         VillageDTO villageDTO = addVillageFormResult.getVillageDTO();
         PopulationDTO savedPopulation = createPopulationFromAddVillageFormResult(addVillageFormResult);
         villageDTO.setPopulationDTO(savedPopulation);
         villageDTO.setRegion(addVillageFormResult.getVillageDTO().getRegion());
+        villageDTO.setStatus(false);///ddd
         VillageDTO savedVillage = villageService.createVillage(villageDTO);
 
         createVillageGroundCategoryFromAddVillageFormResult(savedVillage.getId(), addVillageFormResult);

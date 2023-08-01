@@ -14,6 +14,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -137,5 +138,18 @@ public class VillageAnswerQuestionService {
     
     public boolean existsByVillageIdAndQuestionIdAndAnswer(Long villageId, Long questionId, String answer){
         return villageAnswerQuestionRepository.existsByVillageIdAndQuestionIdAndAnswer(villageId, questionId, answer);
+    }
+
+    public List<VillageAnswerQuestionDTO> findByVillageIdAndVillageStatusAndDateUpload(Long id, boolean status, LocalDateTime date) {
+        List<VillageAnswerQuestion> villageAnswerQuestions = villageAnswerQuestionRepository.findByVillageIdAndVillageStatusAndDateUpload(id, status, date);
+        return villageAnswerQuestions
+                .stream()
+                .map(this::toDTO)
+                .toList();
+    }
+
+    public List<VillageAnswerQuestion> findByVillageIdAndVillageStatus(Long id, boolean status) {
+        return villageAnswerQuestionRepository.findByVillageIdAndVillageStatus(id, status);
+
     }
 }

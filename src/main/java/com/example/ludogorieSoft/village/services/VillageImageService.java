@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -161,4 +162,14 @@ public class VillageImageService {
         return villageDTOsWithImages;
     }
 
+    public List<String> getAllImagesForVillage(Long villageId , boolean ststus, LocalDateTime date) {
+        List<String> base64Images = new ArrayList<>();
+        List<VillageImage> villageImages = villageImageRepository.findByVillageIdAndVillageStatusAndDateUpload(villageId, ststus,date);
+        if (villageImages.isEmpty()) {
+            base64Images.add(null);
+        } else {
+            addVillageImages(base64Images, villageImages);
+        }
+        return base64Images;
+    }
 }

@@ -116,7 +116,7 @@ public class AdministratorService {
 
             if (administrator != null) {
                 response.setStatus(village.getStatus());
-                response.setAdmin(administrator);
+                response.setAdmin(modelMapper.map(administrator,AdministratorDTO.class));
                 response.setDateApproved(village.getDateApproved());
             } else {
                 response.setStatus(village.getStatus());

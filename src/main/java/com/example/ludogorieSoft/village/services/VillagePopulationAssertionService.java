@@ -11,6 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -93,6 +94,14 @@ public class VillagePopulationAssertionService {
         }
 
         return villagePopulationAssertionsList.stream()
+                .map(this::toDTO)
+                .toList();
+    }
+
+    public List<VillagePopulationAssertionDTO> findByVillageIdAndVillageStatusAndDateUpload(Long id, boolean status, LocalDateTime date) {
+        List<VillagePopulationAssertion> villagePopulationAssertions = villagePopulationAssertionRepository.findByVillageIdAndVillageStatusAndDateUpload(id,status,date);
+        return villagePopulationAssertions
+                .stream()
                 .map(this::toDTO)
                 .toList();
     }

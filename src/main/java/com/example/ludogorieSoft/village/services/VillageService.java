@@ -58,7 +58,7 @@ public class VillageService {
             VillageResponse response = villageToVillageResponse(village);
 
             if (village.getAdmin() != null) {
-                response.setAdmin(village.getAdmin());
+                response.setAdmin(modelMapper.map(village.getAdmin(),AdministratorDTO.class));
                 response.setDateApproved(village.getDateApproved());
             } else {
                 response.setAdmin(null);
@@ -92,6 +92,7 @@ public class VillageService {
         }
         village.setPopulation(modelMapper.map(villageDTO.getPopulationDTO(), Population.class));
         village.setPopulationCount(villageDTO.getPopulationCount());
+        village.setStatus(villageDTO.getStatus());
         Village savedVillage = villageRepository.save(village);
         return modelMapper.map(savedVillage, VillageDTO.class);
     }

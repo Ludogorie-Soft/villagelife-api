@@ -11,6 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -145,5 +146,12 @@ public class VillageLivingConditionService {
         }
         double average = sum / (count - 11);
         return Math.round(average * 100) / 100.0;
+    }
+
+    public List<VillageLivingConditionDTO> findByVillageIdAndVillageStatusAndDateUpload(Long id, boolean status, LocalDateTime date) {
+        List<VillageLivingConditions> villageLivingConditions = villageLivingConditionRepository.findByVillageIdAndVillageStatusAndDateUpload(id,status,date);
+        return villageLivingConditions.stream()
+                .map(this::toDTO)
+                .toList();
     }
 }

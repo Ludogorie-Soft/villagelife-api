@@ -5,11 +5,13 @@ import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.Ethnicity;
 import com.example.ludogorieSoft.village.model.EthnicityVillage;
 import com.example.ludogorieSoft.village.model.Village;
+import com.example.ludogorieSoft.village.model.VillageAnswerQuestion;
 import com.example.ludogorieSoft.village.repositories.EthnicityVillageRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -118,5 +120,17 @@ public class EthnicityVillageService {
 
     public boolean existsByVillageIdAndEthnicityId(Long villageId, Long ethnicityId){
         return ethnicityVillageRepository.existsByEthnicityIdAndVillageId(ethnicityId, villageId);
+    }
+
+    public List<EthnicityVillageDTO> findByVillageIdAndVillageStatusAndDateUpload(Long id, boolean status, LocalDateTime date) {
+        List<EthnicityVillage> ethnicityVillages = ethnicityVillageRepository.findByVillageIdAndVillageStatusAndDateUpload(id, status, date);
+        return ethnicityVillages
+                .stream()
+                .map(this::ethnicityVillageToEthnicityVillageDTO)
+                .toList();
+    }
+    public List<EthnicityVillage> findByVillageIdAndVillageStatus(Long id, boolean status) {
+        return ethnicityVillageRepository.findByVillageIdAndVillageStatus(id, status);
+
     }
 }

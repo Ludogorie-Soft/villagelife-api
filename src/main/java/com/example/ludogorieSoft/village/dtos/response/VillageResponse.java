@@ -1,8 +1,7 @@
 package com.example.ludogorieSoft.village.dtos.response;
 
-import com.example.ludogorieSoft.village.model.Administrator;
-import com.example.ludogorieSoft.village.model.Population;
-import com.example.ludogorieSoft.village.model.Region;
+import com.example.ludogorieSoft.village.dtos.*;
+import com.example.ludogorieSoft.village.model.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -10,7 +9,14 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.*;
 
+import javax.persistence.CascadeType;
+import javax.persistence.OneToMany;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 @Getter
 @Setter
 @Data
@@ -35,11 +41,26 @@ public class VillageResponse {
 
     private Boolean status;
 
-    private Administrator admin;
+    private AdministratorDTO admin;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
     private LocalDateTime dateApproved;
 
+    Map<Long, Map<LocalDateTime, Boolean>> groupedAnswers;
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        VillageResponse that = (VillageResponse) o;
+        return id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

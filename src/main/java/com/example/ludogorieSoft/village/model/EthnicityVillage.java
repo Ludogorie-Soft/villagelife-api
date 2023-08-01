@@ -1,6 +1,7 @@
 package com.example.ludogorieSoft.village.model;
 
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -23,5 +24,6 @@ public class EthnicityVillage {
     @JoinColumn(name = "ethnicity_id")
     private Ethnicity ethnicity;
     private Boolean villageStatus;
+    @CreationTimestamp
     private LocalDateTime dateUpload;
 }

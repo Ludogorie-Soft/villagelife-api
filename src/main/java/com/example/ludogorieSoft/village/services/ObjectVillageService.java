@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.List;
 import java.util.Set;
@@ -139,5 +140,35 @@ public class ObjectVillageService {
             }
         }
         return objectVillageResponses;
+    }
+    public List<ObjectVillageDTO> getDistinctObjectVillagesByVillageIdForAdmin(Long villageId, boolean status){///ddd
+        List<ObjectVillage> allObjectVillages = objectVillageRepository.findByVillageIdAndVillageStatus(villageId, status);
+        Set<String> uniqueCombinations = new HashSet<>();
+        List<ObjectVillageDTO> filteredObjectVillages = new ArrayList<>();
+
+        for (ObjectVillage objectVillage : allObjectVillages) {
+            String key = objectVillage.getObject().getId() + "-" + objectVillage.getDistance();
+            if (uniqueCombinations.add(key)) {
+                filteredObjectVillages.add(objectVillageToObjectVillageDTO(objectVillage));
+            }
+        }
+
+        return filteredObjectVillages;
+    }
+
+    public List<ObjectVillageDTO> findByVillageIdAndVillageStatusAndDateUpload(Long id, boolean status, LocalDateTime date) {
+        List<ObjectVillage> objectVillages = objectVillageRepository.findByVillageIdAndVillageStatusAndDateUpload(id,status,date);
+        return objectVillages
+                .stream()
+                .map(this::objectVillageToObjectVillageDTO)
+                .toList();
+    }
+
+    public List<ObjectVillageDTO> findByVillageIdAndVillageStatus(Long id, boolean status) {
+        List<ObjectVillage> objectVillages = objectVillageRepository.findByVillageIdAndVillageStatus(id,status);
+        return objectVillages
+                .stream()
+                .map(this::objectVillageToObjectVillageDTO)
+                .toList();
     }
 }

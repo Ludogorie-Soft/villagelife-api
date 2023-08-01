@@ -114,6 +114,28 @@ public class PopulatedAssertionService {
                 populationAssertionResponses.add(populationAssertionResponse);
             }
         }
+        System.out.println("populationAssertionResponses " + populationAssertionResponses);
+        return  populationAssertionResponses;
+    }
+
+    public List<PopulationAssertionResponse> getPopulationAssertionResponse(Long villageId, boolean status){//ddd
+        List<PopulatedAssertionDTO> populatedAssertionDTOList = getAllPopulatedAssertion();
+        List<PopulationAssertionResponse> populationAssertionResponses = new ArrayList<>();
+        for (PopulatedAssertionDTO populatedAssertionDTO : populatedAssertionDTOList) {
+            PopulationAssertionResponse populationAssertionResponse = new PopulationAssertionResponse();
+            populationAssertionResponse.setPopulationAssertionName(getPopulatedAssertionById(populatedAssertionDTO.getId()).getPopulatedAssertionName());
+
+            List<VillagePopulationAssertion> villagePopulationAssertions = villagePopulationAssertionRepository.findByVillageIdAndPopulatedAssertionIDIdAndVillageStatus(villageId, populatedAssertionDTO.getId(), status);
+            double percentage = 0;
+            for (VillagePopulationAssertion villagePopulationAssertion : villagePopulationAssertions) {
+                percentage += villagePopulationAssertion.getAnswer().getValue();
+            }
+            populationAssertionResponse.setPercentage(Math.round(percentage / villagePopulationAssertions.size() * 100.0) / 100.0);
+            if(populationAssertionResponse.getPercentage() != 0){
+                populationAssertionResponses.add(populationAssertionResponse);
+            }
+        }
+        System.out.println("populationAssertionResponses admin " + populationAssertionResponses);
         return  populationAssertionResponses;
     }
 }

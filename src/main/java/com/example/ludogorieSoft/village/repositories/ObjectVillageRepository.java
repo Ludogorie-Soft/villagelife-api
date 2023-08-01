@@ -4,6 +4,7 @@ import com.example.ludogorieSoft.village.enums.Distance;
 import com.example.ludogorieSoft.village.model.ObjectVillage;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ObjectVillageRepository extends JpaRepository<ObjectVillage,Long> {
@@ -12,5 +13,6 @@ public interface ObjectVillageRepository extends JpaRepository<ObjectVillage,Lon
     List<ObjectVillage> findByVillageIdAndObjectIdAndVillageStatus(Long villageId, Long objectId, boolean villageStatus);
     List<ObjectVillage> findByVillageId(Long villageId);
     List<ObjectVillage> findByVillageIdAndVillageStatus(Long villageId, boolean villageStatus);
+    List<ObjectVillage> findByVillageIdAndVillageStatusAndDateUpload(Long villageId, boolean villageStatus, LocalDateTime localDateTime);
 
 }

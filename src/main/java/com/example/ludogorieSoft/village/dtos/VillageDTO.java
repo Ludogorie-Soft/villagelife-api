@@ -13,6 +13,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class VillageDTO {
@@ -26,7 +27,7 @@ public class VillageDTO {
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
     private LocalDateTime dateUpload;
-    private boolean status;
+    private Boolean status;
 
     private List<LivingConditionDTO> livingConditions;
     private List<ObjectAroundVillageDTO> object;
