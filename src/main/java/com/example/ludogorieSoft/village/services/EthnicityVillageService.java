@@ -122,13 +122,13 @@ public class EthnicityVillageService {
         return ethnicityVillageRepository.existsByEthnicityIdAndVillageId(ethnicityId, villageId);
     }
 
-    public List<EthnicityVillageDTO> findByVillageIdAndVillageStatusAndDateUpload(Long id, boolean status, LocalDateTime date) {
-        List<EthnicityVillage> ethnicityVillages = ethnicityVillageRepository.findByVillageIdAndVillageStatusAndDateUpload(id, status, date);
-        return ethnicityVillages
-                .stream()
-                .map(this::ethnicityVillageToEthnicityVillageDTO)
-                .toList();
-    }
+//    public List<EthnicityVillageDTO> findByVillageIdAndVillageStatusAndDateUpload(Long id, boolean status, LocalDateTime date) {
+//        List<EthnicityVillage> ethnicityVillages = ethnicityVillageRepository.findByVillageIdAndVillageStatusAndDateUpload(id, status, date);
+//        return ethnicityVillages
+//                .stream()
+//                .map(this::ethnicityVillageToEthnicityVillageDTO)
+//                .toList();
+//    }
     public List<EthnicityVillage> findByVillageIdAndVillageStatus(Long id, boolean status) {
         return ethnicityVillageRepository.findByVillageIdAndVillageStatus(id, status);
 

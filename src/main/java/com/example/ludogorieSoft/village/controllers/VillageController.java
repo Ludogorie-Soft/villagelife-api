@@ -3,6 +3,9 @@ package com.example.ludogorieSoft.village.controllers;
 import com.example.ludogorieSoft.village.dtos.VillageDTO;
 import com.example.ludogorieSoft.village.dtos.response.VillageInfo;
 import com.example.ludogorieSoft.village.dtos.response.VillageResponse;
+import com.example.ludogorieSoft.village.model.EthnicityVillage;
+import com.example.ludogorieSoft.village.repositories.EthnicityRepository;
+import com.example.ludogorieSoft.village.repositories.EthnicityVillageRepository;
 import com.example.ludogorieSoft.village.services.AdminVillageService;
 import com.example.ludogorieSoft.village.services.VillageInfoService;
 import com.example.ludogorieSoft.village.services.VillageService;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -23,6 +27,7 @@ public class VillageController {
     private final VillageService villageService;
     private final VillageInfoService villageInfoService;
     private final AdminVillageService adminVillageService;
+    private final EthnicityVillageRepository ethnicityVillageRepository;
 
     @GetMapping
     public ResponseEntity<List<VillageDTO>> getAllVillages() {
@@ -66,17 +71,4 @@ public class VillageController {
         villageService.deleteVillage(id);
         return ResponseEntity.noContent().build();
     }
-
-    //    @GetMapping("/update/{villageId}")
-//    public ResponseEntity<VillageDTO> findVillageById(@PathVariable(name = "villageId") Long id) {
-//        VillageDTO village = villageService.getVillageById(id);
-//
-//        return new ResponseEntity<>(village,HttpStatus.OK);
-//    }
-    @GetMapping("/update")
-    public  ResponseEntity<List<VillageResponse>> findUnapprovedVillageResponseByVillageId() {
-        List<VillageResponse> villageResponse = adminVillageService.getUnapprovedVillageResponsesWithSortedAnswers(false);
-        return new ResponseEntity<>(villageResponse, HttpStatus.OK);
-    }
-
 }

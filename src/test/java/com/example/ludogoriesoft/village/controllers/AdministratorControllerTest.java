@@ -4,6 +4,8 @@ import com.example.ludogorieSoft.village.authorization.JWTService;
 import com.example.ludogorieSoft.village.dtos.AdministratorDTO;
 import com.example.ludogorieSoft.village.dtos.request.AdministratorRequest;
 import com.example.ludogorieSoft.village.dtos.response.VillageResponse;
+import com.example.ludogorieSoft.village.repositories.EthnicityVillageRepository;
+import com.example.ludogorieSoft.village.services.AdminVillageService;
 import com.example.ludogorieSoft.village.services.AdministratorService;
 import com.example.ludogorieSoft.village.services.VillageService;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,12 +30,15 @@ class AdministratorControllerTest {
     private VillageService villageService;
 
     private AdministratorController administratorController;
+    private AdminVillageService adminVillageService;
+    private EthnicityVillageRepository ethnicityVillageRepository;
     private  JWTService jwtService;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        administratorController = new AdministratorController(administratorService, villageService);
+        administratorController = new AdministratorController(administratorService, villageService,
+                adminVillageService,ethnicityVillageRepository);
     }
 
     @Test

@@ -4,6 +4,9 @@ import com.example.ludogorieSoft.village.dtos.AdministratorDTO;
 import com.example.ludogorieSoft.village.dtos.VillageDTO;
 import com.example.ludogorieSoft.village.dtos.request.AdministratorRequest;
 import com.example.ludogorieSoft.village.dtos.response.VillageResponse;
+import com.example.ludogorieSoft.village.model.EthnicityVillage;
+import com.example.ludogorieSoft.village.repositories.EthnicityVillageRepository;
+import com.example.ludogorieSoft.village.services.AdminVillageService;
 import com.example.ludogorieSoft.village.services.AdministratorService;
 import com.example.ludogorieSoft.village.services.VillageService;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -20,6 +25,8 @@ import java.util.List;
 public class AdministratorController {
     private final AdministratorService administratorService;
     private final VillageService villageService;
+    private final AdminVillageService adminVillageService;
+    private final EthnicityVillageRepository ethnicityVillageRepository;
 
     @GetMapping
     public ResponseEntity<List<AdministratorDTO>> getAllAdministrators() {
@@ -70,5 +77,22 @@ public class AdministratorController {
         VillageDTO village = villageService.getVillageById(id);
 
         return new ResponseEntity<>(village,HttpStatus.OK);
+    }
+    @GetMapping("/update")
+    public  ResponseEntity<List<VillageResponse>> findUnapprovedVillageResponseByVillageId() {
+        List<VillageResponse> villageResponse = adminVillageService.getUnapprovedVillageResponsesWithSortedAnswers(false);
+        return new ResponseEntity<>(villageResponse, HttpStatus.OK);
+    }
+    @PostMapping("/approve-answer/{villageId}")
+    public void getEthnisity(@RequestParam("villageId") Long villageId,
+                             @RequestParam("answerDate") String answerDate){
+        String dateTimeString = answerDate;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime localDateTime = LocalDateTime.parse(dateTimeString, formatter);
+        boolean status = false;
+        List<EthnicityVillage> ethnicityVillage = ethnicityVillageRepository.findByVillageIdAndVillageStatusAndDateUpload(villageId,status,localDateTime);
+
+        System.out.println("ethnisity " + ethnicityVillage);
+
     }
 }
