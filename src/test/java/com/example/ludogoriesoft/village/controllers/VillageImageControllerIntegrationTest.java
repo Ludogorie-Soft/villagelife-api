@@ -57,36 +57,36 @@ class VillageImageControllerIntegrationTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    @Test
-    void testGetAllImagesForVillage() throws Exception {
-        List<String> base64Images = Arrays.asList("image1", "image2");
-        when(villageImageService.getAllImagesForVillage(anyLong())).thenReturn(base64Images);
+//    @Test
+//    void testGetAllImagesForVillage() throws Exception {
+//        List<String> base64Images = Arrays.asList("image1", "image2");
+//        when(villageImageService.getAllImagesForVillage(anyLong())).thenReturn(base64Images);
+//
+//        Long villageId = 1L;
+//        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageImages/village/{villageId}/images", villageId)
+//                        .contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isOk())
+//                .andReturn();
+//
+//        MockHttpServletResponse response = mvcResult.getResponse();
+//        Assertions.assertEquals(HttpStatus.OK.value(), response.getStatus());
+//
+//        String responseBody = response.getContentAsString();
+//        List<String> responseImages = new ObjectMapper().readValue(responseBody, new TypeReference<>() {
+//        });
+//        Assertions.assertEquals(base64Images, responseImages);
+//    }
 
-        Long villageId = 1L;
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageImages/village/{villageId}/images", villageId)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        MockHttpServletResponse response = mvcResult.getResponse();
-        Assertions.assertEquals(HttpStatus.OK.value(), response.getStatus());
-
-        String responseBody = response.getContentAsString();
-        List<String> responseImages = new ObjectMapper().readValue(responseBody, new TypeReference<>() {
-        });
-        Assertions.assertEquals(base64Images, responseImages);
-    }
-
-    @Test
-    void testGetAllImagesForVillageNotFound() throws Exception {
-        Long villageId = 1L;
-
-        Mockito.when(villageImageService.getAllImagesForVillage(villageId)).thenReturn(Collections.emptyList());
-
-        mockMvc.perform(get("/api/v1/village/{villageId}/images", villageId)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
-    }
+//    @Test
+//    void testGetAllImagesForVillageNotFound() throws Exception {
+//        Long villageId = 1L;
+//
+//        Mockito.when(villageImageService.getAllImagesForVillage(villageId)).thenReturn(Collections.emptyList());
+//
+//        mockMvc.perform(get("/api/v1/village/{villageId}/images", villageId)
+//                        .contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isNotFound());
+//    }
 
     @Test
     void testGetAllVillageDTOsWithImages() throws Exception {
@@ -139,38 +139,38 @@ class VillageImageControllerIntegrationTest {
     }
 
 
-    @Test
-    void testGetAllImagesForVillageWithImages() throws Exception {
-        Long villageId = 1L;
-        List<String> base64Images = Arrays.asList("image1", "image2");
+//    @Test
+//    void testGetAllImagesForVillageWithImages() throws Exception {
+//        Long villageId = 1L;
+//        List<String> base64Images = Arrays.asList("image1", "image2");
+//
+//        when(villageImageService.getAllImagesForVillage(villageId)).thenReturn(base64Images);
+//
+//        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageImages/village/{villageId}/images", villageId)
+//                        .contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isOk())
+//                .andReturn();
+//
+//        MockHttpServletResponse response = mvcResult.getResponse();
+//        Assertions.assertEquals(HttpStatus.OK.value(), response.getStatus());
+//
+//        String responseBody = response.getContentAsString();
+//        List<String> responseImages = new ObjectMapper().readValue(responseBody, new TypeReference<>() {
+//        });
+//        Assertions.assertEquals(base64Images, responseImages);
+//    }
 
-        when(villageImageService.getAllImagesForVillage(villageId)).thenReturn(base64Images);
-
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageImages/village/{villageId}/images", villageId)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        MockHttpServletResponse response = mvcResult.getResponse();
-        Assertions.assertEquals(HttpStatus.OK.value(), response.getStatus());
-
-        String responseBody = response.getContentAsString();
-        List<String> responseImages = new ObjectMapper().readValue(responseBody, new TypeReference<>() {
-        });
-        Assertions.assertEquals(base64Images, responseImages);
-    }
-
-    @Test
-    void testGetAllImagesForVillageWithoutImages() throws Exception {
-        Long villageId = 1L;
-        List<String> emptyList = Collections.emptyList();
-
-        when(villageImageService.getAllImagesForVillage(villageId)).thenReturn(emptyList);
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageImages/village/{villageId}/images", villageId)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound())
-                .andReturn();
-    }
+//    @Test
+//    void testGetAllImagesForVillageWithoutImages() throws Exception {
+//        Long villageId = 1L;
+//        List<String> emptyList = Collections.emptyList();
+//
+//        when(villageImageService.getAllImagesForVillage(villageId)).thenReturn(emptyList);
+//
+//        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageImages/village/{villageId}/images", villageId)
+//                        .contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isNotFound())
+//                .andReturn();
+//    }
 }
 

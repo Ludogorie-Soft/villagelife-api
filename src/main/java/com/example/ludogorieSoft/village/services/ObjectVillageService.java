@@ -106,8 +106,13 @@ public class ObjectVillageService {
     public boolean existsByVillageIdAndObjectIdAndDistance(Long villageId, Long objectId, Distance distance){
         return objectVillageRepository.existsByVillageIdAndObjectIdAndDistance(villageId, objectId, distance);
     }
-    public List<ObjectVillageDTO> getDistinctObjectVillagesByVillageId(Long villageId){
-        List<ObjectVillage> allObjectVillages = objectVillageRepository.findByVillageIdAndVillageStatus(villageId, true);
+    public List<ObjectVillageDTO> getDistinctObjectVillagesByVillageId(Long villageId, boolean status, String date){
+        List<ObjectVillage> allObjectVillages;
+        if(status){
+           allObjectVillages = objectVillageRepository.findByVillageIdAndVillageStatus(villageId, true);
+        }else {
+            allObjectVillages = objectVillageRepository.findByVillageIdAndVillageStatusAndDateUpload(villageId, status, date);
+        }
         Set<String> uniqueCombinations = new HashSet<>();
         List<ObjectVillageDTO> filteredObjectVillages = new ArrayList<>();
 
@@ -156,19 +161,35 @@ public class ObjectVillageService {
         return filteredObjectVillages;
     }
 
-    public List<ObjectVillageDTO> findByVillageIdAndVillageStatusAndDateUpload(Long id, boolean status, LocalDateTime date) {
-        List<ObjectVillage> objectVillages = objectVillageRepository.findByVillageIdAndVillageStatusAndDateUpload(id,status,date);
-        return objectVillages
-                .stream()
-                .map(this::objectVillageToObjectVillageDTO)
-                .toList();
-    }
+    public void updateObjectVillageStatus(Long id, boolean status, String localDateTime) {
+        List<ObjectVillage> objectVillages = objectVillageRepository.findByVillageIdAndVillageStatusAndDateUpload(id, status, localDateTime);
 
-    public List<ObjectVillageDTO> findByVillageIdAndVillageStatus(Long id, boolean status) {
-        List<ObjectVillage> objectVillages = objectVillageRepository.findByVillageIdAndVillageStatus(id,status);
-        return objectVillages
-                .stream()
-                .map(this::objectVillageToObjectVillageDTO)
-                .toList();
+        List<ObjectVillage> villa = new ArrayList<>();
+
+        if (!objectVillages.isEmpty()) {
+            for (ObjectVillage vill : objectVillages) {
+                Village village = villageService.checkVillage(vill.getVillage().getId());
+                vill.setVillage(village);
+                vill.setVillageStatus(true);
+                villa.add(vill);
+            }
+            objectVillageRepository.saveAll(villa);
+        }
+    }
+    public void rejectObjectVillageResponse(Long id, boolean status, String responseDate, LocalDateTime dateDelete) {
+        List<ObjectVillage> objectVillages = objectVillageRepository.findByVillageIdAndVillageStatusAndDateUpload(
+                id, status, responseDate);
+
+        List<ObjectVillage> villa = new ArrayList<>();
+
+        if (!objectVillages.isEmpty()) {
+            for (ObjectVillage vill : objectVillages) {
+                Village village = villageService.checkVillage(vill.getVillage().getId());
+                vill.setVillage(village);
+                vill.setDateDeleted(dateDelete);
+                villa.add(vill);
+            }
+            objectVillageRepository.saveAll(villa);
+        }
     }
 }

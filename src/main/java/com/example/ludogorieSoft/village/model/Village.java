@@ -32,13 +32,11 @@ public class Village {
     private int populationCount;
     @OneToOne
     private Population population;
-    @CreationTimestamp
     private LocalDateTime dateUpload;
     private Boolean status;
     @ManyToOne
     @JoinColumn(name = "admin_id")
     private Administrator admin;
-    @CreationTimestamp
     private LocalDateTime dateApproved;
 
     @OneToMany(mappedBy = "village", cascade = CascadeType.ALL, orphanRemoval = true)

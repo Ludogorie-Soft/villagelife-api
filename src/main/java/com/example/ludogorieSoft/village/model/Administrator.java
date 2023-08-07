@@ -59,7 +59,6 @@ public class Administrator implements UserDetails {
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
-    @CreationTimestamp
     private LocalDateTime createdAt;
 
     private static final  boolean ENABLED = true;

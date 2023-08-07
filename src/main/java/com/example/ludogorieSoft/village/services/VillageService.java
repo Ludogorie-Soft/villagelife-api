@@ -89,10 +89,13 @@ public class VillageService {
             village.setName(villageDTO.getName());
             RegionDTO regionDTO = regionService.findRegionByName(villageDTO.getRegion());
             village.setRegion(regionService.checkRegion(regionDTO.getId()));
+            village.setStatus(false);
+        }else {
+            village.setStatus(village.getStatus());
         }
         village.setPopulation(modelMapper.map(villageDTO.getPopulationDTO(), Population.class));
         village.setPopulationCount(villageDTO.getPopulationCount());
-        village.setStatus(villageDTO.getStatus());
+        village.setDateUpload(villageDTO.getDateUpload());
         Village savedVillage = villageRepository.save(village);
         return modelMapper.map(savedVillage, VillageDTO.class);
     }
@@ -119,14 +122,9 @@ public class VillageService {
 
             AdministratorDTO administratorDTO = authService.getAdministratorInfo();
 
-            if (village.getStatus().equals(true)){
-                throw new ApiRequestException("This village already approved!");
-
-            }else {
                 village.setAdmin(modelMapper.map(administratorDTO, Administrator.class));
                 village.setStatus(true);
                 village.setDateApproved(now());
-            }
 
             villageRepository.save(village);
             return modelMapper.map(village, VillageDTO.class);

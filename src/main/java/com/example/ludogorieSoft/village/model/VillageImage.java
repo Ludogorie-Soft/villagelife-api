@@ -3,7 +3,6 @@ package com.example.ludogorieSoft.village.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -25,6 +24,7 @@ public class VillageImage {
     @NotBlank
     private String imageName;
     private Boolean villageStatus;
-    @CreationTimestamp
     private LocalDateTime dateUpload;
+    private LocalDateTime dateDeleted;
+
 }

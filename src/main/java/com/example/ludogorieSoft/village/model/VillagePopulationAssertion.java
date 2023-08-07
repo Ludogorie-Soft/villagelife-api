@@ -30,6 +30,6 @@ public class VillagePopulationAssertion {
     @Enumerated(EnumType.STRING)
     private Consents answer;
     private Boolean villageStatus;
-    @CreationTimestamp
     private LocalDateTime dateUpload;
+    private LocalDateTime dateDeleted;
 }

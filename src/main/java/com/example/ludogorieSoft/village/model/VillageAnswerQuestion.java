@@ -25,6 +25,7 @@ public class VillageAnswerQuestion {
     private Question question;
     private String answer;
     private Boolean villageStatus;
-    @CreationTimestamp
     private LocalDateTime dateUpload;
+    private LocalDateTime dateDeleted;
+
 }

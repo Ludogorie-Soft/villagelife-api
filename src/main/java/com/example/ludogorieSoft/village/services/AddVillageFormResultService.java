@@ -3,13 +3,13 @@ package com.example.ludogorieSoft.village.services;
 import com.example.ludogorieSoft.village.dtos.*;
 import com.example.ludogorieSoft.village.enums.NumberOfPopulation;
 import com.example.ludogorieSoft.village.model.Population;
+import com.example.ludogorieSoft.village.utils.TimestampUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static java.time.LocalDateTime.now;
 
 @Service
 @AllArgsConstructor
@@ -28,23 +28,22 @@ public class AddVillageFormResultService {
     private VillageImageService villageImageService;
 
     public AddVillageFormResult create(AddVillageFormResult addVillageFormResult){
-        System.out.println("add village addVillageForm.create " + addVillageFormResult);
+        LocalDateTime timestamp = TimestampUtils.getCurrentTimestamp();
 
         VillageDTO villageDTO = addVillageFormResult.getVillageDTO();
         PopulationDTO savedPopulation = createPopulationFromAddVillageFormResult(addVillageFormResult);
         villageDTO.setPopulationDTO(savedPopulation);
         villageDTO.setRegion(addVillageFormResult.getVillageDTO().getRegion());
-        villageDTO.setStatus(false);///ddd
+        villageDTO.setDateUpload(timestamp);
         VillageDTO savedVillage = villageService.createVillage(villageDTO);
 
-        createVillageGroundCategoryFromAddVillageFormResult(savedVillage.getId(), addVillageFormResult);
-        createEthnicityVillagesFromAddVillageFormResult(savedVillage.getId(), addVillageFormResult);
-        createVillageAnswerQuestionsFromAddVillageFormResult(savedVillage.getId(), addVillageFormResult);
-        createObjectVillagesFromAddVillageFormResult(savedVillage.getId(), addVillageFormResult);
-        createVillagePopulationAssertionsFromAddVillageFormResult(savedVillage.getId(), addVillageFormResult);
-        createVillageLivingConditionFromAddVillageFormResult(savedVillage.getId(), addVillageFormResult);
-
-        villageImageService.createImagePaths(addVillageFormResult.getImageBytes(), savedVillage.getId());
+        createVillageGroundCategoryFromAddVillageFormResult(savedVillage.getId(), addVillageFormResult,timestamp);//ddd
+        createEthnicityVillagesFromAddVillageFormResult(savedVillage.getId(), addVillageFormResult,timestamp);//ddd
+        createVillageAnswerQuestionsFromAddVillageFormResult(savedVillage.getId(), addVillageFormResult, timestamp);
+        createObjectVillagesFromAddVillageFormResult(savedVillage.getId(), addVillageFormResult, timestamp);//ddd
+        createVillagePopulationAssertionsFromAddVillageFormResult(savedVillage.getId(), addVillageFormResult,timestamp);
+        createVillageLivingConditionFromAddVillageFormResult(savedVillage.getId(), addVillageFormResult, timestamp);
+        villageImageService.createImagePaths(addVillageFormResult.getImageBytes(), savedVillage.getId(), timestamp);
         return addVillageFormResult;
     }
     public NumberOfPopulation getNumberOfPopulationByAddVillageFormResult(AddVillageFormResult addVillageFormResult){
@@ -75,7 +74,7 @@ public class AddVillageFormResultService {
             return populationService.updatePopulation(existingPopulation.getId(), populationDTO);
         }
     }
-    public void createVillageGroundCategoryFromAddVillageFormResult(Long villageId, AddVillageFormResult addVillageFormResult) {
+    public void createVillageGroundCategoryFromAddVillageFormResult(Long villageId, AddVillageFormResult addVillageFormResult, LocalDateTime localDateTime) {
         VillageGroundCategoryDTO villageGroundCategoryDTO = new VillageGroundCategoryDTO();
         GroundCategoryDTO groundCategoryDTO = groundCategoryService.getByGroundCategoryName(addVillageFormResult.getGroundCategoryName());
         villageGroundCategoryDTO.setGroundCategoryId(groundCategoryDTO.getId());
@@ -87,24 +86,24 @@ public class AddVillageFormResultService {
             villageGroundCategoryDTO.setVillageId(villageId);
             villageGroundCategoryDTO.setGroundCategoryId(groundCategoryDTO.getId());
             villageGroundCategoryDTO.setStatus(false);
-            villageGroundCategoryDTO.setDateUpload(LocalDateTime.now());
+            villageGroundCategoryDTO.setDateUpload(localDateTime);
             villageGroundCategoryService.createVillageGroundCategoryDTO(villageGroundCategoryDTO);
         }
     }
-    public void createEthnicityVillagesFromAddVillageFormResult(Long villageId, AddVillageFormResult addVillageFormResult){
+    public void createEthnicityVillagesFromAddVillageFormResult(Long villageId, AddVillageFormResult addVillageFormResult, LocalDateTime localDateTime){
         List<Long> ethnicityDTOIds = addVillageFormResult.getEthnicityDTOIds();
         if (ethnicityDTOIds == null && !ethnicityVillageService.existsByVillageIdAndEthnicityId(villageId, ethnicityService.findEthnicityByName("няма малцинствени групи").getId())) {
-            ethnicityVillageService.createEthnicityVillage(new EthnicityVillageDTO(null, villageId, ethnicityService.findEthnicityByName("няма малцинствени групи").getId(),false,now()));
+            ethnicityVillageService.createEthnicityVillage(new EthnicityVillageDTO(null, villageId, ethnicityService.findEthnicityByName("няма малцинствени групи").getId(),false,localDateTime,null));
         }else if(ethnicityDTOIds != null){
             for (Long id : ethnicityDTOIds) {
                 if(!ethnicityVillageService.existsByVillageIdAndEthnicityId(villageId, id)){
-                    EthnicityVillageDTO ethnicityVillageDTO = new EthnicityVillageDTO(null, villageId, id,false,now());
+                    EthnicityVillageDTO ethnicityVillageDTO = new EthnicityVillageDTO(null, villageId, id,false,localDateTime,null);
                     ethnicityVillageService.createEthnicityVillage(ethnicityVillageDTO);
                 }
             }
         }
     }
-    public void createVillageAnswerQuestionsFromAddVillageFormResult(Long villageId, AddVillageFormResult addVillageFormResult) {
+    public void createVillageAnswerQuestionsFromAddVillageFormResult(Long villageId, AddVillageFormResult addVillageFormResult, LocalDateTime localDateTime) {
         List<String> questionResponses = addVillageFormResult.getQuestionResponses();
         List<QuestionDTO> questionsDTO = questionService.getAllQuestions();
         for (int i = 0; i < questionResponses.size(); i++) {
@@ -113,34 +112,34 @@ public class AddVillageFormResultService {
                             villageId, questionsDTO.get(i).getId(), addVillageFormResult.getQuestionResponses().get(i))) {
 
                 VillageAnswerQuestionDTO villageAnswerQuestionDTO = new VillageAnswerQuestionDTO(
-                        null, villageId, questionsDTO.get(i).getId(), addVillageFormResult.getQuestionResponses().get(i),false,now());
+                        null, villageId, questionsDTO.get(i).getId(), addVillageFormResult.getQuestionResponses().get(i),false,localDateTime,null);
 
                 villageAnswerQuestionService.createVillageAnswerQuestion(villageAnswerQuestionDTO);
             }
         }
     }
-    public void createObjectVillagesFromAddVillageFormResult(Long villageId, AddVillageFormResult addVillageFormResult){
+    public void createObjectVillagesFromAddVillageFormResult(Long villageId, AddVillageFormResult addVillageFormResult, LocalDateTime localDateTime){
         List<ObjectVillageDTO> objectVillageDTOS = addVillageFormResult.getObjectVillageDTOS();
         for (int i = 1; i < objectVillageDTOS.size(); i++) {
-            ObjectVillageDTO objectVillageToSave = new ObjectVillageDTO(null, villageId, objectVillageDTOS.get(i).getObjectAroundVillageId(), objectVillageDTOS.get(i).getDistance(),false,now());
+            ObjectVillageDTO objectVillageToSave = new ObjectVillageDTO(null, villageId, objectVillageDTOS.get(i).getObjectAroundVillageId(), objectVillageDTOS.get(i).getDistance(),false,localDateTime,null);
             if(objectVillageToSave.getDistance() != null){
                 objectVillageService.createObjectVillage(objectVillageToSave);
             }
         }
     }
-    public void createVillagePopulationAssertionsFromAddVillageFormResult(Long villageId, AddVillageFormResult addVillageFormResult){
+    public void createVillagePopulationAssertionsFromAddVillageFormResult(Long villageId, AddVillageFormResult addVillageFormResult, LocalDateTime localDateTime){
         List<VillagePopulationAssertionDTO> villagePopulationAssertionDTOS = addVillageFormResult.getVillagePopulationAssertionDTOS();
         for (int i = 1; i < villagePopulationAssertionDTOS.size(); i++) {
-            VillagePopulationAssertionDTO villagePopulationAssertionDTO = new VillagePopulationAssertionDTO(null, villageId, villagePopulationAssertionDTOS.get(i).getPopulatedAssertionId(), villagePopulationAssertionDTOS.get(i).getAnswer(),false,now());
+            VillagePopulationAssertionDTO villagePopulationAssertionDTO = new VillagePopulationAssertionDTO(null, villageId, villagePopulationAssertionDTOS.get(i).getPopulatedAssertionId(), villagePopulationAssertionDTOS.get(i).getAnswer(),false,localDateTime,null);
             if(villagePopulationAssertionDTO.getAnswer() != null){
                 villagePopulationAssertionService.createVillagePopulationAssertionDTO(villagePopulationAssertionDTO);
             }
         }
     }
-    public void createVillageLivingConditionFromAddVillageFormResult(Long villageId, AddVillageFormResult addVillageFormResult){
+    public void createVillageLivingConditionFromAddVillageFormResult(Long villageId, AddVillageFormResult addVillageFormResult, LocalDateTime localDateTime){
         List<VillageLivingConditionDTO> villageLivingConditionDTOS = addVillageFormResult.getVillageLivingConditionDTOS();
         for (int i = 1; i < villageLivingConditionDTOS.size(); i++) {
-            VillageLivingConditionDTO villageLivingConditionDTO = new VillageLivingConditionDTO(null, villageId, villageLivingConditionDTOS.get(i).getLivingConditionId(), villageLivingConditionDTOS.get(i).getConsents(),false,now());
+            VillageLivingConditionDTO villageLivingConditionDTO = new VillageLivingConditionDTO(null, villageId, villageLivingConditionDTOS.get(i).getLivingConditionId(), villageLivingConditionDTOS.get(i).getConsents(),false, localDateTime,null);
             if(villageLivingConditionDTO.getConsents() != null){
                 villageLivingConditionService.createVillageLivingCondition(villageLivingConditionDTO);
             }

@@ -5,9 +5,7 @@ import com.example.ludogorieSoft.village.dtos.AdministratorDTO;
 import com.example.ludogorieSoft.village.dtos.request.AdministratorRequest;
 import com.example.ludogorieSoft.village.dtos.response.VillageResponse;
 import com.example.ludogorieSoft.village.repositories.EthnicityVillageRepository;
-import com.example.ludogorieSoft.village.services.AdminVillageService;
-import com.example.ludogorieSoft.village.services.AdministratorService;
-import com.example.ludogorieSoft.village.services.VillageService;
+import com.example.ludogorieSoft.village.services.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -29,16 +27,16 @@ class AdministratorControllerTest {
     @Mock
     private VillageService villageService;
 
-    private AdministratorController administratorController;
-    private AdminVillageService adminVillageService;
-    private EthnicityVillageRepository ethnicityVillageRepository;
+    private  AdminVillageService adminVillageService;
+    private  VillageInfoService villageInfoService;
+    private  VillageImageService villageImageService;
     private  JWTService jwtService;
-
+    AdministratorController administratorController;
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
         administratorController = new AdministratorController(administratorService, villageService,
-                adminVillageService,ethnicityVillageRepository);
+                adminVillageService, villageInfoService, villageImageService);
     }
 
     @Test

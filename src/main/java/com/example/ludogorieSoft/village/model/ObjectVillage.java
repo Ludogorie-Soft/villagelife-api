@@ -25,6 +25,7 @@ public class ObjectVillage {
     @Enumerated(EnumType.STRING)
     private Distance distance;
     private Boolean villageStatus;
-    @CreationTimestamp
     private LocalDateTime dateUpload;
+    private LocalDateTime dateDeleted;
+
 }

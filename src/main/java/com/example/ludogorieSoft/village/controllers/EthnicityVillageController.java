@@ -11,6 +11,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -36,7 +38,7 @@ public class EthnicityVillageController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<EthnicityVillageDTO> updateEthnicityVillageById(@PathVariable Long id, @Valid  @RequestBody EthnicityVillageDTO ethnicityVillageDTO) {
+    public ResponseEntity<EthnicityVillageDTO> updateEthnicityVillageById(@PathVariable Long id, @Valid @RequestBody EthnicityVillageDTO ethnicityVillageDTO) {
         return ResponseEntity.ok(ethnicityVillageService.updateEthnicityVillageById(id, ethnicityVillageDTO));
     }
 
@@ -61,4 +63,13 @@ public class EthnicityVillageController {
         }
     }
 
+    @PutMapping("/update-answer/{villageId}")
+    public ResponseEntity getEthnisityVIllage(@RequestParam("villageId") Long villageId,
+                                              @RequestParam("answerDate") String answerDate) {
+//        String dateTimeString = answerDate;
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+//        LocalDateTime localDateTime = LocalDateTime.parse(dateTimeString, formatter);
+        ethnicityVillageService.updateEthnicityVillageStatus(villageId, false, answerDate);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

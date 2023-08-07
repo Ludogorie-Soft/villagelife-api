@@ -14,20 +14,20 @@ public class VillageInfoService {
     private final ObjectVillageService objectVillageService;
     private final EthnicityVillageService ethnicityVillageService;
     private final VillageAnswerQuestionService villageAnswerQuestionService;
-    public VillageInfo getVillageInfoByVillageId(Long villageId){
+    public VillageInfo getVillageInfoByVillageId(Long villageId, boolean status, String date){
         Village village = villageService.checkVillage(villageId);
         VillageInfo villageInfo = new VillageInfo();
         villageInfo.setVillageDTO(villageService.getVillageById(village.getId()));
 
-        villageInfo.setPopulationAssertionResponses(populatedAssertionService.getPopulationAssertionResponse(village.getId()));
-        villageInfo.setLivingConditionResponses(livingConditionService.getLivingConditionResponses(village.getId()));
-        villageInfo.getLivingConditionResponses().add(livingConditionService.getAccessibilityByVillageId(village.getId()));
-        villageInfo.getLivingConditionResponses().add(livingConditionService.getCrimeByVillageId(village.getId()));
-        villageInfo.getLivingConditionResponses().add(livingConditionService.getTotalLivingConditionsByVillageId(village.getId()));
-        villageInfo.getLivingConditionResponses().add(livingConditionService.getEcoFriendlinessByVillageId(village.getId()));
-        villageInfo.setObjectVillageResponses(objectVillageService.getObjectVillageResponses(objectVillageService.getDistinctObjectVillagesByVillageId(village.getId())));
-        villageInfo.setAnswersQuestionResponses(villageAnswerQuestionService.getAnswersQuestionResponsesByVillageId(village.getId()));
-        villageInfo.setEthnicities(ethnicityVillageService.getUniqueEthnicityVillagesByVillageId(village.getId()));
+        villageInfo.setPopulationAssertionResponses(populatedAssertionService.getPopulationAssertionResponse(village.getId(),status,date));
+        villageInfo.setLivingConditionResponses(livingConditionService.getLivingConditionResponses(village.getId(),status,date));
+        villageInfo.getLivingConditionResponses().add(livingConditionService.getAccessibilityByVillageId(village.getId(),status,date));
+        villageInfo.getLivingConditionResponses().add(livingConditionService.getCrimeByVillageId(village.getId(),status,date));
+        villageInfo.getLivingConditionResponses().add(livingConditionService.getTotalLivingConditionsByVillageId(village.getId(),status,date));
+        villageInfo.getLivingConditionResponses().add(livingConditionService.getEcoFriendlinessByVillageId(village.getId(),status,date));
+        villageInfo.setObjectVillageResponses(objectVillageService.getObjectVillageResponses(objectVillageService.getDistinctObjectVillagesByVillageId(village.getId(),status,date)));
+        villageInfo.setAnswersQuestionResponses(villageAnswerQuestionService.getAnswersQuestionResponsesByVillageId(village.getId(),status,date));
+        villageInfo.setEthnicities(ethnicityVillageService.getUniqueEthnicityVillagesByVillageId(village.getId(), status, date));
 
         return villageInfo;
     }

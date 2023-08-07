@@ -5,6 +5,7 @@ import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.LivingCondition;
 import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.model.VillageLivingConditions;
+import com.example.ludogorieSoft.village.model.VillagePopulationAssertion;
 import com.example.ludogorieSoft.village.repositories.VillageLivingConditionRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -12,6 +13,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -148,10 +150,36 @@ public class VillageLivingConditionService {
         return Math.round(average * 100) / 100.0;
     }
 
-    public List<VillageLivingConditionDTO> findByVillageIdAndVillageStatusAndDateUpload(Long id, boolean status, LocalDateTime date) {
-        List<VillageLivingConditions> villageLivingConditions = villageLivingConditionRepository.findByVillageIdAndVillageStatusAndDateUpload(id,status,date);
-        return villageLivingConditions.stream()
-                .map(this::toDTO)
-                .toList();
+    public void updateVillageLivingConditionStatus(Long id, boolean status, String localDateTime) {
+        List<VillageLivingConditions> villageLivingConditions = villageLivingConditionRepository.findByVillageIdAndVillageStatusAndDateUpload(id, status, localDateTime);
+
+        List<VillageLivingConditions> villa = new ArrayList<>();
+
+        if (!villageLivingConditions.isEmpty()) {
+            for (VillageLivingConditions vill : villageLivingConditions) {
+                Village village = villageService.checkVillage(vill.getVillage().getId());
+                vill.setVillage(village);
+                vill.setVillageStatus(true);
+                villa.add(vill);
+            }
+            villageLivingConditionRepository.saveAll(villa);
+        }
     }
+    public void rejectVillageLivingConditionResponse(Long id, boolean status, String responseDate, LocalDateTime dateDelete) {
+        List<VillageLivingConditions> villageLivingConditions = villageLivingConditionRepository.findByVillageIdAndVillageStatusAndDateUpload(
+                id, status, responseDate
+        );
+        List<VillageLivingConditions> villa = new ArrayList<>();
+
+        if (!villageLivingConditions.isEmpty()) {
+            for (VillageLivingConditions vill : villageLivingConditions) {
+                Village village = villageService.checkVillage(vill.getVillage().getId());
+                vill.setVillage(village);
+                vill.setDateDeleted(dateDelete);
+                villa.add(vill);
+            }
+            villageLivingConditionRepository.saveAll(villa);
+        }
+    }
+
 }

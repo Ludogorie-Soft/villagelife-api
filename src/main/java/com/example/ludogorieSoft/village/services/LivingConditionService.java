@@ -84,7 +84,6 @@ public class LivingConditionService {
     }
 
 
-
     public void deleteLivingCondition(Long id) {
         Optional<LivingCondition> livingCondition = livingConditionsRepository.findById(id);
         if (livingCondition.isEmpty()) {
@@ -96,139 +95,148 @@ public class LivingConditionService {
 
     public LivingCondition checkLivingCondition(Long id) {
         Optional<LivingCondition> livingCondition = livingConditionsRepository.findById(id);
-        if (livingCondition.isPresent()){
+        if (livingCondition.isPresent()) {
             return livingCondition.get();
-        }else {
+        } else {
             throw new ApiRequestException("Living Condition not found");
         }
     }
 
-    public List<LivingConditionResponse> getLivingConditionResponses(Long villageId){
+    public List<LivingConditionResponse> getLivingConditionResponses(Long villageId, boolean status, String date) {
         List<String> names = new ArrayList<>(Arrays.asList("Инфраструктура", "Обществен транспорт",
                 "Електрозахранване", "Водоснабдяване", "Мобилен обхват", "Интернет", "ТВ", "Чистота"));
         List<Long> livingConditionIds = new ArrayList<>(Arrays.asList(1L, 3L, 4L, 5L, 6L, 7L, 8L, 9L));
         List<LivingConditionResponse> livingConditionResponses = new ArrayList<>();
 
         for (int i = 0; i < names.size(); i++) {
-            if (!villageLivingConditionRepository.existsByVillageIdAndLivingConditionIdAndVillageStatus(villageId, livingConditionIds.get(i), true)){
+
+            if (!villageLivingConditionRepository.existsByVillageIdAndLivingConditionIdAndVillageStatus(villageId, livingConditionIds.get(i), true)) {
                 continue;
             }
+
+            if (!villageLivingConditionRepository.existsByVillageIdAndLivingConditionIdAndVillageStatusAndDate(villageId, livingConditionIds.get(i), status, date)) {
+                continue;
+            }
+
             LivingConditionResponse livingConditionResponse = new LivingConditionResponse();
             livingConditionResponse.setLivingCondition(names.get(i));
-            double percentage = getPercentage(villageId, livingConditionIds.get(i));
+            double percentage = getPercentage(villageId, livingConditionIds.get(i), status, date);
             livingConditionResponse.setPercentage(Math.round(percentage * 100.0) / 100.0);
             livingConditionResponses.add(livingConditionResponse);
         }
-        System.out.println("livingConditionResponses " + livingConditionResponses);
-        return  livingConditionResponses;
+        return livingConditionResponses;
     }
 
-    public List<LivingConditionResponse> getLivingConditionResponses(Long villageId, boolean status){ //ddd
-        List<String> names = new ArrayList<>(Arrays.asList("Инфраструктура", "Обществен транспорт",
-                "Електрозахранване", "Водоснабдяване", "Мобилен обхват", "Интернет", "ТВ", "Чистота"));
-        List<Long> livingConditionIds = new ArrayList<>(Arrays.asList(1L, 3L, 4L, 5L, 6L, 7L, 8L, 9L));
-        List<LivingConditionResponse> livingConditionResponses = new ArrayList<>();
-
-        for (int i = 0; i < names.size(); i++) {
-            if (!villageLivingConditionRepository.existsByVillageIdAndLivingConditionIdAndVillageStatus(villageId, livingConditionIds.get(i), status)){
-                continue;
-            }
-            LivingConditionResponse livingConditionResponse = new LivingConditionResponse();
-            livingConditionResponse.setLivingCondition(names.get(i));
-            double percentage = getPercentage(villageId, livingConditionIds.get(i));
-            livingConditionResponse.setPercentage(Math.round(percentage * 100.0) / 100.0);
-            livingConditionResponses.add(livingConditionResponse);
-        }
-        System.out.println("livingConditionResponses " + livingConditionResponses);
-        return  livingConditionResponses;
-    }
-    public LivingConditionResponse getAccessibilityByVillageId(Long villageId){
+    public LivingConditionResponse getAccessibilityByVillageId(Long villageId, boolean status, String date) {
         LivingConditionResponse livingConditionResponse = new LivingConditionResponse();
         livingConditionResponse.setLivingCondition("Достъпност");
 
-        double accessibleInWinterPercentage = getPercentage(villageId, 2L);
-        double easilyAccessiblePercentage = getPercentage(villageId, 11L);
+        double accessibleInWinterPercentage = getPercentage(villageId, 2L, status, date);
+        double easilyAccessiblePercentage = getPercentage(villageId, 11L, status, date);
 
         livingConditionResponse.setPercentage(Math.round((accessibleInWinterPercentage + easilyAccessiblePercentage) / 2 * 100.0) / 100.0);
-        System.out.println("livingConditionResponse " + livingConditionResponse);
         return livingConditionResponse;
     }
 
-    public LivingConditionResponse getCrimeByVillageId(Long villageId){
+    public LivingConditionResponse getCrimeByVillageId(Long villageId, boolean status, String date) {
         LivingConditionResponse livingConditionResponse = new LivingConditionResponse();
         livingConditionResponse.setLivingCondition("Престъпност");
 
-        double crimePercentage = getPercentage(villageId, 10L);
+        double crimePercentage = getPercentage(villageId, 10L, status, date);
         livingConditionResponse.setPercentage(Math.round((100 - crimePercentage) * 100.0) / 100.0);
         return livingConditionResponse;
     }
 
-    public double getLivingConditionsMainPercentage(Long villageId){
+    public double getLivingConditionsMainPercentage(Long villageId, boolean status, String date) {
         List<Long> conditionIds = new ArrayList<>(Arrays.asList(1L, 3L, 4L, 5L, 6L, 7L, 8L, 9L));
         int count = 0;
         double finalPercentage = 0;
         for (Long conditionId : conditionIds) {
-            if (!villageLivingConditionRepository.existsByVillageIdAndLivingConditionIdAndVillageStatus(villageId, conditionId, true)){
+            if (!villageLivingConditionRepository.existsByVillageIdAndLivingConditionIdAndVillageStatus(villageId, conditionId, true) && status) {
+                continue;
+            }
+
+            if (!villageLivingConditionRepository.existsByVillageIdAndLivingConditionIdAndVillageStatusAndDate(villageId, conditionId, status, date) && !status) {
                 continue;
             }
             double percentage = 0;
-            List<VillageLivingConditions> villageLivingConditions = villageLivingConditionRepository.findByVillageIdAndLivingConditionIdAndVillageStatus(villageId, conditionId, true);
+            List<VillageLivingConditions> villageLivingConditions;
+            if (status) {
+                villageLivingConditions = villageLivingConditionRepository.findByVillageIdAndLivingConditionIdAndVillageStatus(villageId, conditionId, true);
+            } else {
+                villageLivingConditions = villageLivingConditionRepository.findByVillageIdAndLivingConditionIdAndVillageStatusAndDate(villageId, conditionId, status, date);
+            }
             for (VillageLivingConditions villageLivingCondition : villageLivingConditions) {
                 percentage += villageLivingCondition.getConsents().getValue();
             }
             count++;
             finalPercentage += percentage / villageLivingConditions.size();
         }
-        if(count != 0){
+        if (count != 0) {
             return finalPercentage / count;
-        }else {
+        } else {
             return 0;
         }
     }
 
-    public double getLivingConditionsForumPercentage(Long villageId){
+    public double getLivingConditionsForumPercentage(Long villageId, boolean status, String date) {
         List<ObjectAroundVillageDTO> objectAroundVillageDTOS = objectAroundVillageService.getAllObjectsAroundVillage();
         double finalPercentage = 0;
         double count = 0;
-        for (ObjectAroundVillageDTO object: objectAroundVillageDTOS) {
-            if (!objectVillageRepository.existsByVillageIdAndObjectIdAndVillageStatus(villageId, object.getId(), true)){
+        for (ObjectAroundVillageDTO object : objectAroundVillageDTOS) {
+            if (!objectVillageRepository.existsByVillageIdAndObjectIdAndVillageStatus(villageId, object.getId(), true) && status) {
+                continue;
+            }
+            if (!objectVillageRepository.existsByVillageIdAndObjectIdAndVillageStatusAndDate(villageId, object.getId(), status, date) && !status) {
                 continue;
             }
             double percentage = 0;
-            List<ObjectVillage> objectVillages = objectVillageRepository.findByVillageIdAndObjectIdAndVillageStatus(villageId, object.getId(), true);
+            List<ObjectVillage> objectVillages;
+            if (status) {
+                objectVillages = objectVillageRepository.findByVillageIdAndObjectIdAndVillageStatus(villageId, object.getId(), true);
+            } else {
+                objectVillages = objectVillageRepository.findByVillageIdAndObjectIdAndVillageStatusAndDate(villageId, object.getId(), status, date);
+            }
             for (ObjectVillage objectVillage : objectVillages) {
                 percentage += objectVillage.getDistance().getValue();
             }
             count++;
             finalPercentage += percentage / objectVillages.size();
         }
-        if (count != 0){
+        if (count != 0) {
             return finalPercentage / count;
-        }else {
+        } else {
             return 0;
         }
     }
-    public LivingConditionResponse getTotalLivingConditionsByVillageId(Long villageId){
+
+    public LivingConditionResponse getTotalLivingConditionsByVillageId(Long villageId, boolean status, String date) {
         LivingConditionResponse livingConditionResponse = new LivingConditionResponse();
         livingConditionResponse.setLivingCondition("Битови условия");
-        double percentage = (getLivingConditionsMainPercentage(villageId) + getLivingConditionsForumPercentage(villageId)) /2;
+        double percentage = (getLivingConditionsMainPercentage(villageId, status, date) + getLivingConditionsForumPercentage(villageId, status, date)) / 2;
         livingConditionResponse.setPercentage(Math.round((percentage) * 100.0) / 100.0);
         return livingConditionResponse;
     }
 
-    public LivingConditionResponse getEcoFriendlinessByVillageId(Long villageId){
+    public LivingConditionResponse getEcoFriendlinessByVillageId(Long villageId, boolean status, String date) {
         LivingConditionResponse livingConditionResponse = new LivingConditionResponse();
         livingConditionResponse.setLivingCondition("Екосъобразност");
 
-        double natureReservePercentage = getPercentage(villageId, 12L);
-        double environmentallyFriendlyLivingPercentage = getPercentage(villageId, 13L);
+        double natureReservePercentage = getPercentage(villageId, 12L, status, date);
+        double environmentallyFriendlyLivingPercentage = getPercentage(villageId, 13L, status, date);
         livingConditionResponse.setPercentage(Math.round((natureReservePercentage + environmentallyFriendlyLivingPercentage) / 2 * 100.0) / 100.0);
 
         return livingConditionResponse;
     }
 
-    public double getPercentage(Long villageId, Long conditionId){
-        List<VillageLivingConditions> villageLivingConditions = villageLivingConditionRepository.findByVillageIdAndLivingConditionIdAndVillageStatus(villageId, conditionId, true);
+    public double getPercentage(Long villageId, Long conditionId, boolean status, String date) {
+        List<VillageLivingConditions> villageLivingConditions;
+        if (status) {
+            villageLivingConditions = villageLivingConditionRepository.findByVillageIdAndLivingConditionIdAndVillageStatus(villageId, conditionId, status);
+
+        } else {
+            villageLivingConditions = villageLivingConditionRepository.findByVillageIdAndLivingConditionIdAndVillageStatusAndDate(villageId, conditionId, status, date);
+        }
         double percentage = 0;
         for (VillageLivingConditions villageLivingCondition : villageLivingConditions) {
             percentage += villageLivingCondition.getConsents().getValue();

@@ -2,11 +2,9 @@ package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.dtos.VillageDTO;
 import com.example.ludogorieSoft.village.dtos.response.VillageInfo;
-import com.example.ludogorieSoft.village.dtos.response.VillageResponse;
-import com.example.ludogorieSoft.village.model.EthnicityVillage;
-import com.example.ludogorieSoft.village.repositories.EthnicityRepository;
 import com.example.ludogorieSoft.village.repositories.EthnicityVillageRepository;
 import com.example.ludogorieSoft.village.services.AdminVillageService;
+import com.example.ludogorieSoft.village.services.VillageImageService;
 import com.example.ludogorieSoft.village.services.VillageInfoService;
 import com.example.ludogorieSoft.village.services.VillageService;
 import lombok.AllArgsConstructor;
@@ -15,8 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -28,6 +24,7 @@ public class VillageController {
     private final VillageInfoService villageInfoService;
     private final AdminVillageService adminVillageService;
     private final EthnicityVillageRepository ethnicityVillageRepository;
+    private final VillageImageService villageImageService;
 
     @GetMapping
     public ResponseEntity<List<VillageDTO>> getAllVillages() {
@@ -43,7 +40,9 @@ public class VillageController {
 
     @GetMapping("/info/{id}")
     public ResponseEntity<VillageInfo> getVillageInfoById(@PathVariable("id") Long id) {
-        VillageInfo villageInfo = villageInfoService.getVillageInfoByVillageId(id);
+        boolean status = true;
+        String answerDate = null;
+        VillageInfo villageInfo = villageInfoService.getVillageInfoByVillageId(id,status,answerDate);
         return ResponseEntity.ok(villageInfo);
     }
 
