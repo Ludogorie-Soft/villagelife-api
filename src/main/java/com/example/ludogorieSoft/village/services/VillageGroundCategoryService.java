@@ -9,6 +9,8 @@ import com.example.ludogorieSoft.village.repositories.VillageGroundCategoryRepos
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +27,9 @@ public class VillageGroundCategoryService {
     private final ModelMapper modelMapper;
     private final VillageService villageService;
     private final GroundCategoryService groundCategoryService;
+    private static final Logger logger = LoggerFactory.getLogger(VillageGroundCategoryService.class);
+
+    private static final String ERROR_MESSAGE = "An error occurred while processing the request!";
 
     public VillageGroundCategoryDTO toDTO(VillageGroundCategory forMap) {
         return modelMapper.map(forMap, VillageGroundCategoryDTO.class);
@@ -102,7 +107,7 @@ public class VillageGroundCategoryService {
                 throw new IllegalArgumentException("VillageGroundCategory or its IDs are null.");
             }
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            logger.error(ERROR_MESSAGE, ex);
         }
     }
 
@@ -116,7 +121,8 @@ public class VillageGroundCategoryService {
             statement.setLong(2, villageId);
             statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(ERROR_MESSAGE, e);
+
         }
     }
 
@@ -127,7 +133,7 @@ public class VillageGroundCategoryService {
         try (Connection connection = DatabaseUtils.getConnection()) {
             exists = checkVillageExists(connection, villageId);
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            logger.error(ERROR_MESSAGE, ex);
         }
 
         return exists;
@@ -146,7 +152,7 @@ public class VillageGroundCategoryService {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(ERROR_MESSAGE, e);
         }
 
         return false;
