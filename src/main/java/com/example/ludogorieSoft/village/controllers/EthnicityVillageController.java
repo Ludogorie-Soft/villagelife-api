@@ -61,4 +61,9 @@ public class EthnicityVillageController {
         }
     }
 
+    @GetMapping("/check-existence")
+    public boolean checkExistence(@RequestParam Long villageId, @RequestParam Long ethnicityId) {
+        return ethnicityVillageService.existsByVillageIdAndEthnicityId(villageId, ethnicityId);
+    }
+
 }

@@ -1,11 +1,13 @@
 package com.example.ludogorieSoft.village.services;
 
+import com.example.ludogorieSoft.village.config.DatabaseUtils;
 import com.example.ludogorieSoft.village.dtos.VillageGroundCategoryDTO;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.*;
 import com.example.ludogorieSoft.village.repositories.GroundCategoryRepository;
 import com.example.ludogorieSoft.village.repositories.VillageGroundCategoryRepository;
 import com.example.ludogorieSoft.village.repositories.VillageRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -14,20 +16,21 @@ import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class VillageGroundCategoryServiceTest {
     @Mock
     private VillageGroundCategoryRepository villageGroundCategoryRepository;
-    @Mock
-    private VillageRepository villageRepository;
-    @Mock
-    private GroundCategoryRepository groundCategoryRepository;
     @Mock
     private ModelMapper modelMapper;
     @Mock
@@ -41,6 +44,9 @@ class VillageGroundCategoryServiceTest {
     void setup() {
         MockitoAnnotations.openMocks(this);
     }
+
+    @Mock
+    private DatabaseUtils databaseUtils;
 
     @Test
     void testToDTO() {
@@ -300,4 +306,42 @@ class VillageGroundCategoryServiceTest {
             villageGroundCategoryService.findVillageGroundCategoryDTOByVillageId(villageId);
         });
     }
+
+
+    @Test
+    void testIsVillageExistsWithNullId() {
+        assertThrows(NullPointerException.class, () -> villageGroundCategoryService.isVillageExists(null));
+    }
+
+
+    @Test
+    void testUpdateVillageGroundCategoriesWithNullIds() {
+        assertThrows(IllegalArgumentException.class,
+                () -> villageGroundCategoryService.updateVillageGroundCategories(null, 2L));
+        assertThrows(IllegalArgumentException.class,
+                () -> villageGroundCategoryService.updateVillageGroundCategories(1L, null));
+        assertThrows(IllegalArgumentException.class,
+                () -> villageGroundCategoryService.updateVillageGroundCategories(null, null));
+    }
+
+
+    @Test
+    void testIsVillageExistsWhenNotExists() throws SQLException {
+        Long villageId = 1L;
+
+        Connection connection = mock(Connection.class);
+        PreparedStatement statement = mock(PreparedStatement.class);
+        ResultSet resultSet = mock(ResultSet.class);
+
+        when(DatabaseUtils.getConnection()).thenReturn(connection);
+        when(connection.prepareStatement(any())).thenReturn(statement);
+        when(statement.executeQuery()).thenReturn(resultSet);
+        when(resultSet.next()).thenReturn(true);
+        when(resultSet.getInt(1)).thenReturn(0);
+
+        boolean exists = villageGroundCategoryService.isVillageExists(villageId);
+        assertFalse(exists);
+    }
+
+
 }

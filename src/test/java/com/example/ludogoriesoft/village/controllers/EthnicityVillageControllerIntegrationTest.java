@@ -274,4 +274,19 @@ class EthnicityVillageControllerIntegrationTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].ethnicityId").value(2L));
     }
 
+    @Test
+    void testCheckExistence() throws Exception {
+        Long villageId = 1L;
+        Long ethnicityId = 2L;
+
+        when(ethnicityVillageService.existsByVillageIdAndEthnicityId(villageId, ethnicityId)).thenReturn(true);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageEthnicities/check-existence")
+                        .param("villageId", villageId.toString())
+                        .param("ethnicityId", ethnicityId.toString())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string("true"));
+    }
+
 }

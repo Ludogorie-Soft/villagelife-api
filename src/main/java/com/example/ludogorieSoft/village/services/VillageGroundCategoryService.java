@@ -1,5 +1,6 @@
 package com.example.ludogorieSoft.village.services;
 
+import com.example.ludogorieSoft.village.config.DatabaseUtils;
 import com.example.ludogorieSoft.village.dtos.VillageGroundCategoryDTO;
 import com.example.ludogorieSoft.village.model.GroundCategory;
 import com.example.ludogorieSoft.village.model.Village;
@@ -11,6 +12,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import java.sql.*;
 import java.util.List;
 import java.util.Optional;
 
@@ -90,4 +92,64 @@ public class VillageGroundCategoryService {
         }
         return toDTO(villageGroundCategory);
     }
+
+
+    public void updateVillageGroundCategories(Long villageId, Long groundCategoryId) {
+        try (Connection connection = DatabaseUtils.getConnection()) {
+            if (villageId != null && groundCategoryId != null) {
+                executeUpdate(connection, villageId, groundCategoryId);
+            } else {
+                throw new IllegalArgumentException("VillageGroundCategory or its IDs are null.");
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void executeUpdate(Connection connection, Long villageId, Long groundCategoryId) throws SQLException {
+        String sqlQuery = "UPDATE village_ground_categories " +
+                "SET ground_category_id = ? " +
+                "WHERE village_id = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sqlQuery)) {
+            statement.setLong(1, groundCategoryId);
+            statement.setLong(2, villageId);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public boolean isVillageExists(Long villageId) {
+        boolean exists = false;
+
+        try (Connection connection = DatabaseUtils.getConnection()) {
+            exists = checkVillageExists(connection, villageId);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return exists;
+    }
+
+    private boolean checkVillageExists(Connection connection, Long villageId) throws SQLException {
+        String sqlQuery = "SELECT COUNT(*) FROM village_ground_categories WHERE village_id = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sqlQuery)) {
+            statement.setLong(1, villageId);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    int count = resultSet.getInt(1);
+                    return count > 0;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
 }

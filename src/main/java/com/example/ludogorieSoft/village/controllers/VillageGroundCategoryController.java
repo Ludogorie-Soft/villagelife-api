@@ -49,4 +49,17 @@ public class VillageGroundCategoryController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @PostMapping("/{villageId}/{groundCategoryId}")
+    public void updateVillageGroundCategories(@PathVariable Long villageId,
+                                            @PathVariable Long groundCategoryId) {
+        villageGroundCategoryService.updateVillageGroundCategories(villageId, groundCategoryId);
+    }
+
+    @GetMapping("/check-village-exists/{villageId}")
+    public ResponseEntity<Boolean> isVillageExists(@PathVariable Long villageId) {
+        boolean exists = villageGroundCategoryService.isVillageExists(villageId);
+        return ResponseEntity.ok(exists);
+    }
+
 }
