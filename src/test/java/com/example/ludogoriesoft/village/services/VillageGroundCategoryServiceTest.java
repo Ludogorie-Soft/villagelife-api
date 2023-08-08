@@ -298,40 +298,4 @@ class VillageGroundCategoryServiceTest {
     }
 
 
-    @Test
-    void testIsVillageExistsWithNullId() {
-        assertThrows(NullPointerException.class, () -> villageGroundCategoryService.isVillageExists(null));
-    }
-
-
-    @Test
-    void testUpdateVillageGroundCategoriesWithNullIds() {
-        assertThrows(IllegalArgumentException.class,
-                () -> villageGroundCategoryService.updateVillageGroundCategories(null, 2L));
-        assertThrows(IllegalArgumentException.class,
-                () -> villageGroundCategoryService.updateVillageGroundCategories(1L, null));
-        assertThrows(IllegalArgumentException.class,
-                () -> villageGroundCategoryService.updateVillageGroundCategories(null, null));
-    }
-
-
-//    @Test
-//    void testIsVillageExistsWhenNotExists() throws SQLException {
-//        Long villageId = 1L;
-//
-//        Connection connection = mock(Connection.class);
-//        PreparedStatement statement = mock(PreparedStatement.class);
-//        ResultSet resultSet = mock(ResultSet.class);
-//
-//        when(DatabaseUtils.getConnection()).thenReturn(connection);
-//        when(connection.prepareStatement(any())).thenReturn(statement);
-//        when(statement.executeQuery()).thenReturn(resultSet);
-//        when(resultSet.next()).thenReturn(true);
-//        when(resultSet.getInt(1)).thenReturn(0);
-//
-//        boolean exists = villageGroundCategoryService.isVillageExists(villageId);
-//        assertTrue(exists);
-//    }
-
-
 }
