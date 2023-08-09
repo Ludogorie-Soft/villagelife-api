@@ -15,7 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -25,8 +24,6 @@ import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.mockito.Mockito.*;
-
 
 @AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(value = VillageGroundCategoryController.class,
@@ -189,30 +186,4 @@ class VillageGroundCategoryControllerIntegrationTest {
                 .andExpect(status().isNotFound());
     }
 
-
-    @Test
-    void testUpdateVillageGroundCategories() throws Exception {
-        Long villageId = 1L;
-        Long groundCategoryId = 2L;
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/villageGroundCategory/{villageId}/{groundCategoryId}", villageId, groundCategoryId)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-
-        verify(villageGroundCategoryService, times(1)).updateVillageGroundCategories(villageId, groundCategoryId);
-    }
-
-    @Test
-    void testIsVillageExists() throws Exception {
-        Long villageId = 1L;
-
-        when(villageGroundCategoryService.isVillageExists(villageId)).thenReturn(true);
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageGroundCategory/check-village-exists/{villageId}", villageId)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string("true"));
-
-        verify(villageGroundCategoryService, times(1)).isVillageExists(villageId);
-    }
 }

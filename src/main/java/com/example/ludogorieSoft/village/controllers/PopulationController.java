@@ -49,4 +49,10 @@ public class PopulationController {
         return new ResponseEntity<>("Population with id: " + id + " has been deleted successfully!!", HttpStatus.OK);
     }
 
+
+    @GetMapping("/{villageName}/{region}")
+    public ResponseEntity<PopulationDTO> findPopulationByVillageNameAndRegion(@PathVariable("villageName") String villageName, @PathVariable("region") String region) {
+        return ResponseEntity.ok(populationService.findPopulationDTOByVillageNameAndRegion(villageName, region));
+    }
+
 }

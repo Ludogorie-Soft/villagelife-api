@@ -1,6 +1,5 @@
 package com.example.ludogorieSoft.village.services;
 
-import com.example.ludogorieSoft.village.config.DatabaseUtils;
 import com.example.ludogorieSoft.village.dtos.VillageGroundCategoryDTO;
 import com.example.ludogorieSoft.village.model.GroundCategory;
 import com.example.ludogorieSoft.village.model.Village;
@@ -9,12 +8,9 @@ import com.example.ludogorieSoft.village.repositories.VillageGroundCategoryRepos
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import java.sql.*;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,9 +23,6 @@ public class VillageGroundCategoryService {
     private final ModelMapper modelMapper;
     private final VillageService villageService;
     private final GroundCategoryService groundCategoryService;
-    private static final Logger logger = LoggerFactory.getLogger(VillageGroundCategoryService.class);
-
-    private static final String ERROR_MESSAGE = "An error occurred while processing the request!";
 
     public VillageGroundCategoryDTO toDTO(VillageGroundCategory forMap) {
         return modelMapper.map(forMap, VillageGroundCategoryDTO.class);
@@ -98,64 +91,8 @@ public class VillageGroundCategoryService {
         return toDTO(villageGroundCategory);
     }
 
-
-    public void updateVillageGroundCategories(Long villageId, Long groundCategoryId) {
-        try (Connection connection = DatabaseUtils.getConnection()) {
-            if (villageId != null && groundCategoryId != null) {
-                executeUpdate(connection, villageId, groundCategoryId);
-            } else {
-                throw new IllegalArgumentException("VillageGroundCategory or its IDs are null.");
-            }
-        } catch (SQLException ex) {
-            logger.error(ERROR_MESSAGE, ex);
-        }
-    }
-
-    private void executeUpdate(Connection connection, Long villageId, Long groundCategoryId) throws SQLException {
-        String sqlQuery = "UPDATE village_ground_categories " +
-                "SET ground_category_id = ? " +
-                "WHERE village_id = ?";
-
-        try (PreparedStatement statement = connection.prepareStatement(sqlQuery)) {
-            statement.setLong(1, groundCategoryId);
-            statement.setLong(2, villageId);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            logger.error(ERROR_MESSAGE, e);
-
-        }
-    }
-
-
-    public boolean isVillageExists(Long villageId) {
-        boolean exists = false;
-
-        try (Connection connection = DatabaseUtils.getConnection()) {
-            exists = checkVillageExists(connection, villageId);
-        } catch (SQLException ex) {
-            logger.error(ERROR_MESSAGE, ex);
-        }
-
-        return exists;
-    }
-
-    private boolean checkVillageExists(Connection connection, Long villageId) throws SQLException {
-        String sqlQuery = "SELECT COUNT(*) FROM village_ground_categories WHERE village_id = ?";
-
-        try (PreparedStatement statement = connection.prepareStatement(sqlQuery)) {
-            statement.setLong(1, villageId);
-
-            try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.next()) {
-                    int count = resultSet.getInt(1);
-                    return count > 0;
-                }
-            }
-        } catch (SQLException e) {
-            logger.error(ERROR_MESSAGE, e);
-        }
-
-        return false;
+    public boolean existsVillageGroundCategoryDTOByVillageId(Long villageId) {
+        return villageGroundCategoryRepository.findByVillageId(villageId) != null;
     }
 
 }
