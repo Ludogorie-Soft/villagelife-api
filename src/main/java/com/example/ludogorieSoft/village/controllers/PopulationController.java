@@ -21,6 +21,7 @@ public class PopulationController {
     public ResponseEntity<List<PopulationDTO>> getAllPopulation() {
         return ResponseEntity.ok(populationService.getAllPopulation());
     }
+
     @GetMapping("/{id}")
     public ResponseEntity<PopulationDTO> getPopulationById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(populationService.getPopulationById(id));
@@ -34,12 +35,12 @@ public class PopulationController {
 
     @PostMapping("/null")
     public ResponseEntity<Long> createPopulationWithNullValues() {
-        Long populationID=populationService.createPopulationWithNullValues();
+        Long populationID = populationService.createPopulationWithNullValues();
         return ResponseEntity.status(HttpStatus.OK).body(populationID);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PopulationDTO> updatePopulation(@PathVariable("id") Long id,@Valid @RequestBody PopulationDTO populationDTO) {
+    public ResponseEntity<PopulationDTO> updatePopulation(@PathVariable("id") Long id, @Valid @RequestBody PopulationDTO populationDTO) {
         return ResponseEntity.ok(populationService.updatePopulation(id, populationDTO));
     }
 
