@@ -90,4 +90,9 @@ public class VillageGroundCategoryService {
         }
         return toDTO(villageGroundCategory);
     }
+
+    public boolean existsVillageGroundCategoryDTOByVillageId(Long villageId) {
+        return villageGroundCategoryRepository.findByVillageId(villageId) != null;
+    }
+
 }

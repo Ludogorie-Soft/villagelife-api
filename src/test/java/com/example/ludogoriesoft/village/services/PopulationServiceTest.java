@@ -286,4 +286,28 @@ class PopulationServiceTest {
         Population resultPopulation = populationService.findPopulationByVillageNameAndRegion(villageName, regionName);
         assertNull(resultPopulation);
     }
+
+    @Test
+    void testFindPopulationDTOByVillageNameAndRegion_Valid() {
+        String villageName = "SampleVillage";
+        String regionName = "SampleRegion";
+        Population mockedPopulation = new Population();
+        when(populationRepository.findByVillageNameAndRegionName(villageName, regionName)).thenReturn(mockedPopulation);
+        PopulationDTO populationDTO = new PopulationDTO();
+        when(populationService.populationToPopulationDTO(mockedPopulation)).thenReturn(populationDTO);
+        PopulationDTO result = populationService.findPopulationDTOByVillageNameAndRegion(villageName, regionName);
+
+        assertNotNull(result);
+        // Тук може да добавите други проверки според логиката на populationToPopulationDTO
+    }
+
+    @Test
+    void testFindPopulationDTOByVillageNameAndRegion_PopulationNull() {
+        String villageName = "NonExistentVillage";
+        String regionName = "NonExistentRegion";
+        when(populationRepository.findByVillageNameAndRegionName(villageName, regionName)).thenReturn(null);
+
+        assertThrows(ApiRequestException.class,
+                () -> populationService.findPopulationDTOByVillageNameAndRegion(villageName, regionName));
+    }
 }
