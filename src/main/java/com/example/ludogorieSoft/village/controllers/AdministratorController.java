@@ -22,8 +22,6 @@ public class AdministratorController {
     private final VillageService villageService;
     private final AdminVillageService adminVillageService;
     private final VillageInfoService villageInfoService;
-    private final VillageImageService villageImageService;
-
 
     @GetMapping
     public ResponseEntity<List<AdministratorDTO>> getAllAdministrators() {
@@ -55,7 +53,7 @@ public class AdministratorController {
     @GetMapping("village")
     public List<VillageResponse> getAllVillages() {
 
-        return villageService.getAllVillagesWithAdmin();//administratorService.getAllVillagesWithPopulation()
+        return villageService.getAllVillagesWithAdmin();
     }
 
     @DeleteMapping("/village-delete/{villageId}")

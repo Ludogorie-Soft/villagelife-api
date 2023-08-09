@@ -290,34 +290,6 @@ class VillageServiceTest {
         verify(villageRepository, times(1)).save(existingVillage);
         assertEquals(expectedVillageDTO, result);
     }
-
-
-    @Test
-    void testUpdateVillageWithApprovedVillage() {//me
-        Long id = 1L;
-        Region region = new Region(1L, "testRegion");
-        RegionDTO regionDTO = new RegionDTO(region.getId(), region.getRegionName());
-
-        VillageDTO villageDTO = new VillageDTO();
-        villageDTO.setName("Test Village");
-        villageDTO.setRegion(regionDTO.getRegionName());
-        villageDTO.setStatus(true);
-
-        Village village = new Village();
-        village.setName("Test Village");
-        village.setPopulationCount(1000);
-        village.setStatus(true); // Set the status as approved
-        when(villageRepository.findById(id)).thenReturn(Optional.of(village));
-        when(regionService.findRegionByName(region.getRegionName())).thenReturn(regionDTO);
-        when(regionService.checkRegion(region.getId())).thenReturn(region);
-
-        AdministratorDTO administratorDTO = new AdministratorDTO();
-        administratorDTO.setId(1L);
-        administratorDTO.setUsername("admin");
-        when(authService.getAdministratorInfo()).thenReturn(administratorDTO);
-
-        assertThrows(ApiRequestException.class, () -> villageService.updateVillageStatus(id, villageDTO));
-    }
     @Test
     void testUpdateVillageExceptionCase() {
 

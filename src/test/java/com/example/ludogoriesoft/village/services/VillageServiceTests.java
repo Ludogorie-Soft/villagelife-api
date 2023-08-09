@@ -6,8 +6,10 @@ import com.example.ludogorieSoft.village.enums.Children;
 import com.example.ludogorieSoft.village.enums.Foreigners;
 import com.example.ludogorieSoft.village.enums.NumberOfPopulation;
 import com.example.ludogorieSoft.village.enums.Residents;
+import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.*;
 import com.example.ludogorieSoft.village.repositories.RegionRepository;
+import com.example.ludogorieSoft.village.repositories.VillagePopulationAssertionRepository;
 import com.example.ludogorieSoft.village.repositories.VillageRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,24 +22,56 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
+import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 class VillageServiceTests {
+    @Mock
+    private VillageRepository villageRepository;
+    @Mock
+    private ModelMapper modelMapper;
+    @Mock
+    private RegionService regionService;
+    @Mock
+    private AuthService authService;
 
+    @InjectMocks
+    private VillageService villageService;
+
+    @BeforeEach
+    void setUp() {
+        villageRepository = Mockito.mock(VillageRepository.class);
+        modelMapper = Mockito.mock(ModelMapper.class);
+        regionService = Mockito.mock(RegionService.class);
+        authService = Mockito.mock(AuthService.class);
+        villageService = new VillageService(
+                villageRepository,
+                modelMapper,
+                regionService,
+                authService
+        );
+    }
 
     @Test
     void testGetAllSearchVillages() {
-        Village village1 = new Village(1L, "Village1", new Region(1L, "Region1"), 1000, new Population(), LocalDateTime.now(), true, new Administrator(), LocalDateTime.now(), null, null, null, null, null, null, null, null);
-        Village village2 = new Village(2L, "Village2", new Region(2L, "Region2"), 2000, new Population(), LocalDateTime.now(), true, new Administrator(), LocalDateTime.now(), null, null, null, null, null, null, null, null);
-        List<Village> mockVillages = List.of(village1, village2);
+        Village village1 = new Village();
+        village1.setName("Village1");
+        Village village2 = new Village();
+        village2.setName("Village2");
 
-        VillageRepository mockRepository = mock(VillageRepository.class);
-        when(mockRepository.findByNameContainingIgnoreCaseOrderByRegionNameAsc("Village")).thenReturn(mockVillages);
+        List<Village> mockVillages = new ArrayList<>();
+        mockVillages.add(village1);
+        mockVillages.add(village2);
 
-        RegionRepository mockRegionRepository = mock(RegionRepository.class);
+        VillageDTO villageDTO1 = new VillageDTO();
+        villageDTO1.setName("Village1");
 
-        VillageService villageService = new VillageService(mockRepository, new ModelMapper(), new RegionService(mockRegionRepository, new ModelMapper()));
+        VillageDTO villageDTO2 = new VillageDTO();
+        villageDTO2.setName("Village2");
+        when(villageRepository.findByNameContainingIgnoreCaseOrderByRegionNameAsc("Village")).thenReturn(mockVillages);
+        when(modelMapper.map(village1, VillageDTO.class)).thenReturn(villageDTO1);
+        when(modelMapper.map(village2, VillageDTO.class)).thenReturn(villageDTO2);
 
         List<VillageDTO> result = villageService.getAllSearchVillages("Village");
 
@@ -50,7 +84,6 @@ class VillageServiceTests {
 
     @Test
     void testGetAllSearchVillagesByRegionName() {
-        VillageRepository mockRepository = mock(VillageRepository.class);
 
         Village village1 = new Village();
         village1.setId(1L);
@@ -60,17 +93,25 @@ class VillageServiceTests {
         village2.setId(2L);
         village2.setName("Village2");
         village2.setRegion(new Region(2L, "Region2"));
+
         List<Village> mockVillages = Arrays.asList(village1, village2);
 
-        when(mockRepository.findByRegionName("Region1")).thenReturn(mockVillages);
+        VillageDTO villageDTO1 = new VillageDTO();
+        villageDTO1.setName("Village1");
+        villageDTO1.setRegion("Region1");
 
-        RegionRepository mockRegionRepository = mock(RegionRepository.class);
+        VillageDTO villageDTO2 = new VillageDTO();
+        villageDTO2.setName("Village2");
+        villageDTO2.setRegion("Region2");
 
-        VillageService villageService = new VillageService(mockRepository, new ModelMapper(), new RegionService(mockRegionRepository, new ModelMapper()));
+        when(modelMapper.map(village1, VillageDTO.class)).thenReturn(villageDTO1);
+        when(modelMapper.map(village2, VillageDTO.class)).thenReturn(villageDTO2);
+
+        when(villageRepository.findByRegionName("Region1")).thenReturn(mockVillages);
 
         List<VillageDTO> result = villageService.getAllSearchVillagesByRegionName("Region1");
 
-        verify(mockRepository).findByRegionName("Region1");
+        verify(villageRepository).findByRegionName("Region1");
 
         assertNotNull(result);
         assertEquals(2, result.size());
@@ -80,71 +121,62 @@ class VillageServiceTests {
 
     @Test
     void testGetAllSearchVillagesByNameAndRegionName() {
-        VillageRepository mockRepository = mock(VillageRepository.class);
-
         Village village1 = new Village();
         village1.setId(1L);
         village1.setName("Village1");
         village1.setRegion(new Region(1L, "Region1"));
+
         Village village2 = new Village();
         village2.setId(2L);
         village2.setName("Village2");
         village2.setRegion(new Region(2L, "Region2"));
+
         List<Village> mockVillages = Arrays.asList(village1, village2);
 
-        when(mockRepository.findByNameContainingIgnoreCaseAndRegionName("Region1", "Village1"))
+        when(villageRepository.findByNameContainingIgnoreCaseAndRegionName("Region1", "Village1"))
                 .thenReturn(mockVillages);
 
-        RegionRepository mockRegionRepository = mock(RegionRepository.class);
-        ModelMapper modelMapper = new ModelMapper();
+        VillageDTO villageDTO1 = new VillageDTO();
+        villageDTO1.setName("Village1");
 
-        RegionService regionService = new RegionService(mockRegionRepository, modelMapper);
+        VillageDTO villageDTO2 = new VillageDTO();
+        villageDTO2.setName("Village2");
 
-        VillageService villageService = new VillageService(mockRepository, modelMapper, regionService);
+        when(modelMapper.map(village1, VillageDTO.class)).thenReturn(villageDTO1);
+        when(modelMapper.map(village2, VillageDTO.class)).thenReturn(villageDTO2);
 
         List<VillageDTO> result = villageService.getAllSearchVillagesByNameAndRegionName("Region1", "Village1");
 
-        verify(mockRepository).findByNameContainingIgnoreCaseAndRegionName("Region1", "Village1");
+        verify(villageRepository).findByNameContainingIgnoreCaseAndRegionName("Region1", "Village1");
 
         assertNotNull(result);
         assertEquals(2, result.size());
         assertEquals("Village1", result.get(0).getName());
+        assertEquals("Village2", result.get(1).getName());
     }
+
 
 
     @Test
     void testGetAllSearchVillagesByRegionNameNoVillagesFound() {
-        VillageRepository mockRepository = mock(VillageRepository.class);
-        when(mockRepository.findByRegionName("NonExistentRegion")).thenReturn(Collections.emptyList());
 
-        RegionRepository mockRegionRepository = mock(RegionRepository.class);
-
-        VillageService villageService = new VillageService(mockRepository, new ModelMapper(), new RegionService(mockRegionRepository, new ModelMapper()));
+        when(villageRepository.findByRegionName("NonExistentRegion")).thenReturn(Collections.emptyList());
 
         List<VillageDTO> result = villageService.getAllSearchVillagesByRegionName("NonExistentRegion");
 
-        verify(mockRepository).findByRegionName("NonExistentRegion");
+        verify(villageRepository).findByRegionName("NonExistentRegion");
 
         assertNotNull(result);
         Assertions.assertTrue(result.isEmpty());
     }
-
     @Test
     void testGetAllSearchVillagesByNameAndRegionNameNoVillagesFound() {
-        VillageRepository mockRepository = mock(VillageRepository.class);
-        when(mockRepository.findByNameContainingIgnoreCaseAndRegionName("Region1", "NonExistentVillage"))
+        when(villageRepository.findByNameContainingIgnoreCaseAndRegionName("Region1", "NonExistentVillage"))
                 .thenReturn(Collections.emptyList());
-
-        RegionRepository mockRegionRepository = mock(RegionRepository.class);
-        ModelMapper modelMapper = new ModelMapper();
-
-        RegionService regionService = new RegionService(mockRegionRepository, modelMapper);
-
-        VillageService villageService = new VillageService(mockRepository, modelMapper, regionService);
 
         List<VillageDTO> result = villageService.getAllSearchVillagesByNameAndRegionName("Region1", "NonExistentVillage");
 
-        verify(mockRepository).findByNameContainingIgnoreCaseAndRegionName("Region1", "NonExistentVillage");
+        verify(villageRepository).findByNameContainingIgnoreCaseAndRegionName("Region1", "NonExistentVillage");
 
         assertNotNull(result);
         Assertions.assertTrue(result.isEmpty());
@@ -153,11 +185,8 @@ class VillageServiceTests {
 
     @Test
     void testGetSearchVillagesWhenNoVillagesFoundWithParamsNoVillagesFound() {
-        VillageRepository mockRepository = mock(VillageRepository.class);
 
-        when(mockRepository.searchVillages(anyList(), anyList(), any(Children.class))).thenReturn(Collections.emptyList());
-
-        VillageService villageService = new VillageService(mockRepository, new ModelMapper(), new RegionService(mock(RegionRepository.class), new ModelMapper()));
+        when(villageRepository.searchVillages(anyList(), anyList(), any(Children.class))).thenReturn(Collections.emptyList());
 
         List<String> objectAroundVillageDTOS = Arrays.asList("object1", "object2");
         List<String> livingConditionDTOS = Arrays.asList("condition1", "condition2");
@@ -165,7 +194,7 @@ class VillageServiceTests {
 
         List<VillageDTO> result = villageService.getSearchVillages(objectAroundVillageDTOS, livingConditionDTOS, children);
 
-        verify(mockRepository).searchVillages(objectAroundVillageDTOS, livingConditionDTOS, children);
+        verify(villageRepository).searchVillages(objectAroundVillageDTOS, livingConditionDTOS, children);
 
         assertNotNull(result);
         Assertions.assertTrue(result.isEmpty());
@@ -173,15 +202,12 @@ class VillageServiceTests {
 
     @Test
     void testGetSearchVillagesWhenNoVillagesFoundWithEmptyParams() {
-        VillageRepository mockRepository = mock(VillageRepository.class);
 
-        when(mockRepository.searchVillages(anyList(), anyList(), any(Children.class))).thenReturn(Collections.emptyList());
-
-        VillageService villageService = new VillageService(mockRepository, new ModelMapper(), new RegionService(null, null));
+        when(villageRepository.searchVillages(anyList(), anyList(), any(Children.class))).thenReturn(Collections.emptyList());
 
         List<VillageDTO> result = villageService.getSearchVillages(new ArrayList<>(), new ArrayList<>(), Children.OVER_50);
 
-        verify(mockRepository).searchVillages(anyList(), anyList(), any(Children.class));
+        verify(villageRepository).searchVillages(anyList(), anyList(), any(Children.class));
 
         assertNotNull(result);
         Assertions.assertTrue(result.isEmpty());
@@ -190,17 +216,14 @@ class VillageServiceTests {
 
     @Test
     void testGetSearchVillagesByLivingConditionAndChildrenNoVillagesFound() {
-        VillageRepository mockRepository = mock(VillageRepository.class);
 
-        when(mockRepository.searchVillagesByLivingConditionAndChildren(anyList(), any(Children.class))).thenReturn(Collections.emptyList());
-
-        VillageService villageService = new VillageService(mockRepository, new ModelMapper(), new RegionService(mock(RegionRepository.class), new ModelMapper()));
+        when(villageRepository.searchVillagesByLivingConditionAndChildren(anyList(), any(Children.class))).thenReturn(Collections.emptyList());
 
         List<String> livingConditionDTOS = Arrays.asList("condition1", "condition2");
         Children children = Children.BELOW_10;
         List<VillageDTO> result = villageService.getSearchVillagesByLivingConditionAndChildren(livingConditionDTOS, children);
 
-        verify(mockRepository).searchVillagesByLivingConditionAndChildren(livingConditionDTOS, children.getEnumValue());
+        verify(villageRepository).searchVillagesByLivingConditionAndChildren(livingConditionDTOS, children.getEnumValue());
 
         assertNotNull(result);
         Assertions.assertTrue(result.isEmpty());
@@ -209,7 +232,6 @@ class VillageServiceTests {
 
     @Test
     void testGetSearchVillagesByChildrenCount() {
-        VillageRepository mockRepository = mock(VillageRepository.class);
 
         Village village1 = new Village();
         village1.setId(1L);
@@ -224,17 +246,15 @@ class VillageServiceTests {
         List<Village> mockVillages = Arrays.asList(village1, village2);
 
 
-        when(mockRepository.searchVillagesByChildrenCount(
+        when(villageRepository.searchVillagesByChildrenCount(
                 ArgumentMatchers.any(Children.class)))
                 .thenReturn(mockVillages);
-
-        VillageService villageService = new VillageService(mockRepository, new ModelMapper(), new RegionService(mock(RegionRepository.class), new ModelMapper()));
 
         Children children = Children.FROM_21_TO_50;
 
         List<VillageDTO> result = villageService.getSearchVillagesByChildrenCount(children);
 
-        Mockito.verify(mockRepository).searchVillagesByChildrenCount(
+        Mockito.verify(villageRepository).searchVillagesByChildrenCount(
                 children.getEnumValue()
         );
 
@@ -246,7 +266,6 @@ class VillageServiceTests {
 
     @Test
     void testGetAllVillages() {
-        VillageRepository mockRepository = mock(VillageRepository.class);
 
         Village village1 = new Village();
         village1.setId(1L);
@@ -258,32 +277,45 @@ class VillageServiceTests {
         village2.setRegion(new Region(2L, "Region2"));
         List<Village> mockVillages = Arrays.asList(village1, village2);
 
-        when(mockRepository.findAll()).thenReturn(mockVillages);
+        when(villageRepository.findAll()).thenReturn(mockVillages);
 
-        VillageService villageService = new VillageService(mockRepository, new ModelMapper(), new RegionService(mock(RegionRepository.class), new ModelMapper()));
+        VillageDTO villageDTO1 = new VillageDTO();
+        villageDTO1.setName("Village1");
+
+        VillageDTO villageDTO2 = new VillageDTO();
+        villageDTO2.setName("Village2");
+
+        when(modelMapper.map(village1, VillageDTO.class)).thenReturn(villageDTO1);
+        when(modelMapper.map(village2, VillageDTO.class)).thenReturn(villageDTO2);
 
         List<VillageDTO> result = villageService.getAllVillages();
 
-        Mockito.verify(mockRepository).findAll();
+        Mockito.verify(villageRepository).findAll();
 
         assertEquals(2, result.size());
         assertEquals("Village1", result.get(0).getName());
         assertEquals("Village2", result.get(1).getName());
     }
 
-
     @Test
     void testGetVillageByIdWhenFound() {
-        Village village = new Village(1L, "Village1", new Region(1L, "Region1"), 1000,  new Population(), LocalDateTime.now(), true, new Administrator(), LocalDateTime.now(), null, null, null, null, null, null, null, null);
+        Village village = new Village();
+        village.setId(1L);
+        village.setName("Village1");
+        village.setRegion(new Region(1L, "Region1"));
 
-        VillageRepository mockRepository = mock(VillageRepository.class);
-        when(mockRepository.findById(1L)).thenReturn(Optional.of(village));
+        when(villageRepository.findById(1L)).thenReturn(Optional.of(village));
 
-        VillageService villageService = new VillageService(mockRepository, new ModelMapper(), new RegionService(null, null));
+        VillageDTO villageDTO1 = new VillageDTO();
+        villageDTO1.setId(1L);
+        villageDTO1.setName("Village1");
+        villageDTO1.setRegion("Region1");
+
+        when(modelMapper.map(village, VillageDTO.class)).thenReturn(villageDTO1);
 
         VillageDTO result = villageService.getVillageById(1L);
 
-        verify(mockRepository).findById(1L);
+        verify(villageRepository).findById(1L);
 
         assertNotNull(result);
         assertEquals(1L, result.getId());
@@ -304,11 +336,6 @@ class VillageServiceTests {
         vl2.setLivingCondition(new LivingCondition(2L, "Condition2"));
         villageLivingConditions.add(vl2);
 
-        VillageRepository mockRepository = mock(VillageRepository.class);
-
-        RegionRepository mockRegionRepository = mock(RegionRepository.class);
-
-        VillageService villageService = new VillageService(mockRepository, new ModelMapper(), new RegionService(mockRegionRepository, new ModelMapper()));
         List<LivingConditionDTO> livingConditionDTOs = villageService.convertToLivingConditionDTOList(villageLivingConditions);
 
         assertEquals(2, livingConditionDTOs.size());
@@ -327,7 +354,7 @@ class VillageServiceTests {
     void testConvertToPopulationDTO() {
         Children children = Children.OVER_50;
 
-        VillageService villageService = new VillageService(null, null, null);
+        VillageService villageService = new VillageService(null, null, null, null);
         PopulationDTO populationDTO = villageService.convertToPopulationDTO(children);
 
         assertEquals(Children.OVER_50, populationDTO.getChildren());
@@ -363,7 +390,7 @@ class VillageServiceTests {
         village2.setPopulation(new Population(2L, NumberOfPopulation.UP_TO_10_PEOPLE, Residents.UP_TO_2_PERCENT, Children.FROM_21_TO_50, Foreigners.YES));
         villages.add(village2);
 
-        VillageService villageService = new VillageService(null, null, null);
+        VillageService villageService = new VillageService(null, null, null, null);
         List<VillageDTO> villageDTOs = villageService.villageToVillageDTOWithoutObject(villages);
 
         assertEquals(2, villageDTOs.size());
@@ -418,7 +445,7 @@ class VillageServiceTests {
         VillageRepository mockRepository = mock(VillageRepository.class);
         when(mockRepository.searchVillagesByLivingConditionAndChildren(livingConditions, children.getEnumValue())).thenReturn(villages);
 
-        VillageService villageService = new VillageService(mockRepository, null, null);
+        VillageService villageService = new VillageService(mockRepository, null, null, null);
         List<VillageDTO> villageDTOs = villageService.getSearchVillagesByLivingConditionAndChildren(livingConditions, children);
 
         assertEquals(2, villageDTOs.size());
@@ -449,7 +476,7 @@ class VillageServiceTests {
         ov2.setObject(new ObjectAroundVillage(2L, "Type2"));
         objectVillages.add(ov2);
 
-        VillageService villageService = new VillageService(null, null, null);
+        VillageService villageService = new VillageService(null, null, null, null);
         List<ObjectAroundVillageDTO> objectAroundVillageDTOs = villageService.convertToObjectAroundVillageDTOList(objectVillages);
 
         assertEquals(2, objectAroundVillageDTOs.size());
@@ -493,7 +520,7 @@ class VillageServiceTests {
         village2.setPopulation(new Population(2L, NumberOfPopulation.UP_TO_10_PEOPLE, Residents.UP_TO_2_PERCENT, Children.FROM_11_TO_20, Foreigners.YES));
         villages.add(village2);
 
-        VillageService villageService = new VillageService(null, null, null);
+        VillageService villageService = new VillageService(null, null, null, null);
         List<VillageDTO> villageDTOs = villageService.villageToVillageDTOWithoutLivingCondition(villages);
 
         assertEquals(2, villageDTOs.size());
@@ -546,7 +573,7 @@ class VillageServiceTests {
         VillageRepository mockRepository = mock(VillageRepository.class);
         when(mockRepository.searchVillagesByObjectAndChildren(anyList(), any(Children.class))).thenReturn(villages);
 
-        VillageService villageService = new VillageService(mockRepository, null, null);
+        VillageService villageService = new VillageService(mockRepository, null, null, null);
         List<VillageDTO> villageDTOs = villageService.getSearchVillagesByObjectAndChildren(Collections.singletonList("Object1"), Children.OVER_50);
 
         assertEquals(2, villageDTOs.size());
@@ -601,7 +628,7 @@ class VillageServiceTests {
         village2.setVillageLivingConditions(List.of(villageLivingConditions2));
         villages.add(village2);
 
-        VillageService villageService = new VillageService(null, null, null);
+        VillageService villageService = new VillageService(null, null, null, null);
         List<VillageDTO> villageDTOs = villageService.villageToVillageDTOWithoutChildren(villages);
 
         assertEquals(2, villageDTOs.size());
@@ -659,7 +686,7 @@ class VillageServiceTests {
         VillageRepository mockRepository = mock(VillageRepository.class);
         when(mockRepository.searchVillagesByObjectAndLivingCondition(anyList(), anyList())).thenReturn(villages);
 
-        VillageService villageService = new VillageService(mockRepository, null, null);
+        VillageService villageService = new VillageService(mockRepository, null, null, null);
         List<VillageDTO> villageDTOs = villageService.getSearchVillagesByObjectAndLivingCondition(Collections.singletonList("Object1"), Collections.singletonList("LivingCondition1"));
 
         assertEquals(2, villageDTOs.size());
@@ -696,7 +723,7 @@ class VillageServiceTests {
         village2.setPopulation(new Population(2L, NumberOfPopulation.UP_TO_10_PEOPLE, Residents.UP_TO_2_PERCENT, Children.FROM_11_TO_20, Foreigners.YES));
         villages.add(village2);
 
-        VillageService villageService = new VillageService(null, null, null);
+        VillageService villageService = new VillageService(null, null, null, null);
         List<VillageDTO> villageDTOs = villageService.villageToVillageDTOChildren(villages);
 
         assertEquals(2, villageDTOs.size());
@@ -739,7 +766,7 @@ class VillageServiceTests {
         village2.setObjectVillages(List.of(objectVillage2));
         villages.add(village2);
 
-        VillageService villageService = new VillageService(null, null, null);
+        VillageService villageService = new VillageService(null, null, null, null);
         List<VillageDTO> villageDTOs = villageService.villageToVillageDTOObject(villages);
 
         assertEquals(2, villageDTOs.size());
@@ -785,7 +812,7 @@ class VillageServiceTests {
         VillageRepository mockRepository = mock(VillageRepository.class);
         when(mockRepository.searchVillagesByObject(anyList())).thenReturn(villages);
 
-        VillageService villageService = new VillageService(mockRepository, null, null);
+        VillageService villageService = new VillageService(mockRepository, null, null, null);
         List<VillageDTO> villageDTOs = villageService.getSearchVillagesByObject(Collections.singletonList("Object1"));
 
         assertEquals(2, villageDTOs.size());
@@ -827,7 +854,7 @@ class VillageServiceTests {
         village2.setVillageLivingConditions(List.of(villageLivingConditions2));
         villages.add(village2);
 
-        VillageService villageService = new VillageService(null, null, null);
+        VillageService villageService = new VillageService(null, null, null, null);
         List<VillageDTO> villageDTOs = villageService.villageToVillageDTOLivingCondition(villages);
 
         assertEquals(2, villageDTOs.size());
@@ -892,7 +919,7 @@ class VillageServiceTests {
 
         villages.add(village2);
 
-        VillageService villageService = new VillageService(null, null, null);
+        VillageService villageService = new VillageService(null, null, null, null);
         List<VillageDTO> villageDTOs = villageService.convertToDTO(villages);
 
         assertEquals(2, villageDTOs.size());
@@ -939,7 +966,7 @@ class VillageServiceTests {
         VillageRepository mockRepository = mock(VillageRepository.class);
         when(mockRepository.searchVillagesByLivingCondition(anyList())).thenReturn(villages);
 
-        VillageService villageService = new VillageService(mockRepository, null, null);
+        VillageService villageService = new VillageService(mockRepository, null, null, null);
         List<VillageDTO> villageDTOs = villageService.getSearchVillagesByLivingCondition(Collections.singletonList("LivingCondition1"));
 
         assertEquals(2, villageDTOs.size());
@@ -986,7 +1013,7 @@ class VillageServiceTests {
         VillageRepository mockRepository = mock(VillageRepository.class);
         when(mockRepository.searchVillages(anyList(), anyList(), any())).thenReturn(villages);
 
-        VillageService villageService = new VillageService(mockRepository, null, null);
+        VillageService villageService = new VillageService(mockRepository, null, null, null);
         List<VillageDTO> villageDTOs = villageService.getSearchVillages(
                 Collections.singletonList("Type1"),
                 Collections.singletonList("LivingCondition1"),
@@ -1005,47 +1032,74 @@ class VillageServiceTests {
     }
 
     @Test
+    void testCreateVillageWhenVillageExists() {//first
+        String villageName = "Sample Village";
+        String regionName = "Sample Region";
+        VillageDTO villageDTO = new VillageDTO();
+        villageDTO.setName(villageName);
+        villageDTO.setRegion(regionName);
+
+        Village existingVillage = new Village();
+        existingVillage.setId(1L);
+        existingVillage.setName(villageName);
+        existingVillage.setStatus(true);
+        existingVillage.setRegion(new Region(1L, regionName));
+
+        VillageDTO savedVillageDTO = new VillageDTO();
+        savedVillageDTO.setId(1L);
+        savedVillageDTO.setName(villageName);
+        savedVillageDTO.setRegion(regionName);
+        savedVillageDTO.setPopulationDTO(new PopulationDTO(1L, NumberOfPopulation.UP_TO_10_PEOPLE, Residents.FROM_21_TO_30_PERCENT, Children.BELOW_10, Foreigners.I_DONT_KNOW));
+
+        when(villageRepository.findSingleVillageByNameAndRegionName(villageName, regionName)).thenReturn(existingVillage);
+        when(modelMapper.map(villageDTO.getPopulationDTO(), Population.class)).thenReturn(new Population(1L, NumberOfPopulation.UP_TO_10_PEOPLE, Residents.FROM_21_TO_30_PERCENT, Children.BELOW_10, Foreigners.I_DONT_KNOW));
+        when(villageRepository.save(existingVillage)).thenReturn(existingVillage);
+        when(modelMapper.map(existingVillage, VillageDTO.class)).thenReturn(savedVillageDTO);
+
+        VillageDTO resultDTO = villageService.createVillage(villageDTO);
+
+        verify(villageRepository, times(1)).findSingleVillageByNameAndRegionName(villageName, regionName);
+        verify(modelMapper, times(1)).map(villageDTO.getPopulationDTO(), Population.class);
+        verify(villageRepository, times(1)).save(any(Village.class));
+        verify(modelMapper, times(1)).map(existingVillage, VillageDTO.class);
+        verify(regionService, times(0)).findRegionByName(regionName);
+
+        Assertions.assertEquals(savedVillageDTO.getId(), resultDTO.getId());
+        Assertions.assertEquals(savedVillageDTO.getName(), resultDTO.getName());
+        Assertions.assertEquals(savedVillageDTO.getPopulationDTO(), resultDTO.getPopulationDTO());
+        Assertions.assertNotNull(resultDTO);
+    }
+    @Test
     void testGetAllApprovedVillages() {
-        VillageRepository mockRepository = mock(VillageRepository.class);
 
         Village village1 = new Village();
-        village1.setName("Село 1");
+        village1.setName("Village1");
         village1.setStatus(true);
 
         Village village2 = new Village();
-        village2.setName("Село 2");
+        village2.setName("Village2");
         village2.setStatus(false);
 
         List<Village> villages = new ArrayList<>();
         villages.add(village1);
         villages.add(village2);
 
-        when(mockRepository.findAllApprovedVillages()).thenReturn(villages);
+        when(villageRepository.findAllApprovedVillages()).thenReturn(villages);
 
-        ModelMapper modelMapper = new ModelMapper();
-        RegionRepository mockRegionRepository = mock(RegionRepository.class);
+        VillageDTO villageDTO1 = new VillageDTO();
+        villageDTO1.setName("Village1");
+        villageDTO1.setStatus(true);
 
-        VillageService villageService = new VillageService(mockRepository, modelMapper, new RegionService(mockRegionRepository, modelMapper));
+        VillageDTO villageDTO2 = new VillageDTO();
+        villageDTO2.setName("Village2");
+        villageDTO2.setStatus(false);
+
+        when(modelMapper.map(village1, VillageDTO.class)).thenReturn(villageDTO1);
+        when(modelMapper.map(village2, VillageDTO.class)).thenReturn(villageDTO2);
 
         List<VillageDTO> approvedVillages = villageService.getAllApprovedVillages();
 
-
-        assertEquals("Село 1", approvedVillages.get(0).getName());
-    }
-
-
-    @Mock
-    private VillageRepository villageRepository;
-
-    @Mock
-    private ModelMapper modelMapper;
-
-    @InjectMocks
-    private VillageService villageService;
-
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
+        assertEquals("Village1", approvedVillages.get(0).getName());
     }
 
     @Test
@@ -1063,7 +1117,8 @@ class VillageServiceTests {
         List<VillageDTO> expectedVillageDTOs = new ArrayList<>();
         expectedVillageDTOs.add(new VillageDTO(1L, "Village1", "region", 100, new PopulationDTO(),
                 LocalDateTime.now(), true, new ArrayList<>(), new ArrayList<>(),
-                new ArrayList<>()));
+                new ArrayList<>(), new ArrayList<>(), new ArrayList<>(),
+                new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
 
         when(modelMapper.map(any(Village.class), eq(VillageDTO.class))).thenReturn(expectedVillageDTOs.get(0));
 
@@ -1074,6 +1129,63 @@ class VillageServiceTests {
 
         verify(villageRepository, times(1)).findByStatus(status);
         verify(modelMapper, times(1)).map(any(Village.class), eq(VillageDTO.class));
+    }
+    @Test
+    void testUpdateVillageStatusThrowsException() {
+        VillageDTO villageDTO = new VillageDTO();
+
+        when(villageRepository.findById(1L)).thenReturn(Optional.empty());
+
+        assertThrows(ApiRequestException.class,
+                () -> villageService.updateVillageStatus(1L, villageDTO));
+
+        verify(villageRepository).findById(1L);
+
+    }
+    @Test
+    void testUpdateVillageWithExistingVillageId() {
+        Long villageId = 123L;
+        Village existingVillage = new Village();
+        Region region = new Region(1L, "testRegion");
+        RegionDTO regionDTO = new RegionDTO(region.getId(), region.getRegionName());
+        existingVillage.setId(villageId);
+        existingVillage.setName("Existing Village");
+
+
+        VillageDTO updatedVillage = new VillageDTO();
+        updatedVillage.setName("Updated Village");
+        updatedVillage.setRegion(region.getRegionName());
+
+        VillageDTO expectedVillageDTO = new VillageDTO();
+        expectedVillageDTO.setId(villageId);
+        expectedVillageDTO.setName("Updated Village");
+        updatedVillage.setRegion(region.getRegionName());
+
+        when(villageRepository.findById(villageId)).thenReturn(Optional.of(existingVillage));
+        when(modelMapper.map(existingVillage, VillageDTO.class)).thenReturn(expectedVillageDTO);
+        when(regionService.findRegionByName(region.getRegionName())).thenReturn(regionDTO);
+        when(regionService.checkRegion(region.getId())).thenReturn(region);
+
+        VillageDTO result = villageService.updateVillage(villageId, updatedVillage);
+
+        verify(villageRepository, times(1)).findById(villageId);
+        verify(villageRepository, times(1)).save(existingVillage);
+        Assertions.assertEquals(expectedVillageDTO, result);
+    }
+
+    @Test
+    void testUpdateVillageExceptionCase() {
+
+        Long villageId = 1L;
+
+        VillageDTO villageDTO = new VillageDTO();
+        villageDTO.setName("Updated Village");
+
+        when(villageRepository.findById(villageId)).thenReturn(Optional.empty());
+
+        assertThrows(ApiRequestException.class, () -> villageService.updateVillage(villageId, villageDTO));
+        verify(villageRepository, times(1)).findById(villageId);
+        verify(villageRepository, never()).save(any(Village.class));
     }
 }
 

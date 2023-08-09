@@ -2,9 +2,6 @@ package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.dtos.VillageDTO;
 import com.example.ludogorieSoft.village.dtos.response.VillageInfo;
-import com.example.ludogorieSoft.village.repositories.EthnicityVillageRepository;
-import com.example.ludogorieSoft.village.services.AdminVillageService;
-import com.example.ludogorieSoft.village.services.VillageImageService;
 import com.example.ludogorieSoft.village.services.VillageInfoService;
 import com.example.ludogorieSoft.village.services.VillageService;
 import lombok.AllArgsConstructor;
@@ -22,9 +19,6 @@ public class VillageController {
 
     private final VillageService villageService;
     private final VillageInfoService villageInfoService;
-    private final AdminVillageService adminVillageService;
-    private final EthnicityVillageRepository ethnicityVillageRepository;
-    private final VillageImageService villageImageService;
 
     @GetMapping
     public ResponseEntity<List<VillageDTO>> getAllVillages() {

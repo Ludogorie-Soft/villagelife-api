@@ -1,4 +1,4 @@
-package com.example.ludogoriesoft.village.services;
+package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.InquiryDTO;
 import com.example.ludogorieSoft.village.enums.InquiryType;
@@ -6,7 +6,6 @@ import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.Inquiry;
 import com.example.ludogorieSoft.village.model.Region;
 import com.example.ludogorieSoft.village.model.Village;
-import com.example.ludogorieSoft.village.services.VillageService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -38,7 +37,6 @@ public class VillageDTO {
     private List<VillageAnswerQuestionDTO> villageAnswerQuestions;
     private List<EthnicityVillageDTO> ethnicityVillages;
     private List<VillageGroundCategoryDTO> villageGroundCategories;
-//    private List<VillageImageDTO> villageImages;
     private List<VillageLandscapeDTO> villageLandscapes;
     private List<VillagePopulationAssertionDTO> villagePopulationAssertions;
 

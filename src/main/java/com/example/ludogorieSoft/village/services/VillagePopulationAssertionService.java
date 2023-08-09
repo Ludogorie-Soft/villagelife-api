@@ -129,4 +129,5 @@ public class VillagePopulationAssertionService {
             villagePopulationAssertionRepository.saveAll(villa);
         }
     }
+
 }

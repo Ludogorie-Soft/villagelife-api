@@ -3,8 +3,11 @@ package com.example.ludogorieSoft.village.controllers;
 import com.example.ludogorieSoft.village.dtos.AdministratorDTO;
 import com.example.ludogorieSoft.village.dtos.VillageDTO;
 import com.example.ludogorieSoft.village.dtos.request.AdministratorRequest;
+import com.example.ludogorieSoft.village.dtos.response.VillageInfo;
 import com.example.ludogorieSoft.village.dtos.response.VillageResponse;
+import com.example.ludogorieSoft.village.services.AdminVillageService;
 import com.example.ludogorieSoft.village.services.AdministratorService;
+import com.example.ludogorieSoft.village.services.VillageInfoService;
 import com.example.ludogorieSoft.village.services.VillageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,11 +23,15 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(value = AdministratorController.class,
@@ -37,12 +44,15 @@ import static org.mockito.Mockito.*;
         }
 )
 class AdministratorControllerIntegrationTest {
-
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
     private AdministratorService administratorService;
+    @MockBean
+    private AdminVillageService adminVillageService;
+    @MockBean
+    private VillageInfoService villageInfoService;
 
     @MockBean
     private VillageService villageService;
@@ -65,9 +75,9 @@ class AdministratorControllerIntegrationTest {
 
         when(administratorService.getAllAdministrators()).thenReturn(administratorDTOList);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/admins")
+        mockMvc.perform(get("/api/v1/admins")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(1L))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].username").value("username1"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(2L))
@@ -83,9 +93,9 @@ class AdministratorControllerIntegrationTest {
         administratorDTO1.setUsername("username1");
 
         when(administratorService.getAdministratorById(1L)).thenReturn(administratorDTO1);
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/admins/{id}", 1L)
+        mockMvc.perform(get("/api/v1/admins/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1L))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.username").value("username1"));
 
@@ -101,10 +111,10 @@ class AdministratorControllerIntegrationTest {
         AdministratorRequest request = new AdministratorRequest();
         request.setUsername("username");
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/admins")
+        mockMvc.perform(post("/api/v1/admins")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"username\":\"username\"}"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1L))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.username").value("username"));
 
@@ -124,7 +134,7 @@ class AdministratorControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/admins/update/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"id\": 1,\"username\":\"username\"}"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1L))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.username").value("username"));
 
@@ -134,10 +144,10 @@ class AdministratorControllerIntegrationTest {
     @Test
     void deleteAdministratorById_shouldReturnSuccessMessage() throws Exception {
         Long adminId = 1L;
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/admins/{id}", adminId)
+        mockMvc.perform(delete("/api/v1/admins/{id}", adminId)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string("Administrator with id: 1 has been deleted successfully!!"));
+                .andExpect(status().isOk())
+                .andExpect(content().string("Administrator with id: 1 has been deleted successfully!!"));
 
         verify(administratorService, times(1)).deleteAdministratorById(1L);
     }
@@ -152,9 +162,9 @@ class AdministratorControllerIntegrationTest {
         villageResponse2.setName("village2");
         List<VillageResponse> villageResponses = Arrays.asList(villageResponse1, villageResponse2);
         when(villageService.getAllVillagesWithAdmin()).thenReturn(villageResponses);
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/admins/village")
+        mockMvc.perform(get("/api/v1/admins/village")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(1L))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("village1"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(2L))
@@ -168,24 +178,107 @@ class AdministratorControllerIntegrationTest {
         Long villageId = 1L;
         doNothing().when(villageService).deleteVillage(villageId);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/admins/village-delete/{villageId}", villageId)
+        mockMvc.perform(delete("/api/v1/admins/village-delete/{villageId}", villageId)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string("Village with id: " + villageId + " has been deleted successfully!!"));
+                .andExpect(status().isOk())
+                .andExpect(content().string("Village with id: " + villageId + " has been deleted successfully!!"));
     }
 
     @Test
     void testChangeVillageStatus() throws Exception {
+        String answerDate = "2023-08-10";
         Long villageId = 1L;
         VillageDTO villageDTO = new VillageDTO();
 
         when(villageService.getVillageById(villageId)).thenReturn(villageDTO);
         when(villageService.updateVillageStatus(villageId, villageDTO)).thenReturn(villageDTO);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/admins/approve/{id}", villageId)
+        mockMvc.perform(post("/api/v1/admins/approve/{villageId}", villageId)
+                        .param("villageId", String.valueOf(villageId))
+                        .param("answerDate", answerDate)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string("Status of village with ID: " + villageId + " changed successfully!!!"));
+                .andExpect(status().isOk())
+                .andExpect(content().string("Status of village with ID: " + villageId + " changed successfully!!!"));
+    }
+
+    @Test
+    void testApproveVillageResponse() throws Exception {
+        Long villageId = 1L;
+        String answerDate = "2023-08-10";
+
+        VillageDTO villageDTO = new VillageDTO();
+
+        when(villageService.getVillageById(villageId)).thenReturn(villageDTO);
+
+        mockMvc.perform(post("/api/v1/admins/approve/{villageId}", villageId)
+                        .param("villageId", String.valueOf(villageId))
+                        .param("answerDate", answerDate)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Status of village with ID: " + villageId + " changed successfully!!!"));
+
+        verify(villageService).getVillageById(villageId);
+        verify(villageService).updateVillageStatus(villageId, villageDTO);
+        verify(adminVillageService).updateVillageStatusAndVillageResponsesStatus(villageId, answerDate);
+    }
+
+    @Test
+    void testFindVillageById() throws Exception {
+        Long villageId = 1L;
+
+        VillageDTO villageDTO = new VillageDTO();
+        villageDTO.setId(1L);
+
+        when(villageService.getVillageById(villageId)).thenReturn(villageDTO);
+
+        mockMvc.perform(get("/api/v1/admins/update/{villageId}", villageId))
+                .andExpect(status().isOk());
+
+        verify(villageService).getVillageById(villageId);
+    }
+
+    @Test
+    void testFindUnapprovedVillageResponseByVillageId() throws Exception {
+        List<VillageResponse> villageResponses = new ArrayList<>(); // Create your mock responses
+        when(adminVillageService.getUnapprovedVillageResponsesWithSortedAnswers(false)).thenReturn(villageResponses);
+
+        mockMvc.perform(get("/api/v1/admins/update"))
+                .andExpect(status().isOk());
+
+        verify(adminVillageService).getUnapprovedVillageResponsesWithSortedAnswers(false);
+    }
+
+    @Test
+    void testRejectVillageResponse() throws Exception {
+        Long villageId = 1L;
+        String answerDate = "2023-08-10"; // Adjust the date as needed
+
+        mockMvc.perform(post("/api/v1/admins/reject/{villageId}", villageId)
+                        .param("villageId", String.valueOf(villageId))
+                        .param("answerDate", answerDate)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Response of village with ID: " + villageId + " rejected successfully!!!"));
+
+        verify(adminVillageService).rejectVillageResponses(villageId, answerDate);
+    }
+
+    @Test
+    void testGetVillageInfoById() throws Exception {
+        Long villageId = 1L;
+        String answerDate = "2023-08-10";
+        boolean status = true;
+
+        VillageInfo villageInfo = new VillageInfo();
+        when(villageInfoService.getVillageInfoByVillageId(villageId, status, answerDate)).thenReturn(villageInfo);
+
+        mockMvc.perform(get("/api/v1/admins/info/{villageId}", villageId)
+                        .param("villageId", String.valueOf(villageId))
+                        .param("answerDate", answerDate)
+                        .param("status", String.valueOf(status)))
+                .andExpect(status().isOk());
+
+        verify(villageInfoService).getVillageInfoByVillageId(villageId, status, answerDate);
     }
 
 }

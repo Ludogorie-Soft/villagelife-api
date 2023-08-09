@@ -3,9 +3,12 @@ package com.example.ludogorieSoft.village.services;
 
 import static java.time.LocalDateTime.now;
 import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import org.mockito.*;
 import org.mockito.stubbing.Answer;
 import org.slf4j.Logger;
 
@@ -31,14 +34,14 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
 @ExtendWith(MockitoExtension.class)
 class VillageImageServiceTest {
+
+    @Captor
+    private ArgumentCaptor<List<VillageImage>> villageImageListCaptor;
     @Mock
     private VillageImageRepository villageImageRepository;
     @Mock
@@ -149,42 +152,42 @@ class VillageImageServiceTest {
         assertThrows(IOException.class, () -> villageImageService.writeImageToFile(imageBytes, invalidFilePath));
     }
 
-//    @Test
-//    void testCreateVillageImageDTOWithVillageIdAndFileName() {
-//        Long villageId = 123L;
-//        String fileName = "image.jpg";
-//        LocalDateTime fixedTimestamp = LocalDateTime.of(2023, 7, 27, 18, 36, 1, 91929);
-//
-//        VillageImageDTO villageImageDTO = new VillageImageDTO(null, villageId, fileName, false, fixedTimestamp);
-//
-//        Village village = new Village();
-//        when(villageService.checkVillage(villageId)).thenReturn(village);
-//        when(villageImageRepository.save(any(VillageImage.class))).thenReturn(new VillageImage());
-//
-//        doAnswer((Answer<VillageImage>) invocation -> {
-//            VillageImageDTO dto = invocation.getArgument(0);
-//            VillageImage villageImage = new VillageImage();
-//            villageImage.setId(dto.getId());
-//            villageImage.setId(dto.getVillageId());
-//            villageImage.setImageName(dto.getImageName());
-//            villageImage.setVillageStatus(dto.getStatus());
-//            villageImage.setDateUpload(fixedTimestamp);
-//            return villageImage;
-//        }).when(modelMapper).map(any(VillageImageDTO.class), eq(VillageImage.class));
-//
-//        villageImageService.createVillageImageDTO(villageId, fileName);
-//
-//        verify(villageImageRepository).save(any(VillageImage.class));
-//    }
+    @Test
+    void testCreateVillageImageDTOWithVillageIdAndFileName() {
+        Long villageId = 123L;
+        String fileName = "image.jpg";
+        LocalDateTime fixedTimestamp = LocalDateTime.of(2023, 7, 27, 18, 36);
+
+        VillageImageDTO villageImageDTO = new VillageImageDTO(null, villageId, fileName, false, fixedTimestamp,null);
+
+        Village village = new Village();
+        when(villageService.checkVillage(villageId)).thenReturn(village);
+        when(villageImageRepository.save(any(VillageImage.class))).thenReturn(new VillageImage());
+
+        doAnswer((Answer<VillageImage>) invocation -> {
+            VillageImageDTO dto = invocation.getArgument(0);
+            VillageImage villageImage = new VillageImage();
+            villageImage.setId(dto.getId());
+            villageImage.setId(dto.getVillageId());
+            villageImage.setImageName(dto.getImageName());
+            villageImage.setVillageStatus(dto.getStatus());
+            villageImage.setDateUpload(fixedTimestamp);
+            return villageImage;
+        }).when(modelMapper).map(any(VillageImageDTO.class), eq(VillageImage.class));
+
+        villageImageService.createVillageImageDTO(villageId, fileName,fixedTimestamp);
+
+        verify(villageImageRepository).save(any(VillageImage.class));
+    }
 
 
-//    @Test
-//    void testCreateImagePathsWithInvalidImages() {
-//        byte[] emptyImage = {};
-//        Long villageId = 123L;
-//        List<String> result = villageImageService.createImagePaths(List.of(emptyImage), villageId);
-//        Assertions.assertTrue(result.isEmpty());
-//    }
+    @Test
+    void testCreateImagePathsWithInvalidImages() {
+        byte[] emptyImage = {};
+        Long villageId = 123L;
+        List<String> result = villageImageService.createImagePaths(List.of(emptyImage), villageId,null);
+        Assertions.assertTrue(result.isEmpty());
+    }
 
     @Test
     void testProcessImageWithInvalidImage() {
@@ -255,9 +258,9 @@ class VillageImageServiceTest {
 //
 //        when(villageService.getAllVillages()).thenReturn(villageDTOs);
 //
-//        when(villageImageService.getAllImagesForVillage(anyLong())).thenReturn(Arrays.asList("image1.jpg", "image2.jpg"));
+//        when(villageImageService.getAllImagesForVillage(anyLong(),true,null)).thenReturn(Arrays.asList("image1.jpg", "image2.jpg"));
 //
-//        List<VillageDTO> result = villageImageService.getAllVillageDTOsWithImages();
+//        List<VillageDTO> result = villageImageService.getAllApprovedVillageDTOsWithImages();
 //
 //        Assertions.assertEquals(2, result.size());
 //        Assertions.assertEquals(Arrays.asList("image1.jpg", "image2.jpg"), result.get(0).getImages());
@@ -266,8 +269,7 @@ class VillageImageServiceTest {
 
     @Test
     void testGetAllVillageDTOsWithImagesWhenNotFound() {
-        when(villageService.getAllVillages()).thenReturn(Collections.emptyList());
-        List<VillageDTO> result = villageImageService.getAllVillageDTOsWithImages();
+        List<VillageDTO> result = villageImageService.getAllApprovedVillageDTOsWithImages();
         Assertions.assertTrue(result.isEmpty());
     }
 
@@ -314,5 +316,67 @@ class VillageImageServiceTest {
 //    }
 
 
+    @Test
+    void testUpdateVillageImageStatus() {
+        Long villageId = 1L;
+        String localDateTime = "2023-08-10T00:00:00";
+        boolean status = true;
+
+        Village village = new Village();
+        village.setId(1L);
+
+        VillageImage villageImage = new VillageImage();
+        villageImage.setVillage(village);
+
+        List<VillageImage> villageImageList = new ArrayList<>();
+        villageImageList.add(villageImage);
+
+        when(villageImageRepository.findByVillageIdAndVillageStatusAndDateUpload(villageId, status, localDateTime))
+                .thenReturn(villageImageList);
+
+        when(villageService.checkVillage(villageId)).thenReturn(village);
+
+        villageImageService.updateVillageImageStatus(villageId, status, localDateTime);
+
+        verify(villageService, times(1)).checkVillage(villageId);
+        verify(villageImageRepository, times(1)).saveAll(villageImageListCaptor.capture());
+
+        List<VillageImage> capturedList = villageImageListCaptor.getValue();
+        assertEquals(1, capturedList.size());
+        VillageImage capturedVillageImage = capturedList.get(0);
+        assertTrue(capturedVillageImage.getVillageStatus());
+    }
+
+    @Test
+    void testRejectVillageImageResponse() {
+        Long villageId = 1L;
+        String responseDate = "2023-08-10";
+        boolean status = true;
+        LocalDateTime deleteDate = LocalDateTime.now();
+
+        Village village = new Village();
+        village.setId(1L);
+
+        VillageImage villageImage = new VillageImage();
+        villageImage.setVillage(village);
+
+        List<VillageImage> villageImageList = new ArrayList<>();
+        villageImageList.add(villageImage);
+
+        when(villageImageRepository.findByVillageIdAndVillageStatusAndDateUpload(villageId, status, responseDate))
+                .thenReturn(villageImageList);
+
+        when(villageService.checkVillage(villageId)).thenReturn(village);
+
+        villageImageService.rejectVillageImageResponse(villageId, status, responseDate, deleteDate);
+
+        verify(villageService, times(1)).checkVillage(villageId);
+        verify(villageImageRepository, times(1)).saveAll(villageImageListCaptor.capture());
+
+        List<VillageImage> capturedList = villageImageListCaptor.getValue();
+        assertEquals(1, capturedList.size());
+        VillageImage capturedVillageImage = capturedList.get(0);
+        assertEquals(deleteDate, capturedVillageImage.getDateDeleted());
+    }
 
 }

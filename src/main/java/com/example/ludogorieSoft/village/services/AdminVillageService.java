@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Service
@@ -38,12 +37,11 @@ public class AdminVillageService {
         for (Village village : villagesWithAnswers) {
             List<EthnicityVillage> answers = ethnicityVillageService.findByVillageIdAndVillageStatus(village.getId(), status);
             answers.sort(Comparator.comparing(EthnicityVillage::getDateUpload));
-
             Set<String> uniqueDates = new HashSet<>();
             List<String> formattedDates = new ArrayList<>();
 
             for (EthnicityVillage answer : answers) {
-                String formattedDate = answer.getDateUpload().truncatedTo(ChronoUnit.SECONDS).format(formatter);
+                String formattedDate = answer.getDateUpload().format(formatter);
                 if (uniqueDates.add(formattedDate)) {
                     formattedDates.add(formattedDate);
                 }
@@ -80,11 +78,12 @@ public class AdminVillageService {
         ethnicityVillageService.updateEthnicityVillageStatus(villageId, status, answerDate);
         villageGroundCategoryService.updateVillageGroundCategoryStatus(villageId, status, answerDate);
     }
+
     public void rejectVillageResponses(Long villageId, String answerDate){
         LocalDateTime timestamp = TimestampUtils.getCurrentTimestamp();
         boolean status = false;
         VillageDTO villageDTO = villageService.getVillageById(villageId);
-        if(villageDTO.getStatus()){
+        if(villageDTO.getStatus().equals(true)){
             villageService.updateVillageStatus(villageId, villageDTO);
         }
         villagePopulationAssertionService.rejectVillagePopulationAssertionStatus(villageId, status, answerDate, timestamp);
