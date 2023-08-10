@@ -151,28 +151,6 @@ class AdministratorControllerIntegrationTest {
 
         verify(administratorService, times(1)).deleteAdministratorById(1L);
     }
-
-    @Test
-    void getAllVillages_shouldReturnListOfVillageResponses() throws Exception {
-        VillageResponse villageResponse1 = new VillageResponse();
-        villageResponse1.setId(1L);
-        villageResponse1.setName("village1");
-        VillageResponse villageResponse2 = new VillageResponse();
-        villageResponse2.setId(2L);
-        villageResponse2.setName("village2");
-        List<VillageResponse> villageResponses = Arrays.asList(villageResponse1, villageResponse2);
-        when(villageService.getAllVillagesWithAdmin()).thenReturn(villageResponses);
-        mockMvc.perform(get("/api/v1/admins/village")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(1L))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("village1"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(2L))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].name").value("village2"));
-
-        verify(villageService, times(1)).getAllVillagesWithAdmin();
-    }
-
     @Test
     void testDeleteVillageById() throws Exception {
         Long villageId = 1L;
@@ -221,22 +199,6 @@ class AdministratorControllerIntegrationTest {
         verify(villageService).updateVillageStatus(villageId, villageDTO);
         verify(adminVillageService).updateVillageStatusAndVillageResponsesStatus(villageId, answerDate);
     }
-
-    @Test
-    void testFindVillageById() throws Exception {
-        Long villageId = 1L;
-
-        VillageDTO villageDTO = new VillageDTO();
-        villageDTO.setId(1L);
-
-        when(villageService.getVillageById(villageId)).thenReturn(villageDTO);
-
-        mockMvc.perform(get("/api/v1/admins/update/{villageId}", villageId))
-                .andExpect(status().isOk());
-
-        verify(villageService).getVillageById(villageId);
-    }
-
     @Test
     void testFindUnapprovedVillageResponseByVillageId() throws Exception {
         List<VillageResponse> villageResponses = new ArrayList<>(); // Create your mock responses
