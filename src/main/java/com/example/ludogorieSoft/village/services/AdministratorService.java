@@ -97,40 +97,4 @@ public class AdministratorService {
         return administratorToAdministratorDTO(administrator);
     }
 
-
-    public List<VillageResponse> getAllVillagesWithPopulation() { //will be deleted
-        List<Object[]> results = villageRepository.findAllVillagesWithPopulation();
-
-        List<VillageResponse> villageResponses = new ArrayList<>();
-
-        for (Object[] result : results) {
-            Village village = (Village) result[0];
-            Region region = (Region) result[1];
-            Administrator administrator = (Administrator) result[2];
-
-            VillageResponse response = new VillageResponse();
-            response.setId(village.getId());
-            response.setName(village.getName());
-            response.setRegion(region);
-            response.setDateUpload(village.getDateUpload());
-
-            if (administrator != null) {
-                response.setStatus(village.getStatus());
-                response.setAdmin(modelMapper.map(administrator,AdministratorDTO.class));
-                response.setDateApproved(village.getDateApproved());
-            } else {
-                response.setStatus(village.getStatus());
-                response.setAdmin(null);
-                response.setDateApproved(null);
-            }
-
-            villageResponses.add(response);
-        }
-        return villageResponses;
-    }
-
-
-
-
-
 }

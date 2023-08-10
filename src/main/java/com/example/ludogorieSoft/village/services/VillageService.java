@@ -50,26 +50,6 @@ public class VillageService {
                 .map(this::villageToVillageDTO)
                 .toList();
     }
-    public List<VillageResponse> getAllVillagesWithAdmin() {
-        List<Village> allVillages = villageRepository.findAll();
-        List<VillageResponse> villageResponses = new ArrayList<>();
-
-        for (Village village : allVillages) {
-            VillageResponse response = villageToVillageResponse(village);
-
-            if (village.getAdmin() != null) {
-                response.setAdmin(modelMapper.map(village.getAdmin(),AdministratorDTO.class));
-                response.setDateApproved(village.getDateApproved());
-            } else {
-                response.setAdmin(null);
-                response.setDateApproved(null);
-            }
-
-            villageResponses.add(response);
-        }
-
-        return villageResponses;
-    }
 
     public VillageDTO getVillageById(Long id) {
         Optional<Village> optionalVillage = villageRepository.findById(id);

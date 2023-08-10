@@ -110,19 +110,19 @@ class AdministratorControllerTest {
     }
 
 
-    @Test
-    void getAllVillages_shouldReturnListOfVillageResponses() {
-        VillageResponse villageResponse1 = new VillageResponse();
-        villageResponse1.setId(1L);
-        VillageResponse villageResponse2 = new VillageResponse();
-        villageResponse2.setId(3L);
-        List<VillageResponse> villages = Arrays.asList(villageResponse1,villageResponse2);
-
-        when(villageService.getAllVillagesWithAdmin()).thenReturn(villages);
-
-        List<VillageResponse> response = administratorController.getAllVillages();
-
-        assertEquals(villages, response);
-    }
+//    @Test
+//    void getAllVillages_shouldReturnListOfVillageResponses() {
+//        VillageResponse villageResponse1 = new VillageResponse();
+//        villageResponse1.setId(1L);
+//        VillageResponse villageResponse2 = new VillageResponse();
+//        villageResponse2.setId(3L);
+//        List<VillageResponse> villages = Arrays.asList(villageResponse1,villageResponse2);
+//
+//        when(villageService.getAllVillagesWithAdmin()).thenReturn(villages);
+//
+//        List<VillageResponse> response = administratorController.getAllVillages();
+//
+//        assertEquals(villages, response);
+//    }
 
 }

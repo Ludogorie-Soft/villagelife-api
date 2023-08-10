@@ -50,11 +50,11 @@ public class AdministratorController {
         return new ResponseEntity<>("Administrator with id: " + id + " has been deleted successfully!!", HttpStatus.OK);
     }
 
-    @GetMapping("village")
-    public List<VillageResponse> getAllVillages() {
-
-        return villageService.getAllVillagesWithAdmin();
-    }
+//    @GetMapping("village")
+//    public List<VillageResponse> getAllVillages() {
+//
+//        return villageService.getAllVillagesWithAdmin();
+//    }
 
     @DeleteMapping("/village-delete/{villageId}")
     public ResponseEntity<String> deleteVillageById(@PathVariable("villageId") Long villageId) {
@@ -71,15 +71,8 @@ public class AdministratorController {
         return new ResponseEntity<>("Status of village with ID: " + villageId + " changed successfully!!!", HttpStatus.OK);
     }
 
-    @GetMapping("/update/{villageId}")
-    public ResponseEntity<VillageDTO> findVillageById(@PathVariable(name = "villageId") Long id) {
-        VillageDTO village = villageService.getVillageById(id);
-
-        return new ResponseEntity<>(village, HttpStatus.OK);
-    }
-
     @GetMapping("/update")
-    public ResponseEntity<List<VillageResponse>> findUnapprovedVillageResponseByVillageId() {
+    public ResponseEntity<List<VillageResponse>> updateUnapprovedVillageResponseByVillageId() {
         List<VillageResponse> villageResponse = adminVillageService.getUnapprovedVillageResponsesWithSortedAnswers(false);
         return new ResponseEntity<>(villageResponse, HttpStatus.OK);
     }
