@@ -22,18 +22,11 @@ import static org.mockito.Mockito.*;
 class AdministratorControllerTest {
     @Mock
     private AdministratorService administratorService;
-
-    @Mock
-    private VillageService villageService;
-    private  AdminVillageService adminVillageService;
-    private  VillageInfoService villageInfoService;
-    private  JWTService jwtService;
     AdministratorController administratorController;
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        administratorController = new AdministratorController(administratorService, villageService,
-                adminVillageService, villageInfoService);
+        administratorController = new AdministratorController(administratorService);
     }
 
     @Test
