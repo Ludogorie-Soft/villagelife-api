@@ -3,9 +3,7 @@ package com.example.ludogorieSoft.village.services;
 import com.example.ludogorieSoft.village.dtos.VillageGroundCategoryDTO;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.*;
-import com.example.ludogorieSoft.village.repositories.GroundCategoryRepository;
 import com.example.ludogorieSoft.village.repositories.VillageGroundCategoryRepository;
-import com.example.ludogorieSoft.village.repositories.VillageRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -18,16 +16,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class VillageGroundCategoryServiceTest {
     @Mock
     private VillageGroundCategoryRepository villageGroundCategoryRepository;
-    @Mock
-    private VillageRepository villageRepository;
-    @Mock
-    private GroundCategoryRepository groundCategoryRepository;
     @Mock
     private ModelMapper modelMapper;
     @Mock
@@ -41,6 +36,7 @@ class VillageGroundCategoryServiceTest {
     void setup() {
         MockitoAnnotations.openMocks(this);
     }
+
 
     @Test
     void testToDTO() {
@@ -300,4 +296,6 @@ class VillageGroundCategoryServiceTest {
             villageGroundCategoryService.findVillageGroundCategoryDTOByVillageId(villageId);
         });
     }
+
+
 }
