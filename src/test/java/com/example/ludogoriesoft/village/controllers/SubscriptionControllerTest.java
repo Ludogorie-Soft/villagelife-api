@@ -1,4 +1,4 @@
-package com.example.ludogoriesoft.village.controllers;
+package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.controllers.SubscriptionController;
 import com.example.ludogorieSoft.village.dtos.SubscriptionDTO;

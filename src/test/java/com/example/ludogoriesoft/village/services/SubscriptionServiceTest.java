@@ -1,4 +1,4 @@
-package com.example.ludogoriesoft.village.services;
+package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.SubscriptionDTO;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
