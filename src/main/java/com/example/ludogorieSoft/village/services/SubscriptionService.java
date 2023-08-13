@@ -17,9 +17,15 @@ public class SubscriptionService {
         if (StringUtils.isBlank(subscriptionDTO.getEmail())) {
             throw new ApiRequestException("Email is blank");
         }
-        Subscription subscription = new Subscription();
-        subscription.setEmail(subscriptionDTO.getEmail());
-        subscriptionRepository.save(subscription);
+        Subscription subscription = subscriptionRepository.findByEmail(subscriptionDTO.getEmail());
+        if(subscription != null && subscription.getDeletedAt() != null){
+            subscription.setDeletedAt(null);
+            subscriptionRepository.save(subscription);
+        }else if(subscription == null){
+            subscription = new Subscription();
+            subscription.setEmail(subscriptionDTO.getEmail());
+            subscriptionRepository.save(subscription);
+        }
         return subscriptionDTO;
     }
 }
