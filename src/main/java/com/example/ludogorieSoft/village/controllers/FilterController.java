@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -38,19 +39,32 @@ public class FilterController {
 
 
     @GetMapping("/searchAll")
-    public ResponseEntity<List<VillageDTO>> getVillageByNameAndRegion(@RequestParam String region, @RequestParam String keyword) {
-        return ResponseEntity.ok(villageSearchService.getAllSearchVillagesByNameAndRegionName(region, keyword));
-    }
+    public ResponseEntity<List<VillageDTO>> getVillageByNameAndRegion(@RequestParam String region, @RequestParam String keyword, @RequestParam(required = false) String sort) {
+        List<VillageDTO> villages = villageSearchService.getAllSearchVillagesByNameAndRegionName(region, keyword);
 
+        if ("nameAsc".equals(sort)) {
+            villages.sort(Comparator.comparing(VillageDTO::getName));
+        } else if ("nameDesc".equals(sort)) {
+            villages.sort(Comparator.comparing(VillageDTO::getName).reversed());
+        }
+        return ResponseEntity.ok(villages);
+    }
 
     @GetMapping("/searchVillages")
     public ResponseEntity<List<VillageDTO>> searchVillagesByCriteria(
             @RequestParam("objectAroundVillageDTOS") List<String> objectAroundVillageDTOS,
             @RequestParam("livingConditionDTOS") List<String> livingConditionDTOS,
-            @RequestParam("children") String children
+            @RequestParam("children") String children,
+            @RequestParam(required = false) String sort
     ) {
         Children childrenEnum = Children.valueOf(children);
         List<VillageDTO> villages = villageSearchService.getSearchVillages(objectAroundVillageDTOS, livingConditionDTOS, childrenEnum);
+
+        if ("nameAsc".equals(sort)) {
+            villages.sort(Comparator.comparing(VillageDTO::getName));
+        } else if ("nameDesc".equals(sort)) {
+            villages.sort(Comparator.comparing(VillageDTO::getName).reversed());
+        }
         return ResponseEntity.ok(villages);
     }
 

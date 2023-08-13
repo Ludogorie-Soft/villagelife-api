@@ -87,4 +87,12 @@ public class PopulationService {
     public Population findPopulationByVillageNameAndRegion(String name, String regionName){
         return populationRepository.findByVillageNameAndRegionName(name, regionName);
     }
+
+    public PopulationDTO findPopulationDTOByVillageNameAndRegion(String name, String regionName){
+        Population population = populationRepository.findByVillageNameAndRegionName(name, regionName);
+        if (population == null){
+            throw new ApiRequestException("This population is null!");
+        }
+        return populationToPopulationDTO(population);
+    }
 }

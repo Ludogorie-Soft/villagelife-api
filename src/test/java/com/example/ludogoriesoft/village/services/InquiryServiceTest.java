@@ -17,8 +17,6 @@ import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.*;
 
 import com.example.ludogorieSoft.village.repositories.InquiryRepository;
-import com.example.ludogorieSoft.village.services.EmailSenderService;
-import com.example.ludogorieSoft.village.services.InquiryService;
 
 class InquiryServiceTest {
     @Mock

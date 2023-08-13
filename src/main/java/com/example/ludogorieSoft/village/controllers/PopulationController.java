@@ -21,6 +21,7 @@ public class PopulationController {
     public ResponseEntity<List<PopulationDTO>> getAllPopulation() {
         return ResponseEntity.ok(populationService.getAllPopulation());
     }
+
     @GetMapping("/{id}")
     public ResponseEntity<PopulationDTO> getPopulationById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(populationService.getPopulationById(id));
@@ -34,12 +35,12 @@ public class PopulationController {
 
     @PostMapping("/null")
     public ResponseEntity<Long> createPopulationWithNullValues() {
-        Long populationID=populationService.createPopulationWithNullValues();
+        Long populationID = populationService.createPopulationWithNullValues();
         return ResponseEntity.status(HttpStatus.OK).body(populationID);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PopulationDTO> updatePopulation(@PathVariable("id") Long id,@Valid @RequestBody PopulationDTO populationDTO) {
+    public ResponseEntity<PopulationDTO> updatePopulation(@PathVariable("id") Long id, @Valid @RequestBody PopulationDTO populationDTO) {
         return ResponseEntity.ok(populationService.updatePopulation(id, populationDTO));
     }
 
@@ -47,6 +48,12 @@ public class PopulationController {
     public ResponseEntity<String> deletePopulationById(@PathVariable("id") Long id) {
         populationService.deletePopulationById(id);
         return new ResponseEntity<>("Population with id: " + id + " has been deleted successfully!!", HttpStatus.OK);
+    }
+
+
+    @GetMapping("/{villageName}/{region}")
+    public ResponseEntity<PopulationDTO> findPopulationByVillageNameAndRegion(@PathVariable("villageName") String villageName, @PathVariable("region") String region) {
+        return ResponseEntity.ok(populationService.findPopulationDTOByVillageNameAndRegion(villageName, region));
     }
 
 }

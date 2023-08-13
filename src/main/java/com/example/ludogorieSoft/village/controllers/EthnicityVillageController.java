@@ -63,13 +63,17 @@ public class EthnicityVillageController {
         }
     }
 
+
     @PutMapping("/update-answer/{villageId}")
     public ResponseEntity getEthnisityVIllage(@RequestParam("villageId") Long villageId,
                                               @RequestParam("answerDate") String answerDate) {
-//        String dateTimeString = answerDate;
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-//        LocalDateTime localDateTime = LocalDateTime.parse(dateTimeString, formatter);
         ethnicityVillageService.updateEthnicityVillageStatus(villageId, false, answerDate);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @GetMapping("/check-existence")
+    public boolean checkExistence(@RequestParam Long villageId, @RequestParam Long ethnicityId) {
+        return ethnicityVillageService.existsByVillageIdAndEthnicityId(villageId, ethnicityId);
+    }
+
 }

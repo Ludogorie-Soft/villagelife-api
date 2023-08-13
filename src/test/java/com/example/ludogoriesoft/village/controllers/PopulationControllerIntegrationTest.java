@@ -27,9 +27,9 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @AutoConfigureMockMvc(addFilters = false)
@@ -262,5 +262,34 @@ class PopulationControllerIntegrationTest {
         assertNotNull(response);
     }
 
+
+    @Test
+    void testFindPopulationByVillageNameAndRegion_Valid() throws Exception {
+        String villageName = "SampleVillage";
+        String region = "SampleRegion";
+
+        PopulationDTO populationDTO = new PopulationDTO();
+        populationDTO.setId(1L);
+        populationDTO.setNumberOfPopulation(NumberOfPopulation.UP_TO_10_PEOPLE);
+        populationDTO.setResidents(Residents.FROM_2_TO_5_PERCENT);
+        populationDTO.setChildren(Children.BELOW_10);
+        populationDTO.setForeigners(Foreigners.I_DONT_KNOW);
+
+        when(populationService.findPopulationDTOByVillageNameAndRegion(villageName, region)).thenReturn(populationDTO);
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/populations/" + villageName + "/" + region))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"))
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.numberOfPopulation").value("UP_TO_10_PEOPLE"))
+                .andExpect(jsonPath("$.residents").value("FROM_2_TO_5_PERCENT"))
+                .andExpect(jsonPath("$.children").value("BELOW_10"))
+                .andExpect(jsonPath("$.foreigners").value("I_DONT_KNOW"))
+                .andReturn();
+
+        String response = mvcResult.getResponse().getContentAsString();
+        assertNotNull(response);
+
+    }
 
 }

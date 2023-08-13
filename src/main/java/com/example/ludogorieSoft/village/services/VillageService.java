@@ -179,7 +179,6 @@ public class VillageService {
         return convertToDTO(villages);
     }
 
-
     public List<VillageDTO> getSearchVillagesByLivingConditionAndChildren(List<String> livingConditionDTOS, Children children) {
         List<Village> villages = villageRepository.searchVillagesByLivingConditionAndChildren(livingConditionDTOS, children.getEnumValue());
         return villageToVillageDTOWithoutObject(villages);

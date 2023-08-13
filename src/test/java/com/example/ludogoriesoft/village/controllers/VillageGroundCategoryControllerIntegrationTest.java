@@ -15,13 +15,14 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -185,4 +186,19 @@ class VillageGroundCategoryControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/villageGroundCategory/{id}", nonExistentId))
                 .andExpect(status().isNotFound());
     }
+
+    @Test
+    public void testIsVillageExists() throws Exception {
+        Long villageId = 1L;
+
+        when(villageGroundCategoryService.existsVillageGroundCategoryDTOByVillageId(villageId)).thenReturn(true);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageGroundCategory/check-village-exists/{villageId}", villageId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string("true"));
+
+        verify(villageGroundCategoryService, times(1)).existsVillageGroundCategoryDTOByVillageId(villageId);
+    }
+
 }

@@ -84,6 +84,7 @@ class FilterControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
         List<VillageDTO> actualVillages = response.getBody();
+        assert actualVillages != null;
         assertEquals(expectedVillages.size(), actualVillages.size());
         assertEquals(expectedVillages.get(0).getId(), actualVillages.get(0).getId());
         assertEquals(expectedVillages.get(0).getName(), actualVillages.get(0).getName());
@@ -91,10 +92,12 @@ class FilterControllerTest {
         assertEquals(expectedVillages.get(1).getName(), actualVillages.get(1).getName());
     }
 
+
     @Test
     void getVillageByNameAndRegionShouldReturnVillageDTOs() {
         String region = "Region";
         String keyword = "Keyword";
+        String sort = "nameAsc";
 
         List<VillageDTO> expectedVillages = new ArrayList<>();
         VillageDTO village1 = new VillageDTO();
@@ -109,11 +112,44 @@ class FilterControllerTest {
 
         when(villageSearchService.getAllSearchVillagesByNameAndRegionName(region, keyword)).thenReturn(expectedVillages);
 
-        ResponseEntity<List<VillageDTO>> response = filterController.getVillageByNameAndRegion(region, keyword);
+        ResponseEntity<List<VillageDTO>> responseEntity = filterController.getVillageByNameAndRegion(region, keyword, sort);
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
-        List<VillageDTO> actualVillages = response.getBody();
+        List<VillageDTO> actualVillages = responseEntity.getBody();
+        assert actualVillages != null;
+        assertEquals(expectedVillages.size(), actualVillages.size());
+        assertEquals(expectedVillages.get(0).getId(), actualVillages.get(0).getId());
+        assertEquals(expectedVillages.get(0).getName(), actualVillages.get(0).getName());
+        assertEquals(expectedVillages.get(1).getId(), actualVillages.get(1).getId());
+        assertEquals(expectedVillages.get(1).getName(), actualVillages.get(1).getName());
+    }
+
+    @Test
+    void getVillageByNameAndRegionShouldReturnVillageDTOsDesc() {
+        String region = "Region";
+        String keyword = "Keyword";
+        String sort = "nameDesc";
+
+        List<VillageDTO> expectedVillages = new ArrayList<>();
+        VillageDTO village1 = new VillageDTO();
+        village1.setId(1L);
+        village1.setName("Village 1");
+        expectedVillages.add(village1);
+
+        VillageDTO village2 = new VillageDTO();
+        village2.setId(2L);
+        village2.setName("Village 2");
+        expectedVillages.add(village2);
+
+        when(villageSearchService.getAllSearchVillagesByNameAndRegionName(region, keyword)).thenReturn(expectedVillages);
+
+        ResponseEntity<List<VillageDTO>> responseEntity = filterController.getVillageByNameAndRegion(region, keyword, sort);
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+
+        List<VillageDTO> actualVillages = responseEntity.getBody();
+        assert actualVillages != null;
         assertEquals(expectedVillages.size(), actualVillages.size());
         assertEquals(expectedVillages.get(0).getId(), actualVillages.get(0).getId());
         assertEquals(expectedVillages.get(0).getName(), actualVillages.get(0).getName());
@@ -132,6 +168,7 @@ class FilterControllerTest {
         livingConditionDTOS.add("Condition2");
 
         String children = "BELOW_10";
+        String sort = "nameAsc";
 
         List<VillageDTO> expectedVillages = new ArrayList<>();
         VillageDTO village1 = new VillageDTO();
@@ -146,7 +183,47 @@ class FilterControllerTest {
 
         when(villageSearchService.getSearchVillages(objectAroundVillageDTOS, livingConditionDTOS, Children.BELOW_10)).thenReturn(expectedVillages);
 
-        ResponseEntity<List<VillageDTO>> response = filterController.searchVillagesByCriteria(objectAroundVillageDTOS, livingConditionDTOS, children);
+        ResponseEntity<List<VillageDTO>> response = filterController.searchVillagesByCriteria(objectAroundVillageDTOS, livingConditionDTOS, children, sort);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        List<VillageDTO> actualVillages = response.getBody();
+        assert actualVillages != null;
+        assertEquals(expectedVillages.size(), actualVillages.size());
+        assertEquals(expectedVillages.get(0).getId(), actualVillages.get(0).getId());
+        assertEquals(expectedVillages.get(0).getName(), actualVillages.get(0).getName());
+        assertEquals(expectedVillages.get(1).getId(), actualVillages.get(1).getId());
+        assertEquals(expectedVillages.get(1).getName(), actualVillages.get(1).getName());
+    }
+
+
+    @Test
+    void searchVillagesByCriteriaShouldReturnVillageDTOsDesc() {
+        List<String> objectAroundVillageDTOS = new ArrayList<>();
+        objectAroundVillageDTOS.add("Object1");
+        objectAroundVillageDTOS.add("Object2");
+
+        List<String> livingConditionDTOS = new ArrayList<>();
+        livingConditionDTOS.add("Condition1");
+        livingConditionDTOS.add("Condition2");
+
+        String children = "BELOW_10";
+        String sort = "nameDesc";
+
+        List<VillageDTO> expectedVillages = new ArrayList<>();
+        VillageDTO village1 = new VillageDTO();
+        village1.setId(1L);
+        village1.setName("Village 1");
+        expectedVillages.add(village1);
+
+        VillageDTO village2 = new VillageDTO();
+        village2.setId(2L);
+        village2.setName("Village 2");
+        expectedVillages.add(village2);
+
+        when(villageSearchService.getSearchVillages(objectAroundVillageDTOS, livingConditionDTOS, Children.BELOW_10)).thenReturn(expectedVillages);
+
+        ResponseEntity<List<VillageDTO>> response = filterController.searchVillagesByCriteria(objectAroundVillageDTOS, livingConditionDTOS, children, sort);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
@@ -185,6 +262,7 @@ class FilterControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
         List<VillageDTO> actualVillages = response.getBody();
+        assert actualVillages != null;
         assertEquals(expectedVillages.size(), actualVillages.size());
         assertEquals(expectedVillages.get(0).getId(), actualVillages.get(0).getId());
         assertEquals(expectedVillages.get(0).getName(), actualVillages.get(0).getName());
@@ -218,6 +296,7 @@ class FilterControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
         List<VillageDTO> actualVillages = response.getBody();
+        assert actualVillages != null;
         assertEquals(expectedVillages.size(), actualVillages.size());
         assertEquals(expectedVillages.get(0).getId(), actualVillages.get(0).getId());
         assertEquals(expectedVillages.get(0).getName(), actualVillages.get(0).getName());
@@ -253,6 +332,7 @@ class FilterControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
         List<VillageDTO> actualVillages = response.getBody();
+        assert actualVillages != null;
         assertEquals(expectedVillages.size(), actualVillages.size());
         assertEquals(expectedVillages.get(0).getId(), actualVillages.get(0).getId());
         assertEquals(expectedVillages.get(0).getName(), actualVillages.get(0).getName());
@@ -282,6 +362,7 @@ class FilterControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
         List<VillageDTO> actualVillages = response.getBody();
+        assert actualVillages != null;
         assertEquals(expectedVillages.size(), actualVillages.size());
         assertEquals(expectedVillages.get(0).getId(), actualVillages.get(0).getId());
         assertEquals(expectedVillages.get(0).getName(), actualVillages.get(0).getName());
@@ -313,6 +394,7 @@ class FilterControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
         List<VillageDTO> actualVillages = response.getBody();
+        assert actualVillages != null;
         assertEquals(expectedVillages.size(), actualVillages.size());
         assertEquals(expectedVillages.get(0).getId(), actualVillages.get(0).getId());
         assertEquals(expectedVillages.get(0).getName(), actualVillages.get(0).getName());
@@ -344,6 +426,7 @@ class FilterControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
         List<VillageDTO> actualVillages = response.getBody();
+        assert actualVillages != null;
         assertEquals(expectedVillages.size(), actualVillages.size());
         assertEquals(expectedVillages.get(0).getId(), actualVillages.get(0).getId());
         assertEquals(expectedVillages.get(0).getName(), actualVillages.get(0).getName());
@@ -373,6 +456,7 @@ class FilterControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
         List<VillageDTO> actualVillages = response.getBody();
+        assert actualVillages != null;
         assertEquals(expectedVillages.size(), actualVillages.size());
         assertEquals(expectedVillages.get(0).getId(), actualVillages.get(0).getId());
         assertEquals(expectedVillages.get(0).getName(), actualVillages.get(0).getName());
