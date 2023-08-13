@@ -122,6 +122,7 @@ public class VillageGroundCategoryService {
             }
             villageGroundCategoryRepository.saveAll(villa);
         }
+    }
 
     public boolean existsVillageGroundCategoryDTOByVillageId(Long villageId) {
         return villageGroundCategoryRepository.findByVillageId(villageId) != null;
