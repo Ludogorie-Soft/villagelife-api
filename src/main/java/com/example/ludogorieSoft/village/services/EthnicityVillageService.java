@@ -2,14 +2,14 @@ package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.EthnicityVillageDTO;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
-import com.example.ludogorieSoft.village.model.Ethnicity;
-import com.example.ludogorieSoft.village.model.EthnicityVillage;
-import com.example.ludogorieSoft.village.model.Village;
+import com.example.ludogorieSoft.village.model.*;
 import com.example.ludogorieSoft.village.repositories.EthnicityVillageRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -95,11 +95,20 @@ public class EthnicityVillageService {
         }
         return filteredList;
     }
-    public String getUniqueEthnicityVillagesByVillageId(Long villageId) {
+    public String getUniqueEthnicityVillagesByVillageId(Long villageId, boolean status, String date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime localDateTime = null;
+        if(date != null){
+            localDateTime = LocalDateTime.parse(date, formatter);
+        }
+
         List<EthnicityVillage> ethnicityVillages = ethnicityVillageRepository.findAll();
         List<EthnicityVillageDTO> filteredList = new ArrayList<>();
+
         for (EthnicityVillage ethnicityVillage : ethnicityVillages) {
-            if (ethnicityVillage.getVillage().getId().equals(villageId) && !ethnicityVillage.getEthnicity().getEthnicityName().equals("няма малцинствени групи") && Boolean.TRUE.equals(ethnicityVillage.getVillageStatus())) {
+
+            if (ethnicityVillage.getVillage().getId().equals(villageId) && !ethnicityVillage.getEthnicity().getEthnicityName().equals("няма малцинствени групи") && ( Boolean.TRUE.equals(ethnicityVillage.getVillageStatus()) && status ||
+                    Boolean.FALSE.equals(ethnicityVillage.getVillageStatus()) && !status && ethnicityVillage.getDateUpload().equals(localDateTime) && ethnicityVillage.getDateDeleted() == null)) {
                 filteredList.add(ethnicityVillageToEthnicityVillageDTO(ethnicityVillage));
             }
         }
@@ -118,5 +127,40 @@ public class EthnicityVillageService {
 
     public boolean existsByVillageIdAndEthnicityId(Long villageId, Long ethnicityId){
         return ethnicityVillageRepository.existsByEthnicityIdAndVillageId(ethnicityId, villageId);
+    }
+
+    public List<EthnicityVillage> findByVillageIdAndVillageStatus(Long id, boolean status) {
+        return ethnicityVillageRepository.findByVillageIdAndVillageStatus(id, status);
+
+    }
+    public void updateEthnicityVillageStatus(Long id, boolean status, String localDateTime) {
+        List<EthnicityVillage> ethnicityVillages = ethnicityVillageRepository.findByVillageIdAndVillageStatusAndDateUpload(id, status, localDateTime);
+        List<EthnicityVillage> villa = new ArrayList<>();
+
+        if (!ethnicityVillages.isEmpty()) {
+            for (EthnicityVillage vill : ethnicityVillages) {
+                Village village = villageService.checkVillage(vill.getVillage().getId());
+                vill.setVillage(village);
+                vill.setVillageStatus(true);
+                villa.add(vill);
+            }
+            ethnicityVillageRepository.saveAll(villa);
+        }
+    }
+    public void rejectEthnicityVillageResponse(Long id, boolean status, String responseDate,LocalDateTime dateDelete) {
+        List<EthnicityVillage> ethnicityVillages = ethnicityVillageRepository.findByVillageIdAndVillageStatusAndDateUpload(
+                id, status, responseDate
+        );
+        List<EthnicityVillage> villa = new ArrayList<>();
+
+        if (!ethnicityVillages.isEmpty()) {
+            for (EthnicityVillage vill : ethnicityVillages) {
+                Village village = villageService.checkVillage(vill.getVillage().getId());
+                vill.setVillage(village);
+                vill.setDateDeleted(dateDelete);
+                villa.add(vill);
+            }
+            ethnicityVillageRepository.saveAll(villa);
+        }
     }
 }

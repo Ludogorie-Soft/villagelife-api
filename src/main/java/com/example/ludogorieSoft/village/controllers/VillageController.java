@@ -31,9 +31,12 @@ public class VillageController {
         VillageDTO village = villageService.getVillageById(id);
         return ResponseEntity.ok(village);
     }
+
     @GetMapping("/info/{id}")
     public ResponseEntity<VillageInfo> getVillageInfoById(@PathVariable("id") Long id) {
-        VillageInfo villageInfo = villageInfoService.getVillageInfoByVillageId(id);
+        boolean status = true;
+        String answerDate = null;
+        VillageInfo villageInfo = villageInfoService.getVillageInfoByVillageId(id,status,answerDate);
         return ResponseEntity.ok(villageInfo);
     }
 
@@ -45,7 +48,7 @@ public class VillageController {
 
     @PostMapping("/null")
     public ResponseEntity<Long> createVillageWithNullValues() {
-         Long villageID= villageService.createVillageWhitNullValues();
+        Long villageID = villageService.createVillageWhitNullValues();
         return ResponseEntity.status(HttpStatus.OK).body(villageID);
     }
 

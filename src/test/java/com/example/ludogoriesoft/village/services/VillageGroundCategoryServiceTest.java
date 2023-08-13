@@ -6,12 +6,11 @@ import com.example.ludogorieSoft.village.model.*;
 import com.example.ludogorieSoft.village.repositories.VillageGroundCategoryRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +28,9 @@ class VillageGroundCategoryServiceTest {
     private VillageService villageService;
     @Mock
     private GroundCategoryService groundCategoryService;
+
+    @Captor
+    private ArgumentCaptor<List<VillageGroundCategory>> groundCategoryListCaptor;
     @InjectMocks
     private VillageGroundCategoryService villageGroundCategoryService;
 
@@ -297,5 +299,55 @@ class VillageGroundCategoryServiceTest {
         });
     }
 
+    @Test
+    void testUpdateVillageGroundCategoryStatus() {
+        Long villageId = 1L;
+        String localDateTime = "2023-08-10T00:00:00";
+        boolean status = true;
+
+        Village village = new Village();
+        village.setId(villageId);
+
+        VillageGroundCategory groundCategory = new VillageGroundCategory();
+        groundCategory.setVillage(village);
+
+        List<VillageGroundCategory> groundCategories = new ArrayList<>();
+        groundCategories.add(groundCategory);
+
+        when(villageGroundCategoryRepository.findByVillageIdAndVillageStatusAndDateUpload(
+                villageId, status, localDateTime
+        )).thenReturn(groundCategories);
+
+        villageGroundCategoryService.updateVillageGroundCategoryStatus(villageId, status, localDateTime);
+
+        verify(villageService, times(1)).checkVillage(villageId);
+        verify(villageGroundCategoryRepository).saveAll(groundCategoryListCaptor.capture());
+    }
+
+    @Test
+    void testRejectVillageGroundCategoryResponse() {
+        Long villageId = 1L;
+        String responseDate = "2023-08-10T00:00:00";
+        LocalDateTime deleteDate = LocalDateTime.now();
+
+        Village village = new Village();
+        village.setId(villageId);
+
+        VillageGroundCategory groundCategory = new VillageGroundCategory();
+        groundCategory.setVillage(village);
+
+        List<VillageGroundCategory> groundCategories = new ArrayList<>();
+        groundCategories.add(groundCategory);
+
+        when(villageGroundCategoryRepository.findByVillageIdAndVillageStatusAndDateUpload(
+                villageId, true, responseDate
+        )).thenReturn(groundCategories);
+
+        villageGroundCategoryService.rejectVillageGroundCategoryResponse(villageId, true, responseDate, deleteDate);
+
+        verify(villageService, times(1)).checkVillage(villageId);
+        verify(villageGroundCategoryRepository).saveAll(groundCategoryListCaptor.capture());
+
+    }
 
 }

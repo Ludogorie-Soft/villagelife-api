@@ -6,10 +6,13 @@ import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.Ethnicity;
 import com.example.ludogorieSoft.village.model.EthnicityVillage;
 import com.example.ludogorieSoft.village.model.Village;
+import com.example.ludogorieSoft.village.model.VillageGroundCategory;
 import com.example.ludogorieSoft.village.repositories.EthnicityVillageRepository;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
@@ -20,6 +23,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import java.util.Collections;
@@ -33,8 +37,9 @@ import static org.mockito.Mockito.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 
 @ExtendWith(MockitoExtension.class)
-
 class EthnicityVillageServiceTest {
+    @Captor
+    private ArgumentCaptor<List<EthnicityVillage>> ethnicityVillageListCaptor;
     @Mock
     private EthnicityVillageRepository ethnicityVillageRepository;
     @InjectMocks
@@ -258,9 +263,59 @@ class EthnicityVillageServiceTest {
         Long villageId = 1L;
         when(ethnicityVillageRepository.findAll()).thenReturn(new ArrayList<>());
 
-        String result = ethnicityVillageService.getUniqueEthnicityVillagesByVillageId(villageId);
+        String result = ethnicityVillageService.getUniqueEthnicityVillagesByVillageId(villageId,true,null);
 
         verify(ethnicityVillageRepository, times(1)).findAll();
         assertEquals("\u043D\u044F\u043C\u0430 \u043C\u0430\u043B\u0446\u0438\u043D\u0441\u0442\u0432\u0435\u043D\u0438 \u0433\u0440\u0443\u043F\u0438", result);
+    }
+    @Test
+    void testUpdateEthnicityVillageStatus() {
+        Long villageId = 1L;
+        String localDateTime = "2023-08-10T00:00:00";
+        boolean status = true;
+
+        Village village = new Village();
+        village.setId(villageId);
+
+        EthnicityVillage ethnicityVillage = new EthnicityVillage();
+        ethnicityVillage.setVillage(village);
+
+        List<EthnicityVillage> ethnicityVillages = new ArrayList<>();
+        ethnicityVillages.add(ethnicityVillage);
+
+        when(ethnicityVillageRepository.findByVillageIdAndVillageStatusAndDateUpload(
+                villageId, status, localDateTime
+        )).thenReturn(ethnicityVillages);
+
+        ethnicityVillageService.updateEthnicityVillageStatus(villageId, status, localDateTime);
+
+        verify(villageService, times(1)).checkVillage(villageId);
+        verify(ethnicityVillageRepository).saveAll(ethnicityVillageListCaptor.capture());
+    }
+
+    @Test
+    void testRejectEthnicityVillageResponse() {
+        Long villageId = 1L;
+        String responseDate = "2023-08-10T00:00:00";
+        LocalDateTime deleteDate = LocalDateTime.now();
+
+        Village village = new Village();
+        village.setId(villageId);
+
+        EthnicityVillage ethnicityVillage = new EthnicityVillage();
+        ethnicityVillage.setVillage(village);
+
+        List<EthnicityVillage> ethnicityVillages = new ArrayList<>();
+        ethnicityVillages.add(ethnicityVillage);
+
+        when(ethnicityVillageRepository.findByVillageIdAndVillageStatusAndDateUpload(
+                villageId, true, responseDate
+        )).thenReturn(ethnicityVillages);
+
+        ethnicityVillageService.rejectEthnicityVillageResponse(villageId, true, responseDate, deleteDate);
+
+        verify(villageService, times(1)).checkVillage(villageId);
+        verify(ethnicityVillageRepository).saveAll(ethnicityVillageListCaptor.capture());
+
     }
 }

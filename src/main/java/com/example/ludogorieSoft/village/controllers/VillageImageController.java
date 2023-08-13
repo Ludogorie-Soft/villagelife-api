@@ -5,10 +5,7 @@ import com.example.ludogorieSoft.village.services.VillageImageService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -18,19 +15,11 @@ import java.util.List;
 public class VillageImageController {
     private final VillageImageService villageImageService;
     @GetMapping("/village/{villageId}/images")
-    public ResponseEntity<List<String>> getAllImagesForVillage(@PathVariable Long villageId) {
-        List<String> base64Images = villageImageService.getAllImagesForVillage(villageId);
+    public ResponseEntity<List<String>> getAllImagesForVillage(@PathVariable Long villageId, boolean status, String date) {
+
+        List<String> base64Images = villageImageService.getAllImagesForVillage(villageId, status, date);
         if (!base64Images.isEmpty()) {
             return new ResponseEntity<>(base64Images, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-    @GetMapping("/all")
-    public ResponseEntity<List<VillageDTO>> getAllVillageDTOsWithImages() {
-        List<VillageDTO> villageDTOS = villageImageService.getAllVillageDTOsWithImages();
-        if (!villageDTOS.isEmpty()) {
-            return new ResponseEntity<>(villageDTOS, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -45,4 +34,5 @@ public class VillageImageController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
 }

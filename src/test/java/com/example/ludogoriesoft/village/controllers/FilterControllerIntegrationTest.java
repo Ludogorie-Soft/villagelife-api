@@ -83,7 +83,6 @@ class FilterControllerIntegrationTest {
                 .andReturn();
 
         String response = mvcResult.getResponse().getContentAsString();
-        System.out.println("JSON Response: " + response);
 
         assertNotNull(response);
     }

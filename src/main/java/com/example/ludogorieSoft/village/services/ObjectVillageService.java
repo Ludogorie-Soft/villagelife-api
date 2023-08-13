@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.List;
 import java.util.Set;
@@ -105,8 +106,13 @@ public class ObjectVillageService {
     public boolean existsByVillageIdAndObjectIdAndDistance(Long villageId, Long objectId, Distance distance){
         return objectVillageRepository.existsByVillageIdAndObjectIdAndDistance(villageId, objectId, distance);
     }
-    public List<ObjectVillageDTO> getDistinctObjectVillagesByVillageId(Long villageId){
-        List<ObjectVillage> allObjectVillages = objectVillageRepository.findByVillageIdAndVillageStatus(villageId, true);
+    public List<ObjectVillageDTO> getDistinctObjectVillagesByVillageId(Long villageId, boolean status, String date){
+        List<ObjectVillage> allObjectVillages;
+        if(status){
+           allObjectVillages = objectVillageRepository.findByVillageIdAndVillageStatus(villageId, true);
+        }else {
+            allObjectVillages = objectVillageRepository.findByVillageIdAndVillageStatusAndDateUpload(villageId, status, date);
+        }
         Set<String> uniqueCombinations = new HashSet<>();
         List<ObjectVillageDTO> filteredObjectVillages = new ArrayList<>();
 
@@ -139,5 +145,51 @@ public class ObjectVillageService {
             }
         }
         return objectVillageResponses;
+    }
+    public List<ObjectVillageDTO> getDistinctObjectVillagesByVillageIdForAdmin(Long villageId, boolean status){///ddd
+        List<ObjectVillage> allObjectVillages = objectVillageRepository.findByVillageIdAndVillageStatus(villageId, status);
+        Set<String> uniqueCombinations = new HashSet<>();
+        List<ObjectVillageDTO> filteredObjectVillages = new ArrayList<>();
+
+        for (ObjectVillage objectVillage : allObjectVillages) {
+            String key = objectVillage.getObject().getId() + "-" + objectVillage.getDistance();
+            if (uniqueCombinations.add(key)) {
+                filteredObjectVillages.add(objectVillageToObjectVillageDTO(objectVillage));
+            }
+        }
+
+        return filteredObjectVillages;
+    }
+
+    public void updateObjectVillageStatus(Long id, boolean status, String localDateTime) {
+        List<ObjectVillage> objectVillages = objectVillageRepository.findByVillageIdAndVillageStatusAndDateUpload(id, status, localDateTime);
+
+        List<ObjectVillage> villa = new ArrayList<>();
+
+        if (!objectVillages.isEmpty()) {
+            for (ObjectVillage vill : objectVillages) {
+                Village village = villageService.checkVillage(vill.getVillage().getId());
+                vill.setVillage(village);
+                vill.setVillageStatus(true);
+                villa.add(vill);
+            }
+            objectVillageRepository.saveAll(villa);
+        }
+    }
+    public void rejectObjectVillageResponse(Long id, boolean status, String responseDate, LocalDateTime dateDelete) {
+        List<ObjectVillage> objectVillages = objectVillageRepository.findByVillageIdAndVillageStatusAndDateUpload(
+                id, status, responseDate);
+
+        List<ObjectVillage> villa = new ArrayList<>();
+
+        if (!objectVillages.isEmpty()) {
+            for (ObjectVillage vill : objectVillages) {
+                Village village = villageService.checkVillage(vill.getVillage().getId());
+                vill.setVillage(village);
+                vill.setDateDeleted(dateDelete);
+                villa.add(vill);
+            }
+            objectVillageRepository.saveAll(villa);
+        }
     }
 }

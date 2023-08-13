@@ -47,6 +47,7 @@ public class PopulationService {
 
     public PopulationDTO getPopulationById(Long id) {
         Optional<Population> population = populationRepository.findById(id);
+
         if (population.isEmpty()) {
             throw new ApiRequestException("This population not found");
         }

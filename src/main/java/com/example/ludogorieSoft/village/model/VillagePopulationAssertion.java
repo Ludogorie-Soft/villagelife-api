@@ -2,7 +2,8 @@ package com.example.ludogorieSoft.village.model;
 
 import com.example.ludogorieSoft.village.enums.Consents;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -10,7 +11,8 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name = "village_population_assertion")
 @AllArgsConstructor
 @NoArgsConstructor
@@ -28,8 +30,6 @@ public class VillagePopulationAssertion {
     @Enumerated(EnumType.STRING)
     private Consents answer;
     private Boolean villageStatus;
-    @CreationTimestamp
     private LocalDateTime dateUpload;
-
-
+    private LocalDateTime dateDeleted;
 }

@@ -1,6 +1,6 @@
 package com.example.ludogorieSoft.village.exeptions;
 
-import org.springframework.dao.DataIntegrityViolationException;
+import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -21,10 +21,22 @@ public class ApiExceptionHandler {
         );
         return new ResponseEntity<>(apiException, badRequest);
     }
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<String> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
-        String errorMessage = "Duplicate entry error";
-
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorMessage);
+    @ExceptionHandler(value = {JwtException.class})
+    public ResponseEntity<String> handleJWTException(JwtException e) {
+        String errorMessage;
+        if (e.getMessage().contains("JWT expired")) {
+            errorMessage = "JWT token has expired.";
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorMessage);
+        } else {
+            errorMessage = "Invalid JWT token: " + e.getMessage();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorMessage);
+        }
     }
+
+//    @ExceptionHandler(DataIntegrityViolationException.class)
+//    public ResponseEntity<String> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+//        String errorMessage = "Duplicate entry error";
+//
+//        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorMessage);
+//    }
 }

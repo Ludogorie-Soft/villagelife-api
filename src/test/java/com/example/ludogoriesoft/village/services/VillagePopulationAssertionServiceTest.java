@@ -10,16 +10,16 @@ import com.example.ludogorieSoft.village.repositories.VillageRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
@@ -36,6 +36,9 @@ class VillagePopulationAssertionServiceTest {
     private VillageService villageService;
     @Mock
     private ModelMapper modelMapper;
+    @Captor
+    private ArgumentCaptor<List<VillagePopulationAssertion>> assertionListCaptor;
+
     @InjectMocks
     private VillagePopulationAssertionService villagePopulationAssertionService;
 
@@ -45,6 +48,7 @@ class VillagePopulationAssertionServiceTest {
         populatedAssertionService = Mockito.mock(PopulatedAssertionService.class);
         villageService = Mockito.mock(VillageService.class);
         modelMapper = Mockito.mock(ModelMapper.class);
+        assertionListCaptor = ArgumentCaptor.forClass(List.class);
         villagePopulationAssertionService = new VillagePopulationAssertionService(
                 villagePopulationAssertionRepository,
                 populatedAssertionService,
@@ -60,7 +64,7 @@ class VillagePopulationAssertionServiceTest {
         populationAssertions.add(new VillagePopulationAssertion());
         when(villagePopulationAssertionRepository.findAll()).thenReturn(populationAssertions);
         List<VillagePopulationAssertionDTO> result = villagePopulationAssertionService.getAllVillagePopulationAssertion();
-        Assertions.assertEquals(2, result.size());
+        assertEquals(2, result.size());
     }
 
     @Test
@@ -71,7 +75,7 @@ class VillagePopulationAssertionServiceTest {
         when(villagePopulationAssertionRepository.findById(id)).thenReturn(Optional.of(populationAssertion));
         when(villagePopulationAssertionService.toDTO(populationAssertion)).thenReturn(expectedDTO);
         VillagePopulationAssertionDTO result = villagePopulationAssertionService.getByID(id);
-        Assertions.assertEquals(expectedDTO, result);
+        assertEquals(expectedDTO, result);
         verify(villagePopulationAssertionRepository).findById(id);
     }
 
@@ -88,7 +92,7 @@ class VillagePopulationAssertionServiceTest {
         Long id = 1L;
         Mockito.doNothing().when(villagePopulationAssertionRepository).deleteById(id);
         int result = villagePopulationAssertionService.deleteVillagePopulationAssertion(id);
-        Assertions.assertEquals(1, result);
+        assertEquals(1, result);
         verify(villagePopulationAssertionRepository).deleteById(id);
     }
 
@@ -97,7 +101,7 @@ class VillagePopulationAssertionServiceTest {
         Long id = 1L;
         Mockito.doThrow(EmptyResultDataAccessException.class).when(villagePopulationAssertionRepository).deleteById(id);
         int result = villagePopulationAssertionService.deleteVillagePopulationAssertion(id);
-        Assertions.assertEquals(0, result);
+        assertEquals(0, result);
         verify(villagePopulationAssertionRepository).deleteById(id);
     }
 
@@ -117,7 +121,7 @@ class VillagePopulationAssertionServiceTest {
         when(villagePopulationAssertionRepository.findAll()).thenReturn(villagePopulationAssertionList);
         List<VillagePopulationAssertionDTO> result = villagePopulationAssertionService.getVillagePopulationAssertionByVillageId(villageId);
         for (VillagePopulationAssertionDTO dto : result) {
-            Assertions.assertEquals(villageId, dto.getVillageId());
+            assertEquals(villageId, dto.getVillageId());
         }
     }
 
@@ -127,7 +131,7 @@ class VillagePopulationAssertionServiceTest {
         List<VillagePopulationAssertion> villagePopulationAssertionList = new ArrayList<>();
         when(villagePopulationAssertionRepository.findAll()).thenReturn(villagePopulationAssertionList);
         List<VillagePopulationAssertionDTO> result = villagePopulationAssertionService.getVillagePopulationAssertionByVillageId(villageId);
-        Assertions.assertEquals(villagePopulationAssertionList.size(), result.size());
+        assertEquals(villagePopulationAssertionList.size(), result.size());
     }
 
     @Test
@@ -136,7 +140,7 @@ class VillagePopulationAssertionServiceTest {
         List<VillagePopulationAssertion> villagePopulationAssertionList = new ArrayList<>();
         when(villagePopulationAssertionRepository.findAll()).thenReturn(villagePopulationAssertionList);
         List<VillagePopulationAssertionDTO> result = villagePopulationAssertionService.getVillagePopulationAssertionByVillageId(villageId);
-        Assertions.assertEquals(0, result.size());
+        assertEquals(0, result.size());
     }
 
     @Test
@@ -145,7 +149,7 @@ class VillagePopulationAssertionServiceTest {
         List<VillagePopulationAssertion> villagePopulationAssertionList = new ArrayList<>();
         when(villagePopulationAssertionRepository.findAll()).thenReturn(villagePopulationAssertionList);
         List<VillagePopulationAssertionDTO> result = villagePopulationAssertionService.getVillagePopulationAssertionByVillageId(villageId);
-        Assertions.assertEquals(0, result.size());
+        assertEquals(0, result.size());
     }
 
     @Test
@@ -153,7 +157,7 @@ class VillagePopulationAssertionServiceTest {
         Long id = 1L;
         Mockito.doThrow(EmptyResultDataAccessException.class).when(villagePopulationAssertionRepository).deleteById(id);
         int result = villagePopulationAssertionService.deleteVillagePopulationAssertion(id);
-        Assertions.assertEquals(0, result);
+        assertEquals(0, result);
         Mockito.verify(villagePopulationAssertionRepository).deleteById(id);
     }
 
@@ -186,7 +190,7 @@ class VillagePopulationAssertionServiceTest {
 
         List<VillagePopulationAssertionDTO> result = villagePopulationAssertionService.getVillagePopulationAssertionByVillageId(villageId);
 
-        Assertions.assertEquals(2, result.size());
+        assertEquals(2, result.size());
     }
 
 
@@ -286,5 +290,56 @@ class VillagePopulationAssertionServiceTest {
 
         verify(villagePopulationAssertionRepository, times(1)).findById(1L);
         verify(villagePopulationAssertionRepository, times(1)).save(any(VillagePopulationAssertion.class));
+    }
+    @Test
+    void testUpdateVillagePopulationAssertionStatus() {
+        Long villageId = 1L;
+        boolean status = false;
+        String localDateTime = "2023-08-10T00:00:00";
+
+        VillagePopulationAssertion assertion = new VillagePopulationAssertion();
+        assertion.setId(1L);
+        assertion.setVillage(new Village());
+
+        List<VillagePopulationAssertion> assertions = new ArrayList<>();
+        assertions.add(assertion);
+
+        when(villagePopulationAssertionRepository.findByVillageIdAndVillageStatusAndDateUpload(villageId, status, localDateTime))
+                .thenReturn(assertions);
+
+        villagePopulationAssertionService.updateVillagePopulationAssertionStatus(villageId, status, localDateTime);
+
+        verify(villagePopulationAssertionRepository).findByVillageIdAndVillageStatusAndDateUpload(villageId, status, localDateTime);
+        verify(villagePopulationAssertionRepository).saveAll(assertionListCaptor.capture());
+
+        List<VillagePopulationAssertion> savedAssertions = assertionListCaptor.getValue();
+        assertEquals(1, savedAssertions.size());
+        assertEquals(true, savedAssertions.get(0).getVillageStatus());
+    }
+    @Test
+    void testRejectVillagePopulationAssertionStatus() {
+        Long villageId = 1L;
+        boolean status = false;
+        String responseDate = "2023-08-10T00:00:00";
+        LocalDateTime deleteDate = LocalDateTime.now();
+
+        VillagePopulationAssertion assertion = new VillagePopulationAssertion();
+        assertion.setId(1L);
+        assertion.setVillage(new Village());
+
+        List<VillagePopulationAssertion> assertions = new ArrayList<>();
+        assertions.add(assertion);
+
+        when(villagePopulationAssertionRepository.findByVillageIdAndVillageStatusAndDateUpload(villageId, status, responseDate))
+                .thenReturn(assertions);
+
+        villagePopulationAssertionService.rejectVillagePopulationAssertionStatus(villageId, status, responseDate, deleteDate);
+
+        verify(villagePopulationAssertionRepository).findByVillageIdAndVillageStatusAndDateUpload(villageId, status, responseDate);
+        verify(villagePopulationAssertionRepository).saveAll(assertionListCaptor.capture());
+
+        List<VillagePopulationAssertion> savedAssertions = assertionListCaptor.getValue();
+        assertEquals(1, savedAssertions.size());
+        assertEquals(deleteDate, savedAssertions.get(0).getDateDeleted());
     }
 }

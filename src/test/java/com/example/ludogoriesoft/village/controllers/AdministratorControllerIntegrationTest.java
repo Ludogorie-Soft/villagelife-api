@@ -1,9 +1,13 @@
 package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.dtos.AdministratorDTO;
+import com.example.ludogorieSoft.village.dtos.VillageDTO;
 import com.example.ludogorieSoft.village.dtos.request.AdministratorRequest;
+import com.example.ludogorieSoft.village.dtos.response.VillageInfo;
 import com.example.ludogorieSoft.village.dtos.response.VillageResponse;
+import com.example.ludogorieSoft.village.services.AdminVillageService;
 import com.example.ludogorieSoft.village.services.AdministratorService;
+import com.example.ludogorieSoft.village.services.VillageInfoService;
 import com.example.ludogorieSoft.village.services.VillageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,11 +23,15 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(value = AdministratorController.class,
@@ -36,16 +44,10 @@ import static org.mockito.Mockito.*;
         }
 )
 class AdministratorControllerIntegrationTest {
-
     @Autowired
     private MockMvc mockMvc;
-
     @MockBean
     private AdministratorService administratorService;
-
-    @MockBean
-    private VillageService villageService;
-
     @BeforeEach
     public void setup() {
         MockitoAnnotations.openMocks(this);
@@ -64,9 +66,9 @@ class AdministratorControllerIntegrationTest {
 
         when(administratorService.getAllAdministrators()).thenReturn(administratorDTOList);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/admins")
+        mockMvc.perform(get("/api/v1/admins")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(1L))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].username").value("username1"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(2L))
@@ -82,9 +84,9 @@ class AdministratorControllerIntegrationTest {
         administratorDTO1.setUsername("username1");
 
         when(administratorService.getAdministratorById(1L)).thenReturn(administratorDTO1);
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/admins/{id}", 1L)
+        mockMvc.perform(get("/api/v1/admins/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1L))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.username").value("username1"));
 
@@ -100,10 +102,10 @@ class AdministratorControllerIntegrationTest {
         AdministratorRequest request = new AdministratorRequest();
         request.setUsername("username");
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/admins")
+        mockMvc.perform(post("/api/v1/admins")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"username\":\"username\"}"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1L))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.username").value("username"));
 
@@ -123,7 +125,7 @@ class AdministratorControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/admins/update/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"id\": 1,\"username\":\"username\"}"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1L))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.username").value("username"));
 
@@ -133,33 +135,13 @@ class AdministratorControllerIntegrationTest {
     @Test
     void deleteAdministratorById_shouldReturnSuccessMessage() throws Exception {
         Long adminId = 1L;
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/admins/{id}", adminId)
+        mockMvc.perform(delete("/api/v1/admins/{id}", adminId)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string("Administrator with id: 1 has been deleted successfully!!"));
+                .andExpect(status().isOk())
+                .andExpect(content().string("Administrator with id: 1 has been deleted successfully!!"));
 
         verify(administratorService, times(1)).deleteAdministratorById(1L);
     }
 
-    @Test
-    void getAllVillages_shouldReturnListOfVillageResponses() throws Exception {
-        VillageResponse villageResponse1 = new VillageResponse();
-        villageResponse1.setId(1L);
-        villageResponse1.setName("village1");
-        VillageResponse villageResponse2 = new VillageResponse();
-        villageResponse2.setId(2L);
-        villageResponse2.setName("village2");
-        List<VillageResponse> villageResponses = Arrays.asList(villageResponse1, villageResponse2);
-        when(administratorService.getAllVillagesWithPopulation()).thenReturn(villageResponses);
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/admins/village")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(1L))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("village1"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(2L))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].name").value("village2"));
-
-        verify(administratorService, times(1)).getAllVillagesWithPopulation();
-    }
 
 }

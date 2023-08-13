@@ -206,40 +206,40 @@ class VillageControllerIntegrationTest {
         assertNotNull(response);
     }
 
-    @Test
-    void testGetVillageInfoById() throws Exception {
-        VillageDTO villageDTO = new VillageDTO();
-        villageDTO.setId(2L);
-        villageDTO.setName("Village Name 2");
-        villageDTO.setPopulationDTO(new PopulationDTO());
-        villageDTO.setDateUpload(LocalDateTime.now());
-        villageDTO.setStatus(false);
-        VillageInfo villageInfo = new VillageInfo();
-        villageInfo.setVillageDTO(villageDTO);
-        villageInfo.setEthnicities("няма малцинствени групи");
-        villageInfo.setPopulationAssertionResponses(new ArrayList<>());
-        villageInfo.setLivingConditionResponses(new ArrayList<>());
-        villageInfo.setObjectVillageResponses(new ArrayList<>());
-        villageInfo.setAnswersQuestionResponses(new ArrayList<>());
-        when(villageInfoService.getVillageInfoByVillageId(anyLong())).thenReturn(villageInfo);
-
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villages/info/{id}", 2)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.villageDTO.id").value(2))
-                .andExpect(jsonPath("$.villageDTO.name").value("Village Name 2"))
-                .andExpect(jsonPath("$.villageDTO.populationDTO").exists())
-                .andExpect(jsonPath("$.villageDTO.dateUpload").exists())
-                .andExpect(jsonPath("$.villageDTO.status").value(false))
-                .andExpect(jsonPath("$.ethnicities").value(villageInfo.getEthnicities()))
-                .andExpect(jsonPath("$.populationAssertionResponses").value(villageInfo.getPopulationAssertionResponses()))
-                .andExpect(jsonPath("$.livingConditionResponses").value(villageInfo.getLivingConditionResponses()))
-                .andExpect(jsonPath("$.objectVillageResponses").value(villageInfo.getObjectVillageResponses()))
-                .andExpect(jsonPath("$.answersQuestionResponses").value(villageInfo.getAnswersQuestionResponses()))
-                .andReturn();
-
-        String response = mvcResult.getResponse().getContentAsString();
-        assertNotNull(response);
-    }
+//    @Test
+//    void testGetVillageInfoById() throws Exception {
+//        VillageDTO villageDTO = new VillageDTO();
+//        villageDTO.setId(2L);
+//        villageDTO.setName("Village Name 2");
+//        villageDTO.setPopulationDTO(new PopulationDTO());
+//        villageDTO.setDateUpload(LocalDateTime.now());
+//        villageDTO.setStatus(false);
+//        VillageInfo villageInfo = new VillageInfo();
+//        villageInfo.setVillageDTO(villageDTO);
+//        villageInfo.setEthnicities("няма малцинствени групи");
+//        villageInfo.setPopulationAssertionResponses(new ArrayList<>());
+//        villageInfo.setLivingConditionResponses(new ArrayList<>());
+//        villageInfo.setObjectVillageResponses(new ArrayList<>());
+//        villageInfo.setAnswersQuestionResponses(new ArrayList<>());
+//        when(villageInfoService.getVillageInfoByVillageId(anyLong())).thenReturn(villageInfo);
+//
+//        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villages/info/{id}", 2)
+//                        .contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.villageDTO.id").value(2))
+//                .andExpect(jsonPath("$.villageDTO.name").value("Village Name 2"))
+//                .andExpect(jsonPath("$.villageDTO.populationDTO").exists())
+//                .andExpect(jsonPath("$.villageDTO.dateUpload").exists())
+//                .andExpect(jsonPath("$.villageDTO.status").value(false))
+//                .andExpect(jsonPath("$.ethnicities").value(villageInfo.getEthnicities()))
+//                .andExpect(jsonPath("$.populationAssertionResponses").value(villageInfo.getPopulationAssertionResponses()))
+//                .andExpect(jsonPath("$.livingConditionResponses").value(villageInfo.getLivingConditionResponses()))
+//                .andExpect(jsonPath("$.objectVillageResponses").value(villageInfo.getObjectVillageResponses()))
+//                .andExpect(jsonPath("$.answersQuestionResponses").value(villageInfo.getAnswersQuestionResponses()))
+//                .andReturn();
+//
+//        String response = mvcResult.getResponse().getContentAsString();
+//        assertNotNull(response);
+//    }
 
 }

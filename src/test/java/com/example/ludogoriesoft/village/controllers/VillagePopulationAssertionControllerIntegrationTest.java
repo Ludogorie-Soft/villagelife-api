@@ -177,8 +177,9 @@ class VillagePopulationAssertionControllerIntegrationTest {
 
         VillagePopulationAssertionService villagePopulationAssertionService = mock(VillagePopulationAssertionService.class);
         List<VillagePopulationAssertionDTO> populationAssertions = new ArrayList<>();
-        populationAssertions.add(new VillagePopulationAssertionDTO(1L, 1L, 1L, Consents.COMPLETELY_AGREED,true,now()));
-        populationAssertions.add(new VillagePopulationAssertionDTO(2L, 1L, 2L, Consents.DISAGREE,true,now()));
+        populationAssertions.add(new VillagePopulationAssertionDTO(1L, 1L, 1L, Consents.COMPLETELY_AGREED,true,now(),now()));
+        populationAssertions.add(new VillagePopulationAssertionDTO(2L, 1L, 2L, Consents.DISAGREE,true,now(),now()));
+
         when(villagePopulationAssertionService.getVillagePopulationAssertionByVillageId(villageId))
                 .thenReturn(populationAssertions);
 

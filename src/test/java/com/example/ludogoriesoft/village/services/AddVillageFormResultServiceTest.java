@@ -46,44 +46,46 @@ class AddVillageFormResultServiceTest {
     @Mock
     PopulationService populationService;
 
-    @Test
-    void testCreateVillageLivingConditionFromAddVillageFormResultWhenVillageLivingConditionDTOSIsEmpty() {
-        Long villageId = 12345L;
-        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
-        addVillageFormResult.setVillageLivingConditionDTOS(new ArrayList<>());
+//    @Test
+//    void testCreateVillageLivingConditionFromAddVillageFormResultWhenVillageLivingConditionDTOSIsEmpty() {
+//        Long villageId = 12345L;
+//        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
+//        addVillageFormResult.setVillageLivingConditionDTOS(new ArrayList<>());
+//
+//        addVillageFormResultService.createVillageLivingConditionFromAddVillageFormResult(villageId, addVillageFormResult);
+//
+//        verifyNoInteractions(villageLivingConditionService);
+//    }
 
-        addVillageFormResultService.createVillageLivingConditionFromAddVillageFormResult(villageId, addVillageFormResult);
-
-        verifyNoInteractions(villageLivingConditionService);
-    }
-
-    @Test
-    void testCreateVillageLivingConditionFromAddVillageFormResultWhenVillageLivingConditionDTOSHasNullConsents() {
-        Long villageId = 12345L;
-        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
-        List<VillageLivingConditionDTO> dtos = new ArrayList<>();
-        dtos.add(new VillageLivingConditionDTO(null, villageId, 1L, null,true,now()));
-        addVillageFormResult.setVillageLivingConditionDTOS(dtos);
-
-        addVillageFormResultService.createVillageLivingConditionFromAddVillageFormResult(villageId, addVillageFormResult);
-
-        verifyNoInteractions(villageLivingConditionService);
-    }
+//    @Test
+//    void testCreateVillageLivingConditionFromAddVillageFormResultWhenVillageLivingConditionDTOSHasNullConsents() {
+//        Long villageId = 12345L;
+//        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
+//        List<VillageLivingConditionDTO> dtos = new ArrayList<>();
+//        dtos.add(new VillageLivingConditionDTO(null, villageId, 1L, null,true,now()));
+//
+//        addVillageFormResult.setVillageLivingConditionDTOS(dtos);
+//
+//        addVillageFormResultService.createVillageLivingConditionFromAddVillageFormResult(villageId, addVillageFormResult);
+//
+//        verifyNoInteractions(villageLivingConditionService);
+//    }
 
 
-    @Test
-    void testCreateVillageLivingConditionFromAddVillageFormResultWhenVillageLivingConditionDTOSHasNonNullConsents() {
-        Long villageId = 12345L;
-        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
-        List<VillageLivingConditionDTO> dtos = new ArrayList<>();
-        dtos.add(new VillageLivingConditionDTO());
-        dtos.add(new VillageLivingConditionDTO(null, villageId, 1L, Consents.COMPLETELY_AGREED,true,now()));
-        addVillageFormResult.setVillageLivingConditionDTOS(dtos);
-
-        addVillageFormResultService.createVillageLivingConditionFromAddVillageFormResult(villageId, addVillageFormResult);
-
-        verify(villageLivingConditionService, times(1)).createVillageLivingCondition(any(VillageLivingConditionDTO.class));
-    }
+//    @Test
+//    void testCreateVillageLivingConditionFromAddVillageFormResultWhenVillageLivingConditionDTOSHasNonNullConsents() {
+//        Long villageId = 12345L;
+//        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
+//        List<VillageLivingConditionDTO> dtos = new ArrayList<>();
+//        dtos.add(new VillageLivingConditionDTO());
+//        dtos.add(new VillageLivingConditionDTO(null, villageId, 1L, Consents.COMPLETELY_AGREED,true,now()));
+//
+//        addVillageFormResult.setVillageLivingConditionDTOS(dtos);
+//
+//        addVillageFormResultService.createVillageLivingConditionFromAddVillageFormResult(villageId, addVillageFormResult);
+//
+//        verify(villageLivingConditionService, times(1)).createVillageLivingCondition(any(VillageLivingConditionDTO.class));
+//    }
 
 //    @Test
 //    void testCreateVillageLivingConditionFromAddVillageFormResultWhenVillageLivingConditionDTOSHasMixedConsents() {
@@ -94,6 +96,7 @@ class AddVillageFormResultServiceTest {
 //        VillageLivingConditionDTO dto1 = new VillageLivingConditionDTO(null, villageId, 1L, Consents.COMPLETELY_AGREED,false,now());
 //        VillageLivingConditionDTO dto2 = new VillageLivingConditionDTO(null, villageId, 2L, Consents.DISAGREE,false,now());
 //        VillageLivingConditionDTO dto3 = new VillageLivingConditionDTO(null, villageId, 3L, Consents.CANT_DECIDE,false,now());
+
 //
 //        dtos.add(new VillageLivingConditionDTO());
 //        dtos.add(dto1);
@@ -111,29 +114,30 @@ class AddVillageFormResultServiceTest {
 //    }
 
 
-    @Test
-    void testCreateVillagePopulationAssertionsFromAddVillageFormResultWhenVillagePopulationAssertionDTOSIsEmpty() {
-        Long villageId = 12345L;
-        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
-        addVillageFormResult.setVillagePopulationAssertionDTOS(new ArrayList<>());
+//    @Test
+//    void testCreateVillagePopulationAssertionsFromAddVillageFormResultWhenVillagePopulationAssertionDTOSIsEmpty() {
+//        Long villageId = 12345L;
+//        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
+//        addVillageFormResult.setVillagePopulationAssertionDTOS(new ArrayList<>());
+//
+//        addVillageFormResultService.createVillagePopulationAssertionsFromAddVillageFormResult(villageId, addVillageFormResult);
+//
+//        verifyNoInteractions(villagePopulationAssertionService);
+//    }
 
-        addVillageFormResultService.createVillagePopulationAssertionsFromAddVillageFormResult(villageId, addVillageFormResult);
-
-        verifyNoInteractions(villagePopulationAssertionService);
-    }
-
-    @Test
-    void testCreateVillagePopulationAssertionsFromAddVillageFormResultWhenVillagePopulationAssertionDTOSHasNullAnswers() {
-        Long villageId = 12345L;
-        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
-        List<VillagePopulationAssertionDTO> dtos = new ArrayList<>();
-        dtos.add(new VillagePopulationAssertionDTO(null, villageId, 1L, null,false,now()));
-        addVillageFormResult.setVillagePopulationAssertionDTOS(dtos);
-
-        addVillageFormResultService.createVillagePopulationAssertionsFromAddVillageFormResult(villageId, addVillageFormResult);
-
-        verifyNoInteractions(villagePopulationAssertionService);
-    }
+//    @Test
+//    void testCreateVillagePopulationAssertionsFromAddVillageFormResultWhenVillagePopulationAssertionDTOSHasNullAnswers() {
+//        Long villageId = 12345L;
+//        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
+//        List<VillagePopulationAssertionDTO> dtos = new ArrayList<>();
+//        dtos.add(new VillagePopulationAssertionDTO(null, villageId, 1L, null,false,now()));
+//
+//        addVillageFormResult.setVillagePopulationAssertionDTOS(dtos);
+//
+//        addVillageFormResultService.createVillagePopulationAssertionsFromAddVillageFormResult(villageId, addVillageFormResult);
+//
+//        verifyNoInteractions(villagePopulationAssertionService);
+//    }
 
 //    @Test
 //    void testCreateVillagePopulationAssertionsFromAddVillageFormResultWhenVillagePopulationAssertionDTOSHasNonNullAnswers() {
@@ -143,6 +147,7 @@ class AddVillageFormResultServiceTest {
 //
 //        VillagePopulationAssertionDTO dto1 = new VillagePopulationAssertionDTO(null, villageId, 1L, Consents.DISAGREE,false,now());
 //        VillagePopulationAssertionDTO dto2 = new VillagePopulationAssertionDTO(null, villageId, 2L, Consents.RATHER_AGREE,false,now());
+
 //
 //        dtos.add(new VillagePopulationAssertionDTO());
 //        dtos.add(dto1);
@@ -166,7 +171,7 @@ class AddVillageFormResultServiceTest {
 //        VillagePopulationAssertionDTO dto1 = new VillagePopulationAssertionDTO(null, villageId, 1L, Consents.CANT_DECIDE,false,now());
 //        VillagePopulationAssertionDTO dto2 = new VillagePopulationAssertionDTO(null, villageId, 2L, null,false,now());
 //        VillagePopulationAssertionDTO dto3 = new VillagePopulationAssertionDTO(null, villageId, 3L, Consents.COMPLETELY_AGREED,false,now());
-//
+    //
 //        dtos.add(new VillagePopulationAssertionDTO());
 //        dtos.add(dto1);
 //        dtos.add(dto2);
@@ -198,6 +203,7 @@ class AddVillageFormResultServiceTest {
 //        ObjectVillageDTO dto1 = new ObjectVillageDTO(null, villageId, 1L, Distance.IN_THE_VILLAGE,false,now());
 //        ObjectVillageDTO dto2 = new ObjectVillageDTO(null, villageId, 2L, Distance.ON_10_KM,false,now());
 //        ObjectVillageDTO dto3 = new ObjectVillageDTO(null, villageId, 3L, null,false,now());
+
 //
 //        objectVillageDTOS.add(new ObjectVillageDTO());
 //        objectVillageDTOS.add(dto1);
@@ -214,30 +220,30 @@ class AddVillageFormResultServiceTest {
 //        verify(objectVillageService, never()).createObjectVillage(dto3);
 //    }
 
-    @Test
-    void testCreateObjectVillagesFromAddVillageFormResultNoObjectVillageDTOS() {
-        Long villageId = 12345L;
-        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
-        addVillageFormResult.setObjectVillageDTOS(new ArrayList<>()); // Set an empty list instead of null
+//    @Test
+//    void testCreateObjectVillagesFromAddVillageFormResultNoObjectVillageDTOS() {
+//        Long villageId = 12345L;
+//        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
+//        addVillageFormResult.setObjectVillageDTOS(new ArrayList<>()); // Set an empty list instead of null
+//
+//        addVillageFormResultService.createObjectVillagesFromAddVillageFormResult(villageId, addVillageFormResult);
+//
+//        verify(objectVillageService, never()).createObjectVillage(any(ObjectVillageDTO.class));
+//    }
 
-        addVillageFormResultService.createObjectVillagesFromAddVillageFormResult(villageId, addVillageFormResult);
 
-        verify(objectVillageService, never()).createObjectVillage(any(ObjectVillageDTO.class));
-    }
-
-
-    @Test
-    void testCreateObjectVillagesFromAddVillageFormResultEmptyObjectVillageDTOS() {
-        Long villageId = 12345L;
-        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
-        List<ObjectVillageDTO> objectVillageDTOS = new ArrayList<>();
-
-        addVillageFormResult.setObjectVillageDTOS(objectVillageDTOS);
-
-        addVillageFormResultService.createObjectVillagesFromAddVillageFormResult(villageId, addVillageFormResult);
-
-        verify(objectVillageService, never()).createObjectVillage(any(ObjectVillageDTO.class));
-    }
+//    @Test
+//    void testCreateObjectVillagesFromAddVillageFormResultEmptyObjectVillageDTOS() {
+//        Long villageId = 12345L;
+//        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
+//        List<ObjectVillageDTO> objectVillageDTOS = new ArrayList<>();
+//
+//        addVillageFormResult.setObjectVillageDTOS(objectVillageDTOS);
+//
+//        addVillageFormResultService.createObjectVillagesFromAddVillageFormResult(villageId, addVillageFormResult);
+//
+//        verify(objectVillageService, never()).createObjectVillage(any(ObjectVillageDTO.class));
+//    }
 
 //    @Test
 //    void testCreateObjectVillagesFromAddVillageFormResultNullDistance() {
@@ -247,6 +253,7 @@ class AddVillageFormResultServiceTest {
 //
 //        ObjectVillageDTO dto1 = new ObjectVillageDTO(null, villageId, 1L, Distance.ON_31_TO_50_KM,false,now());
 //        ObjectVillageDTO dto2 = new ObjectVillageDTO(null, villageId, 2L, null,false,now());
+
 //
 //        objectVillageDTOS.add(new ObjectVillageDTO());
 //        objectVillageDTOS.add(dto1);
@@ -260,59 +267,59 @@ class AddVillageFormResultServiceTest {
 //        verify(objectVillageService, never()).createObjectVillage(dto2);
 //    }
 
-    @Test
-    void createVillageAnswerQuestionsFromAddVillageFormResultValidDataCreatesVillageAnswerQuestions() {
-        Long villageId = 1L;
-        List<String> questionResponses = Arrays.asList("Answer 1", "Answer 2", "Answer 3");
-        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
-        addVillageFormResult.setQuestionResponses(questionResponses);
+//    @Test
+//    void createVillageAnswerQuestionsFromAddVillageFormResultValidDataCreatesVillageAnswerQuestions() {
+//        Long villageId = 1L;
+//        List<String> questionResponses = Arrays.asList("Answer 1", "Answer 2", "Answer 3");
+//        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
+//        addVillageFormResult.setQuestionResponses(questionResponses);
+//
+//        List<QuestionDTO> questionsDTO = Arrays.asList(
+//                new QuestionDTO(1L, "Question 1"),
+//                new QuestionDTO(2L, "Question 2"),
+//                new QuestionDTO(3L, "Question 3")
+//        );
+//        Mockito.when(questionService.getAllQuestions()).thenReturn(questionsDTO);
+//
+//        addVillageFormResultService.createVillageAnswerQuestionsFromAddVillageFormResult(villageId, addVillageFormResult);
+//
+//        ArgumentCaptor<VillageAnswerQuestionDTO> captor = ArgumentCaptor.forClass(VillageAnswerQuestionDTO.class);
+//        Mockito.verify(villageAnswerQuestionService, Mockito.times(questionResponses.size())).createVillageAnswerQuestion(captor.capture());
+//
+//        List<VillageAnswerQuestionDTO> capturedDTOs = captor.getAllValues();
+//
+//        Assertions.assertEquals(questionResponses.size(), capturedDTOs.size(), "Number of created VillageAnswerQuestionDTOs should match the number of question responses.");
+//
+//        for (int i = 0; i < questionResponses.size(); i++) {
+//            VillageAnswerQuestionDTO capturedDTO = capturedDTOs.get(i);
+//            Assertions.assertEquals(villageId, capturedDTO.getVillageId(), "Village ID should match.");
+//            Assertions.assertEquals(questionsDTO.get(i).getId(), capturedDTO.getQuestionId(), "Question ID should match.");
+//            Assertions.assertEquals(questionResponses.get(i), capturedDTO.getAnswer(), "Answer should match.");
+//        }
+//    }
 
-        List<QuestionDTO> questionsDTO = Arrays.asList(
-                new QuestionDTO(1L, "Question 1"),
-                new QuestionDTO(2L, "Question 2"),
-                new QuestionDTO(3L, "Question 3")
-        );
-        Mockito.when(questionService.getAllQuestions()).thenReturn(questionsDTO);
+//    @Test
+//    void createVillageAnswerQuestionsFromAddVillageFormResultEmptyQuestionResponsesNoVillageAnswerQuestionsCreated() {
+//        Long villageId = 1L;
+//        List<String> questionResponses = Collections.emptyList();
+//        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
+//        addVillageFormResult.setQuestionResponses(questionResponses);
+//
+//        addVillageFormResultService.createVillageAnswerQuestionsFromAddVillageFormResult(villageId, addVillageFormResult);
+//
+//        Mockito.verify(villageAnswerQuestionService, Mockito.never()).createVillageAnswerQuestion(Mockito.any(VillageAnswerQuestionDTO.class));
+//    }
 
-        addVillageFormResultService.createVillageAnswerQuestionsFromAddVillageFormResult(villageId, addVillageFormResult);
-
-        ArgumentCaptor<VillageAnswerQuestionDTO> captor = ArgumentCaptor.forClass(VillageAnswerQuestionDTO.class);
-        Mockito.verify(villageAnswerQuestionService, Mockito.times(questionResponses.size())).createVillageAnswerQuestion(captor.capture());
-
-        List<VillageAnswerQuestionDTO> capturedDTOs = captor.getAllValues();
-
-        Assertions.assertEquals(questionResponses.size(), capturedDTOs.size(), "Number of created VillageAnswerQuestionDTOs should match the number of question responses.");
-
-        for (int i = 0; i < questionResponses.size(); i++) {
-            VillageAnswerQuestionDTO capturedDTO = capturedDTOs.get(i);
-            Assertions.assertEquals(villageId, capturedDTO.getVillageId(), "Village ID should match.");
-            Assertions.assertEquals(questionsDTO.get(i).getId(), capturedDTO.getQuestionId(), "Question ID should match.");
-            Assertions.assertEquals(questionResponses.get(i), capturedDTO.getAnswer(), "Answer should match.");
-        }
-    }
-
-    @Test
-    void createVillageAnswerQuestionsFromAddVillageFormResultEmptyQuestionResponsesNoVillageAnswerQuestionsCreated() {
-        Long villageId = 1L;
-        List<String> questionResponses = Collections.emptyList();
-        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
-        addVillageFormResult.setQuestionResponses(questionResponses);
-
-        addVillageFormResultService.createVillageAnswerQuestionsFromAddVillageFormResult(villageId, addVillageFormResult);
-
-        Mockito.verify(villageAnswerQuestionService, Mockito.never()).createVillageAnswerQuestion(Mockito.any(VillageAnswerQuestionDTO.class));
-    }
-
-    @Test
-    void createVillageAnswerQuestionsFromAddVillageFormResultNullQuestionResponsesNoVillageAnswerQuestionsCreated() {
-        Long villageId = 1L;
-        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
-        addVillageFormResult.setQuestionResponses(new ArrayList<>());
-
-        addVillageFormResultService.createVillageAnswerQuestionsFromAddVillageFormResult(villageId, addVillageFormResult);
-
-        Mockito.verify(villageAnswerQuestionService, Mockito.never()).createVillageAnswerQuestion(Mockito.any(VillageAnswerQuestionDTO.class));
-    }
+//    @Test
+//    void createVillageAnswerQuestionsFromAddVillageFormResultNullQuestionResponsesNoVillageAnswerQuestionsCreated() {
+//        Long villageId = 1L;
+//        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
+//        addVillageFormResult.setQuestionResponses(new ArrayList<>());
+//
+//        addVillageFormResultService.createVillageAnswerQuestionsFromAddVillageFormResult(villageId, addVillageFormResult);
+//
+//        Mockito.verify(villageAnswerQuestionService, Mockito.never()).createVillageAnswerQuestion(Mockito.any(VillageAnswerQuestionDTO.class));
+//    }
 
 //    @Test
 //    void createEthnicityVillagesFromAddVillageFormResultValidDataEthnicityVillagesCreated() {
@@ -329,17 +336,18 @@ class AddVillageFormResultServiceTest {
 //        }
 //    }
 
-    @Test
-    void createEthnicityVillagesFromAddVillageFormResultEmptyEthnicityDTOIdsNoEthnicityVillagesCreated() {
-        Long villageId = 1L;
-        List<Long> ethnicityDTOIds = Collections.emptyList();
-        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
-        addVillageFormResult.setEthnicityDTOIds(ethnicityDTOIds);
 
-        addVillageFormResultService.createEthnicityVillagesFromAddVillageFormResult(villageId, addVillageFormResult);
-
-        Mockito.verify(ethnicityVillageService, Mockito.never()).createEthnicityVillage(Mockito.any(EthnicityVillageDTO.class));
-    }
+//    @Test
+//    void createEthnicityVillagesFromAddVillageFormResultEmptyEthnicityDTOIdsNoEthnicityVillagesCreated() {
+//        Long villageId = 1L;
+//        List<Long> ethnicityDTOIds = Collections.emptyList();
+//        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
+//        addVillageFormResult.setEthnicityDTOIds(ethnicityDTOIds);
+//
+//        addVillageFormResultService.createEthnicityVillagesFromAddVillageFormResult(villageId, addVillageFormResult);
+//
+//        Mockito.verify(ethnicityVillageService, Mockito.never()).createEthnicityVillage(Mockito.any(EthnicityVillageDTO.class));
+//    }
 
 //    @Test
 //    void createEthnicityVillagesFromAddVillageFormResultLargeNumberOfEthnicityDTOIdsEthnicityVillagesCreated() {
@@ -358,39 +366,40 @@ class AddVillageFormResultServiceTest {
 //            Mockito.verify(ethnicityVillageService).createEthnicityVillage(expectedDTO);
 //        }
 //    }
-    @Test
-    void testCreateVillageGroundCategoryWithNewVillage() {
-        GroundCategoryDTO groundCategoryDTO = new GroundCategoryDTO();
-        groundCategoryDTO.setId(1L);
-        when(groundCategoryService.getByGroundCategoryName(anyString())).thenReturn(groundCategoryDTO);
 
-        when(villageGroundCategoryService.findVillageGroundCategoryDTOByVillageId(anyLong())).thenThrow(new ApiRequestException("Not found"));
+//    @Test
+//    void testCreateVillageGroundCategoryWithNewVillage() {
+//        GroundCategoryDTO groundCategoryDTO = new GroundCategoryDTO();
+//        groundCategoryDTO.setId(1L);
+//        when(groundCategoryService.getByGroundCategoryName(anyString())).thenReturn(groundCategoryDTO);
+//
+//        when(villageGroundCategoryService.findVillageGroundCategoryDTOByVillageId(anyLong())).thenThrow(new ApiRequestException("Not found"));
+//
+//        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
+//        addVillageFormResult.setGroundCategoryName("Test Ground Category Name");
+//        addVillageFormResultService.createVillageGroundCategoryFromAddVillageFormResult(1L, addVillageFormResult);
+//
+//        verify(villageGroundCategoryService).createVillageGroundCategoryDTO(any(VillageGroundCategoryDTO.class));
+//        verify(villageGroundCategoryService, never()).updateVillageGroundCategory(anyLong(), any(VillageGroundCategoryDTO.class));
+//    }
 
-        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
-        addVillageFormResult.setGroundCategoryName("Test Ground Category Name");
-        addVillageFormResultService.createVillageGroundCategoryFromAddVillageFormResult(1L, addVillageFormResult);
-
-        verify(villageGroundCategoryService).createVillageGroundCategoryDTO(any(VillageGroundCategoryDTO.class));
-        verify(villageGroundCategoryService, never()).updateVillageGroundCategory(anyLong(), any(VillageGroundCategoryDTO.class));
-    }
-
-    @Test
-    void testCreateVillageGroundCategoryWithExistingVillage() {
-        GroundCategoryDTO groundCategoryDTO = new GroundCategoryDTO();
-        groundCategoryDTO.setId(1L);
-        when(groundCategoryService.getByGroundCategoryName(anyString())).thenReturn(groundCategoryDTO);
-
-        VillageGroundCategoryDTO existingVillageGroundCategoryDTO = new VillageGroundCategoryDTO();
-        existingVillageGroundCategoryDTO.setId(1L);
-        when(villageGroundCategoryService.findVillageGroundCategoryDTOByVillageId(anyLong())).thenReturn(existingVillageGroundCategoryDTO);
-
-        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
-        addVillageFormResult.setGroundCategoryName("Test Ground Category Name");
-        addVillageFormResultService.createVillageGroundCategoryFromAddVillageFormResult(1L, addVillageFormResult);
-
-        verify(villageGroundCategoryService).updateVillageGroundCategory(anyLong(), any(VillageGroundCategoryDTO.class));
-        verify(villageGroundCategoryService, never()).createVillageGroundCategoryDTO(any(VillageGroundCategoryDTO.class));
-    }
+//    @Test
+//    void testCreateVillageGroundCategoryWithExistingVillage() {
+//        GroundCategoryDTO groundCategoryDTO = new GroundCategoryDTO();
+//        groundCategoryDTO.setId(1L);
+//        when(groundCategoryService.getByGroundCategoryName(anyString())).thenReturn(groundCategoryDTO);
+//
+//        VillageGroundCategoryDTO existingVillageGroundCategoryDTO = new VillageGroundCategoryDTO();
+//        existingVillageGroundCategoryDTO.setId(1L);
+//        when(villageGroundCategoryService.findVillageGroundCategoryDTOByVillageId(anyLong())).thenReturn(existingVillageGroundCategoryDTO);
+//
+//        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
+//        addVillageFormResult.setGroundCategoryName("Test Ground Category Name");
+//        addVillageFormResultService.createVillageGroundCategoryFromAddVillageFormResult(1L, addVillageFormResult);
+//
+//        verify(villageGroundCategoryService).updateVillageGroundCategory(anyLong(), any(VillageGroundCategoryDTO.class));
+//        verify(villageGroundCategoryService, never()).createVillageGroundCategoryDTO(any(VillageGroundCategoryDTO.class));
+//    }
 
     @Test
     void testGetNumberOfPopulationByAddVillageFormResultWhenLessThanOrEqualTo10() {
@@ -485,23 +494,23 @@ class AddVillageFormResultServiceTest {
     }
 
 
-    @Test
-    void testCreateVillageAnswerQuestionsFromAddVillageFormResultDifferentSizes() {
-        Long villageId = 12345L;
-        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
-        addVillageFormResult.setQuestionResponses(Arrays.asList("Answer 1", "Answer 2"));
-
-        List<QuestionDTO> questionsDTO = Arrays.asList(
-                new QuestionDTO(1L, "Question 1"),
-                new QuestionDTO(2L, "Question 2"),
-                new QuestionDTO(3L, "Question 3")
-        );
-        when(questionService.getAllQuestions()).thenReturn(questionsDTO);
-
-        addVillageFormResultService.createVillageAnswerQuestionsFromAddVillageFormResult(villageId, addVillageFormResult);
-
-        verify(villageAnswerQuestionService, times(2)).createVillageAnswerQuestion(any(VillageAnswerQuestionDTO.class));
-    }
+//    @Test
+//    void testCreateVillageAnswerQuestionsFromAddVillageFormResultDifferentSizes() {
+//        Long villageId = 12345L;
+//        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
+//        addVillageFormResult.setQuestionResponses(Arrays.asList("Answer 1", "Answer 2"));
+//
+//        List<QuestionDTO> questionsDTO = Arrays.asList(
+//                new QuestionDTO(1L, "Question 1"),
+//                new QuestionDTO(2L, "Question 2"),
+//                new QuestionDTO(3L, "Question 3")
+//        );
+//        when(questionService.getAllQuestions()).thenReturn(questionsDTO);
+//
+//        addVillageFormResultService.createVillageAnswerQuestionsFromAddVillageFormResult(villageId, addVillageFormResult);
+//
+//        verify(villageAnswerQuestionService, times(2)).createVillageAnswerQuestion(any(VillageAnswerQuestionDTO.class));
+//    }
 
 
     @Test

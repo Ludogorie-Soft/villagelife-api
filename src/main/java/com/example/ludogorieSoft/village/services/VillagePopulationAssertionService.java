@@ -11,6 +11,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -96,4 +98,36 @@ public class VillagePopulationAssertionService {
                 .map(this::toDTO)
                 .toList();
     }
+
+    public void updateVillagePopulationAssertionStatus(Long id, boolean status, String localDateTime) {
+        List<VillagePopulationAssertion> villagePopulationAssertions = villagePopulationAssertionRepository.findByVillageIdAndVillageStatusAndDateUpload(id, status, localDateTime);
+
+        List<VillagePopulationAssertion> villa = new ArrayList<>();
+
+        if (!villagePopulationAssertions.isEmpty()) {
+            for (VillagePopulationAssertion vill : villagePopulationAssertions) {
+                Village village = villageService.checkVillage(vill.getVillage().getId());
+                vill.setVillage(village);
+                vill.setVillageStatus(true);
+                villa.add(vill);
+            }
+            villagePopulationAssertionRepository.saveAll(villa);
+        }
+    }
+    public void rejectVillagePopulationAssertionStatus(Long id, boolean status, String responseDate, LocalDateTime deleteDate) {
+        List<VillagePopulationAssertion> villagePopulationAssertions = villagePopulationAssertionRepository.findByVillageIdAndVillageStatusAndDateUpload(id, status, responseDate);
+
+        List<VillagePopulationAssertion> villa = new ArrayList<>();
+
+        if (!villagePopulationAssertions.isEmpty()) {
+            for (VillagePopulationAssertion vill : villagePopulationAssertions) {
+                Village village = villageService.checkVillage(vill.getVillage().getId());
+                vill.setVillage(village);
+                vill.setDateDeleted(deleteDate);
+                villa.add(vill);
+            }
+            villagePopulationAssertionRepository.saveAll(villa);
+        }
+    }
+
 }

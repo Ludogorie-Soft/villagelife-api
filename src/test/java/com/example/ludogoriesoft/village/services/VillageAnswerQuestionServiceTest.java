@@ -6,6 +6,7 @@ import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.Question;
 import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.model.VillageAnswerQuestion;
+import com.example.ludogorieSoft.village.model.VillageGroundCategory;
 import com.example.ludogorieSoft.village.repositories.QuestionRepository;
 import com.example.ludogorieSoft.village.repositories.VillageAnswerQuestionRepository;
 import com.example.ludogorieSoft.village.repositories.VillageRepository;
@@ -36,10 +37,10 @@ class VillageAnswerQuestionServiceTest {
     private VillageService villageService;
     @Mock
     private QuestionService questionService;
+    @Captor
+    private ArgumentCaptor<List<VillageAnswerQuestion>> answerQuestionListCaptor;
     @InjectMocks
     private VillageAnswerQuestionService villageAnswerQuestionService;
-
-
     @BeforeEach
     public void setup() {
         MockitoAnnotations.openMocks(this);
@@ -442,9 +443,9 @@ class VillageAnswerQuestionServiceTest {
         Question question2 = new Question();
         question2.setQuestionName("Question 2");
         question2.setId(2L);
-        VillageAnswerQuestion answerQuestion1 = new VillageAnswerQuestion(1L, village, question1, "Answer 1", true, LocalDateTime.now());
-        VillageAnswerQuestion answerQuestion2 = new VillageAnswerQuestion(2L, village, question1, "Answer 2", true, LocalDateTime.now());
-        VillageAnswerQuestion answerQuestion3 = new VillageAnswerQuestion(3L, village, question2, "Answer 3", true, LocalDateTime.now());
+        VillageAnswerQuestion answerQuestion1 = new VillageAnswerQuestion(1L, village, question1, "Answer 1", true, LocalDateTime.now(),null);
+        VillageAnswerQuestion answerQuestion2 = new VillageAnswerQuestion(2L, village, question1, "Answer 2", true, LocalDateTime.now(),null);
+        VillageAnswerQuestion answerQuestion3 = new VillageAnswerQuestion(3L, village, question2, "Answer 3", true, LocalDateTime.now(),null);
 
         List<VillageAnswerQuestion> villageAnswerQuestions = new ArrayList<>();
         villageAnswerQuestions.add(answerQuestion1);
@@ -453,7 +454,7 @@ class VillageAnswerQuestionServiceTest {
 
         when(villageAnswerQuestionRepository.findByVillageIdAndVillageStatus(villageId, true)).thenReturn(villageAnswerQuestions);
 
-        List<AnswersQuestionResponse> result = villageAnswerQuestionService.getAnswersQuestionResponsesByVillageId(villageId);
+        List<AnswersQuestionResponse> result = villageAnswerQuestionService.getAnswersQuestionResponsesByVillageId(villageId,true,null);
 
         assertEquals(2, result.size());
 
@@ -473,10 +474,10 @@ class VillageAnswerQuestionServiceTest {
     void testGroupAnswersByQuestion() {
         Village village1 = new Village();
         village1.setId(1L);
-        VillageAnswerQuestion answerQuestion1 = new VillageAnswerQuestion(1L, village1, new Question(1L, "Question 1"), "Answer 1", true, LocalDateTime.now());
-        VillageAnswerQuestion answerQuestion2 = new VillageAnswerQuestion(2L, village1, new Question(1L,"Question 1"), "Answer 2", true, LocalDateTime.now());
-        VillageAnswerQuestion answerQuestion3 = new VillageAnswerQuestion(3L, village1, new Question(2L,"Question 2"), "Answer 3", true, LocalDateTime.now());
-        VillageAnswerQuestion answerQuestion4 = new VillageAnswerQuestion(4L, village1, new Question(2L,"Question 2"), "Answer 4", true, LocalDateTime.now());
+        VillageAnswerQuestion answerQuestion1 = new VillageAnswerQuestion(1L, village1, new Question(1L, "Question 1"), "Answer 1", true, LocalDateTime.now(),null);
+        VillageAnswerQuestion answerQuestion2 = new VillageAnswerQuestion(2L, village1, new Question(1L,"Question 1"), "Answer 2", true, LocalDateTime.now(),null);
+        VillageAnswerQuestion answerQuestion3 = new VillageAnswerQuestion(3L, village1, new Question(2L,"Question 2"), "Answer 3", true, LocalDateTime.now(),null);
+        VillageAnswerQuestion answerQuestion4 = new VillageAnswerQuestion(4L, village1, new Question(2L,"Question 2"), "Answer 4", true, LocalDateTime.now(),null);
 
         List<VillageAnswerQuestion> villageAnswerQuestions = new ArrayList<>();
         villageAnswerQuestions.add(answerQuestion1);
@@ -514,5 +515,57 @@ class VillageAnswerQuestionServiceTest {
         assertEquals("Question 2", response2.getQuestion());
         assertEquals(1, response2.getAnswers().size());
         assertEquals("Answer 3", response2.getAnswers().get(0));
+    }
+
+    @Test
+    void testUpdateVillageAnswerQuestionStatus() {
+        Long villageId = 1L;
+        String localDateTime = "2023-08-10T00:00:00";
+        boolean status = true;
+
+        Village village = new Village();
+        village.setId(villageId);
+
+        VillageAnswerQuestion answerQuestion = new VillageAnswerQuestion();
+        answerQuestion.setVillage(village);
+
+        List<VillageAnswerQuestion> answerQuestions = new ArrayList<>();
+        answerQuestions.add(answerQuestion);
+
+        when(villageAnswerQuestionRepository.findByVillageIdAndVillageStatusAndDateUpload(
+                villageId, status, localDateTime
+        )).thenReturn(answerQuestions);
+
+        villageAnswerQuestionService.updateVillageAnswerQuestionStatus(villageId, status, localDateTime);
+
+        verify(villageService, times(1)).checkVillage(villageId);
+        verify(villageAnswerQuestionRepository).saveAll(answerQuestionListCaptor.capture());
+
+    }
+
+    @Test
+    void testRejectVillageAnswerQuestionResponse() {
+        Long villageId = 1L;
+        String responseDate = "2023-08-10T00:00:00";
+        LocalDateTime deleteDate = LocalDateTime.now();
+
+        Village village = new Village();
+        village.setId(villageId);
+
+        VillageAnswerQuestion answerQuestion = new VillageAnswerQuestion();
+        answerQuestion.setVillage(village);
+
+        List<VillageAnswerQuestion> answerQuestions = new ArrayList<>();
+        answerQuestions.add(answerQuestion);
+
+        when(villageAnswerQuestionRepository.findByVillageIdAndVillageStatusAndDateUpload(
+                villageId, true, responseDate
+        )).thenReturn(answerQuestions);
+
+        villageAnswerQuestionService.rejectVillageAnswerQuestionResponse(villageId, true, responseDate, deleteDate);
+
+        verify(villageService, times(1)).checkVillage(villageId);
+        verify(villageAnswerQuestionRepository).saveAll(answerQuestionListCaptor.capture());
+
     }
 }

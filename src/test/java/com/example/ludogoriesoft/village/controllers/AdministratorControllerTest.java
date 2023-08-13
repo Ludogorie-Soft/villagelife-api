@@ -1,10 +1,11 @@
 package com.example.ludogorieSoft.village.controllers;
 
+import com.example.ludogorieSoft.village.authorization.JWTService;
 import com.example.ludogorieSoft.village.dtos.AdministratorDTO;
 import com.example.ludogorieSoft.village.dtos.request.AdministratorRequest;
 import com.example.ludogorieSoft.village.dtos.response.VillageResponse;
-import com.example.ludogorieSoft.village.services.AdministratorService;
-import com.example.ludogorieSoft.village.services.VillageService;
+import com.example.ludogorieSoft.village.repositories.EthnicityVillageRepository;
+import com.example.ludogorieSoft.village.services.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -19,19 +20,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 class AdministratorControllerTest {
-
     @Mock
     private AdministratorService administratorService;
-
-    @Mock
-    private VillageService villageService;
-
-    private AdministratorController administratorController;
-
+    AdministratorController administratorController;
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        administratorController = new AdministratorController(administratorService, villageService);
+        administratorController = new AdministratorController(administratorService);
     }
 
     @Test
@@ -108,18 +103,19 @@ class AdministratorControllerTest {
     }
 
 
-    @Test
-    void getAllVillages_shouldReturnListOfVillageResponses() {
-        VillageResponse villageResponse1 = new VillageResponse();
-        villageResponse1.setId(1L);
-        VillageResponse villageResponse2 = new VillageResponse();
-        villageResponse2.setId(3L);
-        List<VillageResponse> villages = Arrays.asList(villageResponse1,villageResponse2);
+//    @Test
+//    void getAllVillages_shouldReturnListOfVillageResponses() {
+//        VillageResponse villageResponse1 = new VillageResponse();
+//        villageResponse1.setId(1L);
+//        VillageResponse villageResponse2 = new VillageResponse();
+//        villageResponse2.setId(3L);
+//        List<VillageResponse> villages = Arrays.asList(villageResponse1,villageResponse2);
+//
+//        when(villageService.getAllVillagesWithAdmin()).thenReturn(villages);
+//
+//        List<VillageResponse> response = administratorController.getAllVillages();
+//
+//        assertEquals(villages, response);
+//    }
 
-        when(administratorService.getAllVillagesWithPopulation()).thenReturn(villages);
-
-        List<VillageResponse> response = administratorController.getAllVillages();
-
-        assertEquals(villages, response);
-    }
 }

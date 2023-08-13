@@ -14,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -93,32 +92,9 @@ public class AdministratorService {
         return administratorToAdministratorDTO(foundAdministrator.get());
     }
 
-    public Administrator findAdminByUsername(String username) {
-        return administratorRepository.findByUsername(username);
-    }
-
-
-    public List<VillageResponse> getAllVillagesWithPopulation() {
-        List<Object[]> results = villageRepository.findAllVillagesWithPopulation();
-
-        List<VillageResponse> villageResponses = new ArrayList<>();
-        for (Object[] result : results) {
-            Village village = (Village) result[0];
-            Region region = (Region) result[1];
-            Administrator administrator = (Administrator) result[2];
-
-            VillageResponse response = new VillageResponse();
-            response.setId(village.getId());
-            response.setName(village.getName());
-            response.setRegion(region);
-            response.setDateUpload(village.getDateUpload());
-            response.setAdmin(administrator);
-            response.setDateApproved(village.getDateApproved());
-
-            villageResponses.add(response);
-        }
-
-        return villageResponses;
+    public AdministratorDTO findAdminByUsername(String username) {
+        Administrator administrator = administratorRepository.findByUsername(username);
+        return administratorToAdministratorDTO(administrator);
     }
 
 }

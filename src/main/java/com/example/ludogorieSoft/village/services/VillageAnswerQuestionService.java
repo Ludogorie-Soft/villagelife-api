@@ -5,6 +5,7 @@ import com.example.ludogorieSoft.village.dtos.response.AnswersQuestionResponse;
 import com.example.ludogorieSoft.village.model.Question;
 import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.model.VillageAnswerQuestion;
+import com.example.ludogorieSoft.village.model.VillageGroundCategory;
 import com.example.ludogorieSoft.village.repositories.QuestionRepository;
 import com.example.ludogorieSoft.village.repositories.VillageAnswerQuestionRepository;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
@@ -14,6 +15,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -107,8 +109,14 @@ public class VillageAnswerQuestionService {
                 .toList();
     }
 
-    public List<AnswersQuestionResponse> getAnswersQuestionResponsesByVillageId(Long villageId) {
-        List<VillageAnswerQuestion> villageAnswerQuestions = villageAnswerQuestionRepository.findByVillageIdAndVillageStatus(villageId, true);
+    public List<AnswersQuestionResponse> getAnswersQuestionResponsesByVillageId(Long villageId, boolean status, String date) {
+        List<VillageAnswerQuestion> villageAnswerQuestions;
+        if(status){
+            villageAnswerQuestions = villageAnswerQuestionRepository.findByVillageIdAndVillageStatus(villageId, true);
+
+        }else {
+            villageAnswerQuestions = villageAnswerQuestionRepository.findByVillageIdAndVillageStatusAndDateUpload(villageId, status,date);
+        }
         Map<String, List<String>> questionToAnswersMap = groupAnswersByQuestion(villageAnswerQuestions);
         return createAnswersQuestionResponses(questionToAnswersMap);
     }
@@ -137,5 +145,37 @@ public class VillageAnswerQuestionService {
     
     public boolean existsByVillageIdAndQuestionIdAndAnswer(Long villageId, Long questionId, String answer){
         return villageAnswerQuestionRepository.existsByVillageIdAndQuestionIdAndAnswer(villageId, questionId, answer);
+    }
+
+    public void updateVillageAnswerQuestionStatus(Long id, boolean status, String localDateTime) {
+        List<VillageAnswerQuestion> villageAnswerQuestions = villageAnswerQuestionRepository.findByVillageIdAndVillageStatusAndDateUpload(id, status, localDateTime);
+
+        List<VillageAnswerQuestion> villa = new ArrayList<>();
+
+        if (!villageAnswerQuestions.isEmpty()) {
+            for (VillageAnswerQuestion vill : villageAnswerQuestions) {
+                Village village = villageService.checkVillage(vill.getVillage().getId());
+                vill.setVillage(village);
+                vill.setVillageStatus(true);
+                villa.add(vill);
+            }
+            villageAnswerQuestionRepository.saveAll(villa);
+        }
+    }
+    public void rejectVillageAnswerQuestionResponse(Long id, boolean status, String responseDate, LocalDateTime dateDelete) {
+        List<VillageAnswerQuestion> villageAnswerQuestions = villageAnswerQuestionRepository.findByVillageIdAndVillageStatusAndDateUpload(
+                id, status, responseDate
+        );
+        List<VillageAnswerQuestion> villa = new ArrayList<>();
+
+        if (!villageAnswerQuestions.isEmpty()) {
+            for (VillageAnswerQuestion vill : villageAnswerQuestions) {
+                Village village = villageService.checkVillage(vill.getVillage().getId());
+                vill.setVillage(village);
+                vill.setDateDeleted(dateDelete);
+                villa.add(vill);
+            }
+            villageAnswerQuestionRepository.saveAll(villa);
+        }
     }
 }

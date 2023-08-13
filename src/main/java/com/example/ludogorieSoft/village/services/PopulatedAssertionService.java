@@ -25,7 +25,7 @@ public class PopulatedAssertionService {
     private final VillagePopulationAssertionRepository villagePopulationAssertionRepository;
     private final ModelMapper modelMapper;
 
-    public PopulatedAssertionDTO populatedAssertionToPopulatedAssertionDTO(PopulatedAssertion populatedAssertion){
+    public PopulatedAssertionDTO populatedAssertionToPopulatedAssertionDTO(PopulatedAssertion populatedAssertion) {
         return modelMapper.map(populatedAssertion, PopulatedAssertionDTO.class);
     }
 
@@ -89,31 +89,57 @@ public class PopulatedAssertionService {
 
     public PopulatedAssertion checkPopulatedAssertion(Long id) {
         Optional<PopulatedAssertion> populatedAssertion = populatedAssertionRepository.findById(id);
-        if (populatedAssertion.isPresent()){
+        if (populatedAssertion.isPresent()) {
             return populatedAssertion.get();
-        }else {
+        } else {
             throw new ApiRequestException("Populated Assertion not found");
         }
     }
 
 
-    public List<PopulationAssertionResponse> getPopulationAssertionResponse(Long villageId){
+    public List<PopulationAssertionResponse> getPopulationAssertionResponse(Long villageId, boolean status, String date) {
+        List<PopulatedAssertionDTO> populatedAssertionDTOList = getAllPopulatedAssertion();
+        List<PopulationAssertionResponse> populationAssertionResponses = new ArrayList<>();
+        for (PopulatedAssertionDTO populatedAssertionDTO : populatedAssertionDTOList) {
+            PopulationAssertionResponse populationAssertionResponse = new PopulationAssertionResponse();
+            populationAssertionResponse.setPopulationAssertionName(getPopulatedAssertionById(populatedAssertionDTO.getId()).getPopulatedAssertionName());
+            List<VillagePopulationAssertion> villagePopulationAssertions ;
+            if (status) {
+
+                villagePopulationAssertions = villagePopulationAssertionRepository.findByVillageIdAndPopulatedAssertionIDIdAndVillageStatus(villageId, populatedAssertionDTO.getId(), true);
+            }else {
+
+                villagePopulationAssertions = villagePopulationAssertionRepository.findByVillageIdAndPopulatedAssertionIDIdAndVillageStatusAndDateUpload(villageId, populatedAssertionDTO.getId(), status,date);
+            }
+            double percentage = 0;
+            for (VillagePopulationAssertion villagePopulationAssertion : villagePopulationAssertions) {
+                percentage += villagePopulationAssertion.getAnswer().getValue();
+            }
+            populationAssertionResponse.setPercentage(Math.round(percentage / villagePopulationAssertions.size() * 100.0) / 100.0);
+            if (populationAssertionResponse.getPercentage() != 0) {
+                populationAssertionResponses.add(populationAssertionResponse);
+            }
+        }
+        return populationAssertionResponses;
+    }
+
+    public List<PopulationAssertionResponse> getPopulationAssertionResponse(Long villageId, boolean status) {//ddd
         List<PopulatedAssertionDTO> populatedAssertionDTOList = getAllPopulatedAssertion();
         List<PopulationAssertionResponse> populationAssertionResponses = new ArrayList<>();
         for (PopulatedAssertionDTO populatedAssertionDTO : populatedAssertionDTOList) {
             PopulationAssertionResponse populationAssertionResponse = new PopulationAssertionResponse();
             populationAssertionResponse.setPopulationAssertionName(getPopulatedAssertionById(populatedAssertionDTO.getId()).getPopulatedAssertionName());
 
-            List<VillagePopulationAssertion> villagePopulationAssertions = villagePopulationAssertionRepository.findByVillageIdAndPopulatedAssertionIDIdAndVillageStatus(villageId, populatedAssertionDTO.getId(), true);
+            List<VillagePopulationAssertion> villagePopulationAssertions = villagePopulationAssertionRepository.findByVillageIdAndPopulatedAssertionIDIdAndVillageStatus(villageId, populatedAssertionDTO.getId(), status);
             double percentage = 0;
             for (VillagePopulationAssertion villagePopulationAssertion : villagePopulationAssertions) {
                 percentage += villagePopulationAssertion.getAnswer().getValue();
             }
             populationAssertionResponse.setPercentage(Math.round(percentage / villagePopulationAssertions.size() * 100.0) / 100.0);
-            if(populationAssertionResponse.getPercentage() != 0){
+            if (populationAssertionResponse.getPercentage() != 0) {
                 populationAssertionResponses.add(populationAssertionResponse);
             }
         }
-        return  populationAssertionResponses;
+        return populationAssertionResponses;
     }
 }

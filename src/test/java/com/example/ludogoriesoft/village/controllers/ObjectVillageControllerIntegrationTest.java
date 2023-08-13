@@ -242,8 +242,9 @@ class ObjectVillageControllerIntegrationTest {
     @Test
     void testGetObjectVillageByVillageID() throws Exception {
         Long villageId = 1L;
-        ObjectVillageDTO objectVillageDTO1 = new ObjectVillageDTO(1L, villageId, 1L, Distance.IN_THE_VILLAGE,true,now());
-        ObjectVillageDTO objectVillageDTO2 = new ObjectVillageDTO(2L, villageId, 2L, Distance.ON_10_KM,true,now());
+        ObjectVillageDTO objectVillageDTO1 = new ObjectVillageDTO(1L, villageId, 1L, Distance.IN_THE_VILLAGE,true,now(),now());
+        ObjectVillageDTO objectVillageDTO2 = new ObjectVillageDTO(2L, villageId, 2L, Distance.ON_10_KM,true,now(),now());
+
         List<ObjectVillageDTO> objectVillageDTOList = Arrays.asList(objectVillageDTO1, objectVillageDTO2);
 
         when(objectVillageService.getObjectVillageByVillageId(villageId)).thenReturn(objectVillageDTOList);

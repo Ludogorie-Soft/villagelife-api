@@ -5,14 +5,14 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class VillageDTO {
@@ -26,8 +26,18 @@ public class VillageDTO {
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
     private LocalDateTime dateUpload;
-    private boolean status;
+    private Boolean status;
+
     private List<LivingConditionDTO> livingConditions;
     private List<ObjectAroundVillageDTO> object;
     private List<String> images;
+
+    private List<ObjectVillageDTO> objectVillages;
+    private List<VillageLivingConditionDTO> villageLivingConditions;
+    private List<VillageAnswerQuestionDTO> villageAnswerQuestions;
+    private List<EthnicityVillageDTO> ethnicityVillages;
+    private List<VillageGroundCategoryDTO> villageGroundCategories;
+    private List<VillageLandscapeDTO> villageLandscapes;
+    private List<VillagePopulationAssertionDTO> villagePopulationAssertions;
+
 }

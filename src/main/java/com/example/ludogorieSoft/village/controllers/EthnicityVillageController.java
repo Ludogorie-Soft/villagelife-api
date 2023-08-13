@@ -11,6 +11,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -36,7 +38,7 @@ public class EthnicityVillageController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<EthnicityVillageDTO> updateEthnicityVillageById(@PathVariable Long id, @Valid  @RequestBody EthnicityVillageDTO ethnicityVillageDTO) {
+    public ResponseEntity<EthnicityVillageDTO> updateEthnicityVillageById(@PathVariable Long id, @Valid @RequestBody EthnicityVillageDTO ethnicityVillageDTO) {
         return ResponseEntity.ok(ethnicityVillageService.updateEthnicityVillageById(id, ethnicityVillageDTO));
     }
 
@@ -59,6 +61,14 @@ public class EthnicityVillageController {
             String errorMessage = "Ethnicity in Village with id " + id + " not found";
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage);
         }
+    }
+
+
+    @PutMapping("/update-answer/{villageId}")
+    public ResponseEntity getEthnisityVIllage(@RequestParam("villageId") Long villageId,
+                                              @RequestParam("answerDate") String answerDate) {
+        ethnicityVillageService.updateEthnicityVillageStatus(villageId, false, answerDate);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/check-existence")

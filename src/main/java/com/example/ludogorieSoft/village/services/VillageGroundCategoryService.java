@@ -1,9 +1,7 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.VillageGroundCategoryDTO;
-import com.example.ludogorieSoft.village.model.GroundCategory;
-import com.example.ludogorieSoft.village.model.Village;
-import com.example.ludogorieSoft.village.model.VillageGroundCategory;
+import com.example.ludogorieSoft.village.model.*;
 import com.example.ludogorieSoft.village.repositories.VillageGroundCategoryRepository;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import lombok.AllArgsConstructor;
@@ -11,6 +9,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,6 +54,7 @@ public class VillageGroundCategoryService {
 
         villageGroundCategory.setVillageStatus(villageGroundCategoryDTO.getStatus());
         villageGroundCategory.setDateUpload(villageGroundCategoryDTO.getDateUpload());
+
         villageGroundCategoryRepository.save(villageGroundCategory);
         return toDTO(villageGroundCategory);
     }
@@ -91,8 +92,41 @@ public class VillageGroundCategoryService {
         return toDTO(villageGroundCategory);
     }
 
+    public void updateVillageGroundCategoryStatus(Long id, boolean status, String localDateTime) {
+        List<VillageGroundCategory> villagelivingconditions = villageGroundCategoryRepository.findByVillageIdAndVillageStatusAndDateUpload(id, status, localDateTime);
+
+        List<VillageGroundCategory> villa = new ArrayList<>();
+
+        if (!villagelivingconditions.isEmpty()) {
+            for (VillageGroundCategory vill : villagelivingconditions) {
+                Village village = villageService.checkVillage(vill.getVillage().getId());
+                vill.setVillage(village);
+                vill.setVillageStatus(true);
+                villa.add(vill);
+            }
+            villageGroundCategoryRepository.saveAll(villa);
+        }
+    }
+    public void rejectVillageGroundCategoryResponse(Long id, boolean status, String responseDate, LocalDateTime dateDelete) {
+        List<VillageGroundCategory> villagelivingconditions = villageGroundCategoryRepository.findByVillageIdAndVillageStatusAndDateUpload(
+                id, status, responseDate
+        );
+        List<VillageGroundCategory> villa = new ArrayList<>();
+
+        if (!villagelivingconditions.isEmpty()) {
+            for (VillageGroundCategory vill : villagelivingconditions) {
+                Village village = villageService.checkVillage(vill.getVillage().getId());
+                vill.setVillage(village);
+                vill.setDateDeleted(dateDelete);
+                villa.add(vill);
+            }
+            villageGroundCategoryRepository.saveAll(villa);
+        }
+    }
+
     public boolean existsVillageGroundCategoryDTOByVillageId(Long villageId) {
         return villageGroundCategoryRepository.findByVillageId(villageId) != null;
+
     }
 
 }

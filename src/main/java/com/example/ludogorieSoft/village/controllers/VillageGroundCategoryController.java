@@ -50,6 +50,7 @@ public class VillageGroundCategoryController {
         }
     }
 
+
     @GetMapping("/check-village-exists/{villageId}")
     public ResponseEntity<Boolean> isVillageExists(@PathVariable Long villageId) {
         boolean exists = villageGroundCategoryService.existsVillageGroundCategoryDTOByVillageId(villageId);

@@ -1,6 +1,14 @@
 package com.example.ludogorieSoft.village.services;
 
+import com.example.ludogorieSoft.village.dtos.RegionDTO;
+import com.example.ludogorieSoft.village.dtos.LivingConditionDTO;
+import com.example.ludogorieSoft.village.dtos.ObjectAroundVillageDTO;
+import com.example.ludogorieSoft.village.dtos.PopulationDTO;
+import com.example.ludogorieSoft.village.dtos.VillageDTO;
+
 import com.example.ludogorieSoft.village.dtos.*;
+import com.example.ludogorieSoft.village.dtos.response.VillageResponse;
+
 import com.example.ludogorieSoft.village.enums.Children;
 
 import com.example.ludogorieSoft.village.model.*;
@@ -14,6 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static java.time.LocalDateTime.now;
+
 
 @Service
 @AllArgsConstructor
@@ -22,12 +32,16 @@ public class VillageService {
     private final VillageRepository villageRepository;
     private final ModelMapper modelMapper;
     private final RegionService regionService;
+    private final AuthService authService;
     private static final String ERROR_MESSAGE1 = "Village with id ";
     private static final String ERROR_MESSAGE2 = " not found  ";
 
 
     public VillageDTO villageToVillageDTO(Village village) {
         return modelMapper.map(village, VillageDTO.class);
+    }
+    public VillageResponse villageToVillageResponse(Village village){
+        return modelMapper.map(village, VillageResponse.class);
     }
 
     public List<VillageDTO> getAllVillages() {
@@ -36,7 +50,6 @@ public class VillageService {
                 .map(this::villageToVillageDTO)
                 .toList();
     }
-
 
     public VillageDTO getVillageById(Long id) {
         Optional<Village> optionalVillage = villageRepository.findById(id);
@@ -56,9 +69,13 @@ public class VillageService {
             village.setName(villageDTO.getName());
             RegionDTO regionDTO = regionService.findRegionByName(villageDTO.getRegion());
             village.setRegion(regionService.checkRegion(regionDTO.getId()));
+            village.setStatus(false);
+        }else {
+            village.setStatus(village.getStatus());
         }
         village.setPopulation(modelMapper.map(villageDTO.getPopulationDTO(), Population.class));
         village.setPopulationCount(villageDTO.getPopulationCount());
+        village.setDateUpload(villageDTO.getDateUpload());
         Village savedVillage = villageRepository.save(village);
         return modelMapper.map(savedVillage, VillageDTO.class);
     }
@@ -73,7 +90,30 @@ public class VillageService {
     }
 
 
-    public VillageDTO updateVillage(Long id, VillageDTO villageDTO) {
+        public VillageDTO updateVillageStatus(Long id, VillageDTO villageDTO) { // approve village status and set admin and date approved
+        Optional<Village> optionalVillage = villageRepository.findById(id);
+        if (optionalVillage.isPresent()) {
+            Village village = optionalVillage.get();
+            village.setName(villageDTO.getName());
+            RegionDTO regionDTO = regionService.findRegionByName(villageDTO.getRegion());
+            village.setRegion(regionService.checkRegion(regionDTO.getId()));
+            village.setPopulationCount(villageDTO.getPopulationCount());
+            village.setPopulation(modelMapper.map(villageDTO.getPopulationDTO(), Population.class));
+
+            AdministratorDTO administratorDTO = authService.getAdministratorInfo();
+
+                village.setAdmin(modelMapper.map(administratorDTO, Administrator.class));
+                village.setStatus(true);
+                village.setDateApproved(now());
+
+            villageRepository.save(village);
+            return modelMapper.map(village, VillageDTO.class);
+        } else {
+            throw new ApiRequestException(ERROR_MESSAGE1 + id + ERROR_MESSAGE2);
+        }
+    }
+
+    public VillageDTO updateVillage(Long id, VillageDTO villageDTO) { //this is used to upload villages file
         Optional<Village> optionalVillage = villageRepository.findById(id);
         if (optionalVillage.isPresent()) {
             Village village = optionalVillage.get();
@@ -131,6 +171,7 @@ public class VillageService {
                 .map(this::villageToVillageDTO)
                 .toList();
     }
+
 
 
     public List<VillageDTO> getSearchVillages(List<String> objectAroundVillageDTOS, List<String> livingConditionDTOS, Children children) {
@@ -350,5 +391,4 @@ public class VillageService {
         }
         return villageDTOsWithStatus;
     }
-
 }
