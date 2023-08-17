@@ -101,14 +101,13 @@ public class EthnicityVillageService {
         if(date != null){
             localDateTime = LocalDateTime.parse(date, formatter);
         }
-
         List<EthnicityVillage> ethnicityVillages = ethnicityVillageRepository.findAll();
         List<EthnicityVillageDTO> filteredList = new ArrayList<>();
 
         for (EthnicityVillage ethnicityVillage : ethnicityVillages) {
 
             if (ethnicityVillage.getVillage().getId().equals(villageId) && !ethnicityVillage.getEthnicity().getEthnicityName().equals("няма малцинствени групи") && ( Boolean.TRUE.equals(ethnicityVillage.getVillageStatus()) && status ||
-                    Boolean.FALSE.equals(ethnicityVillage.getVillageStatus()) && !status && ethnicityVillage.getDateUpload().equals(localDateTime) && ethnicityVillage.getDateDeleted() == null)) {
+                    Boolean.FALSE.equals(ethnicityVillage.getVillageStatus()) && !status && ethnicityVillage.getDateUpload().equals(localDateTime) )) {//&& ethnicityVillage.getDateDeleted() == null
                 filteredList.add(ethnicityVillageToEthnicityVillageDTO(ethnicityVillage));
             }
         }
@@ -142,6 +141,7 @@ public class EthnicityVillageService {
                 Village village = villageService.checkVillage(vill.getVillage().getId());
                 vill.setVillage(village);
                 vill.setVillageStatus(true);
+                vill.setDateDeleted(null);
                 villa.add(vill);
             }
             ethnicityVillageRepository.saveAll(villa);
@@ -162,5 +162,9 @@ public class EthnicityVillageService {
             }
             ethnicityVillageRepository.saveAll(villa);
         }
+    }
+    public List<EthnicityVillage> findByVillageIdAndVillageStatusDateDeleteNotNull(Long id, boolean status) {
+        return ethnicityVillageRepository.findByVillageIdAndVillageStatusAndDateDeleteNotNull(id, status);
+
     }
 }

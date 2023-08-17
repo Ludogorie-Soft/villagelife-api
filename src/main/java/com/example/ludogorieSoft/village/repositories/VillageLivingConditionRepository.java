@@ -4,7 +4,6 @@ import com.example.ludogorieSoft.village.model.VillageLivingConditions;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface VillageLivingConditionRepository extends JpaRepository<VillageLivingConditions, Long> {
@@ -12,7 +11,6 @@ public interface VillageLivingConditionRepository extends JpaRepository<VillageL
     boolean existsByVillageIdAndLivingConditionIdAndVillageStatus(Long villageId, Long livingConditionId, boolean villageStatus);
     @Query("SELECT v FROM VillageLivingConditions v WHERE v.village.id = :villageId " +
             "AND v.villageStatus = :villageStatus " +
-            "AND (v.dateDeleted IS NULL) " +
             "AND DATE_FORMAT(v.dateUpload, '%Y-%m-%d %H:%i:%s') = :localDateTime")
     List<VillageLivingConditions> findByVillageIdAndVillageStatusAndDateUpload(Long villageId, boolean villageStatus, String localDateTime);
     @Query("SELECT CASE WHEN COUNT(v) > 0 THEN TRUE ELSE FALSE END " +
@@ -20,13 +18,11 @@ public interface VillageLivingConditionRepository extends JpaRepository<VillageL
             "WHERE v.village.id = :villageId " +
             "AND v.villageStatus = :villageStatus " +
             "AND v.livingCondition.id = :livingConditionId " +
-            "AND (v.dateDeleted IS NULL) " +
             "AND DATE_FORMAT(v.dateUpload, '%Y-%m-%d %H:%i:%s') = :localDateTime")
     boolean existsByVillageIdAndLivingConditionIdAndVillageStatusAndDate(Long villageId, Long livingConditionId, boolean villageStatus,String localDateTime);
     @Query("SELECT v FROM VillageLivingConditions v WHERE v.village.id = :villageId " +
             "AND v.villageStatus = :villageStatus " +
             "AND v.livingCondition.id = :livingConditionId " +
-            "AND (v.dateDeleted IS NULL) " +
             "AND DATE_FORMAT(v.dateUpload, '%Y-%m-%d %H:%i:%s') = :localDateTime")
     List<VillageLivingConditions> findByVillageIdAndLivingConditionIdAndVillageStatusAndDate(Long villageId, Long livingConditionId, boolean villageStatus, String localDateTime) ;
 

@@ -109,6 +109,7 @@ public class VillagePopulationAssertionService {
                 Village village = villageService.checkVillage(vill.getVillage().getId());
                 vill.setVillage(village);
                 vill.setVillageStatus(true);
+                vill.setDateDeleted(null);
                 villa.add(vill);
             }
             villagePopulationAssertionRepository.saveAll(villa);

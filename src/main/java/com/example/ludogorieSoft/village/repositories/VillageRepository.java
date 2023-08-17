@@ -126,7 +126,9 @@ public interface VillageRepository extends JpaRepository<Village, Long> {
             "GROUP BY v.name " +
             "ORDER BY r.regionName ASC")
     List<Village> searchVillagesByLivingCondition(@Param("livingConditionNames") List<String> livingConditionDTOS);
-
-    @Query("SELECT v, r, a FROM Village v JOIN v.region r LEFT OUTER JOIN v.admin a")
-    List<Object[]> findAllVillagesWithPopulation();
+    @Query("SELECT DISTINCT v FROM Village v " +
+            "JOIN v.ethnicityVillages ev " +
+            "WHERE ev.dateDeleted IS NOT NULL " +
+            "ORDER BY ev.villageStatus DESC, ev.dateDeleted ASC")
+    List<Village> findAllVillagesWithRejectedResponses();
 }
