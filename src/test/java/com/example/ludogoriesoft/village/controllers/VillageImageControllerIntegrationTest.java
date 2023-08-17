@@ -58,9 +58,9 @@ class VillageImageControllerIntegrationTest {
     }
 
 //    @Test
-//    void testGetAllImagesForVillage() throws Exception {
+//    void testGetAllImagesForVillageByStatusAndDate() throws Exception {
 //        List<String> base64Images = Arrays.asList("image1", "image2");
-//        when(villageImageService.getAllImagesForVillage(anyLong(),true,null)).thenReturn(base64Images);
+//        when(villageImageService.getAllImagesForVillageByStatusAndDate(anyLong(),true,null)).thenReturn(base64Images);
 //
 //        Long villageId = 1L;
 //        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageImages/village/{villageId}/images", villageId)
@@ -78,10 +78,10 @@ class VillageImageControllerIntegrationTest {
 //    }
 
     @Test
-    void testGetAllImagesForVillageNotFound() throws Exception {
+    void testGetAllImagesForVillageByStatusAndDateNotFound() throws Exception {
         Long villageId = 1L;
 
-        Mockito.when(villageImageService.getAllImagesForVillage(villageId,true,null)).thenReturn(Collections.emptyList());
+        Mockito.when(villageImageService.getAllImagesForVillageByStatusAndDate(villageId,true,null)).thenReturn(Collections.emptyList());
 
         mockMvc.perform(get("/api/v1/village/{villageId}/images", villageId)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -140,11 +140,11 @@ class VillageImageControllerIntegrationTest {
 
 
 //    @Test
-//    void testGetAllImagesForVillageWithImages() throws Exception {
+//    void testgetAllImagesForVillageByStatusAndDateWithImages() throws Exception {
 //        Long villageId = 1L;
 //        List<String> base64Images = Arrays.asList("image1", "image2");
 //
-//        when(villageImageService.getAllImagesForVillage(villageId,true,null)).thenReturn(base64Images);
+//        when(villageImageService.getAllImagesForVillageByStatusAndDate(villageId,true,null)).thenReturn(base64Images);
 //
 //        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageImages/village/{villageId}/images", villageId)
 //                        .contentType(MediaType.APPLICATION_JSON))
@@ -161,11 +161,11 @@ class VillageImageControllerIntegrationTest {
 //    }
 
     @Test
-    void testGetAllImagesForVillageWithoutImages() throws Exception {
+    void testGetAllImagesForVillageByStatusAndDateWithoutImages() throws Exception {
         Long villageId = 1L;
         List<String> emptyList = Collections.emptyList();
 
-        when(villageImageService.getAllImagesForVillage(villageId,true,null)).thenReturn(emptyList);
+        when(villageImageService.getAllImagesForVillageByStatusAndDate(villageId,true,null)).thenReturn(emptyList);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageImages/village/{villageId}/images", villageId)
                         .contentType(MediaType.APPLICATION_JSON))

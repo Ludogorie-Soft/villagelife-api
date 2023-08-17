@@ -103,21 +103,17 @@ public class LivingConditionService {
     }
 
     public List<LivingConditionResponse> getLivingConditionResponses(Long villageId, boolean status, String date) {
-        List<String> names = new ArrayList<>(Arrays.asList("Инфраструктура", "Обществен транспорт",
-                "Електрозахранване", "Водоснабдяване", "Мобилен обхват", "Интернет", "ТВ", "Чистота"));
+        List<String> names = new ArrayList<>(Arrays.asList("Инфраструктура", "Обществен транспорт", "Електрозахранване", "Водоснабдяване", "Мобилен обхват", "Интернет", "ТВ", "Чистота"));
         List<Long> livingConditionIds = new ArrayList<>(Arrays.asList(1L, 3L, 4L, 5L, 6L, 7L, 8L, 9L));
         List<LivingConditionResponse> livingConditionResponses = new ArrayList<>();
 
         for (int i = 0; i < names.size(); i++) {
-
-            if (!villageLivingConditionRepository.existsByVillageIdAndLivingConditionIdAndVillageStatus(villageId, livingConditionIds.get(i), true)) {
+            if (status && !villageLivingConditionRepository.existsByVillageIdAndLivingConditionIdAndVillageStatus(villageId, livingConditionIds.get(i), true)) {
                 continue;
             }
-
-            if (!villageLivingConditionRepository.existsByVillageIdAndLivingConditionIdAndVillageStatusAndDate(villageId, livingConditionIds.get(i), status, date)) {
+            if (!status && !villageLivingConditionRepository.existsByVillageIdAndLivingConditionIdAndVillageStatusAndDate(villageId, livingConditionIds.get(i), false, date)) {
                 continue;
             }
-
             LivingConditionResponse livingConditionResponse = new LivingConditionResponse();
             livingConditionResponse.setLivingCondition(names.get(i));
             double percentage = getPercentage(villageId, livingConditionIds.get(i), status, date);
@@ -233,7 +229,6 @@ public class LivingConditionService {
         List<VillageLivingConditions> villageLivingConditions;
         if (status) {
             villageLivingConditions = villageLivingConditionRepository.findByVillageIdAndLivingConditionIdAndVillageStatus(villageId, conditionId, status);
-
         } else {
             villageLivingConditions = villageLivingConditionRepository.findByVillageIdAndLivingConditionIdAndVillageStatusAndDate(villageId, conditionId, status, date);
         }

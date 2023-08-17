@@ -72,7 +72,7 @@ public class AdminVillageService {
         boolean status = false;
         villagePopulationAssertionService.updateVillagePopulationAssertionStatus(villageId, status, answerDate);
         villageLivingConditionService.updateVillageLivingConditionStatus(villageId, status, answerDate);
-        villageImageService.updateVillageImageStatus(villageId, status, answerDate);
+        villageImageService.updateVillageImagesStatus(villageId, status, answerDate);
         villageAnswerQuestionService.updateVillageAnswerQuestionStatus(villageId, status, answerDate);
         objectVillageService.updateObjectVillageStatus(villageId, status, answerDate);
         ethnicityVillageService.updateEthnicityVillageStatus(villageId, status, answerDate);
@@ -88,7 +88,7 @@ public class AdminVillageService {
         }
         villagePopulationAssertionService.rejectVillagePopulationAssertionStatus(villageId, status, answerDate, timestamp);
         villageLivingConditionService.rejectVillageLivingConditionResponse(villageId, status, answerDate, timestamp);
-        villageImageService.rejectVillageImageResponse(villageId, status, answerDate, timestamp);
+        villageImageService.rejectVillageImages(villageId, status, answerDate, timestamp);
         villageAnswerQuestionService.rejectVillageAnswerQuestionResponse(villageId, status, answerDate, timestamp);
         objectVillageService.rejectObjectVillageResponse(villageId, status, answerDate, timestamp);
         ethnicityVillageService.rejectEthnicityVillageResponse(villageId, status, answerDate, timestamp);

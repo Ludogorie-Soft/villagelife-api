@@ -78,7 +78,7 @@ class AdminVillageServiceTest {
 
         verify(villagePopulationAssertionService).updateVillagePopulationAssertionStatus(villageId, status, answerDate);
         verify(villageLivingConditionService).updateVillageLivingConditionStatus(villageId, status, answerDate);
-        verify(villageImageService).updateVillageImageStatus(villageId, status, answerDate);
+        verify(villageImageService).updateVillageImagesStatus(villageId, status, answerDate);
         verify(villageAnswerQuestionService).updateVillageAnswerQuestionStatus(villageId, status, answerDate);
         verify(objectVillageService).updateObjectVillageStatus(villageId, status, answerDate);
         verify(ethnicityVillageService).updateEthnicityVillageStatus(villageId, status, answerDate);

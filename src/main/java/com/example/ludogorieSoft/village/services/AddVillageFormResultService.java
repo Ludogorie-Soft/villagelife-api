@@ -43,7 +43,7 @@ public class AddVillageFormResultService {
         createObjectVillagesFromAddVillageFormResult(savedVillage.getId(), addVillageFormResult, timestamp);//ddd
         createVillagePopulationAssertionsFromAddVillageFormResult(savedVillage.getId(), addVillageFormResult,timestamp);
         createVillageLivingConditionFromAddVillageFormResult(savedVillage.getId(), addVillageFormResult, timestamp);
-        villageImageService.createImagePaths(addVillageFormResult.getImageBytes(), savedVillage.getId(), timestamp);
+        villageImageService.createImagePaths(addVillageFormResult.getImageBytes(), savedVillage.getId(), timestamp, false);
         return addVillageFormResult;
     }
     public NumberOfPopulation getNumberOfPopulationByAddVillageFormResult(AddVillageFormResult addVillageFormResult){
