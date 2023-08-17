@@ -86,7 +86,7 @@ public class AdminVillageService {
         return villageResponses;
     }
 
-    private VillageResponse createVillageResponse(Village village, DateTimeFormatter formatter, boolean status, String keyWord) {
+    protected VillageResponse createVillageResponse(Village village, DateTimeFormatter formatter, boolean status, String keyWord) {
         VillageResponse villageResponse = new VillageResponse();
         villageResponse.setId(village.getId());
         villageResponse.setName(village.getName());
@@ -112,14 +112,14 @@ public class AdminVillageService {
         return villageResponse;
     }
 
-    private List<EthnicityVillage> getRejectedAnswersForVillage(Long villageId, boolean status) {
+    protected List<EthnicityVillage> getRejectedAnswersForVillage(Long villageId, boolean status) {
         return ethnicityVillageService.findByVillageIdAndVillageStatusDateDeleteNotNull(villageId, status);
     }
-    private List<EthnicityVillage> getAnswersToApprove(Long villageId, boolean status){
+    protected List<EthnicityVillage> getAnswersToApprove(Long villageId, boolean status){
         return ethnicityVillageService.findByVillageIdAndVillageStatus(villageId, status);
     }
 
-    private List<String> getFormattedDatesFromAnswers(List<EthnicityVillage> answers, DateTimeFormatter formatter) {
+    protected List<String> getFormattedDatesFromAnswers(List<EthnicityVillage> answers, DateTimeFormatter formatter) {
         Set<String> uniqueDates = new HashSet<>();
         List<String> formattedDates = new ArrayList<>();
 
@@ -132,4 +132,5 @@ public class AdminVillageService {
 
         return formattedDates;
     }
+
 }
