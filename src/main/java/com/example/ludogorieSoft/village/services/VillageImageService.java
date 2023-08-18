@@ -18,8 +18,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -30,6 +29,9 @@ public class VillageImageService {
     private static final String UPLOAD_DIRECTORY = "src/main/resources/static/village_images/";
     private final ModelMapper modelMapper;
     private final VillageService villageService;
+    private static final String ERROR_MESSAGE = "An error occurred while processing the image";
+    private static final String VILLAGE_IMAGE_ID_MESSAGE = "VillageImage with id: ";
+    private static final String NOT_FOUND_MESSAGE = " not found";
     private static final Logger logger = LoggerFactory.getLogger(VillageImageService.class);
 
     public List<String> createImagePaths(List<byte[]> imageBytes, Long villageId, LocalDateTime localDateTime, Boolean status) { //ddd
@@ -60,7 +62,7 @@ public class VillageImageService {
             writeImageToFile(image, fullPath);
             return fileName;
         } catch (IOException e) {
-            logger.error("An error occurred while processing the image", e);
+            logger.error(ERROR_MESSAGE, e);
             return null;
         }
     }
@@ -136,7 +138,7 @@ public class VillageImageService {
                     base64Images.add(base64Image);
                 }
             } catch (IOException e) {
-                logger.error("An error occurred while processing the image", e);
+                logger.error(ERROR_MESSAGE, e);
             }
         }
     }
@@ -177,7 +179,7 @@ public class VillageImageService {
     public VillageImageDTO updateVillageImage(Long id, VillageImageDTO villageImageDTO) {
         Optional<VillageImage> villageImage = villageImageRepository.findById(id);
         if(villageImage.isEmpty()){
-            throw new ApiRequestException("VillageImage with id: " + id + " not found");
+            throw new ApiRequestException(VILLAGE_IMAGE_ID_MESSAGE + id + NOT_FOUND_MESSAGE);
         }
         villageImage.get().setVillage(villageService.checkVillage(villageImageDTO.getVillageId()));
         villageImage.get().setImageName(villageImageDTO.getImageName());
@@ -227,7 +229,7 @@ public class VillageImageService {
                     villageImageDTO.setBase64Image(base64Image);
                 }
             } catch (IOException e) {
-                logger.error("An error occurred while processing the image", e);
+                logger.error(ERROR_MESSAGE, e);
             }
             villageImagesWithBase64Images.add(villageImageDTO);
         }
@@ -239,47 +241,30 @@ public class VillageImageService {
         if(foundVillageImage.isPresent()){
             return villageImageToVillageImageDTO(foundVillageImage.get());
         }
-        throw new ApiRequestException("VillageImage with id: " + id + " not found");
+        throw new ApiRequestException(VILLAGE_IMAGE_ID_MESSAGE + id + NOT_FOUND_MESSAGE);
     }
+
 
     public void deleteImageFileById(Long id) {
         VillageImageDTO villageImageDTO = getVillageImageById(id);
+
         if (villageImageDTO != null) {
             String imageName = villageImageDTO.getImageName();
             Path imagePath = Paths.get(UPLOAD_DIRECTORY, imageName);
-            File imageFile = imagePath.toFile();
-            if (imageFile.exists()) {
-                imageFile.delete();
+            try {
+                Files.delete(imagePath);
                 deleteVillageImageById(id);
-            } else {
+            } catch (NoSuchFileException e) {
                 logger.warn("Image does not exist: {}", imageName);
+            } catch (DirectoryNotEmptyException e) {
+                logger.error("Cannot delete non-empty directory: {}", imageName);
+            } catch (IOException e) {
+                logger.error("Failed to delete image: {}", imageName, e);
             }
         } else {
             logger.warn("Image with ID {} not found.", id);
         }
     }
-
-
-
-    //public void deleteImageFileById(Long id) {
-    //    VillageImageDTO villageImageDTO = getVillageImageById(id);
-    //    if (villageImageDTO != null) {
-    //        String imageName = villageImageDTO.getImageName();
-    //        Path imagePath = Paths.get(UPLOAD_DIRECTORY, imageName);
-    //        File imageFile = imagePath.toFile();
-    //        if (imageFile.exists()) {
-    //            if (imageFile.delete()) {
-    //                deleteVillageImageById(id);
-    //            } else {
-    //                logger.error("Failed to delete image: {}", imageName);
-    //            }
-    //        } else {
-    //            logger.warn("Image does not exist: {}", imageName);
-    //        }
-    //    } else {
-    //        logger.warn("Image with ID {} not found.", id);
-    //    }
-    //}
 
 
 
@@ -305,7 +290,7 @@ public class VillageImageService {
         if (villageImageRepository.existsById(id)) {
             villageImageRepository.deleteById(id);
         } else {
-            throw new ApiRequestException("VillageImage with id: " + id + " not found");
+            throw new ApiRequestException(VILLAGE_IMAGE_ID_MESSAGE + id + NOT_FOUND_MESSAGE);
         }
     }
 
@@ -315,6 +300,6 @@ public class VillageImageService {
             villageImage.get().setDateDeleted(null);
             return villageImageToVillageImageDTO(villageImageRepository.save(villageImage.get()));
         }
-        throw new ApiRequestException("VillageImage with id: " + id + " not found");
+        throw new ApiRequestException(VILLAGE_IMAGE_ID_MESSAGE + id + NOT_FOUND_MESSAGE);
     }
 }
