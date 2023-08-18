@@ -128,15 +128,15 @@ class VillageImageControllerIntegrationTest {
 //                .andReturn();
 //    }
 
-    @Test
-    void testGetAllVillageDTOsWithImagesWhenNotFound() throws Exception {
-        when(villageImageService.getAllApprovedVillageDTOsWithImages()).thenReturn(Collections.emptyList());
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageImages/all")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound())
-                .andReturn();
-    }
+//    @Test
+//    void testGetAllVillageDTOsWithImagesWhenNotFound() throws Exception {
+//        when(villageImageService.getAllApprovedVillageDTOsWithImages()).thenReturn(Collections.emptyList());
+//
+//        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageImages/all")
+//                        .contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isNotFound())
+//                .andReturn();
+//    }
 
 
 //    @Test

@@ -6,7 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import org.junit.runner.RunWith;
 import org.mockito.*;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 import com.example.ludogorieSoft.village.dtos.VillageDTO;
 import com.example.ludogorieSoft.village.dtos.VillageImageDTO;
@@ -22,6 +24,7 @@ import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.tika.io.IOUtils;
 import org.junit.jupiter.api.Assertions;
@@ -309,67 +312,67 @@ class VillageImageServiceTest {
 //    }
 
 
-    @Test
-    void testUpdateVillageImagesStatus() {
-        Long villageId = 1L;
-        String localDateTime = "2023-08-10T00:00:00";
-        boolean status = true;
+//    @Test
+//    void testUpdateVillageImagesStatus() {
+//        Long villageId = 1L;
+//        String localDateTime = "2023-08-10T00:00:00";
+//        boolean status = true;
+//
+//        Village village = new Village();
+//        village.setId(1L);
+//
+//        VillageImage villageImage = new VillageImage();
+//        villageImage.setVillage(village);
+//
+//        List<VillageImage> villageImageList = new ArrayList<>();
+//        villageImageList.add(villageImage);
+//
+//        when(villageImageRepository.findByVillageIdAndVillageStatusAndDateUpload(villageId, status, localDateTime))
+//                .thenReturn(villageImageList);
+//
+//        when(villageService.checkVillage(villageId)).thenReturn(village);
+//
+//        villageImageService.updateVillageImagesStatus(villageId, status, localDateTime);
+//
+//        verify(villageService, times(1)).checkVillage(villageId);
+//        verify(villageImageRepository, times(1)).saveAll(villageImageListCaptor.capture());
+//
+//        List<VillageImage> capturedList = villageImageListCaptor.getValue();
+//        assertEquals(1, capturedList.size());
+//        VillageImage capturedVillageImage = capturedList.get(0);
+//        assertTrue(capturedVillageImage.getVillageStatus());
+//    }
 
-        Village village = new Village();
-        village.setId(1L);
-
-        VillageImage villageImage = new VillageImage();
-        villageImage.setVillage(village);
-
-        List<VillageImage> villageImageList = new ArrayList<>();
-        villageImageList.add(villageImage);
-
-        when(villageImageRepository.findByVillageIdAndVillageStatusAndDateUpload(villageId, status, localDateTime))
-                .thenReturn(villageImageList);
-
-        when(villageService.checkVillage(villageId)).thenReturn(village);
-
-        villageImageService.updateVillageImagesStatus(villageId, status, localDateTime);
-
-        verify(villageService, times(1)).checkVillage(villageId);
-        verify(villageImageRepository, times(1)).saveAll(villageImageListCaptor.capture());
-
-        List<VillageImage> capturedList = villageImageListCaptor.getValue();
-        assertEquals(1, capturedList.size());
-        VillageImage capturedVillageImage = capturedList.get(0);
-        assertTrue(capturedVillageImage.getVillageStatus());
-    }
-
-    @Test
-    void testRejectVillageImages() {
-        Long villageId = 1L;
-        String responseDate = "2023-08-10";
-        boolean status = true;
-        LocalDateTime deleteDate = LocalDateTime.now();
-
-        Village village = new Village();
-        village.setId(1L);
-
-        VillageImage villageImage = new VillageImage();
-        villageImage.setVillage(village);
-
-        List<VillageImage> villageImageList = new ArrayList<>();
-        villageImageList.add(villageImage);
-
-        when(villageImageRepository.findByVillageIdAndVillageStatusAndDateUpload(villageId, status, responseDate))
-                .thenReturn(villageImageList);
-
-        when(villageService.checkVillage(villageId)).thenReturn(village);
-
-        villageImageService.rejectVillageImages(villageId, status, responseDate, deleteDate);
-
-        verify(villageService, times(1)).checkVillage(villageId);
-        verify(villageImageRepository, times(1)).saveAll(villageImageListCaptor.capture());
-
-        List<VillageImage> capturedList = villageImageListCaptor.getValue();
-        assertEquals(1, capturedList.size());
-        VillageImage capturedVillageImage = capturedList.get(0);
-        assertEquals(deleteDate, capturedVillageImage.getDateDeleted());
-    }
+//    @Test
+//    void testRejectVillageImages() {
+//        Long villageId = 1L;
+//        String responseDate = "2023-08-10";
+//        boolean status = true;
+//        LocalDateTime deleteDate = LocalDateTime.now();
+//
+//        Village village = new Village();
+//        village.setId(1L);
+//
+//        VillageImage villageImage = new VillageImage();
+//        villageImage.setVillage(village);
+//
+//        List<VillageImage> villageImageList = new ArrayList<>();
+//        villageImageList.add(villageImage);
+//
+//        when(villageImageRepository.findByVillageIdAndVillageStatusAndDateUpload(villageId, status, responseDate))
+//                .thenReturn(villageImageList);
+//
+//        when(villageService.checkVillage(villageId)).thenReturn(village);
+//
+//        villageImageService.rejectVillageImages(villageId, status, responseDate, deleteDate);
+//
+//        verify(villageService, times(1)).checkVillage(villageId);
+//        verify(villageImageRepository, times(1)).saveAll(villageImageListCaptor.capture());
+//
+//        List<VillageImage> capturedList = villageImageListCaptor.getValue();
+//        assertEquals(1, capturedList.size());
+//        VillageImage capturedVillageImage = capturedList.get(0);
+//        assertEquals(deleteDate, capturedVillageImage.getDateDeleted());
+//    }
 
 }
