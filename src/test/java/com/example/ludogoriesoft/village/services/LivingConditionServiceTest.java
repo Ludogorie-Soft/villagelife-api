@@ -2,13 +2,10 @@ package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.LandscapeDTO;
 import com.example.ludogorieSoft.village.dtos.LivingConditionDTO;
-import com.example.ludogorieSoft.village.dtos.ObjectAroundVillageDTO;
-import com.example.ludogorieSoft.village.enums.Consents;
-import com.example.ludogorieSoft.village.enums.Distance;
+import com.example.ludogorieSoft.village.dtos.response.LivingConditionResponse;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.*;
 import com.example.ludogorieSoft.village.repositories.LivingConditionRepository;
-import com.example.ludogorieSoft.village.repositories.ObjectVillageRepository;
 import com.example.ludogorieSoft.village.repositories.VillageLivingConditionRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,7 +15,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -34,14 +30,7 @@ class LivingConditionServiceTest {
     private ModelMapper modelMapper;
     @Mock
     private VillageLivingConditionRepository villageLivingConditionRepository;
-    @Mock
-    private VillageLivingConditionService villageLivingConditionsService;
-    @Mock
-    private LivingConditionService livingConditionsService;
-    @Mock
-    private ObjectAroundVillageService objectAroundVillageService;
-    @Mock
-    private ObjectVillageRepository objectVillageRepository;
+
 
     @BeforeEach
     public void setup() {
@@ -401,4 +390,45 @@ class LivingConditionServiceTest {
 //        double result = livingConditionService.getLivingConditionsMainPercentage(200L);
 //        assertEquals(0.0, result, 0.01);
 //    }
+
+    @Test
+    void testGetLivingConditionResponsesWhenStatusTrue() {
+        Long villageId = 1L;
+        boolean status = true;
+        String date = "2023-08-19";
+
+        List<String> names = Arrays.asList("Инфраструктура", "Обществен транспорт", "Електрозахранване", "Водоснабдяване", "Мобилен обхват", "Интернет", "ТВ", "Чистота");
+        List<Long> livingConditionIds = Arrays.asList(1L, 3L, 4L, 5L, 6L, 7L, 8L, 9L);
+
+        when(villageLivingConditionRepository.existsByVillageIdAndLivingConditionIdAndVillageStatus(anyLong(), anyLong(), anyBoolean()))
+                .thenReturn(false);
+
+        List<LivingConditionResponse> result = livingConditionService.getLivingConditionResponses(villageId, status, date);
+
+        for (int i = 0; i < names.size(); i++) {
+            verify(villageLivingConditionRepository).existsByVillageIdAndLivingConditionIdAndVillageStatus(villageId, livingConditionIds.get(i), status);
+        }
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void testGetLivingConditionResponsesWhenStatusFalse() {
+        Long villageId = 1L;
+        boolean status = false;
+        String date = "2023-08-19";
+
+        List<String> names = Arrays.asList("Инфраструктура", "Обществен транспорт", "Електрозахранване", "Водоснабдяване", "Мобилен обхват", "Интернет", "ТВ", "Чистота");
+        List<Long> livingConditionIds = Arrays.asList(1L, 3L, 4L, 5L, 6L, 7L, 8L, 9L);
+
+        when(villageLivingConditionRepository.existsByVillageIdAndLivingConditionIdAndVillageStatusAndDate(anyLong(), anyLong(), anyBoolean(), anyString()))
+                .thenReturn(false);
+
+        List<LivingConditionResponse> result = livingConditionService.getLivingConditionResponses(villageId, status, date);
+
+        for (int i = 0; i < names.size(); i++) {
+            verify(villageLivingConditionRepository).existsByVillageIdAndLivingConditionIdAndVillageStatusAndDate(villageId, livingConditionIds.get(i), false, date);
+        }
+
+        assertTrue(result.isEmpty());
+    }
 }
