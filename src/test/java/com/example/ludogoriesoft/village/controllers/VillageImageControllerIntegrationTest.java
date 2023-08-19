@@ -1,10 +1,8 @@
 package com.example.ludogorieSoft.village.controllers;
 
-import com.example.ludogorieSoft.village.dtos.VillageDTO;
 import com.example.ludogorieSoft.village.dtos.VillageImageDTO;
 import com.example.ludogorieSoft.village.services.VillageImageService;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
@@ -15,26 +13,21 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.http.HttpStatus;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Collections;
 
-import static org.mockito.ArgumentMatchers.*;
 
 import org.mockito.Mockito;
 
@@ -54,6 +47,8 @@ class VillageImageControllerIntegrationTest {
 
     @MockBean
     private VillageImageService villageImageService;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @BeforeEach
     public void setup() {
@@ -320,5 +315,49 @@ class VillageImageControllerIntegrationTest {
                 .andExpect(jsonPath("$[1].base64Image").value("base64EncodedImageData2"));
 
         verify(villageImageService).getNotDeletedVillageImageDTOsByVillageId(villageId);
+    }
+
+
+    @Test
+    void testGetVillageImageByIdThenReturnsVillageImageDTO() throws Exception {
+        Long imageId = 1L;
+
+        VillageImageDTO villageImageDTO = new VillageImageDTO();
+        villageImageDTO.setId(imageId);
+        villageImageDTO.setVillageId(2L);
+        villageImageDTO.setImageName("Image");
+        villageImageDTO.setStatus(true);
+        villageImageDTO.setDateUpload(LocalDateTime.parse("2023-08-19T10:00:00"));
+        villageImageDTO.setBase64Image("base64EncodedImageData");
+
+        when(villageImageService.getVillageImageById(imageId)).thenReturn(villageImageDTO);
+
+        mockMvc.perform(get("/api/v1/villageImages/{id}", imageId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(imageId))
+                .andExpect(jsonPath("$.villageId").value(2))
+                .andExpect(jsonPath("$.imageName").value("Image"))
+                .andExpect(jsonPath("$.status").value(true))
+                .andExpect(jsonPath("$.dateUpload").value("2023-08-19 10:00:00"))
+                .andExpect(jsonPath("$.base64Image").value("base64EncodedImageData"));
+
+        verify(villageImageService).getVillageImageById(imageId);
+    }
+
+    @Test
+    void testAdminUploadImagesWhenMissingVillageIdThenReturnsBadRequest() throws Exception {
+        List<byte[]> imageBytesList = new ArrayList<>();
+        byte[] imageBytes1 = "Image1".getBytes(StandardCharsets.UTF_8);
+        byte[] imageBytes2 = "Image2".getBytes(StandardCharsets.UTF_8);
+        imageBytesList.add(imageBytes1);
+        imageBytesList.add(imageBytes2);
+
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/api/v1/villageImages/admin-upload")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(imageBytesList)))
+                .andExpect(status().isBadRequest());
+
+        verifyNoInteractions(villageImageService);
     }
 }
