@@ -36,7 +36,7 @@ public class AdminFunctionController {
         return new ResponseEntity<>("Status of village with ID: " + villageId + " changed successfully!!!", HttpStatus.OK);
     }
 
-    @GetMapping("/update")
+    @GetMapping("/toApprove")
     public ResponseEntity<List<VillageResponse>> getUnapprovedVillageResponses() {
         List<VillageResponse> villageResponse = adminVillageService.getUnapprovedVillageResponsesWithSortedAnswers(false);
         return new ResponseEntity<>(villageResponse, HttpStatus.OK);

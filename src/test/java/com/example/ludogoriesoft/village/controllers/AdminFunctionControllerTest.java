@@ -110,7 +110,7 @@ class AdminFunctionControllerTest {
         List<VillageResponse> villageResponses = new ArrayList<>(); // Create your mock responses
         when(adminVillageService.getUnapprovedVillageResponsesWithSortedAnswers(false)).thenReturn(villageResponses);
 
-        mockMvc.perform(get("/api/v1/admins/functions/update"))
+        mockMvc.perform(get("/api/v1/admins/functions/toApprove"))
                 .andExpect(status().isOk());
 
         verify(adminVillageService).getUnapprovedVillageResponsesWithSortedAnswers(false);
