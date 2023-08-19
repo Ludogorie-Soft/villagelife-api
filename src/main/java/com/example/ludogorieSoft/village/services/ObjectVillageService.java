@@ -171,11 +171,13 @@ public class ObjectVillageService {
                 Village village = villageService.checkVillage(vill.getVillage().getId());
                 vill.setVillage(village);
                 vill.setVillageStatus(true);
+                vill.setDateDeleted(null);
                 villa.add(vill);
             }
             objectVillageRepository.saveAll(villa);
         }
     }
+
     public void rejectObjectVillageResponse(Long id, boolean status, String responseDate, LocalDateTime dateDelete) {
         List<ObjectVillage> objectVillages = objectVillageRepository.findByVillageIdAndVillageStatusAndDateUpload(
                 id, status, responseDate);

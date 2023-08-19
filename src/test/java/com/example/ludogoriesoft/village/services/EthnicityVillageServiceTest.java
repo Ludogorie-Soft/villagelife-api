@@ -316,4 +316,21 @@ class EthnicityVillageServiceTest {
         verify(ethnicityVillageRepository).saveAll(ethnicityVillageListCaptor.capture());
 
     }
+    @Test
+    void testFindByVillageIdAndVillageStatusDateDeleteNotNull() {
+        Long villageId = 1L;
+        boolean status = true;
+
+        List<EthnicityVillage> sampleEthnicityVillages = new ArrayList<>();
+        sampleEthnicityVillages.add(new EthnicityVillage());
+        sampleEthnicityVillages.add(new EthnicityVillage());
+
+        when(ethnicityVillageRepository.findByVillageIdAndVillageStatusAndDateDeleteNotNull(villageId, status)).thenReturn(sampleEthnicityVillages);
+
+        List<EthnicityVillage> result = ethnicityVillageService.findByVillageIdAndVillageStatusDateDeleteNotNull(villageId, status);
+
+        verify(ethnicityVillageRepository).findByVillageIdAndVillageStatusAndDateDeleteNotNull(villageId, status);
+
+        assertEquals(sampleEthnicityVillages, result);
+    }
 }

@@ -5,6 +5,7 @@ import com.example.ludogorieSoft.village.dtos.request.AuthenticationRequest;
 import com.example.ludogorieSoft.village.dtos.request.RegisterRequest;
 import com.example.ludogorieSoft.village.dtos.response.AuthenticationResponce;
 import com.example.ludogorieSoft.village.enums.Role;
+import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.Administrator;
 import com.example.ludogorieSoft.village.repositories.AdministratorRepository;
 import com.example.ludogorieSoft.village.authorization.JWTService;
@@ -15,7 +16,12 @@ import org.mockito.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -34,6 +40,8 @@ class AuthenticationControllerTest {
     private AuthenticationManager authenticationManager;
     @Mock
     private AuthService authService;
+    @Mock
+    private UserDetailsService userDetailsService;
     @InjectMocks
     private AuthenticationController authenticationController;
 
@@ -46,7 +54,7 @@ class AuthenticationControllerTest {
         authenticationManager = Mockito.mock(AuthenticationManager.class);
         authService = Mockito.mock(AuthService.class);
         authenticationController = new AuthenticationController(new AuthenticationService(
-                administratorRepository, passwordEncoder, jwtService, authenticationManager), authService);
+                administratorRepository, passwordEncoder, jwtService, authenticationManager), authService,jwtService,userDetailsService);
     }
 
     @Test
@@ -112,6 +120,13 @@ class AuthenticationControllerTest {
 
         assertEquals(expectedAdministratorDTO, responseEntity.getBody());
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+    }
+    @Test
+    public void testAuthorizeAdminToken_InvalidTokenFormat() {
+        ResponseEntity<String> response = authenticationController.authorizeAdminToken("invalid-token-format");
+
+        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+        assertEquals("Invalid token format", response.getBody());
     }
 }
 

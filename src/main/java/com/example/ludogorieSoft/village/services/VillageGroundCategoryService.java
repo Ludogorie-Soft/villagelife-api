@@ -102,6 +102,7 @@ public class VillageGroundCategoryService {
                 Village village = villageService.checkVillage(vill.getVillage().getId());
                 vill.setVillage(village);
                 vill.setVillageStatus(true);
+                vill.setDateDeleted(null);
                 villa.add(vill);
             }
             villageGroundCategoryRepository.saveAll(villa);

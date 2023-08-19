@@ -10,7 +10,6 @@ public interface VillageGroundCategoryRepository extends JpaRepository<VillageGr
     VillageGroundCategory findByVillageId(Long villageId);
     @Query("SELECT vgc FROM VillageGroundCategory vgc WHERE vgc.village.id = :villageId " +
             "AND vgc.villageStatus = :status " +
-            "AND (vgc.dateDeleted IS NULL) " +
             "AND FUNCTION('DATE_FORMAT', vgc.dateUpload, '%Y-%m-%d %H:%i:%s') = :localDateTime")
     List<VillageGroundCategory> findByVillageIdAndVillageStatusAndDateUpload(Long villageId, boolean status, String localDateTime);
 }

@@ -171,6 +171,7 @@ public class VillageImageService {
         if (!villageImages.isEmpty()) {
             for (VillageImage villageImage : villageImages) {
                 villageImage.setVillageStatus(!status);
+                villageImage.setDateDeleted(null);
                 updateVillageImage(villageImage.getId(), villageImageToVillageImageDTO(villageImage));
             }
         }

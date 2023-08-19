@@ -36,11 +36,12 @@ public class AdminFunctionController {
         return new ResponseEntity<>("Status of village with ID: " + villageId + " changed successfully!!!", HttpStatus.OK);
     }
 
-    @GetMapping("/update")
-    public ResponseEntity<List<VillageResponse>> updateUnapprovedVillageResponseByVillageId() {
+    @GetMapping("/toApprove")
+    public ResponseEntity<List<VillageResponse>> getUnapprovedVillageResponses() {
         List<VillageResponse> villageResponse = adminVillageService.getUnapprovedVillageResponsesWithSortedAnswers(false);
         return new ResponseEntity<>(villageResponse, HttpStatus.OK);
     }
+
     @PostMapping("/reject/{villageId}")
     public ResponseEntity<String> rejectVillageResponse(@RequestParam("villageId") Long villageId,
                                                         @RequestParam("answerDate") String answerDate) {
@@ -51,7 +52,13 @@ public class AdminFunctionController {
     @GetMapping("/info/{villageId}")
     public ResponseEntity<VillageInfo> getVillageInfoById(@RequestParam("villageId") Long villageId,
                                                           @RequestParam("answerDate") String answerDate, boolean status) {
-        VillageInfo villageInfo = villageInfoService.getVillageInfoByVillageId(villageId,status,answerDate);
+        VillageInfo villageInfo = villageInfoService.getVillageInfoByVillageId(villageId, status, answerDate);
         return ResponseEntity.ok(villageInfo);
     }
+    @GetMapping("/getRejected")
+    public ResponseEntity<List<VillageResponse>> getVillagesWithRejectedResponses() {
+        List<VillageResponse> villageResponse = adminVillageService.getRejectedVillageResponsesWithSortedAnswers(false);
+        return new ResponseEntity<>(villageResponse, HttpStatus.OK);
+    }
+
 }

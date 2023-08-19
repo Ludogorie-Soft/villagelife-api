@@ -5,7 +5,6 @@ import com.example.ludogorieSoft.village.dtos.response.AnswersQuestionResponse;
 import com.example.ludogorieSoft.village.model.Question;
 import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.model.VillageAnswerQuestion;
-import com.example.ludogorieSoft.village.model.VillageGroundCategory;
 import com.example.ludogorieSoft.village.repositories.QuestionRepository;
 import com.example.ludogorieSoft.village.repositories.VillageAnswerQuestionRepository;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
@@ -157,6 +156,7 @@ public class VillageAnswerQuestionService {
                 Village village = villageService.checkVillage(vill.getVillage().getId());
                 vill.setVillage(village);
                 vill.setVillageStatus(true);
+                vill.setDateDeleted(null);
                 villa.add(vill);
             }
             villageAnswerQuestionRepository.saveAll(villa);
