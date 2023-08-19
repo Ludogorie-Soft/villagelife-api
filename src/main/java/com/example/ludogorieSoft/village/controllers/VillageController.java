@@ -19,7 +19,6 @@ public class VillageController {
 
     private final VillageService villageService;
     private final VillageInfoService villageInfoService;
-
     @GetMapping
     public ResponseEntity<List<VillageDTO>> getAllVillages() {
         List<VillageDTO> villages = villageService.getAllVillages();

@@ -298,7 +298,6 @@ class PopulationServiceTest {
         PopulationDTO result = populationService.findPopulationDTOByVillageNameAndRegion(villageName, regionName);
 
         assertNotNull(result);
-        // Тук може да добавите други проверки според логиката на populationToPopulationDTO
     }
 
     @Test

@@ -33,41 +33,17 @@ public class AdminVillageService {
         List<VillageResponse> villageResponses = new ArrayList<>();
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
+        String keyWord = "toApprove";
         for (Village village : villagesWithAnswers) {
-            List<EthnicityVillage> answers = ethnicityVillageService.findByVillageIdAndVillageStatus(village.getId(), status);
-            answers.sort(Comparator.comparing(EthnicityVillage::getDateUpload));
-            Set<String> uniqueDates = new HashSet<>();
-            List<String> formattedDates = new ArrayList<>();
-
-            for (EthnicityVillage answer : answers) {
-                String formattedDate = answer.getDateUpload().format(formatter);
-                if (uniqueDates.add(formattedDate)) {
-                    formattedDates.add(formattedDate);
-                }
-            }
-            VillageResponse villageResponse = new VillageResponse();
-            villageResponse.setId(village.getId());
-            villageResponse.setName(village.getName());
-            villageResponse.setRegion(village.getRegion());
-            villageResponse.setPopulationCount(village.getPopulationCount());
-            villageResponse.setStatus(village.getStatus());
-            villageResponse.setDateUpload(village.getDateUpload());
-            if (village.getAdmin() != null) {
-                villageResponse.setAdmin(modelMapper.map(village.getAdmin(),AdministratorDTO.class));
-                villageResponse.setDateApproved(village.getDateApproved());
-            } else {
-                villageResponse.setAdmin(null);
-                villageResponse.setDateApproved(null);
-            }
-            villageResponse.setGroupedAnswers(Collections.singletonMap(village.getId(), formattedDates));
+            VillageResponse villageResponse = createVillageResponse(village, formatter, status, keyWord);
             villageResponses.add(villageResponse);
+
         }
 
         return villageResponses;
     }
 
-    public void updateVillageStatusAndVillageResponsesStatus(Long villageId, String answerDate){
+    public void updateVillageStatusAndVillageResponsesStatus(Long villageId, String answerDate) {
 
         boolean status = false;
         villagePopulationAssertionService.updateVillagePopulationAssertionStatus(villageId, status, answerDate);
@@ -79,11 +55,11 @@ public class AdminVillageService {
         villageGroundCategoryService.updateVillageGroundCategoryStatus(villageId, status, answerDate);
     }
 
-    public void rejectVillageResponses(Long villageId, String answerDate){
+    public void rejectVillageResponses(Long villageId, String answerDate) {
         LocalDateTime timestamp = TimestampUtils.getCurrentTimestamp();
         boolean status = false;
         VillageDTO villageDTO = villageService.getVillageById(villageId);
-        if(villageDTO.getStatus().equals(true)){
+        if (villageDTO.getStatus().equals(true)) {
             villageService.updateVillageStatus(villageId, villageDTO);
         }
         villagePopulationAssertionService.rejectVillagePopulationAssertionStatus(villageId, status, answerDate, timestamp);
@@ -92,7 +68,69 @@ public class AdminVillageService {
         villageAnswerQuestionService.rejectVillageAnswerQuestionResponse(villageId, status, answerDate, timestamp);
         objectVillageService.rejectObjectVillageResponse(villageId, status, answerDate, timestamp);
         ethnicityVillageService.rejectEthnicityVillageResponse(villageId, status, answerDate, timestamp);
-        villageGroundCategoryService.rejectVillageGroundCategoryResponse(villageId, status, answerDate,timestamp);
+        villageGroundCategoryService.rejectVillageGroundCategoryResponse(villageId, status, answerDate, timestamp);
+    }
+
+    public List<VillageResponse> getRejectedVillageResponsesWithSortedAnswers(boolean status) {
+        List<Village> villagesWithRejectedResponses = villageRepository.findAllVillagesWithRejectedResponses();
+        List<VillageResponse> villageResponses = new ArrayList<>();
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String keyWord = "rejected";
+
+        for (Village village : villagesWithRejectedResponses) {
+            VillageResponse villageResponse = createVillageResponse(village, formatter, status,keyWord);
+            villageResponses.add(villageResponse);
+        }
+
+        return villageResponses;
+    }
+
+    protected VillageResponse createVillageResponse(Village village, DateTimeFormatter formatter, boolean status, String keyWord) {
+        VillageResponse villageResponse = new VillageResponse();
+        villageResponse.setId(village.getId());
+        villageResponse.setName(village.getName());
+        villageResponse.setRegion(village.getRegion());
+        villageResponse.setPopulationCount(village.getPopulationCount());
+        villageResponse.setStatus(village.getStatus());
+        villageResponse.setDateUpload(village.getDateUpload());
+
+        if (village.getAdmin() != null) {
+            villageResponse.setAdmin(modelMapper.map(village.getAdmin(), AdministratorDTO.class));
+            villageResponse.setDateApproved(village.getDateApproved());
+        }
+        List<EthnicityVillage> answers = new ArrayList<>();
+
+        if (keyWord.equals("rejected")){
+            answers = getRejectedAnswersForVillage(village.getId(), status);
+        } else if (keyWord.equals("toApprove")) {
+            answers = getAnswersToApprove(village.getId(), status);
+        }
+        List<String> formattedDates = getFormattedDatesFromAnswers(answers, formatter);
+
+        villageResponse.setGroupedAnswers(Collections.singletonMap(village.getId(), formattedDates));
+        return villageResponse;
+    }
+
+    protected List<EthnicityVillage> getRejectedAnswersForVillage(Long villageId, boolean status) {
+        return ethnicityVillageService.findByVillageIdAndVillageStatusDateDeleteNotNull(villageId, status);
+    }
+    protected List<EthnicityVillage> getAnswersToApprove(Long villageId, boolean status){
+        return ethnicityVillageService.findByVillageIdAndVillageStatus(villageId, status);
+    }
+
+    protected List<String> getFormattedDatesFromAnswers(List<EthnicityVillage> answers, DateTimeFormatter formatter) {
+        Set<String> uniqueDates = new HashSet<>();
+        List<String> formattedDates = new ArrayList<>();
+
+        for (EthnicityVillage answer : answers) {
+            String formattedDate = answer.getDateUpload().format(formatter);
+            if (uniqueDates.add(formattedDate)) {
+                formattedDates.add(formattedDate);
+            }
+        }
+
+        return formattedDates;
     }
 
 }

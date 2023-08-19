@@ -6,6 +6,7 @@ import com.example.ludogorieSoft.village.dtos.response.VillageResponse;
 import com.example.ludogorieSoft.village.services.AdminVillageService;
 import com.example.ludogorieSoft.village.services.VillageInfoService;
 import com.example.ludogorieSoft.village.services.VillageService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
@@ -17,6 +18,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +42,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class AdminFunctionControllerTest {
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private ObjectMapper objectMapper;
     @MockBean
     private AdminVillageService adminVillageService;
     @MockBean
@@ -105,7 +110,7 @@ class AdminFunctionControllerTest {
         List<VillageResponse> villageResponses = new ArrayList<>(); // Create your mock responses
         when(adminVillageService.getUnapprovedVillageResponsesWithSortedAnswers(false)).thenReturn(villageResponses);
 
-        mockMvc.perform(get("/api/v1/admins/functions/update"))
+        mockMvc.perform(get("/api/v1/admins/functions/toApprove"))
                 .andExpect(status().isOk());
 
         verify(adminVillageService).getUnapprovedVillageResponsesWithSortedAnswers(false);
@@ -144,4 +149,19 @@ class AdminFunctionControllerTest {
         verify(villageInfoService).getVillageInfoByVillageId(villageId, status, answerDate);
     }
 
+    @Test
+    void testGetVillagesWithRejectedResponses() throws Exception {
+        List<VillageResponse> sampleResponses = new ArrayList<>();
+        sampleResponses.add(new VillageResponse());
+        sampleResponses.add(new VillageResponse());
+
+        when(adminVillageService.getRejectedVillageResponsesWithSortedAnswers(false)).thenReturn(sampleResponses);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/admins/functions/getRejected")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(sampleResponses)));
+
+        verify(adminVillageService).getRejectedVillageResponsesWithSortedAnswers(false);
+    }
 }

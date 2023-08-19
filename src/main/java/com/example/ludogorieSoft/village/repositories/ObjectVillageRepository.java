@@ -15,7 +15,6 @@ public interface ObjectVillageRepository extends JpaRepository<ObjectVillage,Lon
     List<ObjectVillage> findByVillageIdAndVillageStatus(Long villageId, boolean villageStatus);
     @Query("SELECT v FROM ObjectVillage v WHERE v.village.id = :villageId " +
             "AND v.villageStatus = :villageStatus " +
-            "AND (v.dateDeleted IS NULL) " +
             "AND FUNCTION('DATE_FORMAT', v.dateUpload, '%Y-%m-%d %H:%i:%s') = :localDateTime")
     List<ObjectVillage> findByVillageIdAndVillageStatusAndDateUpload(Long villageId, boolean villageStatus, String localDateTime);
     @Query("SELECT CASE WHEN COUNT(v) > 0 THEN TRUE ELSE FALSE END " +
@@ -23,13 +22,11 @@ public interface ObjectVillageRepository extends JpaRepository<ObjectVillage,Lon
             "WHERE v.village.id = :villageId " +
             "AND v.villageStatus = :villageStatus " +
             "AND v.object.id = :objectId " +
-            "AND (v.dateDeleted IS NULL) " +
             "AND FUNCTION('DATE_FORMAT', v.dateUpload, '%Y-%m-%d %H:%i:%s') = :localDateTime")
     boolean existsByVillageIdAndObjectIdAndVillageStatusAndDate(Long villageId, Long objectId, boolean villageStatus, String localDateTime);
     @Query("SELECT v FROM ObjectVillage v WHERE v.village.id = :villageId " +
             "AND v.villageStatus = :villageStatus " +
             "AND v.object.id = :objectId " +
-            "AND (v.dateDeleted IS NULL) " +
             "AND FUNCTION('DATE_FORMAT', v.dateUpload, '%Y-%m-%d %H:%i:%s') = :localDateTime")
     List<ObjectVillage> findByVillageIdAndObjectIdAndVillageStatusAndDate(Long villageId, Long objectId, boolean villageStatus, String localDateTime);
 
