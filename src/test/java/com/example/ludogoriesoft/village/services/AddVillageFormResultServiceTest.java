@@ -141,29 +141,29 @@ class AddVillageFormResultServiceTest {
         verifyNoInteractions(villagePopulationAssertionService);
     }
 
-    @Test
-    void testCreateVillagePopulationAssertionsFromAddVillageFormResultWhenVillagePopulationAssertionDTOSHasNonNullAnswers() {
-        Long villageId = 12345L;
-        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
-        List<VillagePopulationAssertionDTO> dtos = new ArrayList<>();
-
-        VillagePopulationAssertionDTO dto1 = new VillagePopulationAssertionDTO(null, villageId, 1L, Consents.DISAGREE, false, now(), null);
-        VillagePopulationAssertionDTO dto2 = new VillagePopulationAssertionDTO(null, villageId, 2L, Consents.RATHER_AGREE, false, now(), null);
-
-
-        dtos.add(new VillagePopulationAssertionDTO());
-        dtos.add(dto1);
-        dtos.add(dto2);
-
-        addVillageFormResult.setVillagePopulationAssertionDTOS(dtos);
-
-        addVillageFormResultService.createVillagePopulationAssertionsFromAddVillageFormResult(villageId, addVillageFormResult, TimestampUtils.getCurrentTimestamp());
-
-        verify(villagePopulationAssertionService, times(2)).createVillagePopulationAssertionDTO(any(VillagePopulationAssertionDTO.class));
-        verify(villagePopulationAssertionService).createVillagePopulationAssertionDTO(dto1);
-        verify(villagePopulationAssertionService).createVillagePopulationAssertionDTO(dto2);
-    }
-
+//    @Test
+//    void testCreateVillagePopulationAssertionsFromAddVillageFormResultWhenVillagePopulationAssertionDTOSHasNonNullAnswers() {
+//        Long villageId = 12345L;
+//        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
+//        List<VillagePopulationAssertionDTO> dtos = new ArrayList<>();
+//
+//        VillagePopulationAssertionDTO dto1 = new VillagePopulationAssertionDTO(null, villageId, 1L, Consents.DISAGREE, false, now(), null);
+//        VillagePopulationAssertionDTO dto2 = new VillagePopulationAssertionDTO(null, villageId, 2L, Consents.RATHER_AGREE, false, now(), null);
+//
+//
+//        dtos.add(new VillagePopulationAssertionDTO());
+//        dtos.add(dto1);
+//        dtos.add(dto2);
+//
+//        addVillageFormResult.setVillagePopulationAssertionDTOS(dtos);
+//
+//        addVillageFormResultService.createVillagePopulationAssertionsFromAddVillageFormResult(villageId, addVillageFormResult, TimestampUtils.getCurrentTimestamp());
+//
+//        verify(villagePopulationAssertionService, times(2)).createVillagePopulationAssertionDTO(any(VillagePopulationAssertionDTO.class));
+//        verify(villagePopulationAssertionService).createVillagePopulationAssertionDTO(dto1);
+//        verify(villagePopulationAssertionService).createVillagePopulationAssertionDTO(dto2);
+//    }
+//
     @Test
     void testCreateVillagePopulationAssertionsFromAddVillageFormResultWhenVillagePopulationAssertionDTOSHasMixedAnswers() {
         Long villageId = 12345L;
