@@ -593,4 +593,79 @@ class VillageImageServiceTest {
 
         assertEquals(Arrays.asList((String) null), result);
     }
+
+
+    @Test
+    void testUpdateVillageImageWhenValidId() {
+        Long id = 1L;
+        VillageImageDTO villageImageDTO = new VillageImageDTO();
+        villageImageDTO.setVillageId(2L);
+        villageImageDTO.setImageName("NewImageName");
+        villageImageDTO.setStatus(true);
+        villageImageDTO.setDateUpload(LocalDateTime.now());
+
+        VillageImage villageImage = new VillageImage();
+        when(villageImageRepository.findById(id)).thenReturn(Optional.of(villageImage));
+
+        Village village = new Village();
+        when(villageService.checkVillage(villageImageDTO.getVillageId())).thenReturn(village);
+
+        VillageImage updatedVillageImage = new VillageImage();
+        when(villageImageRepository.save(any())).thenReturn(updatedVillageImage);
+
+        when(modelMapper.map(any(), eq(VillageImageDTO.class))).thenReturn(villageImageDTO);
+
+        VillageImageDTO updatedImageDTO = villageImageService.updateVillageImage(id, villageImageDTO);
+
+        verify(villageImageRepository).findById(id);
+        verify(villageService).checkVillage(villageImageDTO.getVillageId());
+        verify(villageImageRepository).save(any());
+
+        Assertions.assertNotNull(updatedImageDTO);
+        assertEquals(villageImageDTO.getImageName(), updatedImageDTO.getImageName());
+        assertEquals(villageImageDTO.getStatus(), updatedImageDTO.getStatus());
+        assertEquals(villageImageDTO.getDateUpload(), updatedImageDTO.getDateUpload());
+    }
+
+    @Test
+    void testUpdateVillageImageWhenInvalidId() {
+        Long id = 1L;
+        VillageImageDTO villageImageDTO = new VillageImageDTO();
+        villageImageDTO.setVillageId(2L);
+
+        when(villageImageRepository.findById(id)).thenReturn(Optional.empty());
+
+        ApiRequestException exception = assertThrows(ApiRequestException.class,
+                () -> villageImageService.updateVillageImage(id, villageImageDTO));
+
+        assertEquals("VillageImage with id: " + id + " not found", exception.getMessage());
+    }
+
+
+    @Test
+    void testRejectSingleVillageImage() {
+        Long villageId = 1L;
+        VillageImageDTO villageImageDTO = new VillageImageDTO();
+        villageImageDTO.setVillageId(villageId);
+
+        LocalDateTime dateDelete = LocalDateTime.now();
+
+        Village village = new Village();
+        VillageImage villageImage = new VillageImage();
+
+        when(villageService.checkVillage(villageId)).thenReturn(village);
+        when(villageImageService.villageImageDTOToVillageImage(villageImageDTO)).thenReturn(villageImage);
+        when(villageImageRepository.save(any(VillageImage.class))).thenReturn(villageImage);
+
+        VillageImageDTO result = villageImageService.rejectSingleVillageImage(villageImageDTO, dateDelete);
+
+        verify(villageService).checkVillage(villageId);
+        verify(villageImageService).villageImageDTOToVillageImage(villageImageDTO);
+        verify(villageImageRepository).save(villageImage);
+
+        Assertions.assertNotNull(result);
+        assertEquals(dateDelete, result.getDateDeleted());
+        assertEquals(villageImage, villageImageService.villageImageDTOToVillageImage(villageImageDTO));
+    }
+
 }
