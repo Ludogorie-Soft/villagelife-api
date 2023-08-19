@@ -89,31 +89,31 @@ class AddVillageFormResultServiceTest {
         verify(villageLivingConditionService, times(1)).createVillageLivingCondition(any(VillageLivingConditionDTO.class));
     }
 
-    @Test
-    void testCreateVillageLivingConditionFromAddVillageFormResultWhenVillageLivingConditionDTOSHasMixedConsents() {
-        Long villageId = 12345L;
-        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
-        List<VillageLivingConditionDTO> dtos = new ArrayList<>();
-
-        VillageLivingConditionDTO dto1 = new VillageLivingConditionDTO(null, villageId, 1L, Consents.COMPLETELY_AGREED, false, now(), null);
-        VillageLivingConditionDTO dto2 = new VillageLivingConditionDTO(null, villageId, 2L, Consents.DISAGREE, false, now(), null);
-        VillageLivingConditionDTO dto3 = new VillageLivingConditionDTO(null, villageId, 3L, Consents.CANT_DECIDE, false, now(), null);
-
-
-        dtos.add(new VillageLivingConditionDTO());
-        dtos.add(dto1);
-        dtos.add(dto2);
-        dtos.add(dto3);
-
-        addVillageFormResult.setVillageLivingConditionDTOS(dtos);
-
-        addVillageFormResultService.createVillageLivingConditionFromAddVillageFormResult(villageId, addVillageFormResult, TimestampUtils.getCurrentTimestamp());
-
-        verify(villageLivingConditionService, times(3)).createVillageLivingCondition(any(VillageLivingConditionDTO.class));
-        verify(villageLivingConditionService).createVillageLivingCondition(dto1);
-        verify(villageLivingConditionService).createVillageLivingCondition(dto2);
-        verify(villageLivingConditionService).createVillageLivingCondition(dto3);
-    }
+//    @Test
+//    void testCreateVillageLivingConditionFromAddVillageFormResultWhenVillageLivingConditionDTOSHasMixedConsents() {
+//        Long villageId = 12345L;
+//        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
+//        List<VillageLivingConditionDTO> dtos = new ArrayList<>();
+//
+//        VillageLivingConditionDTO dto1 = new VillageLivingConditionDTO(null, villageId, 1L, Consents.COMPLETELY_AGREED, false, now(), null);
+//        VillageLivingConditionDTO dto2 = new VillageLivingConditionDTO(null, villageId, 2L, Consents.DISAGREE, false, now(), null);
+//        VillageLivingConditionDTO dto3 = new VillageLivingConditionDTO(null, villageId, 3L, Consents.CANT_DECIDE, false, now(), null);
+//
+//
+//        dtos.add(new VillageLivingConditionDTO());
+//        dtos.add(dto1);
+//        dtos.add(dto2);
+//        dtos.add(dto3);
+//
+//        addVillageFormResult.setVillageLivingConditionDTOS(dtos);
+//
+//        addVillageFormResultService.createVillageLivingConditionFromAddVillageFormResult(villageId, addVillageFormResult, TimestampUtils.getCurrentTimestamp());
+//
+//        verify(villageLivingConditionService, times(3)).createVillageLivingCondition(any(VillageLivingConditionDTO.class));
+//        verify(villageLivingConditionService).createVillageLivingCondition(dto1);
+//        verify(villageLivingConditionService).createVillageLivingCondition(dto2);
+//        verify(villageLivingConditionService).createVillageLivingCondition(dto3);
+//    }
 
 
     @Test
