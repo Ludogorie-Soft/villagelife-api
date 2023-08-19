@@ -195,14 +195,14 @@ public class VillageImageService {
         );
         if (!villageImages.isEmpty()) {
             for (VillageImage vill : villageImages) {
-                rejectVillageImageByVillageIdAndImageName(villageImageToVillageImageDTO(vill), dateDelete);
+                rejectSingleVillageImage(villageImageToVillageImageDTO(vill), dateDelete);
             }
         }
     }
 
 
 
-    public VillageImageDTO rejectVillageImageByVillageIdAndImageName(VillageImageDTO villageImage, LocalDateTime dateDelete){
+    public VillageImageDTO rejectSingleVillageImage(VillageImageDTO villageImage, LocalDateTime dateDelete){
         villageService.checkVillage(villageImage.getVillageId());
         villageImage.setDateDeleted(dateDelete);
         villageImageRepository.save(villageImageDTOToVillageImage(villageImage));

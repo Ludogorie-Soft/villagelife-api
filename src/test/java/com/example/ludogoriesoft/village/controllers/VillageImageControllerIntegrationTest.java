@@ -1,7 +1,9 @@
 package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.dtos.VillageDTO;
+import com.example.ludogorieSoft.village.dtos.VillageImageDTO;
 import com.example.ludogorieSoft.village.services.VillageImageService;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,16 +24,17 @@ import org.springframework.http.HttpStatus;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Collections;
 
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.when;
 
 import org.mockito.Mockito;
 
@@ -172,5 +175,150 @@ class VillageImageControllerIntegrationTest {
                 .andExpect(status().isNotFound())
                 .andReturn();
     }
-}
 
+
+    @Test
+    void testUpdateVillageImageWhenValidInputThenReturnsUpdatedImage() throws Exception {
+        Long imageId = 1L;
+
+        VillageImageDTO inputImage = new VillageImageDTO();
+        inputImage.setId(imageId);
+        inputImage.setVillageId(2L);
+        inputImage.setImageName("Sample Image");
+        inputImage.setStatus(true);
+        inputImage.setDateUpload(LocalDateTime.now());
+
+        VillageImageDTO updatedImage = new VillageImageDTO();
+        updatedImage.setId(imageId);
+        updatedImage.setVillageId(2L);
+        updatedImage.setImageName("Updated Image Name");
+        updatedImage.setStatus(true);
+        updatedImage.setDateUpload(LocalDateTime.now());
+
+        when(villageImageService.updateVillageImage(eq(imageId), any(VillageImageDTO.class)))
+                .thenReturn(updatedImage);
+
+        mockMvc.perform(put("/api/v1/villageImages/{id}", imageId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(inputImage)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.imageName").value("Updated Image Name"));
+
+        verify(villageImageService).updateVillageImage(eq(imageId), any(VillageImageDTO.class));
+    }
+
+    @Test
+    void testResumeImageVillageByIdWhenValidInputThenReturnsImageDTO() throws Exception {
+        Long imageId = 1L;
+        String imageName = "Sample Image";
+
+        VillageImageDTO resumedImageDTO = new VillageImageDTO();
+        resumedImageDTO.setId(imageId);
+        resumedImageDTO.setImageName(imageName);
+        resumedImageDTO.setDateDeleted(null);
+
+        when(villageImageService.resumeImageById(imageId)).thenReturn(resumedImageDTO);
+
+        mockMvc.perform(put("/api/v1/villageImages/resume/{id}", imageId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.imageName").value("Sample Image"))
+                .andExpect(jsonPath("$.dateDeleted", Matchers.nullValue()));
+
+        verify(villageImageService).resumeImageById(imageId);
+    }
+
+    @Test
+    void testGetDeletedVillageImageDTOsByVillageIdThenReturnsListOfDeletedImages() throws Exception {
+        Long villageId = 1L;
+
+        List<VillageImageDTO> deletedImages = new ArrayList<>();
+        VillageImageDTO image1 = new VillageImageDTO();
+        image1.setId(1L);
+        image1.setVillageId(villageId);
+        image1.setImageName("Deleted Image 1");
+        image1.setStatus(false);
+        image1.setDateUpload(LocalDateTime.parse("2023-08-19T10:00:00"));
+        image1.setDateDeleted(LocalDateTime.parse("2023-08-20T15:30:00"));
+        image1.setBase64Image("base64EncodedImageData1");
+        deletedImages.add(image1);
+
+        VillageImageDTO image2 = new VillageImageDTO();
+        image2.setId(2L);
+        image2.setVillageId(villageId);
+        image2.setImageName("Deleted Image 2");
+        image2.setStatus(false);
+        image2.setDateUpload(LocalDateTime.parse("2023-08-19T11:00:00"));
+        image2.setDateDeleted(LocalDateTime.parse("2023-08-20T16:30:00"));
+        image2.setBase64Image("base64EncodedImageData2");
+        deletedImages.add(image2);
+
+        when(villageImageService.getDeletedVillageImageDTOsByVillageId(villageId)).thenReturn(deletedImages);
+
+        mockMvc.perform(get("/api/v1/villageImages/deleted/with-base64/village/{villageId}", villageId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].villageId").value(villageId))
+                .andExpect(jsonPath("$[0].imageName").value("Deleted Image 1"))
+                .andExpect(jsonPath("$[0].status").value(false))
+                .andExpect(jsonPath("$[0].dateUpload").value("2023-08-19 10:00:00"))
+                .andExpect(jsonPath("$[0].dateDeleted").value("2023-08-20 15:30:00"))
+                .andExpect(jsonPath("$[0].base64Image").value("base64EncodedImageData1"))
+                .andExpect(jsonPath("$[1].id").value(2))
+                .andExpect(jsonPath("$[1].villageId").value(villageId))
+                .andExpect(jsonPath("$[1].imageName").value("Deleted Image 2"))
+                .andExpect(jsonPath("$[1].status").value(false))
+                .andExpect(jsonPath("$[1].dateUpload").value("2023-08-19 11:00:00"))
+                .andExpect(jsonPath("$[1].dateDeleted").value("2023-08-20 16:30:00"))
+                .andExpect(jsonPath("$[1].base64Image").value("base64EncodedImageData2"));
+
+        verify(villageImageService).getDeletedVillageImageDTOsByVillageId(villageId);
+    }
+
+    @Test
+    void testGetNotDeletedVillageImageDTOsByVillageIdThenReturnsListOfNotDeletedImages() throws Exception {
+        Long villageId = 1L;
+
+        List<VillageImageDTO> notDeletedImages = new ArrayList<>();
+        VillageImageDTO image1 = new VillageImageDTO();
+        image1.setId(1L);
+        image1.setVillageId(villageId);
+        image1.setImageName("Image 1");
+        image1.setStatus(true);
+        image1.setDateUpload(LocalDateTime.parse("2023-08-19T10:00:00"));
+        image1.setBase64Image("base64EncodedImageData1");
+        notDeletedImages.add(image1);
+
+        VillageImageDTO image2 = new VillageImageDTO();
+        image2.setId(2L);
+        image2.setVillageId(villageId);
+        image2.setImageName("Image 2");
+        image2.setStatus(true);
+        image2.setDateUpload(LocalDateTime.parse("2023-08-19T11:00:00"));
+        image2.setBase64Image("base64EncodedImageData2");
+        notDeletedImages.add(image2);
+
+        when(villageImageService.getNotDeletedVillageImageDTOsByVillageId(villageId)).thenReturn(notDeletedImages);
+
+        mockMvc.perform(get("/api/v1/villageImages/with-base64/village/{villageId}", villageId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].villageId").value(villageId))
+                .andExpect(jsonPath("$[0].imageName").value("Image 1"))
+                .andExpect(jsonPath("$[0].status").value(true))
+                .andExpect(jsonPath("$[0].dateUpload").value("2023-08-19 10:00:00"))
+                .andExpect(jsonPath("$[0].base64Image").value("base64EncodedImageData1"))
+                .andExpect(jsonPath("$[1].id").value(2))
+                .andExpect(jsonPath("$[1].villageId").value(villageId))
+                .andExpect(jsonPath("$[1].imageName").value("Image 2"))
+                .andExpect(jsonPath("$[1].status").value(true))
+                .andExpect(jsonPath("$[1].dateUpload").value("2023-08-19 11:00:00"))
+                .andExpect(jsonPath("$[1].base64Image").value("base64EncodedImageData2"));
+
+        verify(villageImageService).getNotDeletedVillageImageDTOsByVillageId(villageId);
+    }
+}

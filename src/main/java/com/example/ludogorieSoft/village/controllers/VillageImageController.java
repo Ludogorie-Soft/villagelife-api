@@ -60,7 +60,7 @@ public class VillageImageController {
     @PutMapping("/reject/{id}")
     public ResponseEntity<VillageImageDTO> rejectVillageImage(@PathVariable("id") Long id) {
         VillageImageDTO villageImageDTO = villageImageService.getVillageImageById(id);
-        return ResponseEntity.ok(villageImageService.rejectVillageImageByVillageIdAndImageName(villageImageDTO, LocalDateTime.now()));
+        return ResponseEntity.ok(villageImageService.rejectSingleVillageImage(villageImageDTO, LocalDateTime.now()));
     }
 
     @GetMapping("/{id}")
