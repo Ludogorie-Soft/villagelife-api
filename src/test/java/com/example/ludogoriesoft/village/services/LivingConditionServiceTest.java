@@ -3,6 +3,7 @@ package com.example.ludogorieSoft.village.services;
 import com.example.ludogorieSoft.village.dtos.LandscapeDTO;
 import com.example.ludogorieSoft.village.dtos.LivingConditionDTO;
 import com.example.ludogorieSoft.village.dtos.response.LivingConditionResponse;
+import com.example.ludogorieSoft.village.enums.Consents;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.*;
 import com.example.ludogorieSoft.village.repositories.LivingConditionRepository;
@@ -15,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -278,57 +280,48 @@ class LivingConditionServiceTest {
         verify(livingConditionRepository, never()).save(any(LivingCondition.class));
     }
 
-//    @Test
-//    void testGetPercentageWithMultipleLivingConditions() {
-//        Long villageId = 1L;
-//        Long conditionId = 10L;
-//        List<VillageLivingConditions> villageLivingConditions = new ArrayList<>();
-//        Village village = new Village();
-//        village.setId(villageId);
-//        LivingCondition livingCondition = new LivingCondition(conditionId, "Test Condition");
-//
-//        villageLivingConditions.add(new VillageLivingConditions(1L, village, livingCondition, Consents.COMPLETELY_AGREED, true, LocalDateTime.now()));
-//        villageLivingConditions.add(new VillageLivingConditions(1L, village, livingCondition, Consents.DISAGREE, true, LocalDateTime.now()));
-//        villageLivingConditions.add(new VillageLivingConditions(1L, village, livingCondition, Consents.RATHER_DISAGREE, true, LocalDateTime.now()));
-//        when(villageLivingConditionRepository.findByVillageIdAndLivingConditionIdAndVillageStatus(villageId, conditionId, true)).thenReturn(villageLivingConditions);
-//
-//        double expectedPercentage = (100 + 20 + 40) / 3.0;
-//        double result = livingConditionService.getPercentage(villageId, conditionId);
-//        assertEquals(expectedPercentage, result, 0.0001);
-//    }
+    @Test
+    void testGetPercentageWithMultipleLivingConditions() {
+        LocalDateTime localDateTime = LocalDateTime.now();
+        Long villageId = 1L;
+        Long conditionId = 10L;
+        List<VillageLivingConditions> villageLivingConditions = new ArrayList<>();
+        Village village = new Village();
+        village.setId(villageId);
+        LivingCondition livingCondition = new LivingCondition(conditionId, "Test Condition");
 
-//    @Test
-//    void testGetPercentageWithSingleLivingCondition() {
-//        // Prepare mock data
-//        Long villageId = 2L;
-//        Long conditionId = 20L;
-//        List<VillageLivingConditions> villageLivingConditions = new ArrayList<>();
-//        Village village = new Village();
-//        village.setId(villageId);
-//        LivingCondition livingCondition = new LivingCondition(conditionId, "Test Condition");
-//
-//        VillageLivingConditions villageLivingCondition1 = new VillageLivingConditions(1L, village, livingCondition, Consents.RATHER_DISAGREE, true, LocalDateTime.now());
-//        VillageLivingConditions villageLivingCondition2 = new VillageLivingConditions(2L, village, livingCondition, Consents.CANT_DECIDE, true, LocalDateTime.now());
-//        villageLivingConditions.add(villageLivingCondition1);
-//        villageLivingConditions.add(villageLivingCondition2);
-//
-//        when(villageLivingConditionRepository.findByVillageIdAndLivingConditionIdAndVillageStatus(villageId, conditionId, true)).thenReturn(villageLivingConditions);
-//        double expectedPercentage = (40 + 60) / 2.0;
-//        double result = livingConditionService.getPercentage(villageId, conditionId);
-//        assertEquals(expectedPercentage, result, 0.0001);
-//    }
+        villageLivingConditions.add(new VillageLivingConditions(1L, village, livingCondition, Consents.COMPLETELY_AGREED, true, localDateTime, null));
+        villageLivingConditions.add(new VillageLivingConditions(1L, village, livingCondition, Consents.DISAGREE, true, localDateTime, null));
+        villageLivingConditions.add(new VillageLivingConditions(1L, village, livingCondition, Consents.RATHER_DISAGREE, true, localDateTime, null));
+        when(villageLivingConditionRepository.findByVillageIdAndLivingConditionIdAndVillageStatus(villageId, conditionId, true)).thenReturn(villageLivingConditions);
 
-//    @Test
-//    void testGetPercentageWithNoLivingConditions() {
-//        Long villageId = 3L;
-//        Long conditionId = 30L;
-//        List<VillageLivingConditions> mockData = new ArrayList<>();
-//        when(villageLivingConditionRepository.findByVillageIdAndLivingConditionIdAndVillageStatus(villageId, conditionId, true))
-//                .thenReturn(mockData);
-//
-//        double result = livingConditionsService.getPercentage(villageId, conditionId);
-//        assertEquals(0.0, result, 0.0001);
-//    }
+        double expectedPercentage = (100 + 20 + 40) / 3.0;
+        double result = livingConditionService.getPercentage(villageId, conditionId, true, localDateTime.toString());
+        assertEquals(expectedPercentage, result, 0.0001);
+    }
+
+    @Test
+    void testGetPercentageWithSingleLivingCondition() {
+        LocalDateTime localDateTime = LocalDateTime.now();
+
+        Long villageId = 2L;
+        Long conditionId = 20L;
+        List<VillageLivingConditions> villageLivingConditions = new ArrayList<>();
+        Village village = new Village();
+        village.setId(villageId);
+        LivingCondition livingCondition = new LivingCondition(conditionId, "Test Condition");
+
+        VillageLivingConditions villageLivingCondition1 = new VillageLivingConditions(1L, village, livingCondition, Consents.RATHER_DISAGREE, true, localDateTime, null);
+        VillageLivingConditions villageLivingCondition2 = new VillageLivingConditions(2L, village, livingCondition, Consents.CANT_DECIDE, true, localDateTime, null);
+        villageLivingConditions.add(villageLivingCondition1);
+        villageLivingConditions.add(villageLivingCondition2);
+
+        when(villageLivingConditionRepository.findByVillageIdAndLivingConditionIdAndVillageStatus(villageId, conditionId, true)).thenReturn(villageLivingConditions);
+        double expectedPercentage = (40 + 60) / 2.0;
+        double result = livingConditionService.getPercentage(villageId, conditionId, true, localDateTime.toString());
+        assertEquals(expectedPercentage, result, 0.0001);
+    }
+
 //    @Test
 //    void testGetLivingConditionsForumPercentageWhenObjectsFound() {
 //        List<ObjectAroundVillageDTO> objectAroundVillageDTOS = Arrays.asList(
