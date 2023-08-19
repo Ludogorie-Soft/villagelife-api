@@ -385,6 +385,7 @@ class LivingConditionServiceTest {
 
         assertEquals(0.0, result, 0.01);
     }
+
     @Test
     void testGetLivingConditionsMainPercentageWhenNoData() {
         when(villageLivingConditionRepository.existsByVillageIdAndLivingConditionIdAndVillageStatus(eq(200L), anyLong(), eq(true))).thenReturn(false);

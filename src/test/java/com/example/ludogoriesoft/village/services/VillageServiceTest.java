@@ -46,6 +46,7 @@ class VillageServiceTest {
     public void setup() {
         MockitoAnnotations.openMocks(this);
     }
+
     @Test
     void convertToObjectAroundVillageDTOList_ShouldConvertObjectVillagesToObjectAroundVillageDTOList() {
         ObjectAroundVillage objectAroundVillage = new ObjectAroundVillage(1L, "TYPE");
@@ -60,7 +61,7 @@ class VillageServiceTest {
         ov2.setObject(objectAroundVillage);
         objectVillages.add(ov2);
 
-        VillageService villageService = new VillageService(villageRepository, modelMapper, regionService,authService);
+        VillageService villageService = new VillageService(villageRepository, modelMapper, regionService, authService);
 
         List<ObjectAroundVillageDTO> result = villageService.convertToObjectAroundVillageDTOList(objectVillages);
 
@@ -290,6 +291,7 @@ class VillageServiceTest {
         verify(villageRepository, times(1)).save(existingVillage);
         assertEquals(expectedVillageDTO, result);
     }
+
     @Test
     void testUpdateVillageExceptionCase() {
 

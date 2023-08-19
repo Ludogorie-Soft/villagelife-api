@@ -28,14 +28,14 @@ class MessageTest {
         Validator validator = factory.getValidator();
         Set<ConstraintViolation<Message>> violations = validator.validate(message);
 
-        assertThat(violations).isNotEmpty();
-        assertThat(violations).hasSize(3);
+        assertThat(violations).isNotEmpty().hasSize(3);
 
         assertThat(violations).extracting("message").contains(
                 "Name should be at least than 2 characters long!",
                 "Please enter a valid email address!"
         );
     }
+
     @Test
     void createMessageValidDataSuccess() {
         Long id = 1L;
@@ -64,7 +64,6 @@ class MessageTest {
         // Assert
         assertNotNull(message.getId() == null);
     }
-
 
 
     @Test
@@ -218,7 +217,6 @@ class MessageTest {
         ConstraintViolation<Message> violation = violations.iterator().next();
         assertEquals("must not be blank", violation.getMessage());
     }
-
 
 
 }

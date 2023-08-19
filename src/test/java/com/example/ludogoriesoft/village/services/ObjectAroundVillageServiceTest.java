@@ -226,6 +226,7 @@ class ObjectAroundVillageServiceTest {
         verify(objectAroundVillageRepository, times(1)).findById(objectId);
         verify(objectAroundVillageRepository, never()).delete(any(ObjectAroundVillage.class));
     }
+
     @Test
     void checkObjectShouldReturnExistingObject() {
         Long objectId = 1L;

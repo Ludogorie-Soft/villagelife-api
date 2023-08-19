@@ -13,6 +13,7 @@ import com.example.ludogorieSoft.village.dtos.VillageImageDTO;
 import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.model.VillageImage;
 import com.example.ludogorieSoft.village.repositories.VillageImageRepository;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -73,6 +74,7 @@ class VillageImageServiceTest {
         String actualPath = villageImageService.getUploadDirectoryPath();
         Assertions.assertEquals(expectedPath, actualPath);
     }
+
     @Test
     void testGenerateFileName() {
         String fileName = villageImageService.generateFileName();
@@ -156,7 +158,7 @@ class VillageImageServiceTest {
             return villageImage;
         }).when(modelMapper).map(any(VillageImageDTO.class), eq(VillageImage.class));
 
-        villageImageService.createVillageImageDTO(villageId, fileName,fixedTimestamp, false);
+        villageImageService.createVillageImageDTO(villageId, fileName, fixedTimestamp, false);
 
         verify(villageImageRepository).save(any(VillageImage.class));
     }
@@ -166,7 +168,7 @@ class VillageImageServiceTest {
     void testCreateImagePathsWithInvalidImages() {
         byte[] emptyImage = {};
         Long villageId = 123L;
-        List<String> result = villageImageService.createImagePaths(List.of(emptyImage), villageId,null, false);
+        List<String> result = villageImageService.createImagePaths(List.of(emptyImage), villageId, null, false);
         Assertions.assertTrue(result.isEmpty());
     }
 
@@ -183,6 +185,7 @@ class VillageImageServiceTest {
         String result = villageImageService.processImage(image);
         Assertions.assertNull(result);
     }
+
     @Test
     void testEncodeImageToBase64EmptyImage() {
         byte[] emptyImageBytes = new byte[0];
@@ -197,13 +200,14 @@ class VillageImageServiceTest {
     void testEncodeImageToBase64NullImage() {
         Assertions.assertThrows(NullPointerException.class, () -> villageImageService.encodeImageToBase64(null));
     }
+
     @Test
     void testReadImageBytes() throws IOException {
         File imageFile = File.createTempFile("test-image", ".png");
 
         try {
             FileOutputStream outputStream = new FileOutputStream(imageFile);
-            byte[] dummyImageData = { 0x01, 0x02, 0x03 };
+            byte[] dummyImageData = {0x01, 0x02, 0x03};
             outputStream.write(dummyImageData);
             outputStream.close();
 

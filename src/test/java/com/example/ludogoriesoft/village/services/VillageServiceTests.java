@@ -8,8 +8,6 @@ import com.example.ludogorieSoft.village.enums.NumberOfPopulation;
 import com.example.ludogorieSoft.village.enums.Residents;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.*;
-import com.example.ludogorieSoft.village.repositories.RegionRepository;
-import com.example.ludogorieSoft.village.repositories.VillagePopulationAssertionRepository;
 import com.example.ludogorieSoft.village.repositories.VillageRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -156,7 +154,6 @@ class VillageServiceTests {
     }
 
 
-
     @Test
     void testGetAllSearchVillagesByRegionNameNoVillagesFound() {
 
@@ -169,6 +166,7 @@ class VillageServiceTests {
         assertNotNull(result);
         Assertions.assertTrue(result.isEmpty());
     }
+
     @Test
     void testGetAllSearchVillagesByNameAndRegionNameNoVillagesFound() {
         when(villageRepository.findByNameContainingIgnoreCaseAndRegionName("Region1", "NonExistentVillage"))
@@ -1069,6 +1067,7 @@ class VillageServiceTests {
         Assertions.assertEquals(savedVillageDTO.getPopulationDTO(), resultDTO.getPopulationDTO());
         Assertions.assertNotNull(resultDTO);
     }
+
     @Test
     void testGetAllApprovedVillages() {
 
@@ -1130,6 +1129,7 @@ class VillageServiceTests {
         verify(villageRepository, times(1)).findByStatus(status);
         verify(modelMapper, times(1)).map(any(Village.class), eq(VillageDTO.class));
     }
+
     @Test
     void testUpdateVillageStatusThrowsException() {
         VillageDTO villageDTO = new VillageDTO();
@@ -1142,6 +1142,7 @@ class VillageServiceTests {
         verify(villageRepository).findById(1L);
 
     }
+
     @Test
     void testUpdateVillageWithExistingVillageId() {
         Long villageId = 123L;

@@ -4,11 +4,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 
@@ -18,11 +15,6 @@ class EmailSenderServiceTest {
 
     @InjectMocks
     EmailSenderService emailSenderService;
-    @Mock
-    private JavaMailSender mailSender;
-
-    @Mock
-    private Logger logger;
 
     @Value("${spring.mail.username}")
     private String recipientEmail;
@@ -34,6 +26,7 @@ class EmailSenderServiceTest {
     public void setup() {
         MockitoAnnotations.openMocks(this);
     }
+
     @Test
     void testConfigureMailSender() {
         JavaMailSenderImpl mailSenderImpl = new JavaMailSenderImpl();

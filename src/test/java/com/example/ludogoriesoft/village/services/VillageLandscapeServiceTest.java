@@ -39,6 +39,7 @@ class VillageLandscapeServiceTest {
     public void setup() {
         MockitoAnnotations.openMocks(this);
     }
+
     @Test
     void getAllVillageLandscapesShouldReturnAllLandscapesAsDTOs() {
         List<VillageLandscape> villageLandscapes = new ArrayList<>();
@@ -111,6 +112,7 @@ class VillageLandscapeServiceTest {
         assertThrows(ApiRequestException.class, () -> villageLandscapeService.getVillageLandscapeById(id));
         verify(villageLandscapeRepository, times(1)).findById(id);
     }
+
     @Test
     void deleteVillageLandscapeByIdShouldReturnOneWhenDeletedSuccessfully() {
         Long id = 1L;

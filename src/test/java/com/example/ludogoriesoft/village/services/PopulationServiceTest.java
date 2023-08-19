@@ -81,9 +81,8 @@ class PopulationServiceTest {
     }
 
 
-
     @Test
-     void testGetPopulationByVillageId_NonExistingPopulation() {
+    void testGetPopulationByVillageId_NonExistingPopulation() {
         Long villageId = 123L;
         when(populationRepository.findById(villageId)).thenReturn(Optional.empty());
         assertThrows(ApiRequestException.class, () -> populationService.getPopulationByVillageId(villageId));

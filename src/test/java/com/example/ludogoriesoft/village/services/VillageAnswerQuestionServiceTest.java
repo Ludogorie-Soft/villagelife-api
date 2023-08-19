@@ -6,10 +6,7 @@ import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.Question;
 import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.model.VillageAnswerQuestion;
-import com.example.ludogorieSoft.village.model.VillageGroundCategory;
-import com.example.ludogorieSoft.village.repositories.QuestionRepository;
 import com.example.ludogorieSoft.village.repositories.VillageAnswerQuestionRepository;
-import com.example.ludogorieSoft.village.repositories.VillageRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
@@ -27,10 +24,7 @@ class VillageAnswerQuestionServiceTest {
 
     @Mock
     private VillageAnswerQuestionRepository villageAnswerQuestionRepository;
-    @Mock
-    private VillageRepository villageRepository;
-    @Mock
-    private QuestionRepository questionRepository;
+
     @Mock
     private ModelMapper modelMapper;
     @Mock

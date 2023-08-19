@@ -217,6 +217,7 @@ class QuestionServiceTest {
         verify(questionRepository, times(1)).findById(questionId);
         verify(questionRepository, never()).delete(any(Question.class));
     }
+
     @Test
     void checkQuestionShouldReturnExistingQuestion() {
         Long questionId = 1L;

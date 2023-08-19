@@ -226,6 +226,7 @@ class EthnicityServiceTest {
 
         assertEquals(expectedDTO.getId(), resultDTO.getId());
     }
+
     @Test
     void testFindEthnicityByNameExistingEthnicityReturnsEthnicityDTO() {
         Ethnicity existingEthnicity = new Ethnicity();
@@ -577,7 +578,6 @@ class EthnicityServiceTest {
         verify(ethnicityRepository, times(1)).existsByEthnicityName(newEthnicityName);
         verify(ethnicityRepository, never()).save(any(Ethnicity.class));
     }
-
 
 
 }

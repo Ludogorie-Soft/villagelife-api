@@ -22,8 +22,6 @@ import static org.mockito.Mockito.when;
  class ApplicationConfigTest {
 
     @Mock
-    private AdministratorService administratorService;
-    @Mock
     private AdministratorRepository administratorRepository;
 
     @BeforeEach
