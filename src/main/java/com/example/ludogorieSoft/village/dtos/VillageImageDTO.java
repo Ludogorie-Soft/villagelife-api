@@ -27,4 +27,5 @@ public class VillageImageDTO {
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
     private LocalDateTime dateDeleted;
+    private String base64Image;
 }

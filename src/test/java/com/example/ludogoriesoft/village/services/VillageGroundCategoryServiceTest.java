@@ -294,9 +294,7 @@ class VillageGroundCategoryServiceTest {
     void testFindVillageGroundCategoryDTOByVillageIdWhenNotExists() {
         Long villageId = 1L;
         when(villageGroundCategoryRepository.findByVillageId(villageId)).thenReturn(null);
-        assertThrows(ApiRequestException.class, () -> {
-            villageGroundCategoryService.findVillageGroundCategoryDTOByVillageId(villageId);
-        });
+        assertThrows(ApiRequestException.class, () -> villageGroundCategoryService.findVillageGroundCategoryDTOByVillageId(villageId));
     }
 
     @Test

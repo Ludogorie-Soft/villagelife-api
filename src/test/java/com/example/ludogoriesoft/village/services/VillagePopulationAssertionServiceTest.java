@@ -4,9 +4,7 @@ import com.example.ludogorieSoft.village.dtos.VillagePopulationAssertionDTO;
 import com.example.ludogorieSoft.village.enums.Consents;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.*;
-import com.example.ludogorieSoft.village.repositories.PopulatedAssertionRepository;
 import com.example.ludogorieSoft.village.repositories.VillagePopulationAssertionRepository;
-import com.example.ludogorieSoft.village.repositories.VillageRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,10 +24,6 @@ import static org.mockito.Mockito.*;
 
 class VillagePopulationAssertionServiceTest {
     private VillagePopulationAssertionRepository villagePopulationAssertionRepository;
-    @Mock
-    private VillageRepository villageRepository;
-    @Mock
-    private PopulatedAssertionRepository populatedAssertionRepository;
     @Mock
     private PopulatedAssertionService populatedAssertionService;
     @Mock
@@ -291,6 +285,7 @@ class VillagePopulationAssertionServiceTest {
         verify(villagePopulationAssertionRepository, times(1)).findById(1L);
         verify(villagePopulationAssertionRepository, times(1)).save(any(VillagePopulationAssertion.class));
     }
+
     @Test
     void testUpdateVillagePopulationAssertionStatus() {
         Long villageId = 1L;
@@ -316,6 +311,7 @@ class VillagePopulationAssertionServiceTest {
         assertEquals(1, savedAssertions.size());
         assertEquals(true, savedAssertions.get(0).getVillageStatus());
     }
+
     @Test
     void testRejectVillagePopulationAssertionStatus() {
         Long villageId = 1L;

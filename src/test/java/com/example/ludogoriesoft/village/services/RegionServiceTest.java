@@ -12,6 +12,7 @@ import com.example.ludogorieSoft.village.dtos.RegionDTO;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.Region;
 import com.example.ludogorieSoft.village.repositories.RegionRepository;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -55,6 +56,7 @@ class RegionServiceTest {
 
         Assertions.assertEquals("Region not found", exception.getMessage());
     }
+
     @Test
     void testGetAllRegionsReturnsEmptyList() {
         when(regionRepository.findAllByOrderByIdAsc()).thenReturn(new ArrayList<>());
@@ -87,6 +89,7 @@ class RegionServiceTest {
 
         Assertions.assertEquals("Region not found", exception.getMessage());
     }
+
     @Test
     void testCreateRegionReturnsRegionDTO() {
         RegionDTO regionDTO = new RegionDTO();
@@ -181,6 +184,7 @@ class RegionServiceTest {
 
         verify(regionRepository, never()).save(any(Region.class));
     }
+
     @Test
     void testDeleteRegionByIdDeletesExistingRegion() {
         Region region = new Region();
@@ -202,6 +206,7 @@ class RegionServiceTest {
 
         verify(regionRepository, never()).deleteById(anyLong());
     }
+
     @Test
     void testFindRegionByNameReturnsRegionDTO() {
         String regionName = "Test Region";

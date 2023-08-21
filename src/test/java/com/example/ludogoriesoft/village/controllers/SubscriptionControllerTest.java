@@ -1,6 +1,5 @@
 package com.example.ludogorieSoft.village.controllers;
 
-import com.example.ludogorieSoft.village.controllers.SubscriptionController;
 import com.example.ludogorieSoft.village.dtos.SubscriptionDTO;
 import com.example.ludogorieSoft.village.exeptions.ApiExceptionHandler;
 import com.example.ludogorieSoft.village.services.SubscriptionService;

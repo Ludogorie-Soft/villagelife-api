@@ -192,6 +192,7 @@ class LandscapeServiceTest {
         verify(landscapeRepository, times(1)).findById(landscapeId);
         verify(landscapeRepository, never()).delete(any(Landscape.class));
     }
+
     @Test
     void checkLandscapeShouldReturnExistingLandscape() {
         Long landscapeId = 1L;

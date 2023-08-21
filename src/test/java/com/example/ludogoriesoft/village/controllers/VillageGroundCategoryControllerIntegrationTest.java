@@ -188,7 +188,7 @@ class VillageGroundCategoryControllerIntegrationTest {
     }
 
     @Test
-    public void testIsVillageExists() throws Exception {
+    void testIsVillageExists() throws Exception {
         Long villageId = 1L;
 
         when(villageGroundCategoryService.existsVillageGroundCategoryDTOByVillageId(villageId)).thenReturn(true);

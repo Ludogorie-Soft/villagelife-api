@@ -4,7 +4,6 @@ import com.example.ludogorieSoft.village.dtos.SubscriptionDTO;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.Subscription;
 import com.example.ludogorieSoft.village.repositories.SubscriptionRepository;
-import com.example.ludogorieSoft.village.services.SubscriptionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
