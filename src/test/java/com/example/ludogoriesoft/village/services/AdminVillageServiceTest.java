@@ -190,26 +190,4 @@ class AdminVillageServiceTest {
 
         assertEquals(mockedEthnicityVillageData, result);
     }
-//    @Test
-//    public void testRejectVillageResponses() {
-//
-//        Long villageId = 1L;
-//        String answerDate = "2023-08-15 18:12:52";
-//        LocalDateTime timestamp = LocalDateTime.of(2023, 8, 15, 12, 12,52); // Mock timestamp
-//        VillageDTO villageDTO = new VillageDTO();
-//        villageDTO.setStatus(true);
-//        when(villageService.getVillageById(villageId)).thenReturn(villageDTO);
-//        when(timestampUtils.getCurrentTimestamp()).thenReturn(timestamp);
-//
-//        adminVillageService.rejectVillageResponses(villageId, answerDate);
-//
-//        verify(villageService).updateVillageStatus(eq(villageId), eq(villageDTO));
-//        verify(villagePopulationAssertionService).rejectVillagePopulationAssertionStatus(eq(villageId), eq(false), eq(answerDate), eq(timestamp));
-//        verify(villageLivingConditionService).rejectVillageLivingConditionResponse(eq(villageId), eq(false), eq(answerDate), eq(timestamp));
-//        verify(villageImageService).rejectVillageImageResponse(eq(villageId), eq(false), eq(answerDate), eq(timestamp));
-//        verify(villageAnswerQuestionService).rejectVillageAnswerQuestionResponse(eq(villageId), eq(false), eq(answerDate), eq(timestamp));
-//        verify(objectVillageService).rejectObjectVillageResponse(eq(villageId), eq(false), eq(answerDate), eq(timestamp));
-//        verify(ethnicityVillageService).rejectEthnicityVillageResponse(eq(villageId), eq(false), eq(answerDate), eq(timestamp));
-//        verify(villageGroundCategoryService).rejectVillageGroundCategoryResponse(eq(villageId), eq(false), eq(answerDate), eq(timestamp));
-//    }
 }

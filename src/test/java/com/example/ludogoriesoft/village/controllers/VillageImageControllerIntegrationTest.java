@@ -59,25 +59,6 @@ class VillageImageControllerIntegrationTest {
         MockitoAnnotations.openMocks(this);
     }
 
-//    @Test
-//    void testGetAllImagesForVillageByStatusAndDate() throws Exception {
-//        List<String> base64Images = Arrays.asList("image1", "image2");
-//        when(villageImageService.getAllImagesForVillageByStatusAndDate(anyLong(),true,null)).thenReturn(base64Images);
-//
-//        Long villageId = 1L;
-//        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageImages/village/{villageId}/images", villageId)
-//                        .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//                .andReturn();
-//
-//        MockHttpServletResponse response = mvcResult.getResponse();
-//        Assertions.assertEquals(HttpStatus.OK.value(), response.getStatus());
-//
-//        String responseBody = response.getContentAsString();
-//        List<String> responseImages = new ObjectMapper().readValue(responseBody, new TypeReference<>() {
-//        });
-//        Assertions.assertEquals(base64Images, responseImages);
-//    }
 
     @Test
     void testGetAllImagesForVillageByStatusAndDateNotFound() throws Exception {
@@ -139,28 +120,6 @@ class VillageImageControllerIntegrationTest {
                 .andExpect(status().isNotFound())
                 .andReturn();
     }
-
-
-//    @Test
-//    void testgetAllImagesForVillageByStatusAndDateWithImages() throws Exception {
-//        Long villageId = 1L;
-//        List<String> base64Images = Arrays.asList("image1", "image2");
-//
-//        when(villageImageService.getAllImagesForVillageByStatusAndDate(villageId,true,null)).thenReturn(base64Images);
-//
-//        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageImages/village/{villageId}/images", villageId)
-//                        .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//                .andReturn();
-//
-//        MockHttpServletResponse response = mvcResult.getResponse();
-//        Assertions.assertEquals(HttpStatus.OK.value(), response.getStatus());
-//
-//        String responseBody = response.getContentAsString();
-//        List<String> responseImages = new ObjectMapper().readValue(responseBody, new TypeReference<>() {
-//        });
-//        Assertions.assertEquals(base64Images, responseImages);
-//    }
 
     @Test
     void testGetAllImagesForVillageByStatusAndDateWithoutImages() throws Exception {
