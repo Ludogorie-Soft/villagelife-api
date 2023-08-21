@@ -4,7 +4,6 @@ import com.example.ludogorieSoft.village.authorization.JWTService;
 import com.example.ludogorieSoft.village.dtos.request.AuthenticationRequest;
 import com.example.ludogorieSoft.village.dtos.request.RegisterRequest;
 import com.example.ludogorieSoft.village.dtos.response.AuthenticationResponce;
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.Administrator;
 import com.example.ludogorieSoft.village.repositories.AdministratorRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,25 +22,17 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
 
-    public AuthenticationResponce register(RegisterRequest request) {
+    public String register(RegisterRequest request) {
         var user = Administrator.builder()
                 .fullName(request.getFullName())
                 .email(request.getEmail())
                 .mobile(request.getMobile())
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(request.getRole())//will authenticate and role user
+                .role(request.getRole())
                 .build();
         administratorRepository.save(user);
-        var jwtToken = jwtService.generateToken(user);
-        if(jwtToken != null) {
-            return AuthenticationResponce.builder()
-                    .token(jwtToken)
-                    .build();
-        } else {
-            throw new ApiRequestException("The administrator could not be registered!!!");
-        }
-
+        return "Administrator registered successfully!!!";
     }
 
     public AuthenticationResponce authenticate(AuthenticationRequest request) {
