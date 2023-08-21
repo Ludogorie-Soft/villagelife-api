@@ -1,30 +1,25 @@
 package com.example.ludogorieSoft.village.services;
 
+import static java.time.LocalDateTime.now;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import com.example.ludogorieSoft.village.dtos.AdministratorDTO;
-import com.example.ludogorieSoft.village.dtos.VillageDTO;
 import com.example.ludogorieSoft.village.dtos.response.VillageResponse;
-import com.example.ludogorieSoft.village.model.Administrator;
 import com.example.ludogorieSoft.village.model.EthnicityVillage;
-import com.example.ludogorieSoft.village.model.Region;
 import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.repositories.VillageRepository;
-import com.example.ludogorieSoft.village.utils.TimestampUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.modelmapper.ModelMapper;
 
 import static org.mockito.Mockito.verify;
 
@@ -56,9 +51,7 @@ class AdminVillageServiceTest {
     @Mock
     private ModelMapper modelMapper;
     @Mock
-    private VillageService villageService;
-    @Mock
-    private TimestampUtils timestampUtils;
+    private VillageRepository villageRepository;
 
     @BeforeEach
     public void setup() {

@@ -267,26 +267,6 @@ public class VillageImageService {
         }
     }
 
-
-
-    //public void deleteImageFileById(Long id) {
-    //    VillageImageDTO villageImageDTO = getVillageImageById(id);
-    //    if (villageImageDTO != null) {
-    //        String imageName = villageImageDTO.getImageName();
-    //        Path imagePath = Paths.get(UPLOAD_DIRECTORY, imageName);
-//
-    //        try {
-    //            Files.delete(imagePath); // Delete the file using Java NIO
-    //            deleteVillageImageById(id);
-    //            logger.info("Image {} deleted successfully.", imageName);
-    //        } catch (IOException e) {
-    //            logger.error("Failed to delete image: {}", imageName, e);
-    //        }
-    //    } else {
-    //        logger.warn("Image with ID {} not found.", id);
-    //    }
-    //}
-
     public void deleteVillageImageById(Long id) {
         if (villageImageRepository.existsById(id)) {
             villageImageRepository.deleteById(id);
