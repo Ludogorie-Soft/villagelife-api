@@ -70,8 +70,7 @@ public class VillageService {
             RegionDTO regionDTO = regionService.findRegionByName(villageDTO.getRegion());
             village.setRegion(regionService.checkRegion(regionDTO.getId()));
             village.setStatus(false);
-        }else {
-            village.setStatus(village.getStatus());
+            village.setApprovedResponsesCount(0);
         }
         village.setPopulation(modelMapper.map(villageDTO.getPopulationDTO(), Population.class));
         village.setPopulationCount(villageDTO.getPopulationCount());
@@ -90,7 +89,7 @@ public class VillageService {
     }
 
 
-        public VillageDTO updateVillageStatus(Long id, VillageDTO villageDTO) { // approve village status and set admin and date approved
+    public VillageDTO updateVillageStatus(Long id, VillageDTO villageDTO) { // approve village status and set admin and date approved
         Optional<Village> optionalVillage = villageRepository.findById(id);
         if (optionalVillage.isPresent()) {
             Village village = optionalVillage.get();
@@ -102,9 +101,9 @@ public class VillageService {
 
             AdministratorDTO administratorDTO = authService.getAdministratorInfo();
 
-                village.setAdmin(modelMapper.map(administratorDTO, Administrator.class));
-                village.setStatus(true);
-                village.setDateApproved(now());
+            village.setAdmin(modelMapper.map(administratorDTO, Administrator.class));
+            village.setStatus(true);
+            village.setDateApproved(now());
 
             villageRepository.save(village);
             return modelMapper.map(village, VillageDTO.class);
@@ -156,7 +155,6 @@ public class VillageService {
     }
 
 
-
     public List<VillageDTO> getAllSearchVillagesByRegionName(String regionName) {
         List<Village> villages = villageRepository.findByRegionName(regionName);
         return villages.stream()
@@ -171,7 +169,6 @@ public class VillageService {
                 .map(this::villageToVillageDTO)
                 .toList();
     }
-
 
 
     public List<VillageDTO> getSearchVillages(List<String> objectAroundVillageDTOS, List<String> livingConditionDTOS, Children children) {
@@ -390,5 +387,14 @@ public class VillageService {
             villageDTOsWithStatus.add(villageDTO);
         }
         return villageDTOsWithStatus;
+    }
+
+    public void increaseApprovedResponsesCount(Long villageId){
+        Optional<Village> village = villageRepository.findById(villageId);
+        if(village.isEmpty()){
+            return;
+        }
+        village.get().setApprovedResponsesCount(village.get().getApprovedResponsesCount() + 1);
+        villageRepository.save(village.get());
     }
 }

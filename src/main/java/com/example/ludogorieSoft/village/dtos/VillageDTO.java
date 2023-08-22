@@ -39,5 +39,6 @@ public class VillageDTO {
     private List<VillageGroundCategoryDTO> villageGroundCategories;
     private List<VillageLandscapeDTO> villageLandscapes;
     private List<VillagePopulationAssertionDTO> villagePopulationAssertions;
+    private int approvedResponsesCount;
 
 }

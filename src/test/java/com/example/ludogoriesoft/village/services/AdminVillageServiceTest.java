@@ -52,6 +52,8 @@ class AdminVillageServiceTest {
     private ModelMapper modelMapper;
     @Mock
     private VillageRepository villageRepository;
+    @Mock
+    private VillageService villageService;
 
     @BeforeEach
     public void setup() {
@@ -66,6 +68,7 @@ class AdminVillageServiceTest {
 
         boolean status = false;
 
+        doNothing().when(villageService).increaseApprovedResponsesCount(villageId);
         adminVillageService.updateVillageStatusAndVillageResponsesStatus(villageId, answerDate);
 
         verify(villagePopulationAssertionService).updateVillagePopulationAssertionStatus(villageId, status, answerDate);
