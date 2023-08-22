@@ -44,7 +44,7 @@ public class AdminVillageService {
     }
 
     public void updateVillageStatusAndVillageResponsesStatus(Long villageId, String answerDate) {
-
+        villageService.increaseApprovedResponsesCount(villageId);
         boolean status = false;
         villagePopulationAssertionService.updateVillagePopulationAssertionStatus(villageId, status, answerDate);
         villageLivingConditionService.updateVillageLivingConditionStatus(villageId, status, answerDate);

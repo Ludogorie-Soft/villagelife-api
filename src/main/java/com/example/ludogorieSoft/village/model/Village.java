@@ -1,7 +1,6 @@
 package com.example.ludogorieSoft.village.model;
 
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
@@ -62,5 +61,7 @@ public class Village {
 
     @OneToMany(mappedBy = "village", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<VillagePopulationAssertion> villagePopulationAssertions;
+
+    private int approvedResponsesCount;
 
 }
