@@ -18,6 +18,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 class AuthenticationServiceTest {
@@ -31,10 +32,12 @@ class AuthenticationServiceTest {
     private AuthenticationManager authenticationManager;
     @InjectMocks
     private AuthenticationService authenticationService;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
+
     @Test
     void registerShouldReturnAuthenticationResponse() {
         RegisterRequest request = new RegisterRequest("John Doe", "john@example.com", "username", "password", "1234567890", Role.ADMIN);
@@ -47,17 +50,14 @@ class AuthenticationServiceTest {
                 .username("username")
                 .password(encodedPassword)
                 .build();
-        var jwtToken = "jwtToken";
+
 
         when(administratorRepository.save(any(Administrator.class))).thenReturn(savedAdministrator);
-        when(jwtService.generateToken(any(Administrator.class))).thenReturn(jwtToken);
-        AuthenticationResponce response = authenticationService.register(request);
+        String response = authenticationService.register(request);
         verify(passwordEncoder).encode(request.getPassword());
         verify(administratorRepository).save(any(Administrator.class));
-        verify(jwtService).generateToken(any(Administrator.class));
+        assertNotNull(response);
 
-        Assertions.assertNotNull(response);
-        assertEquals(jwtToken, response.getToken());
     }
 
     @Test
