@@ -39,7 +39,6 @@ class PopulationServiceTest {
         MockitoAnnotations.openMocks(this);
     }
 
-
     @Test
     void testCreatePopulationWithNullValues() {
         Population population = new Population();
@@ -73,13 +72,11 @@ class PopulationServiceTest {
         when(populationRepository.findById(villageId)).thenReturn(Optional.of(population));
         when(populationService.populationToPopulationDTO(population)).thenReturn(populationDTO);
 
-
         PopulationDTO result = populationService.getPopulationByVillageId(villageId);
 
         assertEquals(populationDTO.getId(), result.getId());
         assertEquals(populationDTO.getNumberOfPopulation(), result.getNumberOfPopulation());
     }
-
 
     @Test
     void testGetPopulationByVillageId_NonExistingPopulation() {
@@ -91,8 +88,8 @@ class PopulationServiceTest {
     @Test
     void testGetAllPopulationWithPopulations() {
         List<Population> populationList = Arrays.asList(
-                new Population(),
-                new Population()
+            new Population(),
+            new Population()
         );
 
         when(populationRepository.findAll()).thenReturn(populationList);
@@ -131,7 +128,6 @@ class PopulationServiceTest {
         Assertions.assertEquals(populationService.populationToPopulationDTO(population), result);
     }
 
-
     @Test
     void testGetPopulationByIdWithNonExistingId() {
         Long populationId = 123L;
@@ -142,7 +138,6 @@ class PopulationServiceTest {
 
         verify(populationRepository, times(1)).findById(populationId);
     }
-
 
     @Test
     void testCreatePopulation() {
@@ -180,7 +175,6 @@ class PopulationServiceTest {
         assertThrows(ApiRequestException.class, () -> populationService.getPopulationById(populationId));
         verify(populationRepository, times(1)).findById(populationId);
     }
-
 
     @Test
     void testDeletePopulationByIdNotFound() {
@@ -223,12 +217,15 @@ class PopulationServiceTest {
         verify(populationRepository, never()).save(any(Population.class));
     }
 
-
     @Test
     void testDeletePopulationById() {
         Long populationId = 123L;
 
-        Population population = new Population(populationId, NumberOfPopulation.FROM_11_TO_50_PEOPLE, Residents.FROM_21_TO_30_PERCENT, Children.BELOW_10, Foreigners.NO);
+        Population population = new Population(populationId,
+                                               NumberOfPopulation.FROM_11_TO_50_PEOPLE,
+                                               Residents.FROM_21_TO_30_PERCENT,
+                                               Children.BELOW_10,
+                                               Foreigners.NO);
         Optional<Population> optionalPopulation = Optional.of(population);
         when(populationRepository.findById(populationId)).thenReturn(optionalPopulation);
 
@@ -237,7 +234,6 @@ class PopulationServiceTest {
         verify(populationRepository, times(1)).findById(populationId);
         verify(populationRepository, times(1)).delete(population);
     }
-
 
     @Test
     void testDeletePopulationByIdWithNonExistingId() {
@@ -255,7 +251,11 @@ class PopulationServiceTest {
     void testFindPopulationByVillageNameAndRegionWhenExists() {
         String villageName = "Sample Village";
         String regionName = "Sample Region";
-        Population population = new Population(1L, NumberOfPopulation.UP_TO_10_PEOPLE, Residents.FROM_21_TO_30_PERCENT, Children.BELOW_10, Foreigners.I_DONT_KNOW);
+        Population population = new Population(1L,
+                                               NumberOfPopulation.UP_TO_10_PEOPLE,
+                                               Residents.FROM_21_TO_30_PERCENT,
+                                               Children.BELOW_10,
+                                               Foreigners.I_DONT_KNOW);
         when(populationRepository.findByVillageNameAndRegionName(villageName, regionName)).thenReturn(population);
         Population resultPopulation = populationService.findPopulationByVillageNameAndRegion(villageName, regionName);
         assertEquals(population, resultPopulation);
@@ -275,7 +275,6 @@ class PopulationServiceTest {
         verify(populationRepository, times(1)).findById(populationId);
         verify(populationRepository, never()).save(any(Population.class));
     }
-
 
     @Test
     void testFindPopulationByVillageNameAndRegionWhenNotExists() {
@@ -306,6 +305,6 @@ class PopulationServiceTest {
         when(populationRepository.findByVillageNameAndRegionName(villageName, regionName)).thenReturn(null);
 
         assertThrows(ApiRequestException.class,
-                () -> populationService.findPopulationDTOByVillageNameAndRegion(villageName, regionName));
+                     () -> populationService.findPopulationDTOByVillageNameAndRegion(villageName, regionName));
     }
 }
