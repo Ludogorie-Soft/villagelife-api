@@ -1134,8 +1134,10 @@ class VillageServiceTests {
         List<Village> villagesWithStatus = new ArrayList<>();
         villagesWithStatus.add(new Village(1L, "Village1", new Region(),
                 LocalDateTime.now(), true, new Administrator(), LocalDateTime.now(), new ArrayList<>(), new ArrayList<>(),
-                new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(),
-                new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
+
+                new ArrayList<>(), new ArrayList<>(), new ArrayList<>(),
+                new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), 1));
+
 
         when(villageRepository.findByStatus(status)).thenReturn(villagesWithStatus);
 
@@ -1143,7 +1145,7 @@ class VillageServiceTests {
         expectedVillageDTOs.add(new VillageDTO(1L, "Village1", "region",
                 LocalDateTime.now(), true, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(),
                 new ArrayList<>(), new ArrayList<>(), new ArrayList<>(),
-                new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
+                new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), 1));
 
         when(modelMapper.map(any(Village.class), eq(VillageDTO.class))).thenReturn(expectedVillageDTOs.get(0));
 

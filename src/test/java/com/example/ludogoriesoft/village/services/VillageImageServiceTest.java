@@ -222,32 +222,6 @@ class VillageImageServiceTest {
         }
     }
 
-//    @Test
-//    void testGetAllVillageDTOsWithImagesWhenFound() {
-//        List<VillageDTO> villageDTOs = new ArrayList<>();
-//        VillageDTO villageDTO1 = new VillageDTO();
-//        villageDTO1.setId(1L);
-//        villageDTO1.setName("Village 1");
-//        villageDTO1.setRegion("Region 1");
-//        villageDTOs.add(villageDTO1);
-//
-//        VillageDTO villageDTO2 = new VillageDTO();
-//        villageDTO2.setId(2L);
-//        villageDTO2.setName("Village 2");
-//        villageDTO2.setRegion("Region 2");
-//        villageDTOs.add(villageDTO2);
-//
-//        when(villageService.getAllVillages()).thenReturn(villageDTOs);
-//
-//        when(villageImageService.getAllImagesForVillageByStatusAndDate(anyLong(),true,null)).thenReturn(Arrays.asList("image1.jpg", "image2.jpg"));
-//
-//        List<VillageDTO> result = villageImageService.getAllApprovedVillageDTOsWithImages();
-//
-//        Assertions.assertEquals(2, result.size());
-//        Assertions.assertEquals(Arrays.asList("image1.jpg", "image2.jpg"), result.get(0).getImages());
-//        Assertions.assertEquals(Arrays.asList("image1.jpg", "image2.jpg"), result.get(1).getImages());
-//    }
-
     @Test
     void testGetAllVillageDTOsWithImagesWhenNotFound() {
         List<VillageDTO> result = villageImageService.getAllApprovedVillageDTOsWithImages();
