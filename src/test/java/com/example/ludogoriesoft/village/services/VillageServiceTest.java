@@ -16,7 +16,9 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -275,7 +277,6 @@ class VillageServiceTest {
     void testCreateVillageWhitNullValues() {
         Village village = new Village();
         village.setName("null");
-        village.setPopulationCount(0);
         village.setStatus(false);
 
         Village savedVillage = new Village();
@@ -314,24 +315,83 @@ class VillageServiceTest {
     }
 
     @Test
+    void testCreateNewVillage() {
+        VillageDTO villageDTO = new VillageDTO();
+        villageDTO.setName("NewVillage");
+        villageDTO.setRegion("NewRegion");
+        villageDTO.setDateUpload(LocalDateTime.now());
+        villageDTO.setStatus(false);
+
+        RegionDTO regionDTO = new RegionDTO();
+        regionDTO.setId(1L);
+        regionDTO.setRegionName("NewRegion");
+        when(regionService.findRegionByName("NewRegion")).thenReturn(regionDTO);
+        when(regionService.findRegionByName(anyString())).thenReturn(regionDTO);
+
+        Village village = new Village();
+        village.setName("NewVillage");
+        village.setRegion(new Region(1L, "NewRegion"));
+        village.setStatus(false);
+        Village savedVillage = new Village();
+        savedVillage.setId(1L);
+        when(villageRepository.findSingleVillageByNameAndRegionName("NewVillage", "NewRegion")).thenReturn(null);
+        when(villageRepository.save(any(Village.class))).thenReturn(savedVillage);
+        when(modelMapper.map(savedVillage, VillageDTO.class)).thenReturn(villageDTO);
+
+        VillageDTO result = villageService.createVillage(villageDTO);
+
+        assertEquals("NewVillage", result.getName());
+        assertEquals("NewRegion", result.getRegion());
+        assertFalse(result.getStatus());
+        assertTrue(result.getDateUpload().isBefore(LocalDateTime.now().plusSeconds(1)));
+        assertTrue(result.getDateUpload().isAfter(LocalDateTime.now().minusSeconds(1)));
+    }
+
+
+    @Test
+    void testUpdateExistingVillageStatus() {
+        VillageDTO villageDTO = new VillageDTO();
+        villageDTO.setName("ExistingVillage");
+        villageDTO.setRegion("ExistingRegion");
+        villageDTO.setStatus(true);
+        villageDTO.setDateUpload(LocalDateTime.now());
+
+        Village existingVillage = new Village();
+        existingVillage.setName("ExistingVillage");
+        existingVillage.setRegion(new Region(1L, "ExistingRegion"));
+        existingVillage.setStatus(true);
+        when(villageRepository.findSingleVillageByNameAndRegionName("ExistingVillage", "ExistingRegion")).thenReturn(existingVillage);
+        when(villageRepository.save(any(Village.class))).thenReturn(existingVillage);
+        when(modelMapper.map(existingVillage, VillageDTO.class)).thenReturn(villageDTO);
+
+        VillageDTO result = villageService.createVillage(villageDTO);
+
+        assertEquals("ExistingVillage", result.getName());
+        assertEquals("ExistingRegion", result.getRegion());
+        assertTrue(result.getStatus());
+        assertTrue(result.getDateUpload().isBefore(LocalDateTime.now().plusSeconds(1)));
+        assertTrue(result.getDateUpload().isAfter(LocalDateTime.now().minusSeconds(1)));
+
+    }
+
+    @Test
     void testIncreaseApprovedResponsesCountWhenValidVillageId() {
         Long villageId = 123L;
         Village testVillage = new Village();
         testVillage.setId(villageId);
         testVillage.setApprovedResponsesCount(2);
-
         Mockito.when(villageRepository.findById(villageId))
                 .thenReturn(Optional.of(testVillage));
-
         villageService.increaseApprovedResponsesCount(villageId);
         Mockito.verify(villageRepository, Mockito.times(1)).save(testVillage);
         assert(testVillage.getApprovedResponsesCount() == 3);
     }
-
     @Test
     void testIncreaseApprovedResponsesCountWhenInvalidVillageId() {
         Long invalidVillageId = 456L;
         villageService.increaseApprovedResponsesCount(invalidVillageId);
         Mockito.verify(villageRepository, Mockito.never()).save(Mockito.any());
+
     }
+
 }

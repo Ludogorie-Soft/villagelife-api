@@ -1,6 +1,5 @@
 package com.example.ludogorieSoft.village.controllers;
 
-import com.example.ludogorieSoft.village.dtos.PopulationDTO;
 import com.example.ludogorieSoft.village.dtos.VillageDTO;
 import com.example.ludogorieSoft.village.enums.Children;
 import com.example.ludogorieSoft.village.exeptions.ApiExceptionHandler;
@@ -29,7 +28,6 @@ import static org.mockito.Mockito.when;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 @AutoConfigureMockMvc(addFilters = false)
@@ -62,14 +60,12 @@ class FilterControllerIntegrationTest {
         VillageDTO villageDTO1 = new VillageDTO();
         villageDTO1.setId(1L);
         villageDTO1.setName("Village Name 1");
-        villageDTO1.setPopulationDTO(new PopulationDTO());
         villageDTO1.setDateUpload(LocalDateTime.now());
         villageDTO1.setStatus(true);
 
         VillageDTO villageDTO2 = new VillageDTO();
         villageDTO2.setId(2L);
         villageDTO2.setName("Village Name 2");
-        villageDTO2.setPopulationDTO(new PopulationDTO());
         villageDTO2.setDateUpload(LocalDateTime.now());
         villageDTO2.setStatus(true);
 
@@ -93,14 +89,12 @@ class FilterControllerIntegrationTest {
         VillageDTO villageDTO1 = new VillageDTO();
         villageDTO1.setId(1L);
         villageDTO1.setName("Village Name 1");
-        villageDTO1.setPopulationDTO(new PopulationDTO());
         villageDTO1.setDateUpload(LocalDateTime.now());
         villageDTO1.setStatus(true);
 
         VillageDTO villageDTO2 = new VillageDTO();
         villageDTO2.setId(2L);
         villageDTO2.setName("Village Name 2");
-        villageDTO2.setPopulationDTO(new PopulationDTO());
         villageDTO2.setDateUpload(LocalDateTime.now());
         villageDTO2.setStatus(true);
 
@@ -116,12 +110,10 @@ class FilterControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1))
                 .andExpect(jsonPath("$[0].name").value("Village Name 1"))
-                .andExpect(jsonPath("$[0].populationDTO").exists())
                 .andExpect(jsonPath("$[0].dateUpload").exists())
                 .andExpect(jsonPath("$[0].status").value(true))
                 .andExpect(jsonPath("$[1].id").value(2))
                 .andExpect(jsonPath("$[1].name").value("Village Name 2"))
-                .andExpect(jsonPath("$[1].populationDTO").exists())
                 .andExpect(jsonPath("$[1].dateUpload").exists())
                 .andExpect(jsonPath("$[1].status").value(true));
     }
@@ -131,14 +123,12 @@ class FilterControllerIntegrationTest {
         VillageDTO villageDTO1 = new VillageDTO();
         villageDTO1.setId(1L);
         villageDTO1.setName("Village Name 1");
-        villageDTO1.setPopulationDTO(new PopulationDTO());
         villageDTO1.setDateUpload(LocalDateTime.now());
         villageDTO1.setStatus(true);
 
         VillageDTO villageDTO2 = new VillageDTO();
         villageDTO2.setId(2L);
         villageDTO2.setName("Village Name 2");
-        villageDTO2.setPopulationDTO(new PopulationDTO());
         villageDTO2.setDateUpload(LocalDateTime.now());
         villageDTO2.setStatus(true);
 
@@ -154,12 +144,10 @@ class FilterControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1))
                 .andExpect(jsonPath("$[0].name").value("Village Name 1"))
-                .andExpect(jsonPath("$[0].populationDTO").exists())
                 .andExpect(jsonPath("$[0].dateUpload").exists())
                 .andExpect(jsonPath("$[0].status").value(true))
                 .andExpect(jsonPath("$[1].id").value(2))
                 .andExpect(jsonPath("$[1].name").value("Village Name 2"))
-                .andExpect(jsonPath("$[1].populationDTO").exists())
                 .andExpect(jsonPath("$[1].dateUpload").exists())
                 .andExpect(jsonPath("$[1].status").value(true));
     }
@@ -169,14 +157,12 @@ class FilterControllerIntegrationTest {
         VillageDTO villageDTO1 = new VillageDTO();
         villageDTO1.setId(1L);
         villageDTO1.setName("Village Name 1");
-        villageDTO1.setPopulationDTO(new PopulationDTO());
         villageDTO1.setDateUpload(LocalDateTime.now());
         villageDTO1.setStatus(true);
 
         VillageDTO villageDTO2 = new VillageDTO();
         villageDTO2.setId(2L);
         villageDTO2.setName("Village Name 2");
-        villageDTO2.setPopulationDTO(new PopulationDTO());
         villageDTO2.setDateUpload(LocalDateTime.now());
         villageDTO2.setStatus(true);
 
@@ -194,12 +180,10 @@ class FilterControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1))
                 .andExpect(jsonPath("$[0].name").value("Village Name 1"))
-                .andExpect(jsonPath("$[0].populationDTO").exists())
                 .andExpect(jsonPath("$[0].dateUpload").exists())
                 .andExpect(jsonPath("$[0].status").value(true))
                 .andExpect(jsonPath("$[1].id").value(2))
                 .andExpect(jsonPath("$[1].name").value("Village Name 2"))
-                .andExpect(jsonPath("$[1].populationDTO").exists())
                 .andExpect(jsonPath("$[1].dateUpload").exists())
                 .andExpect(jsonPath("$[1].status").value(true));
     }
@@ -210,14 +194,12 @@ class FilterControllerIntegrationTest {
         VillageDTO villageDTO1 = new VillageDTO();
         villageDTO1.setId(1L);
         villageDTO1.setName("Village Name 1");
-        villageDTO1.setPopulationDTO(new PopulationDTO());
         villageDTO1.setDateUpload(LocalDateTime.now());
         villageDTO1.setStatus(true);
 
         VillageDTO villageDTO2 = new VillageDTO();
         villageDTO2.setId(2L);
         villageDTO2.setName("Village Name 2");
-        villageDTO2.setPopulationDTO(new PopulationDTO());
         villageDTO2.setDateUpload(LocalDateTime.now());
         villageDTO2.setStatus(true);
 
@@ -238,12 +220,10 @@ class FilterControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1))
                 .andExpect(jsonPath("$[0].name").value("Village Name 1"))
-                .andExpect(jsonPath("$[0].populationDTO").exists())
                 .andExpect(jsonPath("$[0].dateUpload").exists())
                 .andExpect(jsonPath("$[0].status").value(true))
                 .andExpect(jsonPath("$[1].id").value(2))
                 .andExpect(jsonPath("$[1].name").value("Village Name 2"))
-                .andExpect(jsonPath("$[1].populationDTO").exists())
                 .andExpect(jsonPath("$[1].dateUpload").exists())
                 .andExpect(jsonPath("$[1].status").value(true));
     }
@@ -254,14 +234,12 @@ class FilterControllerIntegrationTest {
         VillageDTO villageDTO1 = new VillageDTO();
         villageDTO1.setId(1L);
         villageDTO1.setName("Village Name 1");
-        villageDTO1.setPopulationDTO(new PopulationDTO());
         villageDTO1.setDateUpload(LocalDateTime.now());
         villageDTO1.setStatus(true);
 
         VillageDTO villageDTO2 = new VillageDTO();
         villageDTO2.setId(2L);
         villageDTO2.setName("Village Name 2");
-        villageDTO2.setPopulationDTO(new PopulationDTO());
         villageDTO2.setDateUpload(LocalDateTime.now());
         villageDTO2.setStatus(true);
 
@@ -279,12 +257,10 @@ class FilterControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1))
                 .andExpect(jsonPath("$[0].name").value("Village Name 1"))
-                .andExpect(jsonPath("$[0].populationDTO").exists())
                 .andExpect(jsonPath("$[0].dateUpload").exists())
                 .andExpect(jsonPath("$[0].status").value(true))
                 .andExpect(jsonPath("$[1].id").value(2))
                 .andExpect(jsonPath("$[1].name").value("Village Name 2"))
-                .andExpect(jsonPath("$[1].populationDTO").exists())
                 .andExpect(jsonPath("$[1].dateUpload").exists())
                 .andExpect(jsonPath("$[1].status").value(true));
     }
@@ -294,14 +270,12 @@ class FilterControllerIntegrationTest {
         VillageDTO villageDTO1 = new VillageDTO();
         villageDTO1.setId(1L);
         villageDTO1.setName("Village Name 1");
-        villageDTO1.setPopulationDTO(new PopulationDTO());
         villageDTO1.setDateUpload(LocalDateTime.now());
         villageDTO1.setStatus(true);
 
         VillageDTO villageDTO2 = new VillageDTO();
         villageDTO2.setId(2L);
         villageDTO2.setName("Village Name 2");
-        villageDTO2.setPopulationDTO(new PopulationDTO());
         villageDTO2.setDateUpload(LocalDateTime.now());
         villageDTO2.setStatus(true);
 
@@ -319,12 +293,10 @@ class FilterControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1))
                 .andExpect(jsonPath("$[0].name").value("Village Name 1"))
-                .andExpect(jsonPath("$[0].populationDTO").exists())
                 .andExpect(jsonPath("$[0].dateUpload").exists())
                 .andExpect(jsonPath("$[0].status").value(true))
                 .andExpect(jsonPath("$[1].id").value(2))
                 .andExpect(jsonPath("$[1].name").value("Village Name 2"))
-                .andExpect(jsonPath("$[1].populationDTO").exists())
                 .andExpect(jsonPath("$[1].dateUpload").exists())
                 .andExpect(jsonPath("$[1].status").value(true));
     }
@@ -335,14 +307,12 @@ class FilterControllerIntegrationTest {
         VillageDTO villageDTO1 = new VillageDTO();
         villageDTO1.setId(1L);
         villageDTO1.setName("Village Name 1");
-        villageDTO1.setPopulationDTO(new PopulationDTO());
         villageDTO1.setDateUpload(LocalDateTime.now());
         villageDTO1.setStatus(true);
 
         VillageDTO villageDTO2 = new VillageDTO();
         villageDTO2.setId(2L);
         villageDTO2.setName("Village Name 2");
-        villageDTO2.setPopulationDTO(new PopulationDTO());
         villageDTO2.setDateUpload(LocalDateTime.now());
         villageDTO2.setStatus(true);
 
@@ -360,12 +330,10 @@ class FilterControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1))
                 .andExpect(jsonPath("$[0].name").value("Village Name 1"))
-                .andExpect(jsonPath("$[0].populationDTO").exists())
                 .andExpect(jsonPath("$[0].dateUpload").exists())
                 .andExpect(jsonPath("$[0].status").value(true))
                 .andExpect(jsonPath("$[1].id").value(2))
                 .andExpect(jsonPath("$[1].name").value("Village Name 2"))
-                .andExpect(jsonPath("$[1].populationDTO").exists())
                 .andExpect(jsonPath("$[1].dateUpload").exists())
                 .andExpect(jsonPath("$[1].status").value(true));
     }
@@ -375,14 +343,12 @@ class FilterControllerIntegrationTest {
         VillageDTO villageDTO1 = new VillageDTO();
         villageDTO1.setId(1L);
         villageDTO1.setName("Village Name 1");
-        villageDTO1.setPopulationDTO(new PopulationDTO());
         villageDTO1.setDateUpload(LocalDateTime.now());
         villageDTO1.setStatus(true);
 
         VillageDTO villageDTO2 = new VillageDTO();
         villageDTO2.setId(2L);
         villageDTO2.setName("Village Name 2");
-        villageDTO2.setPopulationDTO(new PopulationDTO());
         villageDTO2.setDateUpload(LocalDateTime.now());
         villageDTO2.setStatus(true);
 
@@ -398,12 +364,10 @@ class FilterControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1))
                 .andExpect(jsonPath("$[0].name").value("Village Name 1"))
-                .andExpect(jsonPath("$[0].populationDTO").exists())
                 .andExpect(jsonPath("$[0].dateUpload").exists())
                 .andExpect(jsonPath("$[0].status").value(true))
                 .andExpect(jsonPath("$[1].id").value(2))
                 .andExpect(jsonPath("$[1].name").value("Village Name 2"))
-                .andExpect(jsonPath("$[1].populationDTO").exists())
                 .andExpect(jsonPath("$[1].dateUpload").exists())
                 .andExpect(jsonPath("$[1].status").value(true));
     }
@@ -413,14 +377,12 @@ class FilterControllerIntegrationTest {
         VillageDTO villageDTO1 = new VillageDTO();
         villageDTO1.setId(1L);
         villageDTO1.setName("Village Name 1");
-        villageDTO1.setPopulationDTO(new PopulationDTO());
         villageDTO1.setDateUpload(LocalDateTime.now());
         villageDTO1.setStatus(true);
 
         VillageDTO villageDTO2 = new VillageDTO();
         villageDTO2.setId(2L);
         villageDTO2.setName("Village Name 2");
-        villageDTO2.setPopulationDTO(new PopulationDTO());
         villageDTO2.setDateUpload(LocalDateTime.now());
         villageDTO2.setStatus(true);
 
@@ -436,12 +398,10 @@ class FilterControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1))
                 .andExpect(jsonPath("$[0].name").value("Village Name 1"))
-                .andExpect(jsonPath("$[0].populationDTO").exists())
                 .andExpect(jsonPath("$[0].dateUpload").exists())
                 .andExpect(jsonPath("$[0].status").value(true))
                 .andExpect(jsonPath("$[1].id").value(2))
                 .andExpect(jsonPath("$[1].name").value("Village Name 2"))
-                .andExpect(jsonPath("$[1].populationDTO").exists())
                 .andExpect(jsonPath("$[1].dateUpload").exists())
                 .andExpect(jsonPath("$[1].status").value(true));
     }
@@ -451,14 +411,12 @@ class FilterControllerIntegrationTest {
         VillageDTO villageDTO1 = new VillageDTO();
         villageDTO1.setId(1L);
         villageDTO1.setName("Village Name 1");
-        villageDTO1.setPopulationDTO(new PopulationDTO());
         villageDTO1.setDateUpload(LocalDateTime.now());
         villageDTO1.setStatus(true);
 
         VillageDTO villageDTO2 = new VillageDTO();
         villageDTO2.setId(2L);
         villageDTO2.setName("Village Name 2");
-        villageDTO2.setPopulationDTO(new PopulationDTO());
         villageDTO2.setDateUpload(LocalDateTime.now());
         villageDTO2.setStatus(true);
 
@@ -474,12 +432,10 @@ class FilterControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1))
                 .andExpect(jsonPath("$[0].name").value("Village Name 1"))
-                .andExpect(jsonPath("$[0].populationDTO").exists())
                 .andExpect(jsonPath("$[0].dateUpload").exists())
                 .andExpect(jsonPath("$[0].status").value(true))
                 .andExpect(jsonPath("$[1].id").value(2))
                 .andExpect(jsonPath("$[1].name").value("Village Name 2"))
-                .andExpect(jsonPath("$[1].populationDTO").exists())
                 .andExpect(jsonPath("$[1].dateUpload").exists())
                 .andExpect(jsonPath("$[1].status").value(true));
     }
@@ -526,10 +482,8 @@ class FilterControllerIntegrationTest {
             "'Nonexistent Region','Existing Village'"
     })
     void testGetVillageByNameAndRegion(String region, String keyword) throws Exception {
-        // Arrange
         when(villageSearchService.getAllSearchVillagesByNameAndRegionName(region, keyword)).thenReturn(Collections.emptyList());
 
-        // Act & Assert
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/searchAll")
                         .param("region", region)
                         .param("keyword", keyword)

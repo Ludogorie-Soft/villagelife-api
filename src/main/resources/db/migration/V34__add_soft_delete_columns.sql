@@ -12,3 +12,5 @@ ALTER TABLE village_objects
 ADD COLUMN date_deleted DATETIME DEFAULT NULL;
 ALTER TABLE village_population_assertion
 ADD COLUMN date_deleted DATETIME DEFAULT NULL;
+ALTER TABLE populations
+ADD COLUMN date_deleted DATETIME DEFAULT NULL;

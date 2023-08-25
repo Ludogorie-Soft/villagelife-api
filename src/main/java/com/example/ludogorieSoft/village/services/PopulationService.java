@@ -67,6 +67,7 @@ public class PopulationService {
         if (findPopulation.isEmpty()) {
             throw new ApiRequestException("Population not found");
         }
+        findPopulation.get().setPopulationCount(populationDTO.getPopulationCount());
         findPopulation.get().setNumberOfPopulation(populationDTO.getNumberOfPopulation());
         findPopulation.get().setForeigners(populationDTO.getForeigners());
         findPopulation.get().setChildren(populationDTO.getChildren());

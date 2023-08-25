@@ -20,8 +20,6 @@ public class VillageDTO {
     private Long id;
     private String name;
     private String region;
-    private int populationCount;
-    private PopulationDTO populationDTO;
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
@@ -31,7 +29,6 @@ public class VillageDTO {
     private List<LivingConditionDTO> livingConditions;
     private List<ObjectAroundVillageDTO> object;
     private List<String> images;
-
     private List<ObjectVillageDTO> objectVillages;
     private List<VillageLivingConditionDTO> villageLivingConditions;
     private List<VillageAnswerQuestionDTO> villageAnswerQuestions;
@@ -39,6 +36,10 @@ public class VillageDTO {
     private List<VillageGroundCategoryDTO> villageGroundCategories;
     private List<VillageLandscapeDTO> villageLandscapes;
     private List<VillagePopulationAssertionDTO> villagePopulationAssertions;
+
+    private List<PopulationDTO> populations;
+
     private int approvedResponsesCount;
+
 
 }

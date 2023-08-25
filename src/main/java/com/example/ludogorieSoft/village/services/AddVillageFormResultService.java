@@ -2,7 +2,6 @@ package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.*;
 import com.example.ludogorieSoft.village.enums.NumberOfPopulation;
-import com.example.ludogorieSoft.village.model.Population;
 import com.example.ludogorieSoft.village.utils.TimestampUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,12 +30,11 @@ public class AddVillageFormResultService {
         LocalDateTime timestamp = TimestampUtils.getCurrentTimestamp();
 
         VillageDTO villageDTO = addVillageFormResult.getVillageDTO();
-        PopulationDTO savedPopulation = createPopulationFromAddVillageFormResult(addVillageFormResult);
-        villageDTO.setPopulationDTO(savedPopulation);
         villageDTO.setRegion(addVillageFormResult.getVillageDTO().getRegion());
         villageDTO.setDateUpload(timestamp);
         VillageDTO savedVillage = villageService.createVillage(villageDTO);
 
+        createPopulationFromAddVillageFormResult(savedVillage.getId(), addVillageFormResult,timestamp);
         createVillageGroundCategoryFromAddVillageFormResult(savedVillage.getId(), addVillageFormResult,timestamp);//ddd
         createEthnicityVillagesFromAddVillageFormResult(savedVillage.getId(), addVillageFormResult,timestamp);//ddd
         createVillageAnswerQuestionsFromAddVillageFormResult(savedVillage.getId(), addVillageFormResult, timestamp);
@@ -47,7 +45,7 @@ public class AddVillageFormResultService {
         return addVillageFormResult;
     }
     public NumberOfPopulation getNumberOfPopulationByAddVillageFormResult(AddVillageFormResult addVillageFormResult){
-        int populationAsNumber = addVillageFormResult.getVillageDTO().getPopulationCount();
+        int populationAsNumber = addVillageFormResult.getPopulationDTO().getPopulationCount();
         if(populationAsNumber <= 10){
             return NumberOfPopulation.UP_TO_10_PEOPLE;
         }else if(populationAsNumber <= 50){
@@ -64,16 +62,21 @@ public class AddVillageFormResultService {
             return NumberOfPopulation.FROM_2000_PEOPLE;
         }
     }
-    public PopulationDTO createPopulationFromAddVillageFormResult(AddVillageFormResult addVillageFormResult){
-        Population existingPopulation = populationService.findPopulationByVillageNameAndRegion(addVillageFormResult.getVillageDTO().getName(), addVillageFormResult.getVillageDTO().getRegion());
+
+
+    public PopulationDTO createPopulationFromAddVillageFormResult(Long villageId, AddVillageFormResult addVillageFormResult, LocalDateTime localDateTime) {
         PopulationDTO populationDTO = addVillageFormResult.getPopulationDTO();
+        populationDTO.setVillageId(villageId);
         populationDTO.setNumberOfPopulation(getNumberOfPopulationByAddVillageFormResult(addVillageFormResult));
-        if(existingPopulation == null){
-            return populationService.createPopulation(populationDTO);
-        }else {
-            return populationService.updatePopulation(existingPopulation.getId(), populationDTO);
-        }
+        populationDTO.setDateUpload(localDateTime);
+
+        populationDTO.setResidents(addVillageFormResult.getPopulationDTO().getResidents());
+        populationDTO.setChildren(addVillageFormResult.getPopulationDTO().getChildren());
+        populationDTO.setForeigners(addVillageFormResult.getPopulationDTO().getForeigners());
+
+        return populationService.createPopulation(populationDTO);
     }
+
     public void createVillageGroundCategoryFromAddVillageFormResult(Long villageId, AddVillageFormResult addVillageFormResult, LocalDateTime localDateTime) {
         VillageGroundCategoryDTO villageGroundCategoryDTO = new VillageGroundCategoryDTO();
         GroundCategoryDTO groundCategoryDTO = groundCategoryService.getByGroundCategoryName(addVillageFormResult.getGroundCategoryName());
