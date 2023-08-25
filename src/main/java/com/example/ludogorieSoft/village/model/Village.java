@@ -1,6 +1,7 @@
 package com.example.ludogorieSoft.village.model;
 
 import lombok.*;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
@@ -56,5 +57,8 @@ public class Village {
 
     @OneToMany(mappedBy = "village", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Population> populations;
+
+    private int approvedResponsesCount;
+
 
 }
