@@ -3,9 +3,6 @@ package com.example.ludogorieSoft.village.services;
 import com.example.ludogorieSoft.village.dtos.*;
 import com.example.ludogorieSoft.village.dtos.response.VillageResponse;
 import com.example.ludogorieSoft.village.enums.Children;
-import com.example.ludogorieSoft.village.enums.Foreigners;
-import com.example.ludogorieSoft.village.enums.NumberOfPopulation;
-import com.example.ludogorieSoft.village.enums.Residents;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.*;
 import com.example.ludogorieSoft.village.repositories.VillageRepository;
@@ -17,16 +14,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
-import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
+
 import java.util.List;
 import java.util.Optional;
 
-import static java.time.LocalDateTime.now;
 import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -378,4 +372,5 @@ class VillageServiceTest {
         assertTrue(result.getDateUpload().isAfter(LocalDateTime.now().minusSeconds(1)));
 
     }
+
 }
