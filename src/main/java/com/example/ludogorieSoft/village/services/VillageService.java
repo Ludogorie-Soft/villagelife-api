@@ -55,7 +55,6 @@ public class VillageService {
         Optional<Village> optionalVillage = villageRepository.findById(id);
         if (optionalVillage.isPresent()) {
             VillageDTO villageDTO = villageToVillageDTO(optionalVillage.get());
-            villageDTO.setPopulationDTO(modelMapper.map(optionalVillage.get().getPopulation(), PopulationDTO.class));
             return villageDTO;
         } else {
             throw new ApiRequestException(ERROR_MESSAGE1 + id + ERROR_MESSAGE2);
@@ -73,8 +72,6 @@ public class VillageService {
         }else {
             village.setStatus(village.getStatus());
         }
-        village.setPopulation(modelMapper.map(villageDTO.getPopulationDTO(), Population.class));
-        village.setPopulationCount(villageDTO.getPopulationCount());
         village.setDateUpload(villageDTO.getDateUpload());
         Village savedVillage = villageRepository.save(village);
         return modelMapper.map(savedVillage, VillageDTO.class);
@@ -83,7 +80,6 @@ public class VillageService {
     public Long createVillageWhitNullValues() {
         Village village = new Village();
         village.setName("null");
-        village.setPopulationCount(0);
         village.setStatus(true);
         villageRepository.save(village);
         return village.getId();
@@ -97,8 +93,6 @@ public class VillageService {
             village.setName(villageDTO.getName());
             RegionDTO regionDTO = regionService.findRegionByName(villageDTO.getRegion());
             village.setRegion(regionService.checkRegion(regionDTO.getId()));
-            village.setPopulationCount(villageDTO.getPopulationCount());
-            village.setPopulation(modelMapper.map(villageDTO.getPopulationDTO(), Population.class));
 
             AdministratorDTO administratorDTO = authService.getAdministratorInfo();
 
@@ -120,8 +114,6 @@ public class VillageService {
             village.setName(villageDTO.getName());
             RegionDTO regionDTO = regionService.findRegionByName(villageDTO.getRegion());
             village.setRegion(regionService.checkRegion(regionDTO.getId()));
-            village.setPopulationCount(villageDTO.getPopulationCount());
-            village.setPopulation(modelMapper.map(villageDTO.getPopulationDTO(), Population.class));
             villageRepository.save(village);
             return modelMapper.map(village, VillageDTO.class);
         } else {
@@ -259,6 +251,7 @@ public class VillageService {
         return villageDTOs;
     }
 
+
     protected List<VillageDTO> villageToVillageDTOChildren(List<Village> villages) {
         List<VillageDTO> villageDTOs = new ArrayList<>();
 
@@ -268,7 +261,7 @@ public class VillageService {
             villageDTO.setName(village.getName());
             villageDTO.setRegion(String.valueOf(village.getRegion().getRegionName()));
 
-            villageDTO.setPopulationDTO(convertToPopulationDTO(village.getPopulation().getChildren().getEnumValue()));
+            mapPopulationsToDTOs(village, villageDTO);
 
             villageDTOs.add(villageDTO);
         }
@@ -294,6 +287,7 @@ public class VillageService {
         return villageDTOs;
     }
 
+
     protected List<VillageDTO> villageToVillageDTOWithoutObject(List<Village> villages) {
         List<VillageDTO> villageDTOs = new ArrayList<>();
 
@@ -304,13 +298,16 @@ public class VillageService {
             villageDTO.setRegion(String.valueOf(village.getRegion().getRegionName()));
 
             villageDTO.setLivingConditions(convertToLivingConditionDTOList(village.getVillageLivingConditions()));
-            villageDTO.setPopulationDTO(convertToPopulationDTO(village.getPopulation().getChildren().getEnumValue()));
+
+            mapPopulationsToDTOs(village, villageDTO);
 
             villageDTOs.add(villageDTO);
         }
 
         return villageDTOs;
     }
+
+
 
     protected List<VillageDTO> villageToVillageDTOWithoutLivingCondition(List<Village> villages) {
         List<VillageDTO> villageDTOs = new ArrayList<>();
@@ -322,7 +319,7 @@ public class VillageService {
             villageDTO.setRegion(String.valueOf(village.getRegion().getRegionName()));
 
             villageDTO.setObject(convertToObjectAroundVillageDTOList(village.getObjectVillages()));
-            villageDTO.setPopulationDTO(convertToPopulationDTO(village.getPopulation().getChildren().getEnumValue()));
+            mapPopulationsToDTOs(village, villageDTO);
 
             villageDTOs.add(villageDTO);
         }
@@ -341,7 +338,8 @@ public class VillageService {
 
             villageDTO.setObject(convertToObjectAroundVillageDTOList(village.getObjectVillages()));
             villageDTO.setLivingConditions(convertToLivingConditionDTOList(village.getVillageLivingConditions()));
-            villageDTO.setPopulationDTO(convertToPopulationDTO(village.getPopulation().getChildren().getEnumValue()));
+
+            mapPopulationsToDTOs(village, villageDTO);
 
             villageDTOs.add(villageDTO);
         }
@@ -363,6 +361,17 @@ public class VillageService {
         }
 
         return livingConditionDTOs;
+    }
+
+
+    private void mapPopulationsToDTOs(Village village, VillageDTO villageDTO) {
+        List<PopulationDTO> populationDTOs = new ArrayList<>();
+        for (Population population : village.getPopulations()) {
+            Children childrenEnum = population.getChildren().getEnumValue();
+            PopulationDTO populationDTO = convertToPopulationDTO(childrenEnum);
+            populationDTOs.add(populationDTO);
+        }
+        villageDTO.setPopulations(populationDTOs);
     }
 
 

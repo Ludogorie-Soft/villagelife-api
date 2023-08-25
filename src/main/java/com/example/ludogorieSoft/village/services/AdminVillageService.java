@@ -91,7 +91,6 @@ public class AdminVillageService {
         villageResponse.setId(village.getId());
         villageResponse.setName(village.getName());
         villageResponse.setRegion(village.getRegion());
-        villageResponse.setPopulationCount(village.getPopulationCount());
         villageResponse.setStatus(village.getStatus());
         villageResponse.setDateUpload(village.getDateUpload());
 

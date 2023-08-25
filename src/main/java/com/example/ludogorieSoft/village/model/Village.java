@@ -1,12 +1,8 @@
 package com.example.ludogorieSoft.village.model;
 
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-
 import javax.persistence.*;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -27,11 +23,6 @@ public class Village {
     @ManyToOne
     @JoinColumn(name = "region_id")
     private Region region;
-    @Min(0)
-    @NotNull
-    private int populationCount;
-    @OneToOne
-    private Population population;
     private LocalDateTime dateUpload;
     private Boolean status;
     @ManyToOne
@@ -62,5 +53,8 @@ public class Village {
 
     @OneToMany(mappedBy = "village", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<VillagePopulationAssertion> villagePopulationAssertions;
+
+    @OneToMany(mappedBy = "village", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Population> populations;
 
 }

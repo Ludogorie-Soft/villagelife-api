@@ -10,6 +10,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Data
@@ -21,6 +23,15 @@ public class Population {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "village_id")
+    private Village village;
+
+    @Min(0)
+    @NotNull
+    private int populationCount;
+
     @Enumerated(EnumType.STRING)
     private NumberOfPopulation numberOfPopulation;
     @Enumerated(EnumType.STRING)

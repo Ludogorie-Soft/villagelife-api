@@ -7,6 +7,7 @@ import com.example.ludogorieSoft.village.enums.NumberOfPopulation;
 import com.example.ludogorieSoft.village.enums.Residents;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.Population;
+import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.repositories.PopulationRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -227,8 +228,9 @@ class PopulationServiceTest {
     @Test
     void testDeletePopulationById() {
         Long populationId = 123L;
+        Village village1 = new Village();
 
-        Population population = new Population(populationId, NumberOfPopulation.FROM_11_TO_50_PEOPLE, Residents.FROM_21_TO_30_PERCENT, Children.BELOW_10, Foreigners.NO);
+        Population population = new Population(populationId, village1, 100, NumberOfPopulation.FROM_11_TO_50_PEOPLE, Residents.FROM_21_TO_30_PERCENT, Children.BELOW_10, Foreigners.NO);
         Optional<Population> optionalPopulation = Optional.of(population);
         when(populationRepository.findById(populationId)).thenReturn(optionalPopulation);
 
@@ -255,7 +257,9 @@ class PopulationServiceTest {
     void testFindPopulationByVillageNameAndRegionWhenExists() {
         String villageName = "Sample Village";
         String regionName = "Sample Region";
-        Population population = new Population(1L, NumberOfPopulation.UP_TO_10_PEOPLE, Residents.FROM_21_TO_30_PERCENT, Children.BELOW_10, Foreigners.I_DONT_KNOW);
+        Village village1 = new Village();
+
+        Population population = new Population(1L, village1, 100, NumberOfPopulation.UP_TO_10_PEOPLE, Residents.FROM_21_TO_30_PERCENT, Children.BELOW_10, Foreigners.I_DONT_KNOW);
         when(populationRepository.findByVillageNameAndRegionName(villageName, regionName)).thenReturn(population);
         Population resultPopulation = populationService.findPopulationByVillageNameAndRegion(villageName, regionName);
         assertEquals(population, resultPopulation);

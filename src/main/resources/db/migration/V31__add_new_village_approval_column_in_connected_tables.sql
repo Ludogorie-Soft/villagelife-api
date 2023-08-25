@@ -12,3 +12,5 @@ ALTER TABLE village_objects
 ADD COLUMN village_status TINYINT(1) NOT NULL;
 ALTER TABLE village_population_assertion
 ADD COLUMN village_status TINYINT(1) NOT NULL;
+ALTER TABLE populations
+ADD COLUMN village_status TINYINT(1) NOT NULL;
