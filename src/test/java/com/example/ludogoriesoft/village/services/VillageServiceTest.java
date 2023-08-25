@@ -12,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 
@@ -370,6 +371,26 @@ class VillageServiceTest {
         assertTrue(result.getStatus());
         assertTrue(result.getDateUpload().isBefore(LocalDateTime.now().plusSeconds(1)));
         assertTrue(result.getDateUpload().isAfter(LocalDateTime.now().minusSeconds(1)));
+
+    }
+
+    @Test
+    void testIncreaseApprovedResponsesCountWhenValidVillageId() {
+        Long villageId = 123L;
+        Village testVillage = new Village();
+        testVillage.setId(villageId);
+        testVillage.setApprovedResponsesCount(2);
+        Mockito.when(villageRepository.findById(villageId))
+                .thenReturn(Optional.of(testVillage));
+        villageService.increaseApprovedResponsesCount(villageId);
+        Mockito.verify(villageRepository, Mockito.times(1)).save(testVillage);
+        assert(testVillage.getApprovedResponsesCount() == 3);
+    }
+    @Test
+    void testIncreaseApprovedResponsesCountWhenInvalidVillageId() {
+        Long invalidVillageId = 456L;
+        villageService.increaseApprovedResponsesCount(invalidVillageId);
+        Mockito.verify(villageRepository, Mockito.never()).save(Mockito.any());
 
     }
 
