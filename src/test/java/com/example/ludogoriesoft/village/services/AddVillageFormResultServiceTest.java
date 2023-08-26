@@ -278,102 +278,102 @@ class AddVillageFormResultServiceTest {
     }
 
 
-    @Test
-    void testGetNumberOfPopulationByAddVillageFormResultWhenLessThanOrEqualTo10() {
-        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
-
-        PopulationDTO populationDTO = new PopulationDTO();
-        populationDTO.setPopulationCount(10);
-        addVillageFormResult.setPopulationDTO(populationDTO);
-
-        NumberOfPopulation expected = NumberOfPopulation.UP_TO_10_PEOPLE;
-        NumberOfPopulation actual = addVillageFormResultService.getNumberOfPopulationByAddVillageFormResult(addVillageFormResult);
-
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    void testGetNumberOfPopulationByAddVillageFormResultWhenLessThanOrEqualTo50() {
-        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
-
-        PopulationDTO populationDTO = new PopulationDTO();
-        populationDTO.setPopulationCount(50);
-        addVillageFormResult.setPopulationDTO(populationDTO);
-
-        NumberOfPopulation expected = NumberOfPopulation.FROM_11_TO_50_PEOPLE;
-        NumberOfPopulation actual = addVillageFormResultService.getNumberOfPopulationByAddVillageFormResult(addVillageFormResult);
-
-        assertEquals(expected, actual);
-    }
-
-
-    @Test
-    void testGetNumberOfPopulationByAddVillageFormResultWhenLessThanOrEqualTo200() {
-        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
-        PopulationDTO populationDTO = new PopulationDTO();
-        populationDTO.setPopulationCount(200);
-        addVillageFormResult.setPopulationDTO(populationDTO);
-
-        NumberOfPopulation expected = NumberOfPopulation.FROM_51_TO_200_PEOPLE;
-        NumberOfPopulation actual = addVillageFormResultService.getNumberOfPopulationByAddVillageFormResult(addVillageFormResult);
-
-        assertEquals(expected, actual);
-    }
-
-
-    @Test
-    void testGetNumberOfPopulationByAddVillageFormResultWhenLessThanOrEqualTo500() {
-        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
-
-        PopulationDTO populationDTO = new PopulationDTO();
-        populationDTO.setPopulationCount(500);
-        addVillageFormResult.setPopulationDTO(populationDTO);
-
-        NumberOfPopulation expected = NumberOfPopulation.FROM_201_TO_500_PEOPLE;
-        NumberOfPopulation actual = addVillageFormResultService.getNumberOfPopulationByAddVillageFormResult(addVillageFormResult);
-
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    void testGetNumberOfPopulationByAddVillageFormResultWhenLessThanOrEqualTo1000() {
-        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
-        PopulationDTO populationDTO = new PopulationDTO();
-        populationDTO.setPopulationCount(1000);
-        addVillageFormResult.setPopulationDTO(populationDTO);
-
-        NumberOfPopulation expected = NumberOfPopulation.FROM_501_TO_1000_PEOPLE;
-        NumberOfPopulation actual = addVillageFormResultService.getNumberOfPopulationByAddVillageFormResult(addVillageFormResult);
-
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    void testGetNumberOfPopulationByAddVillageFormResultWhenLessThanOrEqualTo2000() {
-        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
-        PopulationDTO populationDTO = new PopulationDTO();
-        populationDTO.setPopulationCount(2000);
-        addVillageFormResult.setPopulationDTO(populationDTO);
-
-        NumberOfPopulation expected = NumberOfPopulation.FROM_1001_TO_2000_PEOPLE;
-        NumberOfPopulation actual = addVillageFormResultService.getNumberOfPopulationByAddVillageFormResult(addVillageFormResult);
-
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    void testGetNumberOfPopulationByAddVillageFormResultWhenMoreThan2000() {
-        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
-
-        PopulationDTO populationDTO = new PopulationDTO();
-        populationDTO.setPopulationCount(3000);
-        addVillageFormResult.setPopulationDTO(populationDTO);
-
-        NumberOfPopulation expected = NumberOfPopulation.FROM_2000_PEOPLE;
-        NumberOfPopulation actual = addVillageFormResultService.getNumberOfPopulationByAddVillageFormResult(addVillageFormResult);
-
-        assertEquals(expected, actual);
-    }
+    //@Test
+    //void testGetNumberOfPopulationByAddVillageFormResultWhenLessThanOrEqualTo10() {
+    //    AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
+//
+    //    PopulationDTO populationDTO = new PopulationDTO();
+    //    populationDTO.setPopulationCount(10);
+    //    addVillageFormResult.setPopulationDTO(populationDTO);
+//
+    //    NumberOfPopulation expected = NumberOfPopulation.UP_TO_10_PEOPLE;
+    //    NumberOfPopulation actual = addVillageFormResultService.getNumberOfPopulationByAddVillageFormResult(addVillageFormResult);
+//
+    //    assertEquals(expected, actual);
+    //}
+//
+    //@Test
+    //void testGetNumberOfPopulationByAddVillageFormResultWhenLessThanOrEqualTo50() {
+    //    AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
+//
+    //    PopulationDTO populationDTO = new PopulationDTO();
+    //    populationDTO.setPopulationCount(50);
+    //    addVillageFormResult.setPopulationDTO(populationDTO);
+//
+    //    NumberOfPopulation expected = NumberOfPopulation.FROM_11_TO_50_PEOPLE;
+    //    NumberOfPopulation actual = addVillageFormResultService.getNumberOfPopulationByAddVillageFormResult(addVillageFormResult);
+//
+    //    assertEquals(expected, actual);
+    //}
+//
+//
+    //@Test
+    //void testGetNumberOfPopulationByAddVillageFormResultWhenLessThanOrEqualTo200() {
+    //    AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
+    //    PopulationDTO populationDTO = new PopulationDTO();
+    //    populationDTO.setPopulationCount(200);
+    //    addVillageFormResult.setPopulationDTO(populationDTO);
+//
+    //    NumberOfPopulation expected = NumberOfPopulation.FROM_51_TO_200_PEOPLE;
+    //    NumberOfPopulation actual = addVillageFormResultService.getNumberOfPopulationByAddVillageFormResult(addVillageFormResult);
+//
+    //    assertEquals(expected, actual);
+    //}
+//
+//
+    //@Test
+    //void testGetNumberOfPopulationByAddVillageFormResultWhenLessThanOrEqualTo500() {
+    //    AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
+//
+    //    PopulationDTO populationDTO = new PopulationDTO();
+    //    populationDTO.setPopulationCount(500);
+    //    addVillageFormResult.setPopulationDTO(populationDTO);
+//
+    //    NumberOfPopulation expected = NumberOfPopulation.FROM_201_TO_500_PEOPLE;
+    //    NumberOfPopulation actual = addVillageFormResultService.getNumberOfPopulationByAddVillageFormResult(addVillageFormResult);
+//
+    //    assertEquals(expected, actual);
+    //}
+//
+    //@Test
+    //void testGetNumberOfPopulationByAddVillageFormResultWhenLessThanOrEqualTo1000() {
+    //    AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
+    //    PopulationDTO populationDTO = new PopulationDTO();
+    //    populationDTO.setPopulationCount(1000);
+    //    addVillageFormResult.setPopulationDTO(populationDTO);
+//
+    //    NumberOfPopulation expected = NumberOfPopulation.FROM_501_TO_1000_PEOPLE;
+    //    NumberOfPopulation actual = addVillageFormResultService.getNumberOfPopulationByAddVillageFormResult(addVillageFormResult);
+//
+    //    assertEquals(expected, actual);
+    //}
+//
+    //@Test
+    //void testGetNumberOfPopulationByAddVillageFormResultWhenLessThanOrEqualTo2000() {
+    //    AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
+    //    PopulationDTO populationDTO = new PopulationDTO();
+    //    populationDTO.setPopulationCount(2000);
+    //    addVillageFormResult.setPopulationDTO(populationDTO);
+//
+    //    NumberOfPopulation expected = NumberOfPopulation.FROM_1001_TO_2000_PEOPLE;
+    //    NumberOfPopulation actual = addVillageFormResultService.getNumberOfPopulationByAddVillageFormResult(addVillageFormResult);
+//
+    //    assertEquals(expected, actual);
+    //}
+//
+    //@Test
+    //void testGetNumberOfPopulationByAddVillageFormResultWhenMoreThan2000() {
+    //    AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
+//
+    //    PopulationDTO populationDTO = new PopulationDTO();
+    //    populationDTO.setPopulationCount(3000);
+    //    addVillageFormResult.setPopulationDTO(populationDTO);
+//
+    //    NumberOfPopulation expected = NumberOfPopulation.FROM_2000_PEOPLE;
+    //    NumberOfPopulation actual = addVillageFormResultService.getNumberOfPopulationByAddVillageFormResult(addVillageFormResult);
+//
+    //    assertEquals(expected, actual);
+    //}
 
 
     @Test

@@ -4,6 +4,7 @@ import com.example.ludogorieSoft.village.dtos.PopulationDTO;
 import com.example.ludogorieSoft.village.enums.Children;
 import com.example.ludogorieSoft.village.enums.Foreigners;
 import com.example.ludogorieSoft.village.enums.NumberOfPopulation;
+import com.example.ludogorieSoft.village.enums.Residents;
 import com.example.ludogorieSoft.village.model.Population;
 import com.example.ludogorieSoft.village.repositories.PopulationRepository;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
@@ -113,7 +114,10 @@ public class PopulationService {
             population.setForeigners(getForeigners(foreignersWithCount));
             List<Object[]> childrenWithCount = populationRepository.countChildrenByVillageIdAndStatusTrueOrderedByCountDesc(villageId);
             population.setChildren(getChildren(childrenWithCount));
+            List<Object[]> residentsWithCount = populationRepository.countResidentsByVillageIdAndStatusTrueOrderedByCountDesc(villageId);
+            population.setResidents(getResidents(residentsWithCount));
             population.setPopulationCount(calculateAveragePopulationCountByVillageId(villageId));
+            population.setNumberOfPopulation(getNumberOfPopulationByPopulationAsNumber(population.getPopulationCount()));
         }else {
             population = populationRepository.findPopulationsByVillageIdAndDateUploadAndStatus(villageId, date, false);
         }
@@ -169,4 +173,35 @@ public class PopulationService {
          return Children.getByValueAsNumber(maxValueAsNumber);
 
      }
+
+    public Residents getResidents(List<Object[]> rows){
+        List<Residents> residents = getEnumsWithMaxCount(rows, Residents.class);
+        int maxValueAsNumber = Integer.MIN_VALUE;
+        for(Residents residentsResult : residents){
+            if(residentsResult.getValueAsNumber() > maxValueAsNumber){
+                maxValueAsNumber = residentsResult.getValueAsNumber();
+            }
+        }
+        return Residents.getByValueAsNumber(maxValueAsNumber);
+
+    }
+
+    public NumberOfPopulation getNumberOfPopulationByPopulationAsNumber(int populationAsNumber){
+        if(populationAsNumber <= 10){
+            return NumberOfPopulation.UP_TO_10_PEOPLE;
+        }else if(populationAsNumber <= 50){
+            return NumberOfPopulation.FROM_11_TO_50_PEOPLE;
+        }else if(populationAsNumber <= 200){
+            return NumberOfPopulation.FROM_51_TO_200_PEOPLE;
+        }else if(populationAsNumber <= 500){
+            return NumberOfPopulation.FROM_201_TO_500_PEOPLE;
+        }else if (populationAsNumber <= 1000){
+            return NumberOfPopulation.FROM_501_TO_1000_PEOPLE;
+        }else if(populationAsNumber <= 2000){
+            return NumberOfPopulation.FROM_1001_TO_2000_PEOPLE;
+        }else {
+            return NumberOfPopulation.FROM_2000_PEOPLE;
+        }
+    }
+
 }

@@ -34,6 +34,13 @@ public interface PopulationRepository extends JpaRepository<Population, Long> {
             "ORDER BY COUNT(p) DESC")
     List<Object[]> countChildrenByVillageIdAndStatusTrueOrderedByCountDesc(@Param("villageId") Long villageId);
 
+    @Query("SELECT COUNT(p), p.residents FROM Population p " +
+            "WHERE p.village.id = :villageId " +
+            "AND p.villageStatus = true " +
+            "AND p.dateDeleted IS NULL " +
+            "GROUP BY p.residents " +
+            "ORDER BY COUNT(p) DESC")
+    List<Object[]> countResidentsByVillageIdAndStatusTrueOrderedByCountDesc(@Param("villageId") Long villageId);
 
     @Query("SELECT p FROM Population p " +
             "WHERE p.village.id = :villageId " +
