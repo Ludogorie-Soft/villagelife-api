@@ -18,13 +18,21 @@ public interface PopulationRepository extends JpaRepository<Population, Long> {
     @Query("SELECT AVG(p.populationCount) FROM Population p WHERE p.village.id = :villageId AND p.villageStatus = true AND p.dateDeleted IS NULL")
     double getAveragePopulationCountByVillageId(Long villageId);
 
-    @Query("SELECT AVG(p.populationCount) FROM Population p WHERE p.village.id = :villageId " +
-            "AND p.villageStatus = :villageStatus " +
-            "AND DATE_FORMAT(p.dateUpload, '%Y-%m-%d %H:%i:%s') = :localDateTime")
-    double getAveragePopulationCountByVillageIdAndStatusAndDate(@Param("villageId") Long villageId,
-                                                                @Param("villageStatus") Boolean villageStatus,
-                                                                @Param("localDateTime") String localDateTime);
+    @Query("SELECT COUNT(p), p.foreigners FROM Population p " +
+            "WHERE p.village.id = :villageId " +
+            "AND p.villageStatus = true " +
+            "AND p.dateDeleted IS NULL " +
+            "GROUP BY p.foreigners " +
+            "ORDER BY COUNT(p) DESC")
+    List<Object[]> countForeignersByVillageIdAndStatusOrderedByCountDesc(@Param("villageId") Long villageId);
 
-
-
+    @Query("SELECT p FROM Population p " +
+            "WHERE p.village.id = :villageId " +
+            "AND DATE_FORMAT(p.dateUpload, '%Y-%m-%d %H:%i:%s') = :dateUpload " +
+            "AND p.villageStatus = :villageStatus")
+    Population findPopulationsByVillageIdAndDateUploadAndStatus(
+            @Param("villageId") Long villageId,
+            @Param("dateUpload") String dateUpload,
+            @Param("villageStatus") Boolean villageStatus
+    );
 }

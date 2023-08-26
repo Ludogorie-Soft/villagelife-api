@@ -1,6 +1,7 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.PopulationDTO;
+import com.example.ludogorieSoft.village.enums.Foreigners;
 import com.example.ludogorieSoft.village.enums.NumberOfPopulation;
 import com.example.ludogorieSoft.village.model.Population;
 import com.example.ludogorieSoft.village.repositories.PopulationRepository;
@@ -9,6 +10,7 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -105,14 +107,45 @@ public class PopulationService {
     public PopulationDTO getPopulationByVillageId(Long villageId, boolean status, String date){
         Population population = new Population();
 
-        population.setPopulationCount(calculateAveragePopulationCountByVillageId(villageId, status, date));
+        if (status){
+            List<Object[]> foreignersWithCount = populationRepository.countForeignersByVillageIdAndStatusOrderedByCountDesc(villageId);
+            population.setForeigners(getForeigners(foreignersWithCount));
+            population.setPopulationCount(calculateAveragePopulationCountByVillageId(villageId));
+
+        }else {
+            population = populationRepository.findPopulationsByVillageIdAndDateUploadAndStatus(villageId, date, false);
+        }
 
         return populationToPopulationDTO(population);
     }
-     public int calculateAveragePopulationCountByVillageId(Long villageId, boolean status, String date){
-        if(status){
-            return (int) Math.floor(populationRepository.getAveragePopulationCountByVillageId(villageId));
-        }
-        return (int) Math.floor(populationRepository.getAveragePopulationCountByVillageIdAndStatusAndDate(villageId, false, date));
+     public int calculateAveragePopulationCountByVillageId(Long villageId){
+        return (int) Math.floor(populationRepository.getAveragePopulationCountByVillageId(villageId));
+     }
+
+     public <T extends Enum<T>> List<T> getEnumsWithMaxCount(List<Object[]> rows, Class<T> enumClass) {
+         List<T> enums = new ArrayList<>();
+         Long maxCount = (Long) rows.get(0)[0];
+
+         for (Object[] row : rows) {
+             if (maxCount == row[0]) {
+                 enums.add(enumClass.cast(row[1]));
+             }
+         }
+
+         return enums;
+     }
+
+    public Foreigners getForeigners(List<Object[]> rows){
+        List<Foreigners> foreigners = getEnumsWithMaxCount(rows, Foreigners.class);
+        if(foreigners.size() == 1){
+             return foreigners.get(0);
+         } else if (foreigners.size() == 2 && foreigners.contains(Foreigners.I_DONT_KNOW)) {
+             if(foreigners.get(0) == Foreigners.I_DONT_KNOW){
+                 return foreigners.get(1);
+             } else {
+                 return foreigners.get(0);
+             }
+         }
+         return Foreigners.I_DONT_KNOW;
      }
 }
