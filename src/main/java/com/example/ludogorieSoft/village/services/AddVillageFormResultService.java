@@ -69,6 +69,7 @@ public class AddVillageFormResultService {
         populationDTO.setVillageId(villageId);
         populationDTO.setNumberOfPopulation(getNumberOfPopulationByAddVillageFormResult(addVillageFormResult));
         populationDTO.setDateUpload(localDateTime);
+        populationDTO.setStatus(false);
 
         populationDTO.setResidents(addVillageFormResult.getPopulationDTO().getResidents());
         populationDTO.setChildren(addVillageFormResult.getPopulationDTO().getChildren());

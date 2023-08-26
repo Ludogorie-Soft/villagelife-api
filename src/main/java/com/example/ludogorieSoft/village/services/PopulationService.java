@@ -16,12 +16,14 @@ import java.util.Optional;
 @AllArgsConstructor
 public class PopulationService {
 
-    private  PopulationRepository populationRepository;
+    private PopulationRepository populationRepository;
     private final ModelMapper modelMapper;
-    public PopulationDTO populationToPopulationDTO(Population population){
+
+    public PopulationDTO populationToPopulationDTO(Population population) {
         return modelMapper.map(population, PopulationDTO.class);
     }
-    public Population populationDTOtoPopulation(PopulationDTO populationDTO){
+
+    public Population populationDTOtoPopulation(PopulationDTO populationDTO) {
         return modelMapper.map(populationDTO, Population.class);
     }
 
@@ -32,14 +34,17 @@ public class PopulationService {
                 .map(this::populationToPopulationDTO)
                 .toList();
     }
+
     public PopulationDTO createPopulation(PopulationDTO populationDTO) {
         Population population = populationDTOtoPopulation(populationDTO);
+        population.setVillageStatus(populationDTO.getStatus());
         Population savedPopulation = populationRepository.save(population);
         populationDTO.setId(savedPopulation.getId());
         return populationDTO;
     }
+
     public Long createPopulationWithNullValues() {
-        Population population=new Population();
+        Population population = new Population();
         population.setNumberOfPopulation(NumberOfPopulation.UP_TO_10_PEOPLE);
         populationRepository.save(population);
         return population.getId();
@@ -85,13 +90,13 @@ public class PopulationService {
         return populationToPopulationDTO(population.get());
     }
 
-    public Population findPopulationByVillageNameAndRegion(String name, String regionName){
+    public Population findPopulationByVillageNameAndRegion(String name, String regionName) {
         return populationRepository.findByVillageNameAndRegionName(name, regionName);
     }
 
-    public PopulationDTO findPopulationDTOByVillageNameAndRegion(String name, String regionName){
+    public PopulationDTO findPopulationDTOByVillageNameAndRegion(String name, String regionName) {
         Population population = populationRepository.findByVillageNameAndRegionName(name, regionName);
-        if (population == null){
+        if (population == null) {
             throw new ApiRequestException("This population is null!");
         }
         return populationToPopulationDTO(population);
