@@ -50,6 +50,9 @@ public class PopulationService {
         return population.getId();
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    ////                                        edit                                        ////
+    ////////////////////////////////////////////////////////////////////////////////////////////
     public PopulationDTO getPopulationById(Long id) {
         Optional<Population> population = populationRepository.findById(id);
 
@@ -81,19 +84,16 @@ public class PopulationService {
         populationRepository.save(findPopulation.get());
         return populationToPopulationDTO(findPopulation.get());
     }
-
-    public PopulationDTO getPopulationByVillageId(Long id) {
-        Optional<Population> population = populationRepository.findById(id);
-        if (!population.isPresent()) {
-            throw new ApiRequestException("This population not found");
-        }
-        return populationToPopulationDTO(population.get());
-    }
-
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    ////                                        edit                                        ////
+    ////////////////////////////////////////////////////////////////////////////////////////////
     public Population findPopulationByVillageNameAndRegion(String name, String regionName) {
         return populationRepository.findByVillageNameAndRegionName(name, regionName);
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    ////                                        edit                                        ////
+    ////////////////////////////////////////////////////////////////////////////////////////////
     public PopulationDTO findPopulationDTOByVillageNameAndRegion(String name, String regionName) {
         Population population = populationRepository.findByVillageNameAndRegionName(name, regionName);
         if (population == null) {
@@ -101,4 +101,18 @@ public class PopulationService {
         }
         return populationToPopulationDTO(population);
     }
+
+    public PopulationDTO getPopulationByVillageId(Long villageId, boolean status, String date){
+        Population population = new Population();
+
+        population.setPopulationCount(calculateAveragePopulationCountByVillageId(villageId, status, date));
+
+        return populationToPopulationDTO(population);
+    }
+     public int calculateAveragePopulationCountByVillageId(Long villageId, boolean status, String date){
+        if(status){
+            return (int) Math.floor(populationRepository.getAveragePopulationCountByVillageId(villageId));
+        }
+        return (int) Math.floor(populationRepository.getAveragePopulationCountByVillageIdAndStatusAndDate(villageId, false, date));
+     }
 }

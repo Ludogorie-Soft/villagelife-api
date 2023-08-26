@@ -14,11 +14,13 @@ public class VillageInfoService {
     private final ObjectVillageService objectVillageService;
     private final EthnicityVillageService ethnicityVillageService;
     private final VillageAnswerQuestionService villageAnswerQuestionService;
+    private final PopulationService populationService;
     public VillageInfo getVillageInfoByVillageId(Long villageId, boolean status, String date){
         Village village = villageService.checkVillage(villageId);
         VillageInfo villageInfo = new VillageInfo();
         villageInfo.setVillageDTO(villageService.getVillageById(village.getId()));
 
+        villageInfo.setPopulationDTO(populationService.getPopulationByVillageId(villageId, status, date));
         villageInfo.setPopulationAssertionResponses(populatedAssertionService.getPopulationAssertionResponse(village.getId(),status,date));
         villageInfo.setLivingConditionResponses(livingConditionService.getLivingConditionResponses(village.getId(),status,date));
         villageInfo.getLivingConditionResponses().add(livingConditionService.getAccessibilityByVillageId(village.getId(),status,date));

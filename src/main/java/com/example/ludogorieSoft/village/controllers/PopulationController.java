@@ -56,4 +56,8 @@ public class PopulationController {
         return ResponseEntity.ok(populationService.findPopulationDTOByVillageNameAndRegion(villageName, region));
     }
 
+    @GetMapping("/village/{id}")
+    public ResponseEntity<PopulationDTO> getPopulationByVillageId(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(populationService.getPopulationByVillageId(id, true, null));
+    }
 }
