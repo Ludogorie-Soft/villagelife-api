@@ -24,7 +24,16 @@ public interface PopulationRepository extends JpaRepository<Population, Long> {
             "AND p.dateDeleted IS NULL " +
             "GROUP BY p.foreigners " +
             "ORDER BY COUNT(p) DESC")
-    List<Object[]> countForeignersByVillageIdAndStatusOrderedByCountDesc(@Param("villageId") Long villageId);
+    List<Object[]> countForeignersByVillageIdAndStatusTrueOrderedByCountDesc(@Param("villageId") Long villageId);
+
+    @Query("SELECT COUNT(p), p.children FROM Population p " +
+            "WHERE p.village.id = :villageId " +
+            "AND p.villageStatus = true " +
+            "AND p.dateDeleted IS NULL " +
+            "GROUP BY p.children " +
+            "ORDER BY COUNT(p) DESC")
+    List<Object[]> countChildrenByVillageIdAndStatusTrueOrderedByCountDesc(@Param("villageId") Long villageId);
+
 
     @Query("SELECT p FROM Population p " +
             "WHERE p.village.id = :villageId " +

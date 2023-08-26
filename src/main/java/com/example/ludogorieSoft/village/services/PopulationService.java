@@ -1,6 +1,7 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.PopulationDTO;
+import com.example.ludogorieSoft.village.enums.Children;
 import com.example.ludogorieSoft.village.enums.Foreigners;
 import com.example.ludogorieSoft.village.enums.NumberOfPopulation;
 import com.example.ludogorieSoft.village.model.Population;
@@ -108,10 +109,11 @@ public class PopulationService {
         Population population = new Population();
 
         if (status){
-            List<Object[]> foreignersWithCount = populationRepository.countForeignersByVillageIdAndStatusOrderedByCountDesc(villageId);
+            List<Object[]> foreignersWithCount = populationRepository.countForeignersByVillageIdAndStatusTrueOrderedByCountDesc(villageId);
             population.setForeigners(getForeigners(foreignersWithCount));
+            List<Object[]> childrenWithCount = populationRepository.countChildrenByVillageIdAndStatusTrueOrderedByCountDesc(villageId);
+            population.setChildren(getChildren(childrenWithCount));
             population.setPopulationCount(calculateAveragePopulationCountByVillageId(villageId));
-
         }else {
             population = populationRepository.findPopulationsByVillageIdAndDateUploadAndStatus(villageId, date, false);
         }
@@ -138,7 +140,15 @@ public class PopulationService {
     public Foreigners getForeigners(List<Object[]> rows){
         List<Foreigners> foreigners = getEnumsWithMaxCount(rows, Foreigners.class);
         if(foreigners.size() == 1){
-             return foreigners.get(0);
+            if(foreigners.get(0) != Foreigners.I_DONT_KNOW ||
+                    foreigners.get(0) == Foreigners.I_DONT_KNOW &&
+                    rows.size() == 3 &&
+                    rows.get(1)[0] == rows.get(2)[0] ||
+                    rows.size() == 1){
+                return foreigners.get(0);
+            }else {
+                return (Foreigners) rows.get(1)[1];
+            }
          } else if (foreigners.size() == 2 && foreigners.contains(Foreigners.I_DONT_KNOW)) {
              if(foreigners.get(0) == Foreigners.I_DONT_KNOW){
                  return foreigners.get(1);
@@ -147,5 +157,16 @@ public class PopulationService {
              }
          }
          return Foreigners.I_DONT_KNOW;
+     }
+     public Children getChildren(List<Object[]> rows){
+         List<Children> children = getEnumsWithMaxCount(rows, Children.class);
+         int maxValueAsNumber = Integer.MIN_VALUE;
+         for(Children childrenResult : children){
+             if(childrenResult.getValueAsNumber() > maxValueAsNumber){
+                 maxValueAsNumber = childrenResult.getValueAsNumber();
+             }
+         }
+         return Children.getByValueAsNumber(maxValueAsNumber);
+
      }
 }
