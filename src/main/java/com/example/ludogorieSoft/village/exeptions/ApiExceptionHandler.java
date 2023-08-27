@@ -3,24 +3,16 @@ package com.example.ludogorieSoft.village.exeptions;
 import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-@ControllerAdvice
-public class ApiExceptionHandler {
+@RestControllerAdvice
+public class ApiExceptionHandler  {
     @ExceptionHandler(value = {ApiRequestException.class})
-    public ResponseEntity<Object> handleApiRequestException(com.example.ludogorieSoft.village.exeptions.ApiRequestException e){
-        HttpStatus badRequest = HttpStatus.BAD_REQUEST;
-        ApiVillageNotFound apiException = new ApiVillageNotFound(
-                e.getMessage(),
-                e.getCause(),
-                badRequest,
-                ZonedDateTime.now(ZoneId.of("Z"))
-        );
-        return new ResponseEntity<>(apiException, badRequest);
+    public ResponseEntity<String> handleApiRequestException(ApiRequestException ex){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
+
     @ExceptionHandler(value = {JwtException.class})
     public ResponseEntity<String> handleJWTException(JwtException e) {
         String errorMessage;
@@ -32,11 +24,12 @@ public class ApiExceptionHandler {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorMessage);
         }
     }
-
-//    @ExceptionHandler(DataIntegrityViolationException.class)
-//    public ResponseEntity<String> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
-//        String errorMessage = "Duplicate entry error";
-//
-//        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorMessage);
-//    }
+    @ExceptionHandler(NoConsentException.class)
+    public ResponseEntity<String> handleNoConsentException(NoConsentException ex){
+        return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(ex.getMessage());
+    }
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleGlobalException(Exception ex){
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+    }
 }

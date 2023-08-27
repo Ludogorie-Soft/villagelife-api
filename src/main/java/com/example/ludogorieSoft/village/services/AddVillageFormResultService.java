@@ -2,6 +2,7 @@ package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.*;
 import com.example.ludogorieSoft.village.enums.NumberOfPopulation;
+import com.example.ludogorieSoft.village.exeptions.NoConsentException;
 import com.example.ludogorieSoft.village.model.Population;
 import com.example.ludogorieSoft.village.utils.TimestampUtils;
 import lombok.AllArgsConstructor;
@@ -26,9 +27,14 @@ public class AddVillageFormResultService {
     private VillageLivingConditionService villageLivingConditionService;
     private EthnicityService ethnicityService;
     private VillageImageService villageImageService;
+    private final UserService userService;
 
     public AddVillageFormResult create(AddVillageFormResult addVillageFormResult){
+
+        checkIsImagesHasUserConsent(addVillageFormResult);
+
         LocalDateTime timestamp = TimestampUtils.getCurrentTimestamp();
+        UserDTO userDTO = userService.checkUserDTO(addVillageFormResult.getUserDTO());
 
         VillageDTO villageDTO = addVillageFormResult.getVillageDTO();
         PopulationDTO savedPopulation = createPopulationFromAddVillageFormResult(addVillageFormResult);
@@ -37,14 +43,23 @@ public class AddVillageFormResultService {
         villageDTO.setDateUpload(timestamp);
         VillageDTO savedVillage = villageService.createVillage(villageDTO);
 
-        createVillageGroundCategoryFromAddVillageFormResult(savedVillage.getId(), addVillageFormResult,timestamp);//ddd
-        createEthnicityVillagesFromAddVillageFormResult(savedVillage.getId(), addVillageFormResult,timestamp);//ddd
+        createVillageGroundCategoryFromAddVillageFormResult(savedVillage.getId(), addVillageFormResult,timestamp);
+        createEthnicityVillagesFromAddVillageFormResult(savedVillage.getId(), addVillageFormResult,timestamp);
         createVillageAnswerQuestionsFromAddVillageFormResult(savedVillage.getId(), addVillageFormResult, timestamp);
-        createObjectVillagesFromAddVillageFormResult(savedVillage.getId(), addVillageFormResult, timestamp);//ddd
+        createObjectVillagesFromAddVillageFormResult(savedVillage.getId(), addVillageFormResult, timestamp);
         createVillagePopulationAssertionsFromAddVillageFormResult(savedVillage.getId(), addVillageFormResult,timestamp);
         createVillageLivingConditionFromAddVillageFormResult(savedVillage.getId(), addVillageFormResult, timestamp);
-        villageImageService.createImagePaths(addVillageFormResult.getImageBytes(), savedVillage.getId(), timestamp, false);
+        villageImageService.createImagePaths(addVillageFormResult.getImageBytes(), savedVillage.getId(), timestamp, false, userDTO);
         return addVillageFormResult;
+    }
+    public void checkIsImagesHasUserConsent(AddVillageFormResult addVillageFormResult){
+        if(!addVillageFormResult.getImageBytes().isEmpty()
+                && addVillageFormResult.getUserDTO().getFullName().isEmpty()
+                && addVillageFormResult.getUserDTO().getEmail().isEmpty()
+            && addVillageFormResult.getUserDTO().getConsent().equals(false)){
+            throw new NoConsentException("При добавяне на снимки трябва да се съгласите с условията!");
+        }
+
     }
     public NumberOfPopulation getNumberOfPopulationByAddVillageFormResult(AddVillageFormResult addVillageFormResult){
         int populationAsNumber = addVillageFormResult.getVillageDTO().getPopulationCount();

@@ -158,7 +158,7 @@ class VillageImageServiceTest {
             return villageImage;
         }).when(modelMapper).map(any(VillageImageDTO.class), eq(VillageImage.class));
 
-        villageImageService.createVillageImageDTO(villageId, fileName, fixedTimestamp, false);
+        villageImageService.createVillageImageDTO(villageId, fileName, fixedTimestamp, false,null);
 
         verify(villageImageRepository).save(any(VillageImage.class));
     }
@@ -168,7 +168,7 @@ class VillageImageServiceTest {
     void testCreateImagePathsWithInvalidImages() {
         byte[] emptyImage = {};
         Long villageId = 123L;
-        List<String> result = villageImageService.createImagePaths(List.of(emptyImage), villageId, null, false);
+        List<String> result = villageImageService.createImagePaths(List.of(emptyImage), villageId, null, false,null);
         Assertions.assertTrue(result.isEmpty());
     }
 

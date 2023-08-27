@@ -1,5 +1,6 @@
 package com.example.ludogorieSoft.village.services;
 
+import com.example.ludogorieSoft.village.model.User;
 import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.model.VillageImage;
 import org.junit.jupiter.api.Test;
@@ -17,7 +18,7 @@ class VillageImageTest {
         String imageName = "image.jpg";
         boolean status = true;
 
-        VillageImage villageImage = new VillageImage(id, village, imageName, true, now(), now());
+        VillageImage villageImage = new VillageImage(id, village, imageName, true, now(), now(),new User());
 
         assertEquals(id, villageImage.getId());
         assertEquals(village, villageImage.getVillage());

@@ -1,5 +1,6 @@
 package com.example.ludogorieSoft.village.services;
 
+import com.example.ludogorieSoft.village.dtos.UserDTO;
 import com.example.ludogorieSoft.village.dtos.VillageDTO;
 import com.example.ludogorieSoft.village.dtos.VillageImageDTO;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
@@ -34,14 +35,14 @@ public class VillageImageService {
     private static final String NOT_FOUND_MESSAGE = " not found";
     private static final Logger logger = LoggerFactory.getLogger(VillageImageService.class);
 
-    public List<String> createImagePaths(List<byte[]> imageBytes, Long villageId, LocalDateTime localDateTime, Boolean status) { //ddd
+    public List<String> createImagePaths(List<byte[]> imageBytes, Long villageId, LocalDateTime localDateTime, Boolean status, UserDTO userDTO) { //ddd
         List<String> imagePaths = new ArrayList<>();
         for (byte[] image : imageBytes) {
             if (image.length > 0) {
                 String imagePath = processImage(image);
                 if (imagePath != null) {
                     imagePaths.add(imagePath);
-                    createVillageImageDTO(villageId, imagePath,localDateTime, status);
+                    createVillageImageDTO(villageId, imagePath,localDateTime, status ,userDTO);
                 }
             }
         }
@@ -84,8 +85,8 @@ public class VillageImageService {
         }
     }
 
-    public void createVillageImageDTO(Long villageId, String fileName, LocalDateTime localDateTime, boolean status) {//ddd
-        VillageImageDTO villageImageDTO = new VillageImageDTO(null, villageId, fileName, status, localDateTime,null, null);//added false for status column /ddd
+    public void createVillageImageDTO(Long villageId, String fileName, LocalDateTime localDateTime, boolean status, UserDTO userDTO) {//ddd
+        VillageImageDTO villageImageDTO = new VillageImageDTO(null, villageId, fileName, status, localDateTime,null, null,userDTO);//added false for status column /ddd
         createVillageImageDTO(villageImageDTO);
     }
 
