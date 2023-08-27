@@ -173,7 +173,6 @@ public class PopulationService {
              }
          }
          return Children.getByValueAsNumber(maxValueAsNumber);
-
      }
 
     public Residents getResidents(List<Object[]> rows){
@@ -185,7 +184,6 @@ public class PopulationService {
             }
         }
         return Residents.getByValueAsNumber(maxValueAsNumber);
-
     }
 
     public NumberOfPopulation getNumberOfPopulationByPopulationAsNumber(int populationAsNumber){

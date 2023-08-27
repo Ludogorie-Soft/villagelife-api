@@ -17,10 +17,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -34,7 +32,8 @@ class PopulationServiceTest {
     private PopulationService populationService;
     @Mock
     private ModelMapper modelMapper;
-
+    @Mock
+    private VillageService villageService;
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -290,4 +289,101 @@ class PopulationServiceTest {
         assertThrows(ApiRequestException.class,
                 () -> populationService.findPopulationDTOByVillageNameAndRegion(villageName, regionName));
     }
+    @Test
+    void testRejectPopulationResponse() {
+        Long villageId = 1L;
+        boolean currentStatus = true;
+        String answerDate = "2023-08-27 10:00:00";
+        LocalDateTime dateDeleted = LocalDateTime.now();
+
+        doAnswer(invocation -> null).when(villageService).checkVillage(villageId);
+
+        Population mockPopulation = new Population();
+        when(populationRepository.findPopulationsByVillageIdAndDateUploadAndStatus(villageId, answerDate, currentStatus))
+                .thenReturn(mockPopulation);
+        when(populationRepository.save(any(Population.class))).thenReturn(mockPopulation);
+
+        populationService.rejectPopulationResponse(villageId, currentStatus, answerDate, dateDeleted);
+
+        verify(villageService, times(1)).checkVillage(villageId);
+        verify(populationRepository, times(1)).findPopulationsByVillageIdAndDateUploadAndStatus(villageId, answerDate, currentStatus);
+        verify(populationRepository, times(1)).save(mockPopulation);
+    }
+
+    @Test
+    void testUpdatePopulationStatus() {
+        Long villageId = 1L;
+        boolean currentStatus = true;
+        String answerDate = "2023-08-27 10:00:00";
+
+        doAnswer(invocation -> null).when(villageService).checkVillage(villageId);
+
+        Population mockPopulation = mock(Population.class);
+        when(populationRepository.findPopulationsByVillageIdAndDateUploadAndStatus(villageId, answerDate, currentStatus))
+                .thenReturn(mockPopulation);
+        when(populationRepository.save(any(Population.class))).thenReturn(mockPopulation);
+
+        populationService.updatePopulationStatus(villageId, currentStatus, answerDate);
+
+        verify(villageService, times(1)).checkVillage(villageId);
+        verify(populationRepository, times(1)).findPopulationsByVillageIdAndDateUploadAndStatus(villageId, answerDate, currentStatus);
+
+        verify(mockPopulation, times(1)).setVillageStatus(!currentStatus);
+        verify(mockPopulation, times(1)).setDateDeleted(null);
+        verify(populationRepository, times(1)).save(mockPopulation);
+    }
+
+    @Test
+    void testFindByVillageIdAndVillageStatus() {
+        Long villageId = 1L;
+        boolean villageStatus = true;
+
+        List<Population> mockPopulations = new ArrayList<>();
+        mockPopulations.add(new Population());
+        mockPopulations.add(new Population());
+        when(populationRepository.findByVillageIdAndVillageStatus(villageId, villageStatus))
+                .thenReturn(mockPopulations);
+
+        List<Population> result = populationService.findByVillageIdAndVillageStatus(villageId, villageStatus);
+
+        assertEquals(mockPopulations.size(), result.size());
+        assertEquals(mockPopulations, result);
+
+        verify(populationRepository, times(1)).findByVillageIdAndVillageStatus(villageId, villageStatus);
+    }
+
+    @Test
+    void testFindByVillageIdAndVillageStatusDateDeleteNotNull() {
+        Long villageId = 1L;
+        boolean villageStatus = true;
+
+        List<Population> mockPopulations = new ArrayList<>();
+        mockPopulations.add(new Population());
+        when(populationRepository.findByVillageIdAndVillageStatusAndDateDeleteNotNull(villageId, villageStatus))
+                .thenReturn(mockPopulations);
+
+        List<Population> result = populationService.findByVillageIdAndVillageStatusDateDeleteNotNull(villageId, villageStatus);
+
+        assertEquals(mockPopulations.size(), result.size());
+        assertEquals(mockPopulations, result);
+
+        verify(populationRepository, times(1)).findByVillageIdAndVillageStatusAndDateDeleteNotNull(villageId, villageStatus);
+    }
+
+    @Test
+    void testCalculateAveragePopulationCountByVillageId() {
+        Long villageId = 1L;
+        double averagePopulationCount = 123.45;
+
+        when(populationRepository.getAveragePopulationCountByVillageId(villageId))
+                .thenReturn(averagePopulationCount);
+
+        int result = populationService.calculateAveragePopulationCountByVillageId(villageId);
+
+        assertEquals((int) Math.floor(averagePopulationCount), result);
+
+        verify(populationRepository, times(1)).getAveragePopulationCountByVillageId(villageId);
+    }
+
+
 }
