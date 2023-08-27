@@ -1,6 +1,5 @@
 package com.example.ludogorieSoft.village.controllers;
 
-import com.example.ludogorieSoft.village.dtos.PopulationDTO;
 import com.example.ludogorieSoft.village.dtos.VillageDTO;
 import com.example.ludogorieSoft.village.dtos.response.VillageInfo;
 import com.example.ludogorieSoft.village.dtos.response.VillageResponse;
@@ -57,11 +56,6 @@ public class AdminFunctionController {
                                                           @RequestParam("answerDate") String answerDate, boolean status) {
         VillageInfo villageInfo = villageInfoService.getVillageInfoByVillageId(villageId, status, answerDate);
         return ResponseEntity.ok(villageInfo);
-    }
-    @GetMapping("/population/villageId/{id}")
-    public ResponseEntity<PopulationDTO> getPopulationByVillageId(@PathVariable("id") Long id,
-                                                                  @RequestParam("answerDate") String answerDate, boolean status) {
-        return ResponseEntity.ok(populationService.getPopulationByVillageId(id, status, answerDate));
     }
     @GetMapping("/getRejected")
     public ResponseEntity<List<VillageResponse>> getVillagesWithRejectedResponses() {
