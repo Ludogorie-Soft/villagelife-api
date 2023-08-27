@@ -55,7 +55,6 @@ public class AdminVillageService {
         ethnicityVillageService.updateEthnicityVillageStatus(villageId, status, answerDate);
         villageGroundCategoryService.updateVillageGroundCategoryStatus(villageId, status, answerDate);
     }
-////////////////////////////////////////////////////////////////////////////////////////////////
     public void rejectVillageResponses(Long villageId, String answerDate) {
         LocalDateTime timestamp = TimestampUtils.getCurrentTimestamp();
         boolean status = false;
@@ -63,6 +62,7 @@ public class AdminVillageService {
         if (villageDTO.getStatus().equals(true)) {
             villageService.updateVillageStatus(villageId, villageDTO);
         }
+        populationService.rejectPopulationResponse(villageId, status, answerDate, timestamp);
         villagePopulationAssertionService.rejectVillagePopulationAssertionStatus(villageId, status, answerDate, timestamp);
         villageLivingConditionService.rejectVillageLivingConditionResponse(villageId, status, answerDate, timestamp);
         villageImageService.rejectVillageImages(villageId, status, answerDate, timestamp);

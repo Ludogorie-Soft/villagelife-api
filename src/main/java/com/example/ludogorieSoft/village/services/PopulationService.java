@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -219,6 +220,13 @@ public class PopulationService {
         Population population = populationRepository.findPopulationsByVillageIdAndDateUploadAndStatus(villageId, answerDate, currentStatus);
         population.setVillageStatus(!currentStatus);
         population.setDateDeleted(null);
+        populationRepository.save(population);
+    }
+
+    public void rejectPopulationResponse(Long villageId, boolean currentStatus, String answerDate, LocalDateTime dateDeleted) {
+        villageService.checkVillage(villageId);
+        Population population = populationRepository.findPopulationsByVillageIdAndDateUploadAndStatus(villageId, answerDate, currentStatus);
+        population.setDateDeleted(dateDeleted);
         populationRepository.save(population);
     }
 }
