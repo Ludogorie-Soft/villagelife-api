@@ -2,6 +2,7 @@ package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.dtos.PopulationDTO;
 import com.example.ludogorieSoft.village.dtos.VillageDTO;
+import com.example.ludogorieSoft.village.dtos.response.VillageInfo;
 import com.example.ludogorieSoft.village.services.VillageInfoService;
 import com.example.ludogorieSoft.village.services.VillageService;
 import org.junit.jupiter.api.BeforeEach;
@@ -57,14 +58,12 @@ class VillageControllerIntegrationTest {
         VillageDTO villageDTO1 = new VillageDTO();
         villageDTO1.setId(1L);
         villageDTO1.setName("Village Name 1");
-        villageDTO1.setPopulationDTO(new PopulationDTO());
         villageDTO1.setDateUpload(LocalDateTime.now());
         villageDTO1.setStatus(true);
 
         VillageDTO villageDTO2 = new VillageDTO();
         villageDTO2.setId(2L);
         villageDTO2.setName("Village Name 2");
-        villageDTO2.setPopulationDTO(new PopulationDTO());
         villageDTO2.setDateUpload(LocalDateTime.now());
         villageDTO2.setStatus(true);
 
@@ -77,12 +76,10 @@ class VillageControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.[0].id").value(1))
                 .andExpect(jsonPath("$.[0].name").value("Village Name 1"))
-                .andExpect(jsonPath("$.[0].populationDTO").exists())
                 .andExpect(jsonPath("$.[0].dateUpload").exists())
                 .andExpect(jsonPath("$.[0].status").value(true))
                 .andExpect(jsonPath("$.[1].id").value(2))
                 .andExpect(jsonPath("$.[1].name").value("Village Name 2"))
-                .andExpect(jsonPath("$.[1].populationDTO").exists())
                 .andExpect(jsonPath("$.[1].dateUpload").exists())
                 .andExpect(jsonPath("$.[1].status").value(true))
                 .andReturn();
@@ -96,7 +93,6 @@ class VillageControllerIntegrationTest {
         VillageDTO villageDTO = new VillageDTO();
         villageDTO.setId(2L);
         villageDTO.setName("Village Name 2");
-        villageDTO.setPopulationDTO(new PopulationDTO());
         villageDTO.setDateUpload(LocalDateTime.now());
         villageDTO.setStatus(false);
 
@@ -107,7 +103,6 @@ class VillageControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(2))
                 .andExpect(jsonPath("$.name").value("Village Name 2"))
-                .andExpect(jsonPath("$.populationDTO").exists())
                 .andExpect(jsonPath("$.dateUpload").exists())
                 .andExpect(jsonPath("$.status").value(false))
                 .andReturn();
@@ -121,7 +116,6 @@ class VillageControllerIntegrationTest {
         VillageDTO villageDTO = new VillageDTO();
         villageDTO.setId(3L);
         villageDTO.setName("Created Village Name");
-        villageDTO.setPopulationDTO(new PopulationDTO());
         villageDTO.setDateUpload(LocalDateTime.now());
         villageDTO.setStatus(true);
 
@@ -133,7 +127,6 @@ class VillageControllerIntegrationTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(3))
                 .andExpect(jsonPath("$.name").value("Created Village Name"))
-                .andExpect(jsonPath("$.populationDTO").exists())
                 .andExpect(jsonPath("$.dateUpload").exists())
                 .andExpect(jsonPath("$.status").value(true))
                 .andReturn();
@@ -147,7 +140,6 @@ class VillageControllerIntegrationTest {
         VillageDTO villageDTO = new VillageDTO();
         villageDTO.setId(1L);
         villageDTO.setName("Updated Village Name");
-        villageDTO.setPopulationDTO(new PopulationDTO());
         villageDTO.setDateUpload(LocalDateTime.now());
         villageDTO.setStatus(false);
 
@@ -159,7 +151,6 @@ class VillageControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.name").value("Updated Village Name"))
-                .andExpect(jsonPath("$.populationDTO").exists())
                 .andExpect(jsonPath("$.dateUpload").exists())
                 .andExpect(jsonPath("$.status").value(false))
                 .andReturn();
@@ -204,6 +195,36 @@ class VillageControllerIntegrationTest {
         String response = mvcResult.getResponse().getContentAsString();
         assertNotNull(response);
     }
+
+    @Test
+    void testGetVillageInfoById() throws Exception {
+        VillageDTO villageDTO = new VillageDTO();
+        villageDTO.setId(2L);
+        villageDTO.setName("Village Name 2");
+        villageDTO.setDateUpload(LocalDateTime.now());
+        villageDTO.setStatus(false);
+
+        VillageInfo villageInfo = new VillageInfo();
+        villageInfo.setVillageDTO(villageDTO);
+        villageInfo.setEthnicities("няма малцинствени групи");
+
+        when(villageInfoService.getVillageInfoByVillageId(anyLong(), anyBoolean(), nullable(String.class)))
+                .thenReturn(villageInfo);
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villages/info/{id}", 2)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.villageDTO.id").value(2))
+                .andExpect(jsonPath("$.villageDTO.name").value("Village Name 2"))
+                .andExpect(jsonPath("$.villageDTO.dateUpload").exists())
+                .andExpect(jsonPath("$.villageDTO.status").value(false))
+                .andExpect(jsonPath("$.ethnicities").value(villageInfo.getEthnicities()))
+                .andReturn();
+
+        String response = mvcResult.getResponse().getContentAsString();
+        assertNotNull(response);
+    }
+
 
 //    @Test
 //    void testGetVillageInfoById() throws Exception {

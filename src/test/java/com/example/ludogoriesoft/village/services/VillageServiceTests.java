@@ -230,23 +230,25 @@ class VillageServiceTests {
 
     @Test
     void testGetSearchVillagesByChildrenCount() {
-
         Village village1 = new Village();
         village1.setId(1L);
         village1.setName("Village1");
         village1.setRegion(new Region(1L, "Region1"));
-        village1.setPopulation(new Population(1L, NumberOfPopulation.UP_TO_10_PEOPLE, Residents.FROM_21_TO_30_PERCENT, Children.FROM_21_TO_50, Foreigners.I_DONT_KNOW));
-        Village village2 = new Village();
-        village2.setId(2L);
-        village2.setName("Village2");
-        village2.setRegion(new Region(2L, "Region2"));
-        village2.setPopulation(new Population(2L, NumberOfPopulation.UP_TO_10_PEOPLE, Residents.FROM_21_TO_30_PERCENT, Children.FROM_21_TO_50, Foreigners.I_DONT_KNOW));
-        List<Village> mockVillages = Arrays.asList(village1, village2);
+        village1.setPopulations(Arrays.asList(
+                new Population(1L, village1, 111, NumberOfPopulation.UP_TO_10_PEOPLE, Residents.FROM_21_TO_30_PERCENT, Children.FROM_21_TO_50, Foreigners.I_DONT_KNOW)
+        ));
 
+        VillageDTO villageDTO1 = new VillageDTO();
+        villageDTO1.setId(1L);
+        villageDTO1.setName("Village1");
+        villageDTO1.setRegion("Region1");
+        PopulationDTO populationDTO1 = new PopulationDTO();
+        populationDTO1.setChildren(Children.FROM_21_TO_50);
+        villageDTO1.setPopulations(Collections.singletonList(populationDTO1));
 
         when(villageRepository.searchVillagesByChildrenCount(
-                ArgumentMatchers.any(Children.class)))
-                .thenReturn(mockVillages);
+                ArgumentMatchers.any(Children.class)
+        )).thenReturn(Arrays.asList(village1));
 
         Children children = Children.FROM_21_TO_50;
 
@@ -256,11 +258,14 @@ class VillageServiceTests {
                 children.getEnumValue()
         );
 
-        assertEquals(2, result.size());
-        assertEquals("Village1", result.get(0).getName());
-        assertEquals("Village2", result.get(1).getName());
-    }
+        assertEquals(1, result.size());
 
+        VillageDTO expectedDTO = result.get(0);
+        assertEquals(villageDTO1.getId(), expectedDTO.getId());
+        assertEquals(villageDTO1.getName(), expectedDTO.getName());
+        assertEquals(villageDTO1.getRegion(), expectedDTO.getRegion());
+
+    }
 
     @Test
     void testGetAllVillages() {
@@ -372,7 +377,9 @@ class VillageServiceTests {
         vl1.setLivingCondition(new LivingCondition(1L, "Condition1"));
         village1.setVillageLivingConditions(List.of(vl1));
 
-        village1.setPopulation(new Population(1L, NumberOfPopulation.FROM_11_TO_50_PEOPLE, Residents.FROM_21_TO_30_PERCENT, Children.BELOW_10, Foreigners.I_DONT_KNOW));
+        village1.setPopulations(Arrays.asList(
+                new Population(1L, village1, 111, NumberOfPopulation.UP_TO_10_PEOPLE, Residents.FROM_21_TO_30_PERCENT, Children.FROM_21_TO_50, Foreigners.I_DONT_KNOW)
+        ));
         villages.add(village1);
 
         Village village2 = new Village();
@@ -385,27 +392,30 @@ class VillageServiceTests {
         vl2.setLivingCondition(new LivingCondition(2L, "Condition2"));
         village2.setVillageLivingConditions(List.of(vl2));
 
-        village2.setPopulation(new Population(2L, NumberOfPopulation.UP_TO_10_PEOPLE, Residents.UP_TO_2_PERCENT, Children.FROM_21_TO_50, Foreigners.YES));
-        villages.add(village2);
+        village2.setPopulations(Arrays.asList(
+                new Population(1L, village1, 111, NumberOfPopulation.UP_TO_10_PEOPLE, Residents.FROM_21_TO_30_PERCENT, Children.FROM_21_TO_50, Foreigners.I_DONT_KNOW)
+        ));villages.add(village2);
 
         VillageService villageService = new VillageService(null, null, null, null);
         List<VillageDTO> villageDTOs = villageService.villageToVillageDTOWithoutObject(villages);
 
         assertEquals(2, villageDTOs.size());
 
+
         VillageDTO dto1 = villageDTOs.get(0);
         assertEquals(1L, dto1.getId());
         assertEquals("Village1", dto1.getName());
         assertEquals("Region1", dto1.getRegion());
         assertEquals(1, dto1.getLivingConditions().size());
-        assertEquals(Children.BELOW_10, dto1.getPopulationDTO().getChildren());
+        assertEquals(Children.FROM_21_TO_50, dto1.getPopulations().get(0).getChildren());
 
         VillageDTO dto2 = villageDTOs.get(1);
         assertEquals(2L, dto2.getId());
         assertEquals("Village2", dto2.getName());
         assertEquals("Region2", dto2.getRegion());
         assertEquals(1, dto2.getLivingConditions().size());
-        assertEquals(Children.FROM_21_TO_50, dto2.getPopulationDTO().getChildren());
+        assertEquals(Children.FROM_21_TO_50, dto2.getPopulations().get(0).getChildren());
+
     }
 
     @Test
@@ -424,7 +434,9 @@ class VillageServiceTests {
         vl1.setLivingCondition(new LivingCondition(1L, "Condition1"));
         village1.setVillageLivingConditions(List.of(vl1));
 
-        village1.setPopulation(new Population(1L, NumberOfPopulation.FROM_11_TO_50_PEOPLE, Residents.FROM_21_TO_30_PERCENT, Children.BELOW_10, Foreigners.I_DONT_KNOW));
+        village1.setPopulations(Arrays.asList(
+                new Population(1L, village1, 111, NumberOfPopulation.UP_TO_10_PEOPLE, Residents.FROM_21_TO_30_PERCENT, Children.FROM_21_TO_50, Foreigners.I_DONT_KNOW)
+        ));
         villages.add(village1);
 
         Village village2 = new Village();
@@ -437,7 +449,9 @@ class VillageServiceTests {
         vl2.setLivingCondition(new LivingCondition(2L, "Condition2"));
         village2.setVillageLivingConditions(List.of(vl2));
 
-        village2.setPopulation(new Population(2L, NumberOfPopulation.UP_TO_10_PEOPLE, Residents.UP_TO_2_PERCENT, Children.FROM_21_TO_50, Foreigners.YES));
+        village2.setPopulations(Arrays.asList(
+                new Population(1L, village1, 111, NumberOfPopulation.UP_TO_10_PEOPLE, Residents.FROM_21_TO_30_PERCENT, Children.FROM_21_TO_50, Foreigners.I_DONT_KNOW)
+        ));
         villages.add(village2);
 
         VillageRepository mockRepository = mock(VillageRepository.class);
@@ -453,14 +467,15 @@ class VillageServiceTests {
         assertEquals("Village1", dto1.getName());
         assertEquals("Region1", dto1.getRegion());
         assertEquals(1, dto1.getLivingConditions().size());
-        assertEquals(Children.BELOW_10, dto1.getPopulationDTO().getChildren());
+        assertEquals(Children.FROM_21_TO_50, dto1.getPopulations().get(0).getChildren());
 
         VillageDTO dto2 = villageDTOs.get(1);
         assertEquals(2L, dto2.getId());
         assertEquals("Village2", dto2.getName());
         assertEquals("Region2", dto2.getRegion());
         assertEquals(1, dto2.getLivingConditions().size());
-        assertEquals(Children.FROM_21_TO_50, dto2.getPopulationDTO().getChildren());
+        assertEquals(Children.FROM_21_TO_50, dto2.getPopulations().get(0).getChildren());
+
     }
 
 
@@ -502,7 +517,9 @@ class VillageServiceTests {
         objectVillage1.setObject(object1);
         village1.setObjectVillages(List.of(objectVillage1));
 
-        village1.setPopulation(new Population(1L, NumberOfPopulation.UP_TO_10_PEOPLE, Residents.UP_TO_2_PERCENT, Children.OVER_50, Foreigners.YES));
+        village1.setPopulations(Arrays.asList(
+                new Population(1L, village1, 111, NumberOfPopulation.UP_TO_10_PEOPLE, Residents.FROM_21_TO_30_PERCENT, Children.OVER_50, Foreigners.I_DONT_KNOW)
+        ));
         villages.add(village1);
 
         Village village2 = new Village();
@@ -515,7 +532,9 @@ class VillageServiceTests {
         objectVillage2.setObject(object2);
         village2.setObjectVillages(List.of(objectVillage2));
 
-        village2.setPopulation(new Population(2L, NumberOfPopulation.UP_TO_10_PEOPLE, Residents.UP_TO_2_PERCENT, Children.FROM_11_TO_20, Foreigners.YES));
+        village2.setPopulations(Arrays.asList(
+                new Population(1L, village1, 111, NumberOfPopulation.UP_TO_10_PEOPLE, Residents.FROM_21_TO_30_PERCENT, Children.FROM_11_TO_20, Foreigners.I_DONT_KNOW)
+        ));
         villages.add(village2);
 
         VillageService villageService = new VillageService(null, null, null, null);
@@ -530,7 +549,7 @@ class VillageServiceTests {
         assertEquals(1, dto1.getObject().size());
         assertEquals(1L, dto1.getObject().get(0).getId());
         assertEquals("Type1", dto1.getObject().get(0).getType());
-        assertEquals(Children.OVER_50, dto1.getPopulationDTO().getChildren());
+        assertEquals(Children.OVER_50, dto1.getPopulations().get(0).getChildren());
 
         VillageDTO dto2 = villageDTOs.get(1);
         assertEquals(2L, dto2.getId());
@@ -539,7 +558,7 @@ class VillageServiceTests {
         assertEquals(1, dto2.getObject().size());
         assertEquals(2L, dto2.getObject().get(0).getId());
         assertEquals("Type2", dto2.getObject().get(0).getType());
-        assertEquals(Children.FROM_11_TO_20, dto2.getPopulationDTO().getChildren());
+        assertEquals(Children.FROM_11_TO_20, dto2.getPopulations().get(0).getChildren());
     }
 
 
@@ -554,7 +573,9 @@ class VillageServiceTests {
         ObjectVillage objectVillage1 = new ObjectVillage();
         objectVillage1.setObject(object1);
         village1.setObjectVillages(List.of(objectVillage1));
-        village1.setPopulation(new Population(1L, NumberOfPopulation.UP_TO_10_PEOPLE, Residents.UP_TO_2_PERCENT, Children.OVER_50, Foreigners.YES));
+        village1.setPopulations(Arrays.asList(
+                new Population(1L, village1, 111, NumberOfPopulation.UP_TO_10_PEOPLE, Residents.FROM_21_TO_30_PERCENT, Children.FROM_21_TO_50, Foreigners.I_DONT_KNOW)
+        ));
         villages.add(village1);
 
         Village village2 = new Village();
@@ -565,7 +586,9 @@ class VillageServiceTests {
         ObjectVillage objectVillage2 = new ObjectVillage();
         objectVillage2.setObject(object2);
         village2.setObjectVillages(List.of(objectVillage2));
-        village2.setPopulation(new Population(2L, NumberOfPopulation.UP_TO_10_PEOPLE, Residents.UP_TO_2_PERCENT, Children.FROM_11_TO_20, Foreigners.YES));
+        village2.setPopulations(Arrays.asList(
+                new Population(1L, village2, 111, NumberOfPopulation.UP_TO_10_PEOPLE, Residents.FROM_21_TO_30_PERCENT, Children.FROM_11_TO_20, Foreigners.I_DONT_KNOW)
+        ));
         villages.add(village2);
 
         VillageRepository mockRepository = mock(VillageRepository.class);
@@ -581,14 +604,14 @@ class VillageServiceTests {
         assertEquals("Village1", dto1.getName());
         assertEquals("Region1", dto1.getRegion());
         assertEquals(1, dto1.getObject().size());
-        assertEquals(Children.OVER_50, dto1.getPopulationDTO().getChildren());
+        assertEquals(Children.FROM_21_TO_50, dto1.getPopulations().get(0).getChildren());
 
         VillageDTO dto2 = villageDTOs.get(1);
         assertEquals(2L, dto2.getId());
         assertEquals("Village2", dto2.getName());
         assertEquals("Region2", dto2.getRegion());
         assertEquals(1, dto2.getObject().size());
-        assertEquals(Children.FROM_11_TO_20, dto2.getPopulationDTO().getChildren());
+        assertEquals(Children.FROM_11_TO_20, dto2.getPopulations().get(0).getChildren());
     }
 
 
@@ -711,14 +734,18 @@ class VillageServiceTests {
         village1.setId(1L);
         village1.setName("Village1");
         village1.setRegion(new Region(1L, "Region1"));
-        village1.setPopulation(new Population(1L, NumberOfPopulation.UP_TO_10_PEOPLE, Residents.UP_TO_2_PERCENT, Children.OVER_50, Foreigners.YES));
+        village1.setPopulations(Arrays.asList(
+                new Population(1L, village1, 111, NumberOfPopulation.UP_TO_10_PEOPLE, Residents.FROM_21_TO_30_PERCENT, Children.FROM_21_TO_50, Foreigners.I_DONT_KNOW)
+        ));
         villages.add(village1);
 
         Village village2 = new Village();
         village2.setId(2L);
         village2.setName("Village2");
         village2.setRegion(new Region(2L, "Region2"));
-        village2.setPopulation(new Population(2L, NumberOfPopulation.UP_TO_10_PEOPLE, Residents.UP_TO_2_PERCENT, Children.FROM_11_TO_20, Foreigners.YES));
+        village2.setPopulations(Arrays.asList(
+                new Population(1L, village1, 111, NumberOfPopulation.UP_TO_10_PEOPLE, Residents.FROM_21_TO_30_PERCENT, Children.FROM_21_TO_50, Foreigners.I_DONT_KNOW)
+        ));
         villages.add(village2);
 
         VillageService villageService = new VillageService(null, null, null, null);
@@ -730,13 +757,14 @@ class VillageServiceTests {
         assertEquals(1L, dto1.getId());
         assertEquals("Village1", dto1.getName());
         assertEquals("Region1", dto1.getRegion());
-        assertEquals(Children.OVER_50, dto1.getPopulationDTO().getChildren());
+        assertEquals(Children.FROM_21_TO_50, dto1.getPopulations().get(0).getChildren());
 
         VillageDTO dto2 = villageDTOs.get(1);
         assertEquals(2L, dto2.getId());
         assertEquals("Village2", dto2.getName());
         assertEquals("Region2", dto2.getRegion());
-        assertEquals(Children.FROM_11_TO_20, dto2.getPopulationDTO().getChildren());
+        assertEquals(Children.FROM_21_TO_50, dto2.getPopulations().get(0).getChildren());
+
     }
 
 
@@ -892,7 +920,7 @@ class VillageServiceTests {
         Children children1 = Children.FROM_11_TO_20;
         Population population1 = new Population();
         population1.setChildren(children1);
-        village1.setPopulation(population1);
+        village1.setPopulations(Collections.singletonList(population1));
 
         villages.add(village1);
 
@@ -913,7 +941,7 @@ class VillageServiceTests {
         Children children2 = Children.OVER_50;
         Population population2 = new Population();
         population2.setChildren(children2);
-        village2.setPopulation(population2);
+        village2.setPopulations(Collections.singletonList(population2));
 
         villages.add(village2);
 
@@ -928,7 +956,7 @@ class VillageServiceTests {
         assertEquals("Region1", dto1.getRegion());
         assertEquals(1, dto1.getObject().size());
         assertEquals(1, dto1.getLivingConditions().size());
-        assertEquals(Children.FROM_11_TO_20.getEnumValue(), dto1.getPopulationDTO().getChildren());
+        assertEquals(Children.FROM_11_TO_20.getEnumValue(), dto1.getPopulations().get(0).getChildren());
 
         VillageDTO dto2 = villageDTOs.get(1);
         assertEquals(2L, dto2.getId());
@@ -936,9 +964,8 @@ class VillageServiceTests {
         assertEquals("Region2", dto2.getRegion());
         assertEquals(1, dto2.getObject().size());
         assertEquals(1, dto2.getLivingConditions().size());
-        assertEquals(Children.OVER_50.getEnumValue(), dto2.getPopulationDTO().getChildren());
+        assertEquals(Children.OVER_50.getEnumValue(), dto2.getPopulations().get(0).getChildren());
     }
-
 
     @Test
     void testGetSearchVillagesByLivingCondition() {
@@ -1004,7 +1031,9 @@ class VillageServiceTests {
         Children children1 = Children.FROM_21_TO_50;
         Population population1 = new Population();
         population1.setChildren(children1);
-        village1.setPopulation(population1);
+
+        village1.setPopulations(new ArrayList<>());
+        village1.getPopulations().add(population1);
 
         villages.add(village1);
 
@@ -1026,11 +1055,12 @@ class VillageServiceTests {
         assertEquals("Region1", dto1.getRegion());
         assertEquals(1, dto1.getObject().size());
         assertEquals(1, dto1.getLivingConditions().size());
-        assertEquals(Children.FROM_21_TO_50, dto1.getPopulationDTO().getChildren());
+        assertEquals(Children.FROM_21_TO_50, dto1.getPopulations().get(0).getChildren());
     }
 
+
     @Test
-    void testCreateVillageWhenVillageExists() {//first
+    void testCreateVillageWhenVillageExists() {
         String villageName = "Sample Village";
         String regionName = "Sample Region";
         VillageDTO villageDTO = new VillageDTO();
@@ -1047,24 +1077,20 @@ class VillageServiceTests {
         savedVillageDTO.setId(1L);
         savedVillageDTO.setName(villageName);
         savedVillageDTO.setRegion(regionName);
-        savedVillageDTO.setPopulationDTO(new PopulationDTO(1L, NumberOfPopulation.UP_TO_10_PEOPLE, Residents.FROM_21_TO_30_PERCENT, Children.BELOW_10, Foreigners.I_DONT_KNOW));
 
         when(villageRepository.findSingleVillageByNameAndRegionName(villageName, regionName)).thenReturn(existingVillage);
-        when(modelMapper.map(villageDTO.getPopulationDTO(), Population.class)).thenReturn(new Population(1L, NumberOfPopulation.UP_TO_10_PEOPLE, Residents.FROM_21_TO_30_PERCENT, Children.BELOW_10, Foreigners.I_DONT_KNOW));
         when(villageRepository.save(existingVillage)).thenReturn(existingVillage);
         when(modelMapper.map(existingVillage, VillageDTO.class)).thenReturn(savedVillageDTO);
 
         VillageDTO resultDTO = villageService.createVillage(villageDTO);
 
         verify(villageRepository, times(1)).findSingleVillageByNameAndRegionName(villageName, regionName);
-        verify(modelMapper, times(1)).map(villageDTO.getPopulationDTO(), Population.class);
         verify(villageRepository, times(1)).save(any(Village.class));
         verify(modelMapper, times(1)).map(existingVillage, VillageDTO.class);
         verify(regionService, times(0)).findRegionByName(regionName);
 
         Assertions.assertEquals(savedVillageDTO.getId(), resultDTO.getId());
         Assertions.assertEquals(savedVillageDTO.getName(), resultDTO.getName());
-        Assertions.assertEquals(savedVillageDTO.getPopulationDTO(), resultDTO.getPopulationDTO());
         Assertions.assertNotNull(resultDTO);
     }
 
@@ -1106,16 +1132,18 @@ class VillageServiceTests {
         boolean status = true;
 
         List<Village> villagesWithStatus = new ArrayList<>();
-        villagesWithStatus.add(new Village(1L, "Village1", new Region(), 100, new Population(),
+        villagesWithStatus.add(new Village(1L, "Village1", new Region(),
                 LocalDateTime.now(), true, new Administrator(), LocalDateTime.now(), new ArrayList<>(), new ArrayList<>(),
-                new ArrayList<>(), new ArrayList<>(), new ArrayList<>(),
+
+                new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(),
                 new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), 1));
+
 
         when(villageRepository.findByStatus(status)).thenReturn(villagesWithStatus);
 
         List<VillageDTO> expectedVillageDTOs = new ArrayList<>();
-        expectedVillageDTOs.add(new VillageDTO(1L, "Village1", "region", 100, new PopulationDTO(),
-                LocalDateTime.now(), true, new ArrayList<>(), new ArrayList<>(),
+        expectedVillageDTOs.add(new VillageDTO(1L, "Village1", "region",
+                LocalDateTime.now(), true, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(),
                 new ArrayList<>(), new ArrayList<>(), new ArrayList<>(),
                 new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), 1));
 

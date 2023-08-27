@@ -33,7 +33,7 @@ public interface VillageRepository extends JpaRepository<Village, Long> {
             "JOIN ov.object o " +
             "JOIN v.villageLivingConditions vl " +
             "JOIN vl.livingCondition lc " +
-            "JOIN v.population p " +
+            "JOIN Population p ON v.id = p.village.id " +
             "JOIN v.region r " +
             "WHERE o.type IN :objectTypes " +
             "AND lc.livingConditionName IN :livingConditionNames " +
@@ -51,7 +51,7 @@ public interface VillageRepository extends JpaRepository<Village, Long> {
     @Query(value = "SELECT DISTINCT v FROM Village v " +
             "JOIN v.villageLivingConditions vl " +
             "JOIN vl.livingCondition lc " +
-            "JOIN v.population p " +
+            "JOIN Population p ON v.id = p.village.id " +
             "JOIN v.region r " +
             "WHERE lc.livingConditionName IN :livingConditionNames " +
             "AND p.children = :childrenCount " +
@@ -59,14 +59,15 @@ public interface VillageRepository extends JpaRepository<Village, Long> {
             "AND v.status = 1 " +
             "GROUP BY v.name " +
             "ORDER BY r.regionName ASC")
-    List<Village> searchVillagesByLivingConditionAndChildren(@Param("livingConditionNames") List<String> livingConditionDTOS,
-                                                             @Param("childrenCount") Children children);
+    List<Village> searchVillagesByLivingConditionAndChildren(
+            @Param("livingConditionNames") List<String> livingConditionDTOS,
+            @Param("childrenCount") Children children);
 
 
     @Query(value = "SELECT DISTINCT v FROM Village v " +
             "JOIN v.objectVillages ov " +
             "JOIN ov.object o " +
-            "JOIN v.population p " +
+            "JOIN Population p ON v.id = p.village.id " +
             "JOIN v.region r " +
             "WHERE o.type IN :objectTypes " +
             "AND p.children = :childrenCount " +
@@ -95,15 +96,14 @@ public interface VillageRepository extends JpaRepository<Village, Long> {
                                                            @Param("livingConditionNames") List<String> livingConditionDTOS);
 
 
-    @Query(value = "SELECT DISTINCT v FROM Village v " +
-            "JOIN v.population p " +
+    @Query("SELECT DISTINCT v FROM Village v " +
+            "JOIN Population p ON v.id = p.village " +
             "JOIN v.region r " +
             "WHERE p.children = :childrenCount " +
             "AND v.status = 1 " +
             "GROUP BY v.name " +
             "ORDER BY r.regionName ASC")
     List<Village> searchVillagesByChildrenCount(@Param("childrenCount") Children children);
-
 
     @Query(value = "SELECT DISTINCT v FROM Village v " +
             "JOIN v.objectVillages ov " +
