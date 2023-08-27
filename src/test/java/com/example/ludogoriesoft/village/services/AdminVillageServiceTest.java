@@ -8,11 +8,15 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
+import com.example.ludogorieSoft.village.dtos.VillageDTO;
 import com.example.ludogorieSoft.village.dtos.response.VillageResponse;
 import com.example.ludogorieSoft.village.model.Population;
 import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.repositories.VillageRepository;
+import com.example.ludogorieSoft.village.utils.TimestampUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -210,4 +214,47 @@ class AdminVillageServiceTest {
 
         assertEquals(mockedPopulationData, result);
     }
+
+    @Test
+    void testRejectVillageResponses() {
+        Long villageId = 1L;
+        String answerDate = "2023-08-27 10:00:00";
+        LocalDateTime timestamp = LocalDateTime.of(2023, 8, 27, 10, 0, 0);
+        boolean status = false;
+
+        VillageDTO villageDTO = new VillageDTO();
+        villageDTO.setId(villageId);
+        villageDTO.setStatus(false);
+
+        Village village = new Village();
+        village.setId(villageId);
+        village.setStatus(false);
+
+        when(villageService.getVillageById(villageId)).thenReturn(villageDTO);
+        when(villageRepository.findById(villageId)).thenReturn(Optional.of(village));
+        when(villageService.updateVillageStatus(eq(villageId), any(VillageDTO.class))).thenReturn(villageDTO);
+
+        doNothing().when(populationService).rejectPopulationResponse(villageId, status, answerDate, timestamp);
+        doNothing().when(villagePopulationAssertionService).rejectVillagePopulationAssertionStatus(villageId, status, answerDate, timestamp);
+        doNothing().when(villageLivingConditionService).rejectVillageLivingConditionResponse(villageId, status, answerDate, timestamp);
+        doNothing().when(villageImageService).rejectVillageImages(villageId, status, answerDate, timestamp);
+        doNothing().when(villageAnswerQuestionService).rejectVillageAnswerQuestionResponse(villageId, status, answerDate, timestamp);
+        doNothing().when(objectVillageService).rejectObjectVillageResponse(villageId, status, answerDate, timestamp);
+        doNothing().when(ethnicityVillageService).rejectEthnicityVillageResponse(villageId, status, answerDate, timestamp);
+        doNothing().when(villageGroundCategoryService).rejectVillageGroundCategoryResponse(villageId, status, answerDate, timestamp);
+
+        adminVillageService.rejectVillageResponses(villageId, answerDate);
+
+        verify(villageService).getVillageById(villageId);
+        verify(populationService).rejectPopulationResponse(eq(villageId), eq(status), eq(answerDate), argThat(Objects::nonNull));
+        verify(villagePopulationAssertionService).rejectVillagePopulationAssertionStatus(eq(villageId), eq(status), eq(answerDate), argThat(Objects::nonNull));
+        verify(villageLivingConditionService).rejectVillageLivingConditionResponse(eq(villageId), eq(status), eq(answerDate), argThat(Objects::nonNull));
+        verify(villageImageService).rejectVillageImages(eq(villageId), eq(status), eq(answerDate), argThat(Objects::nonNull));
+        verify(villageAnswerQuestionService).rejectVillageAnswerQuestionResponse(eq(villageId), eq(status), eq(answerDate), argThat(Objects::nonNull));
+        verify(objectVillageService).rejectObjectVillageResponse(eq(villageId), eq(status), eq(answerDate), argThat(Objects::nonNull));
+        verify(ethnicityVillageService).rejectEthnicityVillageResponse(eq(villageId), eq(status), eq(answerDate), argThat(Objects::nonNull));
+        verify(villageGroundCategoryService).rejectVillageGroundCategoryResponse(eq(villageId), eq(status), eq(answerDate), argThat(Objects::nonNull));
+    }
+
+
 }
