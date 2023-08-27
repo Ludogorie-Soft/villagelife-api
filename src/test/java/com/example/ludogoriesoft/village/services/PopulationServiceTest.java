@@ -486,4 +486,60 @@ class PopulationServiceTest {
         assertTrue(result.contains(Children.OVER_50));
     }
 
+    @Test
+    void testGetForeignersWhenOneForeigner() {
+        List<Object[]> rows = new ArrayList<>();
+        rows.add(new Object[]{2L, Foreigners.YES});
+        rows.add(new Object[]{1L, Foreigners.NO});
+
+        Foreigners result = populationService.getForeigners(rows);
+
+        assertEquals(Foreigners.YES, result);
+    }
+
+    @Test
+    void testGetForeignersWhenOneForeignerHasMaxCount() {
+        List<Object[]> rows = new ArrayList<>();
+        rows.add(new Object[]{3L, Foreigners.I_DONT_KNOW});
+        rows.add(new Object[]{2L, Foreigners.YES});
+        rows.add(new Object[]{2L, Foreigners.NO});
+
+        Foreigners result = populationService.getForeigners(rows);
+
+        assertEquals(Foreigners.I_DONT_KNOW, result);
+    }
+
+    @Test
+    void testGetForeignersWhenYesAndNoHaveEqualCount() {
+        List<Object[]> rows = new ArrayList<>();
+        rows.add(new Object[]{2L, Foreigners.I_DONT_KNOW});
+        rows.add(new Object[]{3L, Foreigners.YES});
+        rows.add(new Object[]{3L, Foreigners.NO});
+
+        Foreigners result = populationService.getForeigners(rows);
+
+        assertEquals(Foreigners.I_DONT_KNOW, result);
+    }
+    @Test
+    void testGetForeignersWhenIDontKnowAndNoHaveEqualCount() {
+        List<Object[]> rows = new ArrayList<>();
+        rows.add(new Object[]{3L, Foreigners.NO});
+        rows.add(new Object[]{3L, Foreigners.I_DONT_KNOW});
+        rows.add(new Object[]{2L, Foreigners.YES});
+
+        Foreigners result = populationService.getForeigners(rows);
+
+        assertEquals(Foreigners.NO, result);
+    }
+    @Test
+    void testGetForeignersWhenNoForeigners() {
+        List<Object[]> rows = new ArrayList<>();
+        rows.add(new Object[]{2L, Foreigners.NO});
+        rows.add(new Object[]{2L, Foreigners.YES});
+        rows.add(new Object[]{2L, Foreigners.I_DONT_KNOW});
+
+        Foreigners result = populationService.getForeigners(rows);
+
+        assertEquals(Foreigners.I_DONT_KNOW, result);
+    }
 }
