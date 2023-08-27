@@ -22,6 +22,7 @@ public class PopulationService {
 
     private PopulationRepository populationRepository;
     private final ModelMapper modelMapper;
+    private VillageService villageService;
 
     public PopulationDTO populationToPopulationDTO(Population population) {
         return modelMapper.map(population, PopulationDTO.class);
@@ -211,5 +212,13 @@ public class PopulationService {
     public List<Population> findByVillageIdAndVillageStatus(Long id, boolean status) {
         return populationRepository.findByVillageIdAndVillageStatus(id, status);
 
+    }
+
+    public void updatePopulationStatus(Long villageId, boolean currentStatus, String answerDate) {
+        villageService.checkVillage(villageId);
+        Population population = populationRepository.findPopulationsByVillageIdAndDateUploadAndStatus(villageId, answerDate, currentStatus);
+        population.setVillageStatus(!currentStatus);
+        population.setDateDeleted(null);
+        populationRepository.save(population);
     }
 }
