@@ -63,4 +63,9 @@ public class VillageController {
         villageService.deleteVillage(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/{id}/increase-approved-responses-count")
+    public void increaseApprovedResponsesCount(@PathVariable Long id) {
+        villageService.increaseApprovedResponsesCount(id);
+    }
 }
