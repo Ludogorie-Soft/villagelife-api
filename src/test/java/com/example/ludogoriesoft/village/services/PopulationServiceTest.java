@@ -385,5 +385,74 @@ class PopulationServiceTest {
         verify(populationRepository, times(1)).getAveragePopulationCountByVillageId(villageId);
     }
 
+    @Test
+    void testGetNumberOfPopulationByPopulationAsNumber_UpTo10() {
+        int populationAsNumber = 10;
 
+        NumberOfPopulation expected = NumberOfPopulation.UP_TO_10_PEOPLE;
+        NumberOfPopulation actual = populationService.getNumberOfPopulationByPopulationAsNumber(populationAsNumber);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void testGetNumberOfPopulationByPopulationAsNumber_From11To50() {
+        int populationAsNumber = 50;
+
+        NumberOfPopulation expected = NumberOfPopulation.FROM_11_TO_50_PEOPLE;
+        NumberOfPopulation actual = populationService.getNumberOfPopulationByPopulationAsNumber(populationAsNumber);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void testGetNumberOfPopulationByPopulationAsNumber_From51To200() {
+        int populationAsNumber = 200;
+
+        NumberOfPopulation expected = NumberOfPopulation.FROM_51_TO_200_PEOPLE;
+        NumberOfPopulation actual = populationService.getNumberOfPopulationByPopulationAsNumber(populationAsNumber);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void testGetNumberOfPopulationByPopulationAsNumber_From201To500() {
+        int populationAsNumber = 500;
+
+        NumberOfPopulation expected = NumberOfPopulation.FROM_201_TO_500_PEOPLE;
+        NumberOfPopulation actual = populationService.getNumberOfPopulationByPopulationAsNumber(populationAsNumber);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void testGetNumberOfPopulationByPopulationAsNumber_From501To1000() {
+
+        int populationAsNumber = 1000;
+
+        NumberOfPopulation expected = NumberOfPopulation.FROM_501_TO_1000_PEOPLE;
+        NumberOfPopulation actual = populationService.getNumberOfPopulationByPopulationAsNumber(populationAsNumber);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void testGetNumberOfPopulationByPopulationAsNumber_From1001To2000() {
+        int populationAsNumber = 2000;
+
+        NumberOfPopulation expected = NumberOfPopulation.FROM_1001_TO_2000_PEOPLE;
+        NumberOfPopulation actual = populationService.getNumberOfPopulationByPopulationAsNumber(populationAsNumber);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void testGetNumberOfPopulationByPopulationAsNumber_From2000() {
+        int populationAsNumber = 3000;
+
+        NumberOfPopulation expected = NumberOfPopulation.FROM_2000_PEOPLE;
+        NumberOfPopulation actual = populationService.getNumberOfPopulationByPopulationAsNumber(populationAsNumber);
+
+        assertEquals(expected, actual);
+    }
 }
