@@ -204,4 +204,12 @@ public class PopulationService {
         }
     }
 
+    public List<Population> findByVillageIdAndVillageStatusDateDeleteNotNull(Long id, boolean status) {
+        return populationRepository.findByVillageIdAndVillageStatusAndDateDeleteNotNull(id, status);
+    }
+
+    public List<Population> findByVillageIdAndVillageStatus(Long id, boolean status) {
+        return populationRepository.findByVillageIdAndVillageStatus(id, status);
+
+    }
 }

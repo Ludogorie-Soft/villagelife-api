@@ -27,6 +27,7 @@ public class AdminVillageService {
     private final VillageGroundCategoryService villageGroundCategoryService;
     private final VillageService villageService;
     private final ModelMapper modelMapper;
+    private final PopulationService populationService;
 
     public List<VillageResponse> getUnapprovedVillageResponsesWithSortedAnswers(boolean status) {
         List<Village> villagesWithAnswers = villageRepository.findAll();
@@ -85,7 +86,6 @@ public class AdminVillageService {
 
         return villageResponses;
     }
-
     protected VillageResponse createVillageResponse(Village village, DateTimeFormatter formatter, boolean status, String keyWord) {
         VillageResponse villageResponse = new VillageResponse();
         villageResponse.setId(village.getId());
@@ -98,7 +98,7 @@ public class AdminVillageService {
             villageResponse.setAdmin(modelMapper.map(village.getAdmin(), AdministratorDTO.class));
             villageResponse.setDateApproved(village.getDateApproved());
         }
-        List<EthnicityVillage> answers = new ArrayList<>();
+        List<Population> answers = new ArrayList<>();
 
         if (keyWord.equals("rejected")){
             answers = getRejectedAnswersForVillage(village.getId(), status);
@@ -111,18 +111,18 @@ public class AdminVillageService {
         return villageResponse;
     }
 
-    protected List<EthnicityVillage> getRejectedAnswersForVillage(Long villageId, boolean status) {
-        return ethnicityVillageService.findByVillageIdAndVillageStatusDateDeleteNotNull(villageId, status);
+    protected List<Population> getRejectedAnswersForVillage(Long villageId, boolean status) {
+        return populationService.findByVillageIdAndVillageStatusDateDeleteNotNull(villageId, status);
     }
-    protected List<EthnicityVillage> getAnswersToApprove(Long villageId, boolean status){
-        return ethnicityVillageService.findByVillageIdAndVillageStatus(villageId, status);
+    protected List<Population> getAnswersToApprove(Long villageId, boolean status){
+        return populationService.findByVillageIdAndVillageStatus(villageId, status);
     }
 
-    protected List<String> getFormattedDatesFromAnswers(List<EthnicityVillage> answers, DateTimeFormatter formatter) {
+    protected List<String> getFormattedDatesFromAnswers(List<Population> answers, DateTimeFormatter formatter) {
         Set<String> uniqueDates = new HashSet<>();
         List<String> formattedDates = new ArrayList<>();
 
-        for (EthnicityVillage answer : answers) {
+        for (Population answer : answers) {
             String formattedDate = answer.getDateUpload().format(formatter);
             if (uniqueDates.add(formattedDate)) {
                 formattedDates.add(formattedDate);
