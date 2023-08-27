@@ -56,9 +56,6 @@ public class PopulationService {
         return population.getId();
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////
-    ////                                        edit                                        ////
-    ////////////////////////////////////////////////////////////////////////////////////////////
     public PopulationDTO getPopulationById(Long id) {
         Optional<Population> population = populationRepository.findById(id);
 
@@ -90,16 +87,11 @@ public class PopulationService {
         populationRepository.save(findPopulation.get());
         return populationToPopulationDTO(findPopulation.get());
     }
-    ////////////////////////////////////////////////////////////////////////////////////////////
-    ////                                        edit                                        ////
-    ////////////////////////////////////////////////////////////////////////////////////////////
+
     public Population findPopulationByVillageNameAndRegion(String name, String regionName) {
         return populationRepository.findByVillageNameAndRegionName(name, regionName);
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////
-    ////                                        edit                                        ////
-    ////////////////////////////////////////////////////////////////////////////////////////////
     public PopulationDTO findPopulationDTOByVillageNameAndRegion(String name, String regionName) {
         Population population = populationRepository.findByVillageNameAndRegionName(name, regionName);
         if (population == null) {
