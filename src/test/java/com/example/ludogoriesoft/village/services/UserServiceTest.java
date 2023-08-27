@@ -4,6 +4,7 @@ package com.example.ludogorieSoft.village.services;
 import com.example.ludogorieSoft.village.dtos.UserDTO;
 import com.example.ludogorieSoft.village.model.User;
 import com.example.ludogorieSoft.village.repositories.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -32,6 +33,7 @@ class UserServiceTest {
     @InjectMocks
     private UserService userService;
 
+    @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
     }
@@ -59,24 +61,6 @@ class UserServiceTest {
         assertEquals("John Doe", result.getFullName());
         assertTrue(result.getConsent());
     }
-//
-//    @Test
-//    void testSaveUser_NewUser() {
-//        UserDTO userDTO = new UserDTO();
-//        userDTO.setEmail("test@example.com");
-//        userDTO.setFullName("John Doe");
-//        userDTO.setConsent(true);
-//
-//        when(userRepository.findByEmail("test@example.com")).thenReturn(empty());
-//
-//        UserDTO result = userService.saveUser(userDTO);
-//
-//        assertNotNull(result);
-//        assertEquals("test@example.com", result.getEmail());
-//        assertEquals("John Doe", result.getFullName());
-//        assertTrue(result.getConsent());
-//    }
-
 
     @Test
     void testCheckUserDTO_Null() {

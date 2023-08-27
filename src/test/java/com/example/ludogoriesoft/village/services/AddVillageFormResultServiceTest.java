@@ -4,6 +4,7 @@ import com.example.ludogorieSoft.village.dtos.*;
 import com.example.ludogorieSoft.village.enums.*;
 
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
+import com.example.ludogorieSoft.village.exeptions.NoConsentException;
 import com.example.ludogorieSoft.village.utils.TimestampUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,6 +19,7 @@ import java.util.List;
 
 import static java.time.LocalDateTime.now;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -415,7 +417,40 @@ class AddVillageFormResultServiceTest {
 
         verify(populationService, times(1)).createPopulation(populationDTO);
     }
+    @Test
+    void testCheckIsImagesHasUserConsent_NoConsent() {
+        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
 
+        // Initialize the imageBytes list
+        List<byte[]> imageBytes = new ArrayList<>();
+        imageBytes.add(new byte[0]);
+        addVillageFormResult.setImageBytes(imageBytes);
+
+        UserDTO userDTO = new UserDTO();
+        userDTO.setFullName("");
+        userDTO.setEmail("");
+        userDTO.setConsent(false);
+        addVillageFormResult.setUserDTO(userDTO);
+
+        assertThrows(NoConsentException.class, () -> {
+            addVillageFormResultService.checkIsImagesHasUserConsent(addVillageFormResult);
+        });
+    }
+
+    @Test
+    void testCheckIsImagesHasUserConsent_Valid() {
+        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
+        addVillageFormResult.getImageBytes().add(new byte[0]); // Adding an empty image
+
+        UserDTO userDTO = new UserDTO();
+        userDTO.setFullName("John Doe");
+        userDTO.setEmail("john@example.com");
+        userDTO.setConsent(true);
+        addVillageFormResult.setUserDTO(userDTO);
+
+        // Call the method, no exception should be thrown
+        addVillageFormResultService.checkIsImagesHasUserConsent(addVillageFormResult);
+    }
 
 
 //    @Test
