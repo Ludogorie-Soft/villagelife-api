@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +23,7 @@ public class PopulationService {
 
     private PopulationRepository populationRepository;
     private final ModelMapper modelMapper;
+    private VillageService villageService;
 
     public PopulationDTO populationToPopulationDTO(Population population) {
         return modelMapper.map(population, PopulationDTO.class);
@@ -54,9 +56,6 @@ public class PopulationService {
         return population.getId();
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////
-    ////                                        edit                                        ////
-    ////////////////////////////////////////////////////////////////////////////////////////////
     public PopulationDTO getPopulationById(Long id) {
         Optional<Population> population = populationRepository.findById(id);
 
@@ -88,16 +87,11 @@ public class PopulationService {
         populationRepository.save(findPopulation.get());
         return populationToPopulationDTO(findPopulation.get());
     }
-    ////////////////////////////////////////////////////////////////////////////////////////////
-    ////                                        edit                                        ////
-    ////////////////////////////////////////////////////////////////////////////////////////////
+
     public Population findPopulationByVillageNameAndRegion(String name, String regionName) {
         return populationRepository.findByVillageNameAndRegionName(name, regionName);
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////
-    ////                                        edit                                        ////
-    ////////////////////////////////////////////////////////////////////////////////////////////
     public PopulationDTO findPopulationDTOByVillageNameAndRegion(String name, String regionName) {
         Population population = populationRepository.findByVillageNameAndRegionName(name, regionName);
         if (population == null) {
@@ -171,7 +165,6 @@ public class PopulationService {
              }
          }
          return Children.getByValueAsNumber(maxValueAsNumber);
-
      }
 
     public Residents getResidents(List<Object[]> rows){
@@ -183,7 +176,6 @@ public class PopulationService {
             }
         }
         return Residents.getByValueAsNumber(maxValueAsNumber);
-
     }
 
     public NumberOfPopulation getNumberOfPopulationByPopulationAsNumber(int populationAsNumber){
@@ -204,4 +196,27 @@ public class PopulationService {
         }
     }
 
+    public List<Population> findByVillageIdAndVillageStatusDateDeleteNotNull(Long id, boolean status) {
+        return populationRepository.findByVillageIdAndVillageStatusAndDateDeleteNotNull(id, status);
+    }
+
+    public List<Population> findByVillageIdAndVillageStatus(Long id, boolean status) {
+        return populationRepository.findByVillageIdAndVillageStatus(id, status);
+
+    }
+
+    public void updatePopulationStatus(Long villageId, boolean currentStatus, String answerDate) {
+        villageService.checkVillage(villageId);
+        Population population = populationRepository.findPopulationsByVillageIdAndDateUploadAndStatus(villageId, answerDate, currentStatus);
+        population.setVillageStatus(!currentStatus);
+        population.setDateDeleted(null);
+        populationRepository.save(population);
+    }
+
+    public void rejectPopulationResponse(Long villageId, boolean currentStatus, String answerDate, LocalDateTime dateDeleted) {
+        villageService.checkVillage(villageId);
+        Population population = populationRepository.findPopulationsByVillageIdAndDateUploadAndStatus(villageId, answerDate, currentStatus);
+        population.setDateDeleted(dateDeleted);
+        populationRepository.save(population);
+    }
 }

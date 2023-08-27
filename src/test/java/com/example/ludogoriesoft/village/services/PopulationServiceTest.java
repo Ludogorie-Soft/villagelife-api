@@ -17,10 +17,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -34,7 +32,8 @@ class PopulationServiceTest {
     private PopulationService populationService;
     @Mock
     private ModelMapper modelMapper;
-
+    @Mock
+    private VillageService villageService;
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -289,5 +288,302 @@ class PopulationServiceTest {
 
         assertThrows(ApiRequestException.class,
                 () -> populationService.findPopulationDTOByVillageNameAndRegion(villageName, regionName));
+    }
+    @Test
+    void testRejectPopulationResponse() {
+        Long villageId = 1L;
+        boolean currentStatus = true;
+        String answerDate = "2023-08-27 10:00:00";
+        LocalDateTime dateDeleted = LocalDateTime.now();
+
+        doAnswer(invocation -> null).when(villageService).checkVillage(villageId);
+
+        Population mockPopulation = new Population();
+        when(populationRepository.findPopulationsByVillageIdAndDateUploadAndStatus(villageId, answerDate, currentStatus))
+                .thenReturn(mockPopulation);
+        when(populationRepository.save(any(Population.class))).thenReturn(mockPopulation);
+
+        populationService.rejectPopulationResponse(villageId, currentStatus, answerDate, dateDeleted);
+
+        verify(villageService, times(1)).checkVillage(villageId);
+        verify(populationRepository, times(1)).findPopulationsByVillageIdAndDateUploadAndStatus(villageId, answerDate, currentStatus);
+        verify(populationRepository, times(1)).save(mockPopulation);
+    }
+
+    @Test
+    void testUpdatePopulationStatus() {
+        Long villageId = 1L;
+        boolean currentStatus = true;
+        String answerDate = "2023-08-27 10:00:00";
+
+        doAnswer(invocation -> null).when(villageService).checkVillage(villageId);
+
+        Population mockPopulation = mock(Population.class);
+        when(populationRepository.findPopulationsByVillageIdAndDateUploadAndStatus(villageId, answerDate, currentStatus))
+                .thenReturn(mockPopulation);
+        when(populationRepository.save(any(Population.class))).thenReturn(mockPopulation);
+
+        populationService.updatePopulationStatus(villageId, currentStatus, answerDate);
+
+        verify(villageService, times(1)).checkVillage(villageId);
+        verify(populationRepository, times(1)).findPopulationsByVillageIdAndDateUploadAndStatus(villageId, answerDate, currentStatus);
+
+        verify(mockPopulation, times(1)).setVillageStatus(!currentStatus);
+        verify(mockPopulation, times(1)).setDateDeleted(null);
+        verify(populationRepository, times(1)).save(mockPopulation);
+    }
+
+    @Test
+    void testFindByVillageIdAndVillageStatus() {
+        Long villageId = 1L;
+        boolean villageStatus = true;
+
+        List<Population> mockPopulations = new ArrayList<>();
+        mockPopulations.add(new Population());
+        mockPopulations.add(new Population());
+        when(populationRepository.findByVillageIdAndVillageStatus(villageId, villageStatus))
+                .thenReturn(mockPopulations);
+
+        List<Population> result = populationService.findByVillageIdAndVillageStatus(villageId, villageStatus);
+
+        assertEquals(mockPopulations.size(), result.size());
+        assertEquals(mockPopulations, result);
+
+        verify(populationRepository, times(1)).findByVillageIdAndVillageStatus(villageId, villageStatus);
+    }
+
+    @Test
+    void testFindByVillageIdAndVillageStatusDateDeleteNotNull() {
+        Long villageId = 1L;
+        boolean villageStatus = true;
+
+        List<Population> mockPopulations = new ArrayList<>();
+        mockPopulations.add(new Population());
+        when(populationRepository.findByVillageIdAndVillageStatusAndDateDeleteNotNull(villageId, villageStatus))
+                .thenReturn(mockPopulations);
+
+        List<Population> result = populationService.findByVillageIdAndVillageStatusDateDeleteNotNull(villageId, villageStatus);
+
+        assertEquals(mockPopulations.size(), result.size());
+        assertEquals(mockPopulations, result);
+
+        verify(populationRepository, times(1)).findByVillageIdAndVillageStatusAndDateDeleteNotNull(villageId, villageStatus);
+    }
+
+    @Test
+    void testCalculateAveragePopulationCountByVillageId() {
+        Long villageId = 1L;
+        double averagePopulationCount = 123.45;
+
+        when(populationRepository.getAveragePopulationCountByVillageId(villageId))
+                .thenReturn(averagePopulationCount);
+
+        int result = populationService.calculateAveragePopulationCountByVillageId(villageId);
+
+        assertEquals((int) Math.floor(averagePopulationCount), result);
+
+        verify(populationRepository, times(1)).getAveragePopulationCountByVillageId(villageId);
+    }
+
+    @Test
+    void testGetNumberOfPopulationByPopulationAsNumber_UpTo10() {
+        int populationAsNumber = 10;
+
+        NumberOfPopulation expected = NumberOfPopulation.UP_TO_10_PEOPLE;
+        NumberOfPopulation actual = populationService.getNumberOfPopulationByPopulationAsNumber(populationAsNumber);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void testGetNumberOfPopulationByPopulationAsNumber_From11To50() {
+        int populationAsNumber = 50;
+
+        NumberOfPopulation expected = NumberOfPopulation.FROM_11_TO_50_PEOPLE;
+        NumberOfPopulation actual = populationService.getNumberOfPopulationByPopulationAsNumber(populationAsNumber);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void testGetNumberOfPopulationByPopulationAsNumber_From51To200() {
+        int populationAsNumber = 200;
+
+        NumberOfPopulation expected = NumberOfPopulation.FROM_51_TO_200_PEOPLE;
+        NumberOfPopulation actual = populationService.getNumberOfPopulationByPopulationAsNumber(populationAsNumber);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void testGetNumberOfPopulationByPopulationAsNumber_From201To500() {
+        int populationAsNumber = 500;
+
+        NumberOfPopulation expected = NumberOfPopulation.FROM_201_TO_500_PEOPLE;
+        NumberOfPopulation actual = populationService.getNumberOfPopulationByPopulationAsNumber(populationAsNumber);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void testGetNumberOfPopulationByPopulationAsNumber_From501To1000() {
+
+        int populationAsNumber = 1000;
+
+        NumberOfPopulation expected = NumberOfPopulation.FROM_501_TO_1000_PEOPLE;
+        NumberOfPopulation actual = populationService.getNumberOfPopulationByPopulationAsNumber(populationAsNumber);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void testGetNumberOfPopulationByPopulationAsNumber_From1001To2000() {
+        int populationAsNumber = 2000;
+
+        NumberOfPopulation expected = NumberOfPopulation.FROM_1001_TO_2000_PEOPLE;
+        NumberOfPopulation actual = populationService.getNumberOfPopulationByPopulationAsNumber(populationAsNumber);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void testGetNumberOfPopulationByPopulationAsNumber_From2000() {
+        int populationAsNumber = 3000;
+
+        NumberOfPopulation expected = NumberOfPopulation.FROM_2000_PEOPLE;
+        NumberOfPopulation actual = populationService.getNumberOfPopulationByPopulationAsNumber(populationAsNumber);
+
+        assertEquals(expected, actual);
+    }
+
+
+    @Test
+    void testGetEnumsWithMaxCountWhenSingleMax() {
+        List<Object[]> rows = new ArrayList<>();
+        rows.add(new Object[]{3L, Residents.FROM_11_TO_20_PERCENT});
+        rows.add(new Object[]{2L, Residents.UP_TO_2_PERCENT});
+        rows.add(new Object[]{3L, Residents.FROM_21_TO_30_PERCENT});
+        rows.add(new Object[]{1L, Residents.OVER_30_PERCENT});
+
+        List<Residents> result = populationService.getEnumsWithMaxCount(rows, Residents.class);
+
+        assertEquals(2, result.size());
+        assertTrue(result.contains(Residents.FROM_11_TO_20_PERCENT));
+        assertTrue(result.contains(Residents.FROM_21_TO_30_PERCENT));
+    }
+    @Test
+    void testGetEnumsWithMaxCountWhenChildrenEnum() {
+        List<Object[]> rows = new ArrayList<>();
+        rows.add(new Object[]{2L, Children.BELOW_10});
+        rows.add(new Object[]{2L, Children.FROM_11_TO_20});
+        rows.add(new Object[]{2L, Children.OVER_50});
+
+        List<Children> result = populationService.getEnumsWithMaxCount(rows, Children.class);
+
+        assertEquals(3, result.size());
+        assertTrue(result.contains(Children.BELOW_10));
+        assertTrue(result.contains(Children.FROM_11_TO_20));
+        assertTrue(result.contains(Children.OVER_50));
+    }
+
+    @Test
+    void testGetForeignersWhenOneForeigner() {
+        List<Object[]> rows = new ArrayList<>();
+        rows.add(new Object[]{2L, Foreigners.YES});
+        rows.add(new Object[]{1L, Foreigners.NO});
+
+        Foreigners result = populationService.getForeigners(rows);
+
+        assertEquals(Foreigners.YES, result);
+    }
+
+    @Test
+    void testGetForeignersWhenOneForeignerHasMaxCount() {
+        List<Object[]> rows = new ArrayList<>();
+        rows.add(new Object[]{3L, Foreigners.I_DONT_KNOW});
+        rows.add(new Object[]{2L, Foreigners.YES});
+        rows.add(new Object[]{2L, Foreigners.NO});
+
+        Foreigners result = populationService.getForeigners(rows);
+
+        assertEquals(Foreigners.I_DONT_KNOW, result);
+    }
+
+    @Test
+    void testGetForeignersWhenYesAndNoHaveEqualCount() {
+        List<Object[]> rows = new ArrayList<>();
+        rows.add(new Object[]{2L, Foreigners.I_DONT_KNOW});
+        rows.add(new Object[]{3L, Foreigners.YES});
+        rows.add(new Object[]{3L, Foreigners.NO});
+
+        Foreigners result = populationService.getForeigners(rows);
+
+        assertEquals(Foreigners.I_DONT_KNOW, result);
+    }
+    @Test
+    void testGetForeignersWhenIDontKnowAndNoHaveEqualCount() {
+        List<Object[]> rows = new ArrayList<>();
+        rows.add(new Object[]{3L, Foreigners.NO});
+        rows.add(new Object[]{3L, Foreigners.I_DONT_KNOW});
+        rows.add(new Object[]{2L, Foreigners.YES});
+
+        Foreigners result = populationService.getForeigners(rows);
+
+        assertEquals(Foreigners.NO, result);
+    }
+    @Test
+    void testGetForeignersWhenNoForeigners() {
+        List<Object[]> rows = new ArrayList<>();
+        rows.add(new Object[]{2L, Foreigners.NO});
+        rows.add(new Object[]{2L, Foreigners.YES});
+        rows.add(new Object[]{2L, Foreigners.I_DONT_KNOW});
+
+        Foreigners result = populationService.getForeigners(rows);
+
+        assertEquals(Foreigners.I_DONT_KNOW, result);
+    }
+
+    @Test
+    void testGetChildrenWhenSingleRow() {
+        List<Object[]> rows = new ArrayList<>();
+        rows.add(new Object[]{5L, Children.BELOW_10});
+
+        Children result = populationService.getChildren(rows);
+
+        assertEquals(Children.BELOW_10, result);
+    }
+
+    @Test
+    void testGetChildrenWhenMultipleRows() {
+        List<Object[]> rows = new ArrayList<>();
+        rows.add(new Object[]{3L, Children.FROM_11_TO_20});
+        rows.add(new Object[]{4L, Children.BELOW_10});
+        rows.add(new Object[]{2L, Children.OVER_50});
+
+        Children result = populationService.getChildren(rows);
+
+        assertEquals(Children.FROM_11_TO_20, result);
+    }
+
+    @Test
+    void testGetResidentsWhenSingleRow() {
+        List<Object[]> rows = new ArrayList<>();
+        rows.add(new Object[]{3L, Residents.FROM_11_TO_20_PERCENT});
+
+        Residents result = populationService.getResidents(rows);
+
+        assertEquals(Residents.FROM_11_TO_20_PERCENT, result);
+    }
+
+    @Test
+    void testGetResidentsWhenMultipleRows() {
+        List<Object[]> rows = new ArrayList<>();
+        rows.add(new Object[]{6L, Residents.OVER_30_PERCENT});
+        rows.add(new Object[]{4L, Residents.FROM_11_TO_20_PERCENT});
+        rows.add(new Object[]{1L, Residents.UP_TO_2_PERCENT});
+
+        Residents result = populationService.getResidents(rows);
+
+        assertEquals(Residents.OVER_30_PERCENT, result);
     }
 }

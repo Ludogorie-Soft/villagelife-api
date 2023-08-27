@@ -51,4 +51,14 @@ public interface PopulationRepository extends JpaRepository<Population, Long> {
             @Param("dateUpload") String dateUpload,
             @Param("villageStatus") Boolean villageStatus
     );
+
+    @Query("SELECT p FROM Population p WHERE p.village.id = :id " +
+            "AND p.villageStatus = :status "+
+            "AND p.dateDeleted != NULL " )
+    List<Population> findByVillageIdAndVillageStatusAndDateDeleteNotNull(Long id, boolean status);
+
+    @Query("SELECT p FROM Population p WHERE p.village.id = :id " +
+            "AND p.villageStatus = :status "+
+            "AND p.dateDeleted = NULL " )
+    List<Population> findByVillageIdAndVillageStatus(Long id, boolean status);
 }
