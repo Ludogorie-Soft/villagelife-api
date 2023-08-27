@@ -10,15 +10,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
 import java.util.Optional;
 
-import static java.util.Optional.empty;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -35,7 +32,9 @@ class UserServiceTest {
 
     @BeforeEach
     public void setUp() {
-        MockitoAnnotations.openMocks(this);
+        userRepository = Mockito.mock(UserRepository.class);
+        modelMapper = Mockito.mock(ModelMapper.class);
+        userService = new UserService(userRepository, modelMapper);
     }
 
     @Test
@@ -75,7 +74,7 @@ class UserServiceTest {
     }
 
     @Test
-    public void testSaveUser_FoundUser() {
+    void testSaveUser_FoundUser() {
         UserDTO userDTO = new UserDTO();
         userDTO.setEmail("test@example.com");
         userDTO.setFullName("John Doe");
@@ -96,5 +95,4 @@ class UserServiceTest {
         assertEquals("John Doe", result.getFullName());
         assertTrue(result.getConsent());
     }
-
 }

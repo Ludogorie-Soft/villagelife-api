@@ -440,7 +440,9 @@ class AddVillageFormResultServiceTest {
     @Test
     void testCheckIsImagesHasUserConsent_Valid() {
         AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
-        addVillageFormResult.getImageBytes().add(new byte[0]); // Adding an empty image
+        addVillageFormResult.setImageBytes(new ArrayList<>());
+
+        addVillageFormResult.getImageBytes().add(new byte[0]);
 
         UserDTO userDTO = new UserDTO();
         userDTO.setFullName("John Doe");
@@ -448,7 +450,6 @@ class AddVillageFormResultServiceTest {
         userDTO.setConsent(true);
         addVillageFormResult.setUserDTO(userDTO);
 
-        // Call the method, no exception should be thrown
         addVillageFormResultService.checkIsImagesHasUserConsent(addVillageFormResult);
     }
 
