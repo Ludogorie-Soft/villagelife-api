@@ -455,4 +455,35 @@ class PopulationServiceTest {
 
         assertEquals(expected, actual);
     }
+
+
+    @Test
+    void testGetEnumsWithMaxCountWhenSingleMax() {
+        List<Object[]> rows = new ArrayList<>();
+        rows.add(new Object[]{3L, Residents.FROM_11_TO_20_PERCENT});
+        rows.add(new Object[]{2L, Residents.UP_TO_2_PERCENT});
+        rows.add(new Object[]{3L, Residents.FROM_21_TO_30_PERCENT});
+        rows.add(new Object[]{1L, Residents.OVER_30_PERCENT});
+
+        List<Residents> result = populationService.getEnumsWithMaxCount(rows, Residents.class);
+
+        assertEquals(2, result.size());
+        assertTrue(result.contains(Residents.FROM_11_TO_20_PERCENT));
+        assertTrue(result.contains(Residents.FROM_21_TO_30_PERCENT));
+    }
+    @Test
+    void testGetEnumsWithMaxCountWhenChildrenEnum() {
+        List<Object[]> rows = new ArrayList<>();
+        rows.add(new Object[]{2L, Children.BELOW_10});
+        rows.add(new Object[]{2L, Children.FROM_11_TO_20});
+        rows.add(new Object[]{2L, Children.OVER_50});
+
+        List<Children> result = populationService.getEnumsWithMaxCount(rows, Children.class);
+
+        assertEquals(3, result.size());
+        assertTrue(result.contains(Children.BELOW_10));
+        assertTrue(result.contains(Children.FROM_11_TO_20));
+        assertTrue(result.contains(Children.OVER_50));
+    }
+
 }
