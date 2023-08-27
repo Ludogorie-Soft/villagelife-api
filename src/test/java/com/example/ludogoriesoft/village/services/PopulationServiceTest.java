@@ -542,4 +542,48 @@ class PopulationServiceTest {
 
         assertEquals(Foreigners.I_DONT_KNOW, result);
     }
+
+    @Test
+    void testGetChildrenWhenSingleRow() {
+        List<Object[]> rows = new ArrayList<>();
+        rows.add(new Object[]{5L, Children.BELOW_10});
+
+        Children result = populationService.getChildren(rows);
+
+        assertEquals(Children.BELOW_10, result);
+    }
+
+    @Test
+    void testGetChildrenWhenMultipleRows() {
+        List<Object[]> rows = new ArrayList<>();
+        rows.add(new Object[]{3L, Children.FROM_11_TO_20});
+        rows.add(new Object[]{4L, Children.BELOW_10});
+        rows.add(new Object[]{2L, Children.OVER_50});
+
+        Children result = populationService.getChildren(rows);
+
+        assertEquals(Children.FROM_11_TO_20, result);
+    }
+
+    @Test
+    void testGetResidentsWhenSingleRow() {
+        List<Object[]> rows = new ArrayList<>();
+        rows.add(new Object[]{3L, Residents.FROM_11_TO_20_PERCENT});
+
+        Residents result = populationService.getResidents(rows);
+
+        assertEquals(Residents.FROM_11_TO_20_PERCENT, result);
+    }
+
+    @Test
+    void testGetResidentsWhenMultipleRows() {
+        List<Object[]> rows = new ArrayList<>();
+        rows.add(new Object[]{6L, Residents.OVER_30_PERCENT});
+        rows.add(new Object[]{4L, Residents.FROM_11_TO_20_PERCENT});
+        rows.add(new Object[]{1L, Residents.UP_TO_2_PERCENT});
+
+        Residents result = populationService.getResidents(rows);
+
+        assertEquals(Residents.OVER_30_PERCENT, result);
+    }
 }
