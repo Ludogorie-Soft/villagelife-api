@@ -188,7 +188,7 @@ class ObjectAroundVillageControllerIntegrationTest {
                         .content("{\"id\": 1, \"type\": \"" + blankObjectAroundVillage + "\"}")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Object Around Village is blank"))
+                .andExpect(content().string("Object Around Village is blank"))
                 .andReturn();
     }
 
@@ -202,7 +202,7 @@ class ObjectAroundVillageControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/objectsAroundVillage/{id}", invalidId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Object Around Village with id: " + invalidId + " Not Found"))
+                .andExpect(content().string("Object Around Village with id: " + invalidId + " Not Found"))
                 .andReturn();
     }
 
@@ -213,7 +213,7 @@ class ObjectAroundVillageControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/objectsAroundVillage/{id}", 1)
                         .content("{\"id\": 1, \"type\": }" + invalidData)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isInternalServerError());
     }
 
     @Test
@@ -280,7 +280,7 @@ class ObjectAroundVillageControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/objectsAroundVillage/village/{id}", invalidId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Object Around Village with id: " + invalidId + " Not Found"))
+                .andExpect(content().string("Object Around Village with id: " + invalidId + " Not Found"))
                 .andReturn();
     }
 

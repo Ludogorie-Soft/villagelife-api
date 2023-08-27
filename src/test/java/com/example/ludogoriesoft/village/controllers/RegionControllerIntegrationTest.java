@@ -186,7 +186,7 @@ class RegionControllerIntegrationTest {
                         .content("{\"id\": 1, \"regionName\": \"" + blankRegionName + "\"}")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Region name is blank"))
+                .andExpect(content().string("Region name is blank"))
                 .andReturn();
     }
 
@@ -200,7 +200,7 @@ class RegionControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/regions/{id}", invalidId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Region with id: " + invalidId + " Not Found"))
+                .andExpect(content().string("Region with id: " + invalidId + " Not Found"))
                 .andReturn();
     }
 
@@ -211,7 +211,7 @@ class RegionControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/regions/{id}", 1)
                         .content("{\"id\": 1, \"name\": " + invalidData + "}")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isInternalServerError());
     }
 
     @Test

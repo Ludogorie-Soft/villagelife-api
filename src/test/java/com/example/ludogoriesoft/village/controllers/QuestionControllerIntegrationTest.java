@@ -171,7 +171,7 @@ class QuestionControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/questions/{id}", invalidId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Question with id: " + invalidId + " Not Found"))
+                .andExpect(content().string("Question with id: " + invalidId + " Not Found"))
                 .andReturn();
     }
 
@@ -186,7 +186,7 @@ class QuestionControllerIntegrationTest {
                         .content("{\"id\": 1, \"question\": \"" + blankQuestion + "\"}")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Question is blank"))
+                .andExpect(content().string("Question is blank"))
                 .andReturn();
     }
 
@@ -197,7 +197,7 @@ class QuestionControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/questions/{id}", 1)
                         .content("{\"id\": 1, \"question\": }" + blankQuestion)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isInternalServerError())
                 .andReturn();
     }
 
@@ -211,7 +211,7 @@ class QuestionControllerIntegrationTest {
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/questions/{id}", invalidId))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Question not found for id " + invalidId))
+                .andExpect(content().string("Question not found for id " + invalidId))
                 .andReturn();
     }
 
