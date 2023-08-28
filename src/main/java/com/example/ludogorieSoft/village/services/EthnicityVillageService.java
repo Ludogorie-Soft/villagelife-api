@@ -128,10 +128,6 @@ public class EthnicityVillageService {
         return ethnicityVillageRepository.existsByEthnicityIdAndVillageId(ethnicityId, villageId);
     }
 
-    public List<EthnicityVillage> findByVillageIdAndVillageStatus(Long id, boolean status) {
-        return ethnicityVillageRepository.findByVillageIdAndVillageStatus(id, status);
-
-    }
     public void updateEthnicityVillageStatus(Long id, boolean status, String localDateTime) {
         List<EthnicityVillage> ethnicityVillages = ethnicityVillageRepository.findByVillageIdAndVillageStatusAndDateUpload(id, status, localDateTime);
         List<EthnicityVillage> villa = new ArrayList<>();
@@ -162,9 +158,5 @@ public class EthnicityVillageService {
             }
             ethnicityVillageRepository.saveAll(villa);
         }
-    }
-    public List<EthnicityVillage> findByVillageIdAndVillageStatusDateDeleteNotNull(Long id, boolean status) {
-        return ethnicityVillageRepository.findByVillageIdAndVillageStatusAndDateDeleteNotNull(id, status);
-
     }
 }

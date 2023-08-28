@@ -12,13 +12,4 @@ public interface EthnicityVillageRepository extends JpaRepository<EthnicityVilla
             "AND e.villageStatus = :status " +
             "AND DATE_FORMAT(e.dateUpload, '%Y-%m-%d %H:%i:%s') = :localDateTime")
     List<EthnicityVillage> findByVillageIdAndVillageStatusAndDateUpload(Long villageId, boolean status, String localDateTime);
-    @Query("SELECT e FROM EthnicityVillage e WHERE e.village.id = :id " +
-            "AND e.villageStatus = :status "+
-            "AND e.dateDeleted = NULL " )
-    List<EthnicityVillage> findByVillageIdAndVillageStatus(Long id, boolean status);
-    @Query("SELECT e FROM EthnicityVillage e WHERE e.village.id = :id " +
-            "AND e.villageStatus = :status "+
-            "AND e.dateDeleted != NULL " )
-    List<EthnicityVillage> findByVillageIdAndVillageStatusAndDateDeleteNotNull(Long id, boolean status);
-
 }

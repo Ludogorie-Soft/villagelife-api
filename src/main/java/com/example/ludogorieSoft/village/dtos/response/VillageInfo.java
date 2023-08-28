@@ -1,5 +1,6 @@
 package com.example.ludogorieSoft.village.dtos.response;
 
+import com.example.ludogorieSoft.village.dtos.PopulationDTO;
 import com.example.ludogorieSoft.village.dtos.VillageDTO;
 import lombok.*;
 
@@ -10,6 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 public class VillageInfo {
     private VillageDTO villageDTO;
+    private PopulationDTO populationDTO;
     private String ethnicities;
     private List<PopulationAssertionResponse> populationAssertionResponses;
     private List<LivingConditionResponse> livingConditionResponses;

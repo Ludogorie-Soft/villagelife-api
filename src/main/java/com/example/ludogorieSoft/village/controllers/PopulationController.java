@@ -55,5 +55,4 @@ public class PopulationController {
     public ResponseEntity<PopulationDTO> findPopulationByVillageNameAndRegion(@PathVariable("villageName") String villageName, @PathVariable("region") String region) {
         return ResponseEntity.ok(populationService.findPopulationDTOByVillageNameAndRegion(villageName, region));
     }
-
 }

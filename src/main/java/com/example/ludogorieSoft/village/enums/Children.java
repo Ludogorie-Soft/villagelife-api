@@ -1,9 +1,9 @@
 package com.example.ludogorieSoft.village.enums;
 
+import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Getter
@@ -20,6 +20,20 @@ public enum Children {
 
     public Children getEnumValue() {
         return this;
+    }
+
+    public static Children getByValueAsNumber(int valueAsNumber){
+        List<Children> childrenList = List.of(values());
+        Children children = null;
+        for(Children childrenResult : childrenList) {
+            if (childrenResult.getValueAsNumber() == valueAsNumber) {
+                children = childrenResult;
+            }
+        }
+        if (children != null){
+            return children;
+        }
+        throw new ApiRequestException("Children not found");
     }
 
 }

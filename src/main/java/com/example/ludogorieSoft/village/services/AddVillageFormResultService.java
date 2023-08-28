@@ -1,7 +1,6 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.*;
-import com.example.ludogorieSoft.village.enums.NumberOfPopulation;
 import com.example.ludogorieSoft.village.utils.TimestampUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -44,31 +43,15 @@ public class AddVillageFormResultService {
         villageImageService.createImagePaths(addVillageFormResult.getImageBytes(), savedVillage.getId(), timestamp, false);
         return addVillageFormResult;
     }
-    public NumberOfPopulation getNumberOfPopulationByAddVillageFormResult(AddVillageFormResult addVillageFormResult){
-        int populationAsNumber = addVillageFormResult.getPopulationDTO().getPopulationCount();
-        if(populationAsNumber <= 10){
-            return NumberOfPopulation.UP_TO_10_PEOPLE;
-        }else if(populationAsNumber <= 50){
-            return NumberOfPopulation.FROM_11_TO_50_PEOPLE;
-        }else if(populationAsNumber <= 200){
-            return NumberOfPopulation.FROM_51_TO_200_PEOPLE;
-        }else if(populationAsNumber <= 500){
-            return NumberOfPopulation.FROM_201_TO_500_PEOPLE;
-        }else if (populationAsNumber <= 1000){
-            return NumberOfPopulation.FROM_501_TO_1000_PEOPLE;
-        }else if(populationAsNumber <= 2000){
-            return NumberOfPopulation.FROM_1001_TO_2000_PEOPLE;
-        }else {
-            return NumberOfPopulation.FROM_2000_PEOPLE;
-        }
-    }
-
 
     public PopulationDTO createPopulationFromAddVillageFormResult(Long villageId, AddVillageFormResult addVillageFormResult, LocalDateTime localDateTime) {
         PopulationDTO populationDTO = addVillageFormResult.getPopulationDTO();
         populationDTO.setVillageId(villageId);
-        populationDTO.setNumberOfPopulation(getNumberOfPopulationByAddVillageFormResult(addVillageFormResult));
+
+        int populationAsNumber = addVillageFormResult.getPopulationDTO().getPopulationCount();
+        populationDTO.setNumberOfPopulation(populationService.getNumberOfPopulationByPopulationAsNumber(populationAsNumber));
         populationDTO.setDateUpload(localDateTime);
+        populationDTO.setStatus(false);
 
         populationDTO.setResidents(addVillageFormResult.getPopulationDTO().getResidents());
         populationDTO.setChildren(addVillageFormResult.getPopulationDTO().getChildren());
