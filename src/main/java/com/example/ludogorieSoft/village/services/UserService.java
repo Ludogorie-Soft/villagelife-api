@@ -17,7 +17,7 @@ public class UserService {
 
     public UserDTO checkUserDTO(UserDTO userDTO) {
 
-        if (!userDTO.getEmail().isEmpty() && !userDTO.getFullName().isEmpty() && userDTO.getConsent().equals(true)) {
+        if (!userDTO.getEmail().isEmpty() && !userDTO.getFullName().isEmpty() && !userDTO.getConsent().equals(false)) {
             return saveUser(userDTO);
         } else {
             return null;
