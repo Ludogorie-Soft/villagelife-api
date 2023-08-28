@@ -4,6 +4,7 @@ import com.example.ludogorieSoft.village.dtos.VillageDTO;
 import com.example.ludogorieSoft.village.dtos.response.VillageInfo;
 import com.example.ludogorieSoft.village.dtos.response.VillageResponse;
 import com.example.ludogorieSoft.village.services.AdminVillageService;
+import com.example.ludogorieSoft.village.services.PopulationService;
 import com.example.ludogorieSoft.village.services.VillageInfoService;
 import com.example.ludogorieSoft.village.services.VillageService;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ public class AdminFunctionController {
     private final VillageService villageService;
     private final AdminVillageService adminVillageService;
     private final VillageInfoService villageInfoService;
+    private PopulationService populationService;
 
     @DeleteMapping("/village-delete/{villageId}")
     public ResponseEntity<String> deleteVillageById(@PathVariable("villageId") Long villageId) {

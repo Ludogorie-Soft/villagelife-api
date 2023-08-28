@@ -18,6 +18,7 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -80,6 +81,8 @@ public class VillageService {
         Village village = new Village();
         village.setName("null");
         village.setStatus(true);
+        village.setDateUpload(LocalDateTime.now());
+        village.setDateApproved(LocalDateTime.now());
         villageRepository.save(village);
         return village.getId();
     }

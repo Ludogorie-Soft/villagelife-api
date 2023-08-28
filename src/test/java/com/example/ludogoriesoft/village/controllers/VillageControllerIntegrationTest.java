@@ -262,4 +262,14 @@ class VillageControllerIntegrationTest {
 //        assertNotNull(response);
 //    }
 
+    @Test
+    void testIncreaseApprovedResponsesCount() throws Exception {
+        Long villageId = 1L;
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/villages/{id}/increase-approved-responses-count", villageId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+    }
+
 }

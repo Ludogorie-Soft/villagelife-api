@@ -1,7 +1,10 @@
 package com.example.ludogorieSoft.village.enums;
 
+import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+
+import java.util.List;
 
 @Getter
 @AllArgsConstructor
@@ -17,5 +20,17 @@ public enum Residents {
     private final String name;
     private final int valueAsNumber;
 
-
+    public static Residents getByValueAsNumber(int valueAsNumber){
+        List<Residents> residentsList = List.of(values());
+        Residents residents = null;
+        for(Residents residentsResult : residentsList) {
+            if (residentsResult.getValueAsNumber() == valueAsNumber) {
+                residents = residentsResult;
+            }
+        }
+        if (residents != null){
+            return residents;
+        }
+        throw new ApiRequestException("Residents not found");
+    }
 }
