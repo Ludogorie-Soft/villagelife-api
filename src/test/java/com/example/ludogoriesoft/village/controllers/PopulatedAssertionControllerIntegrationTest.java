@@ -172,7 +172,7 @@ class PopulatedAssertionControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/populatedAssertions/{id}", invalidId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Populated Assertion with id: " + invalidId + " Not Found"))
+                .andExpect(content().string("Populated Assertion with id: " + invalidId + " Not Found"))
                 .andReturn();
     }
 
@@ -188,7 +188,7 @@ class PopulatedAssertionControllerIntegrationTest {
                         .content("{\"id\": 1, \"populatedAssertionName\": \"" + blankPopulatedAssertionName + "\"}")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Populated Assertion is blank"))
+                .andExpect(content().string("Populated Assertion is blank"))
                 .andReturn();
     }
 
@@ -203,7 +203,7 @@ class PopulatedAssertionControllerIntegrationTest {
                         .content("{\"id\": 1}")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Populated Assertion with id: " + invalidId + " Not Found"))
+                .andExpect(content().string("Populated Assertion with id: " + invalidId + " Not Found"))
                 .andReturn();
     }
 

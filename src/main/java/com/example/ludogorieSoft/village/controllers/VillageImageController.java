@@ -43,7 +43,7 @@ public class VillageImageController {
     @PostMapping("/admin-upload")
     public ResponseEntity<List<byte[]>> adminUploadImages(@RequestParam("villageId") Long villageId,
                                                           @RequestBody List<byte[]> imageBytesList) {
-        villageImageService.createImagePaths(imageBytesList, villageId, LocalDateTime.now(), true);
+        villageImageService.createImagePaths(imageBytesList, villageId, LocalDateTime.now(), true,null);
         return ResponseEntity.ok(imageBytesList);
     }
 

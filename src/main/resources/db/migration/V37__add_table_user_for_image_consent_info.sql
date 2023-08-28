@@ -1,0 +1,10 @@
+CREATE TABLE IF NOT EXISTS users (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    full_name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    consent TINYINT(1) NOT NULL,
+    UNIQUE (email)
+);
+ALTER TABLE village_images
+ADD COLUMN user_id BIGINT,
+ADD CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users(id);

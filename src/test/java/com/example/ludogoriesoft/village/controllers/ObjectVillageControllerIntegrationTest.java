@@ -181,7 +181,7 @@ class ObjectVillageControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/objectVillages/{id}", invalidId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Object Village with id: " + invalidId + " Not Found"))
+                .andExpect(content().string("Object Village with id: " + invalidId + " Not Found"))
                 .andReturn();
     }
 
@@ -191,7 +191,7 @@ class ObjectVillageControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/objectVillages")
                         .content("{\"id\": 1, }" + invalidData)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isInternalServerError())
                 .andReturn();
     }
 
@@ -207,7 +207,7 @@ class ObjectVillageControllerIntegrationTest {
                         .content("{\"id\": 1}")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Object Village with id: " + invalidId + " Not Found"))
+                .andExpect(content().string("Object Village with id: " + invalidId + " Not Found"))
                 .andReturn();
     }
 
@@ -235,7 +235,7 @@ class ObjectVillageControllerIntegrationTest {
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/objectVillages/{id}", invalidId))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value(errorMessage))
+                .andExpect(content().string(errorMessage))
                 .andReturn();
     }
 

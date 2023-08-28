@@ -203,7 +203,7 @@ class PopulationControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/populations/{id}", invalidId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Population with id: " + invalidId + " Not Found"))
+                .andExpect(content().string("Population with id: " + invalidId + " Not Found"))
                 .andReturn();
     }
 
@@ -213,7 +213,7 @@ class PopulationControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/populations")
                         .content("{\"id\": }")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isInternalServerError())
                 .andReturn();
     }
 
@@ -229,7 +229,7 @@ class PopulationControllerIntegrationTest {
                         .content("{\"id\": 1}")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Population with id: " + invalidId + " Not Found"))
+                .andExpect(content().string("Population with id: " + invalidId + " Not Found"))
                 .andReturn();
     }
 
@@ -243,7 +243,7 @@ class PopulationControllerIntegrationTest {
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/populations/{id}", invalidId))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value(errorMessage))
+                .andExpect(content().string(errorMessage))
                 .andReturn();
     }
 

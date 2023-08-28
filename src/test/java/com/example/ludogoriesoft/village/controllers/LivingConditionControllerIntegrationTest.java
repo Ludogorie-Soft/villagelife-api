@@ -192,7 +192,7 @@ class LivingConditionControllerIntegrationTest {
                         .content("{\"id\": 1, \"livingConditionName\": \"" + blankLivingConditionName + "\"}")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Living Condition is blank"))
+                .andExpect(content().string("Living Condition is blank"))
                 .andReturn();
     }
 

@@ -1,6 +1,7 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.*;
+import com.example.ludogorieSoft.village.model.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -20,6 +21,7 @@ class AddVillageFormResultTest {
         List<ObjectVillageDTO> objectVillageDTOS = new ArrayList<>();
         List<VillagePopulationAssertionDTO> villagePopulationAssertionDTOS = new ArrayList<>();
         List<byte[]> imageBytes = new ArrayList<>();
+        UserDTO user = new UserDTO();
 
         AddVillageFormResult formResult = new AddVillageFormResult(
                 villageDTO,
@@ -30,7 +32,8 @@ class AddVillageFormResultTest {
                 villageLivingConditionDTOS,
                 objectVillageDTOS,
                 villagePopulationAssertionDTOS,
-                imageBytes
+                imageBytes,
+                user
         );
 
         Assertions.assertEquals(villageDTO, formResult.getVillageDTO());

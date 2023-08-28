@@ -191,7 +191,7 @@ class LandscapeControllerIntegrationTest {
                         .content("{\"id\": 1, \"landscapeName\": \"" + blankLandscapeName + "\"}")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Landscape is blank"))
+                .andExpect(content().string("Landscape is blank"))
                 .andReturn();
     }
 

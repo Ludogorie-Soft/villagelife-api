@@ -171,7 +171,7 @@ class GroundCategoryControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/groundCategories/{id}", invalidId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Ground Category with id: " + invalidId + " Not Found"))
+                .andExpect(content().string("Ground Category with id: " + invalidId + " Not Found"))
                 .andReturn();
     }
 
@@ -187,7 +187,7 @@ class GroundCategoryControllerIntegrationTest {
                         .content("{\"id\": 1, \"groundCategoryName\": \"" + blankGroundCategoryName + "\"}")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Ground Category is blank"))
+                .andExpect(content().string("Ground Category is blank"))
                 .andReturn();
     }
 
@@ -261,7 +261,7 @@ class GroundCategoryControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/groundCategories/name/{name}", categoryName)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Ground Category with name: " + categoryName + " Not Found"))
+                .andExpect(content().string("Ground Category with name: " + categoryName + " Not Found"))
                 .andReturn();
     }
 

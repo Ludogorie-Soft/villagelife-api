@@ -28,8 +28,7 @@ import java.util.List;
 
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(value = EthnicityVillageController.class,
@@ -110,7 +109,7 @@ class EthnicityVillageControllerIntegrationTest {
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageEthnicities/{id}", id))
                 .andExpect(status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Ethnicity in Village with id " + id + " not found"));
+                .andExpect(content().string("Ethnicity in Village with id " + id + " not found"));
     }
 
     @Test
@@ -165,7 +164,7 @@ class EthnicityVillageControllerIntegrationTest {
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/villageEthnicities/{id}", id))
                 .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string("Ethnicity in Village with id: " + id + " has been deleted successfully!!"));
+                .andExpect(content().string("Ethnicity in Village with id: " + id + " has been deleted successfully!!"));
     }
 
     @Test
@@ -189,7 +188,7 @@ class EthnicityVillageControllerIntegrationTest {
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/villageEthnicities/{id}", id))
                 .andExpect(status().isNotFound())
-                .andExpect(MockMvcResultMatchers.content().string("Ethnicity in Village with id " + id + " not found"));
+                .andExpect(content().string("Ethnicity in Village with id " + id + " not found"));
     }
 
     private String asJsonString(Object obj) throws JsonProcessingException {
@@ -229,7 +228,7 @@ class EthnicityVillageControllerIntegrationTest {
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/villageEthnicities/{id}", id))
                 .andExpect(status().isNotFound())
-                .andExpect(MockMvcResultMatchers.content().string("Ethnicity in Village with id " + id + " not found"));
+                .andExpect(content().string("Ethnicity in Village with id " + id + " not found"));
     }
 
 
@@ -286,7 +285,7 @@ class EthnicityVillageControllerIntegrationTest {
                         .param("ethnicityId", ethnicityId.toString())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string("true"));
+                .andExpect(content().string("true"));
     }
 
 }

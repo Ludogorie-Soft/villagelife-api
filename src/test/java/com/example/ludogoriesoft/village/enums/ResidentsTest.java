@@ -1,4 +1,4 @@
-package com.example.ludogoriesoft.village.enums;
+package com.example.ludogorieSoft.village.enums;
 
 import com.example.ludogorieSoft.village.enums.Residents;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;

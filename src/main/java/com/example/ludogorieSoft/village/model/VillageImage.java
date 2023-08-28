@@ -26,5 +26,8 @@ public class VillageImage {
     private Boolean villageStatus;
     private LocalDateTime dateUpload;
     private LocalDateTime dateDeleted;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
 }
