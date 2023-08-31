@@ -234,39 +234,17 @@ class AddVillageFormResultServiceTest {
         Mockito.verify(ethnicityVillageService, Mockito.never()).createEthnicityVillage(Mockito.any(EthnicityVillageDTO.class));
     }
 
-//    @Test
-//    void testCreateVillageGroundCategoryWithNewVillage() {
-//        GroundCategoryDTO groundCategoryDTO = new GroundCategoryDTO();
-//        groundCategoryDTO.setId(1L);
-//        when(groundCategoryService.getByGroundCategoryName(anyString())).thenReturn(groundCategoryDTO);
-//
-//        when(villageGroundCategoryService.findVillageGroundCategoryDTOByVillageId(anyLong())).thenThrow(new ApiRequestException("Not found"));
-//
-//        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
-//        addVillageFormResult.setGroundCategoryName("Test Ground Category Name");
-//        addVillageFormResultService.createVillageGroundCategoryFromAddVillageFormResult(1L, addVillageFormResult, TimestampUtils.getCurrentTimestamp());
-//
-//        verify(villageGroundCategoryService).createVillageGroundCategoryDTO(any(VillageGroundCategoryDTO.class));
-//        verify(villageGroundCategoryService, never()).updateVillageGroundCategory(anyLong(), any(VillageGroundCategoryDTO.class));
-//    }
+    @Test
+    void createVillageGroundCategoryFromAddVillageFormResultEmptyGroundCategoryIds() {
+        Long villageId = 1L;
+        List<Long> groundCategoryIds = Collections.emptyList();
+        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
+        addVillageFormResult.setGroundCategoryIds(groundCategoryIds);
 
-//    @Test
-//    void testCreateVillageGroundCategoryWithExistingVillage() {
-//        GroundCategoryDTO groundCategoryDTO = new GroundCategoryDTO();
-//        groundCategoryDTO.setId(1L);
-//        when(groundCategoryService.getByGroundCategoryName(anyString())).thenReturn(groundCategoryDTO);
-//
-//        VillageGroundCategoryDTO existingVillageGroundCategoryDTO = new VillageGroundCategoryDTO();
-//        existingVillageGroundCategoryDTO.setId(1L);
-//        when(villageGroundCategoryService.findVillageGroundCategoryDTOByVillageId(anyLong())).thenReturn(existingVillageGroundCategoryDTO);
-//
-//        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
-//        addVillageFormResult.setGroundCategoryName("Test Ground Category Name");
-//        addVillageFormResultService.createVillageGroundCategoryFromAddVillageFormResult(1L, addVillageFormResult, TimestampUtils.getCurrentTimestamp());
-//
-//        verify(villageGroundCategoryService).updateVillageGroundCategory(anyLong(), any(VillageGroundCategoryDTO.class));
-//        verify(villageGroundCategoryService, never()).createVillageGroundCategoryDTO(any(VillageGroundCategoryDTO.class));
-//    }
+        addVillageFormResultService.createVillageGroundCategoryFromAddVillageFormResult(villageId, addVillageFormResult, TimestampUtils.getCurrentTimestamp());
+
+        Mockito.verify(ethnicityVillageService, Mockito.never()).createEthnicityVillage(Mockito.any(EthnicityVillageDTO.class));
+    }
 
     @Test
     void testCreatePopulationFromAddVillageFormResult() {
@@ -377,7 +355,7 @@ class AddVillageFormResultServiceTest {
 //
 //
 //        addVillageFormResult.setImageBytes(Collections.singletonList(new byte[0]));
-//        addVillageFormResult.setGroundCategoryName("Ground Category Name");
+//        addVillageFormResult.setGroundCategoryIds(new ArrayList<>());
 //        addVillageFormResult.setEthnicityDTOIds(new ArrayList<>());
 //        addVillageFormResult.setQuestionResponses(new ArrayList<>());
 //        addVillageFormResult.setObjectVillageDTOS(new ArrayList<>());
@@ -399,7 +377,7 @@ class AddVillageFormResultServiceTest {
 //                .thenReturn(new VillagePopulationAssertionDTO());
 //        when(villageLivingConditionService.createVillageLivingCondition(any(VillageLivingConditionDTO.class)))
 //                .thenReturn(new VillageLivingConditionDTO());
-//        when(villageImageService.createImagePaths(eq(addVillageFormResult.getImageBytes()), anyLong(), any(LocalDateTime.class), eq(false)))
+//        when(villageImageService.createImagePaths(eq(addVillageFormResult.getImageBytes()), anyLong(), any(LocalDateTime.class), eq(false), eq(new UserDTO())))
 //                .thenReturn(new ArrayList<>());
 //
 //        AddVillageFormResult result = addVillageFormResultService.create(addVillageFormResult);
