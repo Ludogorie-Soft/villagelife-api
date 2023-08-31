@@ -10,6 +10,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -127,7 +128,37 @@ public class VillageGroundCategoryService {
 
     public boolean existsVillageGroundCategoryDTOByVillageId(Long villageId) {
         return villageGroundCategoryRepository.findByVillageId(villageId) != null;
-
     }
 
+    public boolean existsByVillageIdAndGroundCategoryId(Long villageId, Long groundCategoryId){
+        return villageGroundCategoryRepository.existsByGroundCategoryIdAndVillageId(groundCategoryId, villageId);
+    }
+
+    public String getUniqueVillageGroundCategoriesByVillageId(Long villageId, boolean status, String date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime localDateTime = null;
+        if(date != null){
+            localDateTime = LocalDateTime.parse(date, formatter);
+        }
+        List<VillageGroundCategory> villageGroundCategories = villageGroundCategoryRepository.findAll();
+        List<VillageGroundCategoryDTO> filteredList = new ArrayList<>();
+
+        for (VillageGroundCategory villageGroundCategory : villageGroundCategories) {
+
+            if (villageGroundCategory.getVillage().getId().equals(villageId) && !villageGroundCategory.getGroundCategory().getGroundCategoryName().equals("не знам") && ( Boolean.TRUE.equals(villageGroundCategory.getVillageStatus()) && status ||
+                    Boolean.FALSE.equals(villageGroundCategory.getVillageStatus()) && !status && villageGroundCategory.getDateUpload().equals(localDateTime) )) {
+                filteredList.add(toDTO(villageGroundCategory));
+            }
+        }
+        StringBuilder groundCategoryNames = new StringBuilder();
+        if (filteredList.isEmpty()) {
+            groundCategoryNames.append("не знам");
+        } else {
+            for (int i = 0; i < filteredList.size() - 1; i++) {
+                groundCategoryNames.append(groundCategoryService.getByID(filteredList.get(i).getGroundCategoryId()).getGroundCategoryName()).append(", ");
+            }
+            groundCategoryNames.append(groundCategoryService.getByID(filteredList.get(filteredList.size() - 1).getGroundCategoryId()).getGroundCategoryName());
+        }
+        return groundCategoryNames.toString();
+    }
 }

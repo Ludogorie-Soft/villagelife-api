@@ -19,6 +19,7 @@ public class GroundCategoryService {
 
     private final GroundCategoryRepository groundCategoryRepository;
     private final ModelMapper modelMapper;
+    private static final String ERROR_MESSAGE = "Ground Category not found";
 
     public GroundCategoryDTO toDTO(GroundCategory forMap) {
         return modelMapper.map(forMap, GroundCategoryDTO.class);
@@ -67,13 +68,13 @@ public class GroundCategoryService {
         GroundCategory livingCondition = foundGroundCategory.orElseThrow(() -> new ApiRequestException("Living condition not found"));
 
         if (groundCategoryDTO == null || groundCategoryDTO.getGroundCategoryName() == null || groundCategoryDTO.getGroundCategoryName().isEmpty()) {
-            throw new ApiRequestException("Invalid Living Condition data");
+            throw new ApiRequestException("Invalid Ground category data");
         }
 
         String newGroundCategoryName = groundCategoryDTO.getGroundCategoryName();
         if (!newGroundCategoryName.equals(livingCondition.getGroundCategoryName())) {
             if (groundCategoryRepository.existsByGroundCategoryName(newGroundCategoryName)) {
-                throw new ApiRequestException("Living Condition with name: " + newGroundCategoryName + " already exists");
+                throw new ApiRequestException("Ground category with name: " + newGroundCategoryName + " already exists");
             }
             livingCondition.setGroundCategoryName(newGroundCategoryName);
             groundCategoryRepository.save(livingCondition);
@@ -87,7 +88,7 @@ public class GroundCategoryService {
         Optional<GroundCategory> groundCategory = groundCategoryRepository.findById(id);
 
         if (groundCategory.isEmpty()) {
-            throw new ApiRequestException("Ground Category not found for id " + id);
+            throw new ApiRequestException(ERROR_MESSAGE + " for id " + id);
         }
         groundCategoryRepository.delete(groundCategory.get());
     }
@@ -97,8 +98,15 @@ public class GroundCategoryService {
         if (groundCategory.isPresent()){
             return groundCategory.get();
         }else {
-            throw new ApiRequestException("Ground Category not found");
+            throw new ApiRequestException(ERROR_MESSAGE);
         }
     }
 
+    public GroundCategoryDTO findGroundCategoryByName(String name){
+        GroundCategory groundCategory = groundCategoryRepository.findByGroundCategoryName(name);
+        if(groundCategory == null){
+            throw new ApiRequestException(ERROR_MESSAGE);
+        }
+        return toDTO(groundCategory);
+    }
 }

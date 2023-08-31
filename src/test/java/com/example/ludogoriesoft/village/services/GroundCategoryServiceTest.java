@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class GroundCategoryServiceTest {
@@ -42,7 +43,7 @@ class GroundCategoryServiceTest {
         when(groundCategoryRepository.findAllByOrderByIdAsc()).thenReturn(groundCategories);
         List<GroundCategoryDTO> result = groundCategoryService.getAllGroundCategories();
         verify(groundCategoryRepository, times(1)).findAllByOrderByIdAsc();
-        Assertions.assertEquals(groundCategories.size(), result.size());
+        assertEquals(groundCategories.size(), result.size());
     }
 
     @Test
@@ -67,7 +68,7 @@ class GroundCategoryServiceTest {
 
         GroundCategoryDTO result = groundCategoryService.getByID(groundCategoryId);
         verify(groundCategoryRepository, times(1)).findById(groundCategoryId);
-        Assertions.assertEquals(existingGroundCategory.getId(), result.getId());
+        assertEquals(existingGroundCategory.getId(), result.getId());
     }
 
     @Test
@@ -77,7 +78,7 @@ class GroundCategoryServiceTest {
 
         when(groundCategoryRepository.findById(groundCategoryId)).thenReturn(optionalGroundCategory);
 
-        Assertions.assertThrows(ApiRequestException.class, () -> groundCategoryService.getByID(groundCategoryId));
+        assertThrows(ApiRequestException.class, () -> groundCategoryService.getByID(groundCategoryId));
         verify(groundCategoryRepository, times(1)).findById(groundCategoryId);
     }
     @Test
@@ -96,7 +97,7 @@ class GroundCategoryServiceTest {
 
         verify(groundCategoryRepository, times(1)).existsByGroundCategoryName(groundCategoryDTO.getGroundCategoryName());
         verify(groundCategoryRepository, times(1)).save(any(GroundCategory.class));
-        Assertions.assertEquals(groundCategoryDTO.getGroundCategoryName(), result.getGroundCategoryName());
+        assertEquals(groundCategoryDTO.getGroundCategoryName(), result.getGroundCategoryName());
     }
 
     @Test
@@ -106,7 +107,7 @@ class GroundCategoryServiceTest {
 
         when(groundCategoryRepository.existsByGroundCategoryName(groundCategoryDTO.getGroundCategoryName())).thenReturn(true);
 
-        Assertions.assertThrows(ApiRequestException.class, () -> groundCategoryService.createGroundCategoryDTO(groundCategoryDTO));
+        assertThrows(ApiRequestException.class, () -> groundCategoryService.createGroundCategoryDTO(groundCategoryDTO));
 
         verify(groundCategoryRepository, times(1)).existsByGroundCategoryName(groundCategoryDTO.getGroundCategoryName());
         verify(groundCategoryRepository, never()).save(any(GroundCategory.class));
@@ -134,8 +135,8 @@ class GroundCategoryServiceTest {
 
         verify(groundCategoryRepository, times(1)).findById(groundCategoryId);
         verify(groundCategoryRepository, times(1)).save(any(GroundCategory.class));
-        Assertions.assertEquals(groundCategoryId, result.getId());
-        Assertions.assertEquals(groundCategoryDTO.getGroundCategoryName(), result.getGroundCategoryName());
+        assertEquals(groundCategoryId, result.getId());
+        assertEquals(groundCategoryDTO.getGroundCategoryName(), result.getGroundCategoryName());
     }
 
 
@@ -147,7 +148,7 @@ class GroundCategoryServiceTest {
 
         when(groundCategoryRepository.findById(groundCategoryId)).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(ApiRequestException.class, () -> groundCategoryService.updateGroundCategory(groundCategoryId, groundCategoryDTO));
+        assertThrows(ApiRequestException.class, () -> groundCategoryService.updateGroundCategory(groundCategoryId, groundCategoryDTO));
 
         verify(groundCategoryRepository, times(1)).findById(groundCategoryId);
         verify(groundCategoryRepository, never()).save(any(GroundCategory.class));
@@ -172,7 +173,7 @@ class GroundCategoryServiceTest {
 
         when(groundCategoryRepository.findById(groundCategoryId)).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(ApiRequestException.class, () -> groundCategoryService.deleteGroundCategory(groundCategoryId));
+        assertThrows(ApiRequestException.class, () -> groundCategoryService.deleteGroundCategory(groundCategoryId));
 
         verify(groundCategoryRepository, times(1)).findById(groundCategoryId);
         verify(groundCategoryRepository, never()).delete(any(GroundCategory.class));
@@ -188,7 +189,7 @@ class GroundCategoryServiceTest {
         GroundCategory result = groundCategoryService.checkGroundCategory(groundCategoryId);
 
         verify(groundCategoryRepository, times(1)).findById(groundCategoryId);
-        Assertions.assertEquals(existingGroundCategory, result);
+        assertEquals(existingGroundCategory, result);
     }
 
     @Test
@@ -197,7 +198,7 @@ class GroundCategoryServiceTest {
 
         when(groundCategoryRepository.findById(groundCategoryId)).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(ApiRequestException.class, () -> groundCategoryService.checkGroundCategory(groundCategoryId));
+        assertThrows(ApiRequestException.class, () -> groundCategoryService.checkGroundCategory(groundCategoryId));
 
         verify(groundCategoryRepository, times(1)).findById(groundCategoryId);
     }
@@ -217,8 +218,8 @@ class GroundCategoryServiceTest {
         when(groundCategoryService.toDTO(existingGroundCategory)).thenReturn(groundCategoryDTO);
 
         GroundCategoryDTO result = groundCategoryService.getByGroundCategoryName(groundCategoryName);
-        Assertions.assertEquals(existingGroundCategory.getId(), result.getId());
-        Assertions.assertEquals(existingGroundCategory.getGroundCategoryName(), result.getGroundCategoryName());
+        assertEquals(existingGroundCategory.getId(), result.getId());
+        assertEquals(existingGroundCategory.getGroundCategoryName(), result.getGroundCategoryName());
     }
 
     @Test
@@ -226,7 +227,7 @@ class GroundCategoryServiceTest {
         String groundCategoryName = "Non-Existent Ground Category";
         when(groundCategoryRepository.findByGroundCategoryName(groundCategoryName)).thenReturn(null);
 
-        Assertions.assertThrows(ApiRequestException.class, () -> groundCategoryService.getByGroundCategoryName(groundCategoryName));
+        assertThrows(ApiRequestException.class, () -> groundCategoryService.getByGroundCategoryName(groundCategoryName));
 
         verify(groundCategoryRepository, times(1)).findByGroundCategoryName(groundCategoryName);
     }
@@ -236,11 +237,42 @@ class GroundCategoryServiceTest {
         GroundCategoryDTO groundCategoryDTO = new GroundCategoryDTO();
         groundCategoryDTO.setGroundCategoryName("");
 
-        Assertions.assertThrows(ApiRequestException.class, () -> groundCategoryService.createGroundCategoryDTO(groundCategoryDTO));
+        assertThrows(ApiRequestException.class, () -> groundCategoryService.createGroundCategoryDTO(groundCategoryDTO));
 
         verify(groundCategoryRepository, never()).existsByGroundCategoryName(groundCategoryDTO.getGroundCategoryName());
         verify(groundCategoryRepository, never()).save(any(GroundCategory.class));
     }
 
+    @Test
+    void testFindGroundCategoryByNameExistingCategory() {
+        GroundCategory existingCategory = new GroundCategory();
+        existingCategory.setId(1L);
+        existingCategory.setGroundCategoryName("не знам");
 
+        GroundCategoryDTO groundCategory = new GroundCategoryDTO();
+        groundCategory.setId(1L);
+        groundCategory.setGroundCategoryName("не знам");
+
+        when(groundCategoryRepository.findByGroundCategoryName("не знам"))
+                .thenReturn(existingCategory);
+        when(groundCategoryService.toDTO(existingCategory)).thenReturn(groundCategory);
+
+        GroundCategoryDTO result = groundCategoryService.findGroundCategoryByName("не знам");
+
+        assertNotNull(result);
+        assertEquals(existingCategory.getId(), result.getId());
+        assertEquals(existingCategory.getGroundCategoryName(), result.getGroundCategoryName());
+
+        verify(groundCategoryRepository, times(1)).findByGroundCategoryName("не знам");
+    }
+
+    @Test
+    void testFindGroundCategoryByName_NonExistingCategory() {
+        when(groundCategoryRepository.findByGroundCategoryName("NON EXISTING CATEGORY NAME"))
+                .thenReturn(null);
+
+        assertThrows(ApiRequestException.class, () -> groundCategoryService.findGroundCategoryByName("NON EXISTING CATEGORY NAME"));
+
+        verify(groundCategoryRepository, times(1)).findByGroundCategoryName("NON EXISTING CATEGORY NAME");
+    }
 }

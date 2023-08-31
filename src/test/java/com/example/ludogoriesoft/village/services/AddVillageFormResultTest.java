@@ -14,8 +14,8 @@ class AddVillageFormResultTest {
     void testAddVillageFormResult() {
         VillageDTO villageDTO = new VillageDTO();
         PopulationDTO populationDTO = new PopulationDTO();
-        String groundCategoryName = "Ground Category";
         List<Long> ethnicityDTOIds = new ArrayList<>();
+        List<Long> groundCategoryIds = new ArrayList<>();
         List<String> questionResponses = new ArrayList<>();
         List<VillageLivingConditionDTO> villageLivingConditionDTOS = new ArrayList<>();
         List<ObjectVillageDTO> objectVillageDTOS = new ArrayList<>();
@@ -26,7 +26,7 @@ class AddVillageFormResultTest {
         AddVillageFormResult formResult = new AddVillageFormResult(
                 villageDTO,
                 populationDTO,
-                groundCategoryName,
+                groundCategoryIds,
                 ethnicityDTOIds,
                 questionResponses,
                 villageLivingConditionDTOS,
@@ -38,7 +38,7 @@ class AddVillageFormResultTest {
 
         Assertions.assertEquals(villageDTO, formResult.getVillageDTO());
         Assertions.assertEquals(populationDTO, formResult.getPopulationDTO());
-        Assertions.assertEquals(groundCategoryName, formResult.getGroundCategoryName());
+        Assertions.assertEquals(groundCategoryIds, formResult.getGroundCategoryIds());
         Assertions.assertEquals(ethnicityDTOIds, formResult.getEthnicityDTOIds());
         Assertions.assertEquals(questionResponses, formResult.getQuestionResponses());
         Assertions.assertEquals(villageLivingConditionDTOS, formResult.getVillageLivingConditionDTOS());

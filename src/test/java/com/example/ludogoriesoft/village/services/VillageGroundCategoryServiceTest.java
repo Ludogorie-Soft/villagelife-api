@@ -348,4 +348,42 @@ class VillageGroundCategoryServiceTest {
 
     }
 
+    @Test
+    void testExistsByVillageIdAndGroundCategoryIdWhenExists() {
+        Long villageId = 1L;
+        Long groundCategoryId = 2L;
+
+        when(villageGroundCategoryRepository.existsByGroundCategoryIdAndVillageId(groundCategoryId, villageId))
+                .thenReturn(true);
+
+        boolean exists = villageGroundCategoryService.existsByVillageIdAndGroundCategoryId(villageId, groundCategoryId);
+
+        assertTrue(exists);
+        verify(villageGroundCategoryRepository, times(1)).existsByGroundCategoryIdAndVillageId(groundCategoryId, villageId);
+    }
+
+    @Test
+    void testExistsByVillageIdAndGroundCategoryIdWhenNotExists() {
+        Long villageId = 1L;
+        Long groundCategoryId = 2L;
+
+        when(villageGroundCategoryRepository.existsByGroundCategoryIdAndVillageId(groundCategoryId, villageId))
+                .thenReturn(false);
+
+        boolean exists = villageGroundCategoryService.existsByVillageIdAndGroundCategoryId(villageId, groundCategoryId);
+
+        assertFalse(exists);
+        verify(villageGroundCategoryRepository, times(1)).existsByGroundCategoryIdAndVillageId(groundCategoryId, villageId);
+    }
+
+    @Test
+    void testGetUniqueVillageGroundCategoriesByVillageIdWithNoGroundCategories() {
+        Long villageId = 1L;
+        when(villageGroundCategoryRepository.findAll()).thenReturn(new ArrayList<>());
+
+        String result = villageGroundCategoryService.getUniqueVillageGroundCategoriesByVillageId(villageId, true, null);
+
+        verify(villageGroundCategoryRepository, times(1)).findAll();
+        assertEquals("\u043D\u0435\u0020\u0437\u043D\u0430\u043C", result);
+    }
 }

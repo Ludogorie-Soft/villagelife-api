@@ -22,6 +22,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.util.ArrayList;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -66,12 +68,12 @@ class AddVillageFormResultControllerIntegrationTest {
         AddVillageFormResult inputFormResult = new AddVillageFormResult();
         inputFormResult.setVillageDTO(villageDTO);
         inputFormResult.setPopulationDTO(populationDTO);
-        inputFormResult.setGroundCategoryName(groundCategoryName);
+        inputFormResult.setGroundCategoryIds(new ArrayList<>());
 
         AddVillageFormResult createdFormResult = new AddVillageFormResult();
         createdFormResult.setVillageDTO(villageDTO);
         createdFormResult.setPopulationDTO(populationDTO);
-        createdFormResult.setGroundCategoryName(groundCategoryName);
+        createdFormResult.setGroundCategoryIds(new ArrayList<>());
         when(addVillageFormResultService.create(any(AddVillageFormResult.class))).thenReturn(createdFormResult);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/addVillageForm")
@@ -83,7 +85,7 @@ class AddVillageFormResultControllerIntegrationTest {
                 .andExpect(jsonPath("$.populationDTO.residents").value("FROM_21_TO_30_PERCENT"))
                 .andExpect(jsonPath("$.populationDTO.children").value("BELOW_10"))
                 .andExpect(jsonPath("$.populationDTO.foreigners").value("YES"))
-                .andExpect(jsonPath("$.groundCategoryName").value("Ground Category 1"))
+                .andExpect(jsonPath("$.groundCategoryIds").value(new ArrayList<>()))
                 .andReturn();
     }
 

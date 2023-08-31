@@ -77,19 +77,16 @@ public class AddVillageFormResultService {
     }
 
     public void createVillageGroundCategoryFromAddVillageFormResult(Long villageId, AddVillageFormResult addVillageFormResult, LocalDateTime localDateTime) {
-        VillageGroundCategoryDTO villageGroundCategoryDTO = new VillageGroundCategoryDTO();
-        GroundCategoryDTO groundCategoryDTO = groundCategoryService.getByGroundCategoryName(addVillageFormResult.getGroundCategoryName());
-        villageGroundCategoryDTO.setGroundCategoryId(groundCategoryDTO.getId());
-        try {
-            villageGroundCategoryDTO = villageGroundCategoryService.findVillageGroundCategoryDTOByVillageId(villageId);
-            villageGroundCategoryDTO.setGroundCategoryId(groundCategoryDTO.getId());
-            villageGroundCategoryService.updateVillageGroundCategory(villageGroundCategoryDTO.getId(), villageGroundCategoryDTO);
-        } catch (Exception e) {
-            villageGroundCategoryDTO.setVillageId(villageId);
-            villageGroundCategoryDTO.setGroundCategoryId(groundCategoryDTO.getId());
-            villageGroundCategoryDTO.setStatus(false);
-            villageGroundCategoryDTO.setDateUpload(localDateTime);
-            villageGroundCategoryService.createVillageGroundCategoryDTO(villageGroundCategoryDTO);
+        List<Long> groundCategoryIds = addVillageFormResult.getGroundCategoryIds();
+        if (groundCategoryIds == null && !villageGroundCategoryService.existsByVillageIdAndGroundCategoryId(villageId, groundCategoryService.findGroundCategoryByName("не знам").getId())) {
+            villageGroundCategoryService.createVillageGroundCategoryDTO(new VillageGroundCategoryDTO(null, villageId, groundCategoryService.findGroundCategoryByName("не знам").getId(), false, localDateTime, null));
+        } else if (groundCategoryIds != null) {
+            for (Long id : groundCategoryIds) {
+                if (!villageGroundCategoryService.existsByVillageIdAndGroundCategoryId(villageId, id)) {
+                    VillageGroundCategoryDTO villageGroundCategoryDTO = new VillageGroundCategoryDTO(null, villageId, id, false, localDateTime, null);
+                    villageGroundCategoryService.createVillageGroundCategoryDTO(villageGroundCategoryDTO);
+                }
+            }
         }
     }
 

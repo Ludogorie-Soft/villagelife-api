@@ -15,6 +15,7 @@ public class VillageInfoService {
     private final EthnicityVillageService ethnicityVillageService;
     private final VillageAnswerQuestionService villageAnswerQuestionService;
     private final PopulationService populationService;
+    private final VillageGroundCategoryService villageGroundCategoryService;
     public VillageInfo getVillageInfoByVillageId(Long villageId, boolean status, String date){
         Village village = villageService.checkVillage(villageId);
         VillageInfo villageInfo = new VillageInfo();
@@ -30,7 +31,7 @@ public class VillageInfoService {
         villageInfo.setObjectVillageResponses(objectVillageService.getObjectVillageResponses(objectVillageService.getDistinctObjectVillagesByVillageId(village.getId(),status,date)));
         villageInfo.setAnswersQuestionResponses(villageAnswerQuestionService.getAnswersQuestionResponsesByVillageId(village.getId(),status,date));
         villageInfo.setEthnicities(ethnicityVillageService.getUniqueEthnicityVillagesByVillageId(village.getId(), status, date));
-
+        villageInfo.setGroundCategories(villageGroundCategoryService.getUniqueVillageGroundCategoriesByVillageId(village.getId(), status, date));
         return villageInfo;
     }
 }
