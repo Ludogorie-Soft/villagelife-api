@@ -12,7 +12,7 @@ import java.util.List;
 public class AddVillageFormResult {
     private VillageDTO villageDTO;
     private PopulationDTO populationDTO;
-    private String groundCategoryName;
+    private List<Long> groundCategoryIds;
     private List<Long> ethnicityDTOIds;
     private List<String> questionResponses;
     private List<VillageLivingConditionDTO> villageLivingConditionDTOS;

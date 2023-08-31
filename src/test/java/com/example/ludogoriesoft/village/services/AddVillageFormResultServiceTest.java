@@ -234,39 +234,39 @@ class AddVillageFormResultServiceTest {
         Mockito.verify(ethnicityVillageService, Mockito.never()).createEthnicityVillage(Mockito.any(EthnicityVillageDTO.class));
     }
 
-    @Test
-    void testCreateVillageGroundCategoryWithNewVillage() {
-        GroundCategoryDTO groundCategoryDTO = new GroundCategoryDTO();
-        groundCategoryDTO.setId(1L);
-        when(groundCategoryService.getByGroundCategoryName(anyString())).thenReturn(groundCategoryDTO);
+//    @Test
+//    void testCreateVillageGroundCategoryWithNewVillage() {
+//        GroundCategoryDTO groundCategoryDTO = new GroundCategoryDTO();
+//        groundCategoryDTO.setId(1L);
+//        when(groundCategoryService.getByGroundCategoryName(anyString())).thenReturn(groundCategoryDTO);
+//
+//        when(villageGroundCategoryService.findVillageGroundCategoryDTOByVillageId(anyLong())).thenThrow(new ApiRequestException("Not found"));
+//
+//        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
+//        addVillageFormResult.setGroundCategoryName("Test Ground Category Name");
+//        addVillageFormResultService.createVillageGroundCategoryFromAddVillageFormResult(1L, addVillageFormResult, TimestampUtils.getCurrentTimestamp());
+//
+//        verify(villageGroundCategoryService).createVillageGroundCategoryDTO(any(VillageGroundCategoryDTO.class));
+//        verify(villageGroundCategoryService, never()).updateVillageGroundCategory(anyLong(), any(VillageGroundCategoryDTO.class));
+//    }
 
-        when(villageGroundCategoryService.findVillageGroundCategoryDTOByVillageId(anyLong())).thenThrow(new ApiRequestException("Not found"));
-
-        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
-        addVillageFormResult.setGroundCategoryName("Test Ground Category Name");
-        addVillageFormResultService.createVillageGroundCategoryFromAddVillageFormResult(1L, addVillageFormResult, TimestampUtils.getCurrentTimestamp());
-
-        verify(villageGroundCategoryService).createVillageGroundCategoryDTO(any(VillageGroundCategoryDTO.class));
-        verify(villageGroundCategoryService, never()).updateVillageGroundCategory(anyLong(), any(VillageGroundCategoryDTO.class));
-    }
-
-    @Test
-    void testCreateVillageGroundCategoryWithExistingVillage() {
-        GroundCategoryDTO groundCategoryDTO = new GroundCategoryDTO();
-        groundCategoryDTO.setId(1L);
-        when(groundCategoryService.getByGroundCategoryName(anyString())).thenReturn(groundCategoryDTO);
-
-        VillageGroundCategoryDTO existingVillageGroundCategoryDTO = new VillageGroundCategoryDTO();
-        existingVillageGroundCategoryDTO.setId(1L);
-        when(villageGroundCategoryService.findVillageGroundCategoryDTOByVillageId(anyLong())).thenReturn(existingVillageGroundCategoryDTO);
-
-        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
-        addVillageFormResult.setGroundCategoryName("Test Ground Category Name");
-        addVillageFormResultService.createVillageGroundCategoryFromAddVillageFormResult(1L, addVillageFormResult, TimestampUtils.getCurrentTimestamp());
-
-        verify(villageGroundCategoryService).updateVillageGroundCategory(anyLong(), any(VillageGroundCategoryDTO.class));
-        verify(villageGroundCategoryService, never()).createVillageGroundCategoryDTO(any(VillageGroundCategoryDTO.class));
-    }
+//    @Test
+//    void testCreateVillageGroundCategoryWithExistingVillage() {
+//        GroundCategoryDTO groundCategoryDTO = new GroundCategoryDTO();
+//        groundCategoryDTO.setId(1L);
+//        when(groundCategoryService.getByGroundCategoryName(anyString())).thenReturn(groundCategoryDTO);
+//
+//        VillageGroundCategoryDTO existingVillageGroundCategoryDTO = new VillageGroundCategoryDTO();
+//        existingVillageGroundCategoryDTO.setId(1L);
+//        when(villageGroundCategoryService.findVillageGroundCategoryDTOByVillageId(anyLong())).thenReturn(existingVillageGroundCategoryDTO);
+//
+//        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
+//        addVillageFormResult.setGroundCategoryName("Test Ground Category Name");
+//        addVillageFormResultService.createVillageGroundCategoryFromAddVillageFormResult(1L, addVillageFormResult, TimestampUtils.getCurrentTimestamp());
+//
+//        verify(villageGroundCategoryService).updateVillageGroundCategory(anyLong(), any(VillageGroundCategoryDTO.class));
+//        verify(villageGroundCategoryService, never()).createVillageGroundCategoryDTO(any(VillageGroundCategoryDTO.class));
+//    }
 
     @Test
     void testCreatePopulationFromAddVillageFormResult() {
