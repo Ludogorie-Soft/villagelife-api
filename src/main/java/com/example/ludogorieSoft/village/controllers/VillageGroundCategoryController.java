@@ -57,4 +57,8 @@ public class VillageGroundCategoryController {
         return ResponseEntity.ok(exists);
     }
 
+    @GetMapping("/check-existence")
+    public boolean checkExistence(@RequestParam Long villageId, @RequestParam Long groundCategoryId) {
+        return villageGroundCategoryService.existsByVillageIdAndGroundCategoryId(villageId, groundCategoryId);
+    }
 }
