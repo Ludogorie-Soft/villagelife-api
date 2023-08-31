@@ -201,4 +201,19 @@ class VillageGroundCategoryControllerIntegrationTest {
         verify(villageGroundCategoryService, times(1)).existsVillageGroundCategoryDTOByVillageId(villageId);
     }
 
+    @Test
+    void testCheckExistence() throws Exception {
+        Long villageId = 1L;
+        Long groundCategoryId = 2L;
+
+        when(villageGroundCategoryService.existsByVillageIdAndGroundCategoryId(villageId, groundCategoryId)).thenReturn(true);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageGroundCategory/check-existence")
+                        .param("villageId", villageId.toString())
+                        .param("groundCategoryId", groundCategoryId.toString())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(content().string("true"));
+    }
+
 }
