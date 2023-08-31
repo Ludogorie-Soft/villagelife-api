@@ -22,6 +22,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.util.ArrayList;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -49,43 +51,43 @@ class AddVillageFormResultControllerIntegrationTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    //@Test
-    //void testCreateAddVillageForResult() throws Exception {
-    //    VillageDTO villageDTO = new VillageDTO();
-    //    villageDTO.setId(1L);
-    //    villageDTO.setName("Test Village");
-//
-    //    PopulationDTO populationDTO = new PopulationDTO();
-    //    populationDTO.setNumberOfPopulation(NumberOfPopulation.UP_TO_10_PEOPLE);
-    //    populationDTO.setResidents(Residents.FROM_21_TO_30_PERCENT);
-    //    populationDTO.setChildren(Children.BELOW_10);
-    //    populationDTO.setForeigners(Foreigners.YES);
-//
-    //    String groundCategoryName = "Ground Category 1";
-//
-    //    AddVillageFormResult inputFormResult = new AddVillageFormResult();
-    //    inputFormResult.setVillageDTO(villageDTO);
-    //    inputFormResult.setPopulationDTO(populationDTO);
-    //    inputFormResult.setGroundCategoryName(groundCategoryName);
-//
-    //    AddVillageFormResult createdFormResult = new AddVillageFormResult();
-    //    createdFormResult.setVillageDTO(villageDTO);
-    //    createdFormResult.setPopulationDTO(populationDTO);
-    //    createdFormResult.setGroundCategoryName(groundCategoryName);
-    //    when(addVillageFormResultService.create(any(AddVillageFormResult.class))).thenReturn(createdFormResult);
-//
-    //    mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/addVillageForm")
-    //                    .content(asJsonString(inputFormResult))
-    //                    .contentType(MediaType.APPLICATION_JSON))
-    //            .andExpect(status().isCreated())
-    //            .andExpect(jsonPath("$.villageDTO.name").value("Test Village"))
-    //            .andExpect(jsonPath("$.populationDTO.numberOfPopulation").value("UP_TO_10_PEOPLE"))
-    //            .andExpect(jsonPath("$.populationDTO.residents").value("FROM_21_TO_30_PERCENT"))
-    //            .andExpect(jsonPath("$.populationDTO.children").value("BELOW_10"))
-    //            .andExpect(jsonPath("$.populationDTO.foreigners").value("YES"))
-    //            .andExpect(jsonPath("$.groundCategoryName").value("Ground Category 1"))
-    //            .andReturn();
-    //}
+    @Test
+    void testCreateAddVillageForResult() throws Exception {
+        VillageDTO villageDTO = new VillageDTO();
+        villageDTO.setId(1L);
+        villageDTO.setName("Test Village");
+
+        PopulationDTO populationDTO = new PopulationDTO();
+        populationDTO.setNumberOfPopulation(NumberOfPopulation.UP_TO_10_PEOPLE);
+        populationDTO.setResidents(Residents.FROM_21_TO_30_PERCENT);
+        populationDTO.setChildren(Children.BELOW_10);
+        populationDTO.setForeigners(Foreigners.YES);
+
+        String groundCategoryName = "Ground Category 1";
+
+        AddVillageFormResult inputFormResult = new AddVillageFormResult();
+        inputFormResult.setVillageDTO(villageDTO);
+        inputFormResult.setPopulationDTO(populationDTO);
+        inputFormResult.setGroundCategoryIds(new ArrayList<>());
+
+        AddVillageFormResult createdFormResult = new AddVillageFormResult();
+        createdFormResult.setVillageDTO(villageDTO);
+        createdFormResult.setPopulationDTO(populationDTO);
+        createdFormResult.setGroundCategoryIds(new ArrayList<>());
+        when(addVillageFormResultService.create(any(AddVillageFormResult.class))).thenReturn(createdFormResult);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/addVillageForm")
+                        .content(asJsonString(inputFormResult))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.villageDTO.name").value("Test Village"))
+                .andExpect(jsonPath("$.populationDTO.numberOfPopulation").value("UP_TO_10_PEOPLE"))
+                .andExpect(jsonPath("$.populationDTO.residents").value("FROM_21_TO_30_PERCENT"))
+                .andExpect(jsonPath("$.populationDTO.children").value("BELOW_10"))
+                .andExpect(jsonPath("$.populationDTO.foreigners").value("YES"))
+                .andExpect(jsonPath("$.groundCategoryIds").value(new ArrayList<>()))
+                .andReturn();
+    }
 
     private static String asJsonString(Object obj) {
         try {
