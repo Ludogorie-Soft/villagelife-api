@@ -5,6 +5,7 @@ import com.example.ludogorieSoft.village.enums.*;
 
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.exeptions.NoConsentException;
+import com.example.ludogorieSoft.village.model.GroundCategory;
 import com.example.ludogorieSoft.village.utils.TimestampUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -296,6 +297,7 @@ class AddVillageFormResultServiceTest {
 
         verify(populationService, times(1)).createPopulation(populationDTO);
     }
+
     @Test
     void testCheckIsImagesHasUserConsent_NoConsent() {
         AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
@@ -332,7 +334,7 @@ class AddVillageFormResultServiceTest {
         addVillageFormResultService.checkIsImagesHasUserConsent(addVillageFormResult);
     }
 
-//    @Test
+    //    @Test
 //    void testCreateAddVillageFormResult() {
 //        VillageDTO savedVillage = new VillageDTO();
 //        PopulationDTO savedPopulation = new PopulationDTO();
@@ -388,5 +390,40 @@ class AddVillageFormResultServiceTest {
 //        assertEquals(addVillageFormResult, result);
 //
 //    }
+    @Test
+    void testCreateVillageGroundCategoryFromAddVillageFormResultWhenGroundCategoryIdsExist() {
+        Long villageId = 1L;
+        List<Long> groundCategoryIds = Arrays.asList(2L, 3L);
+        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
+        addVillageFormResult.setGroundCategoryIds(groundCategoryIds);
+        LocalDateTime localDateTime = LocalDateTime.now();
 
+        when(villageGroundCategoryService.existsByVillageIdAndGroundCategoryId(eq(villageId), any()))
+                .thenReturn(false);
+        lenient().when(groundCategoryService.findGroundCategoryByName("не знам")).thenReturn(new GroundCategoryDTO());
+
+        addVillageFormResultService.createVillageGroundCategoryFromAddVillageFormResult(villageId, addVillageFormResult, localDateTime);
+
+        verify(villageGroundCategoryService, times(groundCategoryIds.size()))
+                .createVillageGroundCategoryDTO(new VillageGroundCategoryDTO(null, villageId, any(), false, localDateTime, null));
+    }
+
+    @Test
+    void testCreateVillageGroundCategoryFromAddVillageFormResultWhenGroundCategoryIdsExistButAlreadyCreated() {
+        Long villageId = 1L;
+        List<Long> groundCategoryIds = Arrays.asList(2L, 3L);
+        AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
+        addVillageFormResult.setGroundCategoryIds(groundCategoryIds);
+        LocalDateTime localDateTime = LocalDateTime.now();
+
+        when(villageGroundCategoryService.existsByVillageIdAndGroundCategoryId(eq(villageId), any()))
+                .thenReturn(true);
+
+        lenient().when(groundCategoryService.findGroundCategoryByName("не знам")).thenReturn(new GroundCategoryDTO());
+
+        addVillageFormResultService.createVillageGroundCategoryFromAddVillageFormResult(villageId, addVillageFormResult, localDateTime);
+
+        verify(villageGroundCategoryService, never())
+                .createVillageGroundCategoryDTO(new VillageGroundCategoryDTO(null, villageId, any(), false, localDateTime, null));
+    }
 }
