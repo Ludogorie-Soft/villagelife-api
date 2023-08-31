@@ -384,6 +384,55 @@ class VillageGroundCategoryServiceTest {
         String result = villageGroundCategoryService.getUniqueVillageGroundCategoriesByVillageId(villageId, true, null);
 
         verify(villageGroundCategoryRepository, times(1)).findAll();
-        assertEquals("\u043D\u0435\u0020\u0437\u043D\u0430\u043C", result);
+        assertEquals("не знам", result);
     }
+
+    @Test
+    void testExistsByVillageIdAndGroundCategoryIdNotExists() {
+        Long villageId = 1L;
+        Long groundCategoryId = 2L;
+        when(villageGroundCategoryRepository.existsByGroundCategoryIdAndVillageId(villageId, groundCategoryId)).thenReturn(false);
+        boolean exists = villageGroundCategoryService.existsByVillageIdAndGroundCategoryId(villageId, groundCategoryId);
+        assertFalse(exists);
+    }
+
+
+    @Test
+    void testGetUniqueVillageGroundCategoriesByVillageIdWhenEmpty() {
+        Long villageId = 1L;
+        boolean status = true;
+        String date = "2023-08-31 12:00:00";
+
+        List<VillageGroundCategory> villageGroundCategories = new ArrayList<>();
+
+        when(villageGroundCategoryRepository.findAll()).thenReturn(villageGroundCategories);
+
+        String result = villageGroundCategoryService.getUniqueVillageGroundCategoriesByVillageId(villageId, status, date);
+
+        assertEquals("не знам", result);
+    }
+
+    @Test
+    void testExistsVillageGroundCategoryDTOByVillageIdWhenExists() {
+        Long villageId = 1L;
+        when(villageGroundCategoryRepository.findByVillageId(villageId)).thenReturn(new VillageGroundCategory());
+
+        boolean exists = villageGroundCategoryService.existsVillageGroundCategoryDTOByVillageId(villageId);
+
+        assertTrue(exists);
+        verify(villageGroundCategoryRepository).findByVillageId(villageId);
+    }
+
+    @Test
+    void testExistsVillageGroundCategoryDTOByVillageIdWhenNotExists() {
+        Long villageId = 1L;
+        when(villageGroundCategoryRepository.findByVillageId(villageId)).thenReturn(null);
+
+        boolean exists = villageGroundCategoryService.existsVillageGroundCategoryDTOByVillageId(villageId);
+
+        assertFalse(exists);
+        verify(villageGroundCategoryRepository).findByVillageId(villageId);
+    }
+
+
 }
