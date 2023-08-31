@@ -86,8 +86,8 @@ public class VillageImageService {
         }
     }
 
-    public void createVillageImageDTO(Long villageId, String fileName, LocalDateTime localDateTime, boolean status, UserDTO userDTO) {//ddd
-        VillageImageDTO villageImageDTO = new VillageImageDTO(null, villageId, fileName, status, localDateTime, null, null, userDTO);//added false for status column /ddd
+    public void createVillageImageDTO(Long villageId, String fileName, LocalDateTime localDateTime, boolean status, UserDTO userDTO) {
+        VillageImageDTO villageImageDTO = new VillageImageDTO(null, villageId, fileName, status, localDateTime, null, null, userDTO);
         createVillageImageDTO(villageImageDTO);
     }
 
