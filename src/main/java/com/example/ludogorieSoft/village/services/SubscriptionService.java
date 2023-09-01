@@ -22,10 +22,10 @@ public class SubscriptionService {
             throw new ApiRequestException("Email is blank");
         }
         Subscription subscription = subscriptionRepository.findByEmail(subscriptionDTO.getEmail());
-        if(subscription != null && subscription.getDeletedAt() != null){
+        if (subscription != null && subscription.getDeletedAt() != null) {
             subscription.setDeletedAt(null);
             subscriptionRepository.save(subscription);
-        }else if(subscription == null){
+        } else if (subscription == null) {
             subscription = new Subscription();
             subscription.setEmail(subscriptionDTO.getEmail());
             subscriptionRepository.save(subscription);
@@ -36,11 +36,17 @@ public class SubscriptionService {
     public SubscriptionDTO subscriptionToSubscriptionDTO(Subscription subscription) {
         return modelMapper.map(subscription, SubscriptionDTO.class);
     }
+
     public List<SubscriptionDTO> getAllSubscriptions() {
         List<Subscription> subscriptions = subscriptionRepository.findAll();
         return subscriptions
                 .stream()
                 .map(this::subscriptionToSubscriptionDTO)
                 .toList();
+    }
+
+    public boolean emailExists(String email) {
+        Subscription existingSubscription = subscriptionRepository.findByEmail(email);
+        return existingSubscription != null;
     }
 }

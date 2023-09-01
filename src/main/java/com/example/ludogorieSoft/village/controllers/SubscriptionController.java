@@ -25,4 +25,10 @@ public class SubscriptionController {
     public ResponseEntity<List<SubscriptionDTO>> getAllSubscriptions() {
         return ResponseEntity.ok(subscriptionService.getAllSubscriptions());
     }
+
+    @GetMapping("/check-email")
+    public boolean emailExists(@RequestParam String email) {
+        return subscriptionService.emailExists(email);
+    }
+
 }

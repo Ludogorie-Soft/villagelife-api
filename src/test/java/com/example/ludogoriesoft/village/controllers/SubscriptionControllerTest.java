@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import javax.ws.rs.core.MediaType;
 import java.time.LocalDateTime;
@@ -106,4 +107,32 @@ class SubscriptionControllerTest {
         Assertions.assertNotNull(response);
 
     }
+
+
+    @Test
+    void testEmailExistsEndpointWithEmailExists() throws Exception {
+        String email = "existing@example.com";
+
+        when(subscriptionService.emailExists(email)).thenReturn(true);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/subscriptions/check-email")
+                        .param("email", email)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string("true"));
+    }
+
+    @Test
+    void testEmailExistsEndpointWithEmailDoesNotExist() throws Exception {
+        String email = "nonexistent@example.com";
+
+        when(subscriptionService.emailExists(email)).thenReturn(false);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/subscriptions/check-email")
+                        .param("email", email)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string("false"));
+    }
+
 }
