@@ -1,17 +1,13 @@
 package com.example.ludogorieSoft.village.auth;
 
-import com.example.ludogorieSoft.village.authorization.JWTService;
 import com.example.ludogorieSoft.village.dtos.AdministratorDTO;
 import com.example.ludogorieSoft.village.dtos.request.AuthenticationRequest;
 import com.example.ludogorieSoft.village.dtos.request.RegisterRequest;
 import com.example.ludogorieSoft.village.dtos.response.AuthenticationResponce;
 import com.example.ludogorieSoft.village.services.AuthService;
-import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,8 +17,6 @@ public class AuthenticationController {
 
     private final AuthenticationService service;
     private final AuthService authService;
-  private final JWTService jwtService;
-  private final UserDetailsService userDetailsService;
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody RegisterRequest request){
@@ -39,22 +33,7 @@ public class AuthenticationController {
     }
     @GetMapping("/check")
     public ResponseEntity<String> authorizeAdminToken(@RequestHeader("Authorization") String token) {
-        if (token == null || !token.startsWith("Bearer ")) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token format");
-        }
 
-        String jwtToken = token.substring(7);
-        try {
-            String username = jwtService.extractUsername(jwtToken);
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-
-            if (jwtService.isTokenValid(jwtToken, userDetails)) {
-                return ResponseEntity.ok("Authorized");
-            } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
-            }
-        } catch (JwtException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
-        }
+        return ResponseEntity.ok("Authorized");
     }
 }
