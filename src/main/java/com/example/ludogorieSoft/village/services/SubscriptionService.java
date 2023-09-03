@@ -47,6 +47,7 @@ public class SubscriptionService {
 
     public boolean emailExists(String email) {
         Subscription existingSubscription = subscriptionRepository.findByEmail(email);
-        return existingSubscription != null;
+        return existingSubscription != null && existingSubscription.getDeletedAt() == null;
     }
+
 }

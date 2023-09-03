@@ -126,23 +126,28 @@ class SubscriptionServiceTest {
         assertEquals(subscriptionDTO2.getDeletedAt(), expectedSubscriptionDTO2.getDeletedAt());
     }
 
+
     @Test
-    void testEmailExistsWhenEmailExists() {
+    void testEmailExistsWhenEmailExistsAndIsActive() {
         String email = "test@example.com";
         Subscription existingSubscription = new Subscription();
         existingSubscription.setEmail(email);
+        existingSubscription.setDeletedAt(null);
 
         when(subscriptionRepository.findByEmail(email)).thenReturn(existingSubscription);
         boolean result = subscriptionService.emailExists(email);
         assertTrue(result);
     }
 
+
     @Test
     void testEmailExistsWhenEmailDoesNotExist() {
         String email = "nonexistent@example.com";
 
         when(subscriptionRepository.findByEmail(email)).thenReturn(null);
+
         boolean result = subscriptionService.emailExists(email);
         assertFalse(result);
     }
+
 }

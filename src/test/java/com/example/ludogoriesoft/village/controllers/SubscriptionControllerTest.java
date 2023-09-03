@@ -108,9 +108,8 @@ class SubscriptionControllerTest {
 
     }
 
-
     @Test
-    void testEmailExistsEndpointWithEmailExists() throws Exception {
+    void testEmailExistsEndpointWithEmailExistsAndIsActive() throws Exception {
         String email = "existing@example.com";
 
         when(subscriptionService.emailExists(email)).thenReturn(true);
@@ -123,7 +122,7 @@ class SubscriptionControllerTest {
     }
 
     @Test
-    void testEmailExistsEndpointWithEmailDoesNotExist() throws Exception {
+    void testEmailExistsEndpointWithEmailDoesNotExistOrIsInactive() throws Exception {
         String email = "nonexistent@example.com";
 
         when(subscriptionService.emailExists(email)).thenReturn(false);
@@ -134,5 +133,6 @@ class SubscriptionControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string("false"));
     }
+
 
 }
