@@ -1,5 +1,9 @@
 package com.example.ludogorieSoft.village.authorization;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -109,5 +113,68 @@ class JWTAuthenticationFilterTest {
         }
     }
 
+    @Test
+    void testDoFilterInternal_SignatureException() throws ServletException, IOException {
+        String invalidJwtToken = "InvalidToken";
 
+        when(request.getHeader("Authorization")).thenReturn("Bearer " + invalidJwtToken);
+        when(jwtService.extractUsername(invalidJwtToken)).thenThrow(new SignatureException("Invalid signature"));
+
+        filter.doFilterInternal(request, response, filterChain);
+
+        verify(response).setStatus(HttpServletResponse.SC_FORBIDDEN);
+        verify(response).sendError(HttpServletResponse.SC_FORBIDDEN, "No valid signature");
+    }
+
+    @Test
+    public void testDoFilterInternal_MalformedJwtException() throws ServletException, IOException {
+        String invalidJwtToken = "InvalidToken";
+
+        when(request.getHeader("Authorization")).thenReturn("Bearer " + invalidJwtToken);
+        when(jwtService.extractUsername(invalidJwtToken)).thenThrow(new MalformedJwtException("Malformed token"));
+
+        filter.doFilterInternal(request, response, filterChain);
+
+        verify(response).setStatus(HttpServletResponse.SC_FORBIDDEN);
+        verify(response).sendError(HttpServletResponse.SC_FORBIDDEN, "Invalid authorization token");
+    }
+
+    @Test
+    public void testDoFilterInternal_ExpiredJwtException() throws ServletException, IOException {
+        String expiredJwtToken = "ExpiredToken";
+
+        when(request.getHeader("Authorization")).thenReturn("Bearer " + expiredJwtToken);
+        when(jwtService.extractUsername(expiredJwtToken)).thenThrow(new ExpiredJwtException(null, null, "Expired token"));
+
+        filter.doFilterInternal(request, response, filterChain);
+
+        verify(response).setStatus(HttpServletResponse.SC_FORBIDDEN);
+        verify(response).sendError(HttpServletResponse.SC_FORBIDDEN, "Expired authorization token");
+    }
+
+    @Test
+    public void testDoFilterInternal_UnsupportedJwtException() throws ServletException, IOException {
+        String unsupportedJwtToken = "UnsupportedToken";
+
+        when(request.getHeader("Authorization")).thenReturn("Bearer " + unsupportedJwtToken);
+        when(jwtService.extractUsername(unsupportedJwtToken)).thenThrow(new UnsupportedJwtException("Unsupported token"));
+
+        filter.doFilterInternal(request, response, filterChain);
+
+        verify(response).setStatus(HttpServletResponse.SC_FORBIDDEN);
+        verify(response).sendError(HttpServletResponse.SC_FORBIDDEN, "Unsupported authorization token ");
+    }
+
+    @Test
+    public void testDoFilterInternal_IllegalArgumentException() throws ServletException, IOException {
+        String emptyJwtToken = "";
+
+        when(request.getHeader("Authorization")).thenReturn("Bearer " + emptyJwtToken);
+        when(jwtService.extractUsername(emptyJwtToken)).thenThrow(new IllegalArgumentException("Empty token"));
+
+        filter.doFilterInternal(request, response, filterChain);
+
+        verify(response).setStatus(HttpServletResponse.SC_FORBIDDEN);
+        verify(response).sendError(HttpServletResponse.SC_FORBIDDEN, "JWT claims string is empty");
+    }
 }
