@@ -191,7 +191,7 @@ class ObjectVillageControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/objectVillages")
                         .content("{\"id\": 1, }" + invalidData)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isInternalServerError())
+                .andExpect(status().isBadRequest())
                 .andReturn();
     }
 

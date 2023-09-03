@@ -211,7 +211,7 @@ class RegionControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/regions/{id}", 1)
                         .content("{\"id\": 1, \"name\": " + invalidData + "}")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isInternalServerError());
+                .andExpect(status().isBadRequest());
     }
 
     @Test

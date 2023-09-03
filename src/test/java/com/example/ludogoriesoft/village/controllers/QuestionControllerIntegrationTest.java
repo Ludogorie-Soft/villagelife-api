@@ -197,7 +197,7 @@ class QuestionControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/questions/{id}", 1)
                         .content("{\"id\": 1, \"question\": }" + blankQuestion)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isInternalServerError())
+                .andExpect(status().isBadRequest())
                 .andReturn();
     }
 

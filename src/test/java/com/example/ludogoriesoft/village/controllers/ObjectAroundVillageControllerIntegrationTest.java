@@ -213,7 +213,7 @@ class ObjectAroundVillageControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/objectsAroundVillage/{id}", 1)
                         .content("{\"id\": 1, \"type\": }" + invalidData)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isInternalServerError());
+                .andExpect(status().isBadRequest());
     }
 
     @Test

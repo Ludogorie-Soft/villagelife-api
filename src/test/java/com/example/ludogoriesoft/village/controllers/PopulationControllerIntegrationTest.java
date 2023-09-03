@@ -213,7 +213,7 @@ class PopulationControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/populations")
                         .content("{\"id\": }")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isInternalServerError())
+                .andExpect(status().isBadRequest())
                 .andReturn();
     }
 

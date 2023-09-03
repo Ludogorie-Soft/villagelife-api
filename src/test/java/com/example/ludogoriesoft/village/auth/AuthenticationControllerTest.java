@@ -49,7 +49,7 @@ class AuthenticationControllerTest {
         authenticationManager = Mockito.mock(AuthenticationManager.class);
         authService = Mockito.mock(AuthService.class);
         authenticationController = new AuthenticationController(new AuthenticationService(
-                administratorRepository, passwordEncoder, jwtService, authenticationManager), authService,jwtService,userDetailsService);
+                administratorRepository, passwordEncoder, jwtService, authenticationManager), authService);
     }
 
     @Test
@@ -109,12 +109,6 @@ class AuthenticationControllerTest {
         assertEquals(expectedAdministratorDTO, responseEntity.getBody());
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     }
-    @Test
-     void testAuthorizeAdminToken_InvalidTokenFormat() {
-        ResponseEntity<String> response = authenticationController.authorizeAdminToken("invalid-token-format");
 
-        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
-        assertEquals("Invalid token format", response.getBody());
-    }
 }
 

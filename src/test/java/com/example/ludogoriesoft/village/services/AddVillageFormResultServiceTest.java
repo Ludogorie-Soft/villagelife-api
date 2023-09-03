@@ -400,7 +400,7 @@ class AddVillageFormResultServiceTest {
 
         when(villageGroundCategoryService.existsByVillageIdAndGroundCategoryId(eq(villageId), any()))
                 .thenReturn(false);
-        lenient().when(groundCategoryService.findGroundCategoryByName("не знам")).thenReturn(new GroundCategoryDTO());
+        lenient().when(groundCategoryService.findGroundCategoryByName("U+043D U+0435 U+0020 U+0437 U+043D U+0430 U+043C.")).thenReturn(new GroundCategoryDTO());
 
         addVillageFormResultService.createVillageGroundCategoryFromAddVillageFormResult(villageId, addVillageFormResult, localDateTime);
 
@@ -419,7 +419,7 @@ class AddVillageFormResultServiceTest {
         when(villageGroundCategoryService.existsByVillageIdAndGroundCategoryId(eq(villageId), any()))
                 .thenReturn(true);
 
-        lenient().when(groundCategoryService.findGroundCategoryByName("не знам")).thenReturn(new GroundCategoryDTO());
+        lenient().when(groundCategoryService.findGroundCategoryByName("U+043D U+0435 U+0020 U+0437 U+043D U+0430 U+043C.")).thenReturn(new GroundCategoryDTO());
 
         addVillageFormResultService.createVillageGroundCategoryFromAddVillageFormResult(villageId, addVillageFormResult, localDateTime);
 
