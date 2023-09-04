@@ -5,7 +5,7 @@ import com.example.ludogorieSoft.village.enums.Children;
 import com.example.ludogorieSoft.village.enums.Foreigners;
 import com.example.ludogorieSoft.village.enums.NumberOfPopulation;
 import com.example.ludogorieSoft.village.enums.Residents;
-import com.example.ludogorieSoft.village.exeptions.ApiExceptionHandler;
+import com.example.ludogorieSoft.village.exeptions.handler.ApiExceptionHandler;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.services.PopulationService;
 import org.junit.jupiter.api.BeforeEach;
@@ -213,7 +213,7 @@ class PopulationControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/populations")
                         .content("{\"id\": }")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isInternalServerError())
+                .andExpect(status().isBadRequest())
                 .andReturn();
     }
 

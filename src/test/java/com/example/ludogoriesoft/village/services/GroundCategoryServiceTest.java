@@ -247,23 +247,23 @@ class GroundCategoryServiceTest {
     void testFindGroundCategoryByNameExistingCategory() {
         GroundCategory existingCategory = new GroundCategory();
         existingCategory.setId(1L);
-        existingCategory.setGroundCategoryName("не знам");
+        existingCategory.setGroundCategoryName("U+043D U+0435 U+0020 U+0437 U+043D U+0430 U+043C.");
 
         GroundCategoryDTO groundCategory = new GroundCategoryDTO();
         groundCategory.setId(1L);
-        groundCategory.setGroundCategoryName("не знам");
+        groundCategory.setGroundCategoryName("U+043D U+0435 U+0020 U+0437 U+043D U+0430 U+043C.");
 
-        when(groundCategoryRepository.findByGroundCategoryName("не знам"))
+        when(groundCategoryRepository.findByGroundCategoryName("U+043D U+0435 U+0020 U+0437 U+043D U+0430 U+043C."))
                 .thenReturn(existingCategory);
         when(groundCategoryService.toDTO(existingCategory)).thenReturn(groundCategory);
 
-        GroundCategoryDTO result = groundCategoryService.findGroundCategoryByName("не знам");
+        GroundCategoryDTO result = groundCategoryService.findGroundCategoryByName("U+043D U+0435 U+0020 U+0437 U+043D U+0430 U+043C.");
 
         assertNotNull(result);
         assertEquals(existingCategory.getId(), result.getId());
         assertEquals(existingCategory.getGroundCategoryName(), result.getGroundCategoryName());
 
-        verify(groundCategoryRepository, times(1)).findByGroundCategoryName("не знам");
+        verify(groundCategoryRepository, times(1)).findByGroundCategoryName("U+043D U+0435 U+0020 U+0437 U+043D U+0430 U+043C.");
     }
 
     @Test

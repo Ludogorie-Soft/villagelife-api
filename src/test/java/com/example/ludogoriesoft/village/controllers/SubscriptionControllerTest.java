@@ -1,7 +1,7 @@
 package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.dtos.SubscriptionDTO;
-import com.example.ludogorieSoft.village.exeptions.ApiExceptionHandler;
+import com.example.ludogorieSoft.village.exeptions.handler.ApiExceptionHandler;
 import com.example.ludogorieSoft.village.services.SubscriptionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.MockitoAnnotations;

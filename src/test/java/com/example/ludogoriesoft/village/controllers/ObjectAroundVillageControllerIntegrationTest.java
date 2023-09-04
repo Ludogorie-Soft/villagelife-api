@@ -1,7 +1,7 @@
 package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.dtos.ObjectAroundVillageDTO;
-import com.example.ludogorieSoft.village.exeptions.ApiExceptionHandler;
+import com.example.ludogorieSoft.village.exeptions.handler.ApiExceptionHandler;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.services.ObjectAroundVillageService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -213,7 +213,7 @@ class ObjectAroundVillageControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/objectsAroundVillage/{id}", 1)
                         .content("{\"id\": 1, \"type\": }" + invalidData)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isInternalServerError());
+                .andExpect(status().isBadRequest());
     }
 
     @Test

@@ -1,7 +1,7 @@
 package com.example.ludogorieSoft.village.exeptions;
 
+import com.example.ludogorieSoft.village.exeptions.handler.ApiExceptionHandler;
 import org.junit.jupiter.api.Test;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
