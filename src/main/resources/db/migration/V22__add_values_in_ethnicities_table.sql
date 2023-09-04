@@ -1,5 +1,4 @@
-INSERT INTO ethnicities (ethnicity_name)
-VALUES
+INSERT INTO ethnicities (ethnicity_name) VALUES
     ('роми'),
     ('турци'),
     ('власи'),

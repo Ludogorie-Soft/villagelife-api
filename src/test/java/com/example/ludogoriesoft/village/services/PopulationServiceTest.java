@@ -62,8 +62,8 @@ class PopulationServiceTest {
     @Test
     void testGetAllPopulationWithPopulations() {
         List<Population> populationList = Arrays.asList(
-                new Population(),
-                new Population()
+            new Population(),
+            new Population()
         );
 
         when(populationRepository.findAll()).thenReturn(populationList);
@@ -287,7 +287,7 @@ class PopulationServiceTest {
         when(populationRepository.findByVillageNameAndRegionName(villageName, regionName)).thenReturn(null);
 
         assertThrows(ApiRequestException.class,
-                () -> populationService.findPopulationDTOByVillageNameAndRegion(villageName, regionName));
+                     () -> populationService.findPopulationDTOByVillageNameAndRegion(villageName, regionName));
     }
     @Test
     void testRejectPopulationResponse() {
@@ -300,7 +300,7 @@ class PopulationServiceTest {
 
         Population mockPopulation = new Population();
         when(populationRepository.findPopulationsByVillageIdAndDateUploadAndStatus(villageId, answerDate, currentStatus))
-                .thenReturn(mockPopulation);
+            .thenReturn(mockPopulation);
         when(populationRepository.save(any(Population.class))).thenReturn(mockPopulation);
 
         populationService.rejectPopulationResponse(villageId, currentStatus, answerDate, dateDeleted);
@@ -320,7 +320,7 @@ class PopulationServiceTest {
 
         Population mockPopulation = mock(Population.class);
         when(populationRepository.findPopulationsByVillageIdAndDateUploadAndStatus(villageId, answerDate, currentStatus))
-                .thenReturn(mockPopulation);
+            .thenReturn(mockPopulation);
         when(populationRepository.save(any(Population.class))).thenReturn(mockPopulation);
 
         populationService.updatePopulationStatus(villageId, currentStatus, answerDate);
@@ -342,7 +342,7 @@ class PopulationServiceTest {
         mockPopulations.add(new Population());
         mockPopulations.add(new Population());
         when(populationRepository.findByVillageIdAndVillageStatus(villageId, villageStatus))
-                .thenReturn(mockPopulations);
+            .thenReturn(mockPopulations);
 
         List<Population> result = populationService.findByVillageIdAndVillageStatus(villageId, villageStatus);
 
@@ -360,7 +360,7 @@ class PopulationServiceTest {
         List<Population> mockPopulations = new ArrayList<>();
         mockPopulations.add(new Population());
         when(populationRepository.findByVillageIdAndVillageStatusAndDateDeleteNotNull(villageId, villageStatus))
-                .thenReturn(mockPopulations);
+            .thenReturn(mockPopulations);
 
         List<Population> result = populationService.findByVillageIdAndVillageStatusDateDeleteNotNull(villageId, villageStatus);
 
@@ -376,7 +376,7 @@ class PopulationServiceTest {
         double averagePopulationCount = 123.45;
 
         when(populationRepository.getAveragePopulationCountByVillageId(villageId))
-                .thenReturn(averagePopulationCount);
+            .thenReturn(averagePopulationCount);
 
         int result = populationService.calculateAveragePopulationCountByVillageId(villageId);
 
