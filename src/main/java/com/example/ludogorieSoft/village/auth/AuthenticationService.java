@@ -52,7 +52,7 @@ public class AuthenticationService {
                     .token(jwtToken)
                     .build();
         } catch (Exception e) {
-            throw new AccessDeniedException("Wrong username ot password");
+            throw new AccessDeniedException("Wrong username or password");
         }
     }
 }
