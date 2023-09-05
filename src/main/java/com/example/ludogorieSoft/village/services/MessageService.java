@@ -25,7 +25,7 @@ public class MessageService {
             emailSenderService.sendEmail(messageDTO.getEmail(), emailBody, "VillageLife");
             return messageDTO;
         } catch (Exception e) {
-            throw new ApiRequestException("Error creating message: " + e);
+            throw new ApiRequestException("Error creating message");
         }
     }
 
