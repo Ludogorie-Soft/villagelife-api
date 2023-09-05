@@ -2,7 +2,7 @@ package com.example.ludogorieSoft.village.controllers;
 
 
 import com.example.ludogorieSoft.village.dtos.RegionDTO;
-import com.example.ludogorieSoft.village.exeptions.ApiExceptionHandler;
+import com.example.ludogorieSoft.village.exeptions.handler.ApiExceptionHandler;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.services.RegionService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -211,7 +211,7 @@ class RegionControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/regions/{id}", 1)
                         .content("{\"id\": 1, \"name\": " + invalidData + "}")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isInternalServerError());
+                .andExpect(status().isBadRequest());
     }
 
     @Test

@@ -2,7 +2,7 @@ package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.dtos.ObjectVillageDTO;
 import com.example.ludogorieSoft.village.enums.Distance;
-import com.example.ludogorieSoft.village.exeptions.ApiExceptionHandler;
+import com.example.ludogorieSoft.village.exeptions.handler.ApiExceptionHandler;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.services.ObjectVillageService;
 import org.junit.jupiter.api.BeforeEach;
@@ -191,7 +191,7 @@ class ObjectVillageControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/objectVillages")
                         .content("{\"id\": 1, }" + invalidData)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isInternalServerError())
+                .andExpect(status().isBadRequest())
                 .andReturn();
     }
 

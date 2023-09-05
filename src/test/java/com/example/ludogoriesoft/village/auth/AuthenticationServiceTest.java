@@ -5,6 +5,7 @@ import com.example.ludogorieSoft.village.dtos.request.AuthenticationRequest;
 import com.example.ludogorieSoft.village.dtos.request.RegisterRequest;
 import com.example.ludogorieSoft.village.dtos.response.AuthenticationResponce;
 import com.example.ludogorieSoft.village.enums.Role;
+import com.example.ludogorieSoft.village.exeptions.AccessDeniedException;
 import com.example.ludogorieSoft.village.model.Administrator;
 import com.example.ludogorieSoft.village.repositories.AdministratorRepository;
 import org.junit.jupiter.api.Assertions;
@@ -15,10 +16,10 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class AuthenticationServiceTest {
@@ -76,5 +77,15 @@ class AuthenticationServiceTest {
         verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
         verify(administratorRepository).findByUsername(request.getUsername());
         verify(jwtService).generateToken(authenticatedAdministrator);
+    }
+    @Test
+    void testAuthenticate_Failure() {
+        // Mock necessary behavior
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+                .thenThrow(UsernameNotFoundException.class); // Simulate authentication failure
+
+        AuthenticationRequest request = new AuthenticationRequest("invalidUsername", "invalidPassword");
+
+        assertThrows(AccessDeniedException.class, () -> authenticationService.authenticate(request));
     }
 }

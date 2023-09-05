@@ -4,6 +4,7 @@ import com.example.ludogorieSoft.village.authorization.JWTService;
 import com.example.ludogorieSoft.village.dtos.request.AuthenticationRequest;
 import com.example.ludogorieSoft.village.dtos.request.RegisterRequest;
 import com.example.ludogorieSoft.village.dtos.response.AuthenticationResponce;
+import com.example.ludogorieSoft.village.exeptions.AccessDeniedException;
 import com.example.ludogorieSoft.village.model.Administrator;
 import com.example.ludogorieSoft.village.repositories.AdministratorRepository;
 import lombok.RequiredArgsConstructor;
@@ -36,16 +37,22 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponce authenticate(AuthenticationRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getUsername(),
-                        request.getPassword()
-                )
-        );
-        var user = administratorRepository.findByUsername(request.getUsername());
-        var jwtToken = jwtService.generateToken(user);
-        return AuthenticationResponce.builder()
-                .token(jwtToken)
-                .build();
+
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getUsername(),
+                            request.getPassword()
+                    )
+            );
+            var user = administratorRepository.findByUsername(request.getUsername());
+            var jwtToken = jwtService.generateToken(user);
+
+            return AuthenticationResponce.builder()
+                    .token(jwtToken)
+                    .build();
+        } catch (Exception e) {
+            throw new AccessDeniedException("Wrong username or password");
+        }
     }
 }
