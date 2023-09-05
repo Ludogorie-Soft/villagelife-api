@@ -49,7 +49,7 @@ public class VillageAnswerQuestionService {
         Question question = questionService.checkQuestion(villageAnswerQuestionDTO.getQuestionId());
         villageAnswerQuestion.setQuestion(question);
 
-        villageAnswerQuestion.setAnswer(villageAnswerQuestionDTO.getAnswer());
+        villageAnswerQuestion.setAnswer(villageAnswerQuestionDTO.getAnswer().trim());
         villageAnswerQuestion.setVillageStatus(villageAnswerQuestionDTO.getStatus());
         villageAnswerQuestion.setDateUpload(villageAnswerQuestionDTO.getDateUpload());
         villageAnswerQuestionRepository.save(villageAnswerQuestion);

@@ -30,7 +30,7 @@ class AdministratorServiceTest {
         administratorRepository = mock(AdministratorRepository.class);
         modelMapper = mock(ModelMapper.class);
         VillageRepository villageRepository = mock(VillageRepository.class);
-        administratorService = new AdministratorService(administratorRepository, modelMapper, villageRepository);
+        administratorService = new AdministratorService(administratorRepository, modelMapper);
     }
 
     @Test
