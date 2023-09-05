@@ -17,4 +17,8 @@ public class ValidationUtilsController {
     public ResponseEntity<Boolean> usernameCheck(@RequestParam String name) {
         return ResponseEntity.ok(ValidationUtils.isValidName(name));
     }
+    @GetMapping("/check-number")
+    public ResponseEntity<Boolean> numberCheck(@RequestParam String number) {
+        return ResponseEntity.ok(ValidationUtils.isValidNumber(number));
+    }
 }

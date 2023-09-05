@@ -97,5 +97,10 @@ public class RegionService {
         return regionToRegionDTO(region);
     }
 
+    public boolean existsRegionByName(String name) {
+        Region region = regionRepository.findByRegionName(name);
+        return region != null;
+    }
+
 
 }
