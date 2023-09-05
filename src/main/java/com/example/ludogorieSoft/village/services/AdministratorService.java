@@ -3,18 +3,14 @@ package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.AdministratorDTO;
 import com.example.ludogorieSoft.village.dtos.request.AdministratorRequest;
-import com.example.ludogorieSoft.village.dtos.response.VillageResponse;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.Administrator;
-import com.example.ludogorieSoft.village.model.Region;
-import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.repositories.AdministratorRepository;
 import com.example.ludogorieSoft.village.repositories.VillageRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 @Service
@@ -22,7 +18,6 @@ import java.util.Optional;
 public class AdministratorService {
     private final AdministratorRepository administratorRepository;
     private final ModelMapper modelMapper;
-    private final VillageRepository villageRepository;
 
     public AdministratorDTO administratorToAdministratorDTO(Administrator administrator) {
         return modelMapper.map(administrator, AdministratorDTO.class);
