@@ -11,6 +11,8 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import java.util.Properties;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 class EmailSenderServiceTest {
 
     @InjectMocks
@@ -44,11 +46,19 @@ class EmailSenderServiceTest {
 
         emailSenderService.configureMailSender();
 
-        Assertions.assertEquals(recipientEmail, mailSenderImpl.getUsername());
-        Assertions.assertEquals(recipientPassword, mailSenderImpl.getPassword());
+        assertEquals(recipientEmail, mailSenderImpl.getUsername());
+        assertEquals(recipientPassword, mailSenderImpl.getPassword());
 
         Properties configuredProperties = mailSenderImpl.getJavaMailProperties();
-        Assertions.assertEquals("true", configuredProperties.getProperty("mail.smtp.auth"));
-        Assertions.assertEquals("true", configuredProperties.getProperty("mail.smtp.starttls.enable"));
+        assertEquals("true", configuredProperties.getProperty("mail.smtp.auth"));
+        assertEquals("true", configuredProperties.getProperty("mail.smtp.starttls.enable"));
+    }
+    @Test
+    void testAddTableRow() {
+        StringBuilder emailBody = new StringBuilder();
+        EmailSenderService emailSenderService = new EmailSenderService();
+        emailSenderService.addTableRow(emailBody, "Title", "Info");
+        String expectedEmailBody = "<tr><td style=\"border: 1px solid #CCCCCC; padding: 5px; width: 30%;\">Title</td><td style=\"border: 1px solid #CCCCCC; padding: 5px;\">Info</td></tr>";
+        assertEquals(expectedEmailBody, emailBody.toString());
     }
 }

@@ -55,14 +55,7 @@ class InquiryServiceTest {
         Assertions.assertEquals(inquiryDTO.getUserMessage(), result.getUserMessage());
 
         verify(inquiryRepository).save(any(Inquiry.class));
-        verify(emailSenderService).sendEmail(
-                inquiryDTO.getEmail(),
-                "\u0418\u043c\u0435 \u043d\u0430 \u043f\u043e\u0442\u0440\u0435\u0431\u0438\u0442\u0435\u043b: John Doe" +
-                        "\n\u0422\u0435\u043b\u0435\u0444\u043e\u043d: 1234567890" +
-                        "\nEmail: johndoe@example.com" +
-                        "\n\u0422\u0438\u043f: \u0412\u044a\u0437\u043c\u043e\u0436\u043d\u043e\u0441\u0442\u0438 \u0437\u0430 \u0440\u0430\u0431\u043e\u0442\u0430" +
-                        "\n\u0417\u0430\u043f\u0438\u0442\u0432\u0430\u043d\u0435 \u0438\u043b\u0438 \u0437\u0430\u044f\u0432\u043a\u0430 \u0437\u0430 \u0441\u0435\u043b\u043e Test Village (\u043e\u0431\u043b\u0430\u0441\u0442 Test Region): Hello, this is a test inquiry message.",
-                "VillageLife - \u0412\u044a\u0437\u043c\u043e\u0436\u043d\u043e\u0441\u0442\u0438 \u0437\u0430 \u0440\u0430\u0431\u043e\u0442\u0430");
+        verify(emailSenderService).sendEmail(inquiryDTO.getEmail(), "<html><body><table></table></body></html>","VillageLife - \u0412\u044a\u0437\u043c\u043e\u0436\u043d\u043e\u0441\u0442\u0438 \u0437\u0430 \u0440\u0430\u0431\u043e\u0442\u0430");
     }
 
 
