@@ -20,6 +20,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -30,6 +31,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @ExtendWith(MockitoExtension.class)
 class VillageImageServiceTest {
@@ -41,7 +44,11 @@ class VillageImageServiceTest {
     private VillageService villageService;
     @InjectMocks
     private VillageImageService villageImageService;
+    private static final String UPLOAD_DIRECTORY = "src/main/resources/static/village_images/";
 
+    private static final Logger logger = LoggerFactory.getLogger(VillageImageService.class);
+    @Mock
+    private File mockFile;
     @BeforeEach
     void setUp() {
         villageImageService = Mockito.spy(villageImageService);
@@ -552,4 +559,27 @@ class VillageImageServiceTest {
         assertEquals(villageImage, villageImageService.villageImageDTOToVillageImage(villageImageDTO));
     }
 
+    @Test
+    void testDeleteVillageImageByIdWhenSuccessfulDeletion() {
+        Long id = 1L;
+        when(villageImageRepository.existsById(id)).thenReturn(true);
+        villageImageService.deleteVillageImageById(id);
+        verify(villageImageRepository).deleteById(id);
+    }
+
+    @Test
+    void testFileExistsWhenFileExists() {
+        when(mockFile.exists()).thenReturn(true);
+        boolean result = villageImageService.fileExists(mockFile);
+        Assertions.assertTrue(result);
+        verify(mockFile).exists();
+    }
+
+    @Test
+    void testFileExistsWhenFileDoesNotExist() {
+        when(mockFile.exists()).thenReturn(false);
+        boolean result = villageImageService.fileExists(mockFile);
+        Assertions.assertFalse(result);
+        verify(mockFile).exists();
+    }
 }

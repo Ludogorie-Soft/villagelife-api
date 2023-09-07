@@ -264,22 +264,33 @@ public class VillageImageService {
         VillageImageDTO villageImageDTO = getVillageImageById(id);
         if (villageImageDTO != null) {
             String imageName = villageImageDTO.getImageName();
+            File fileToDelete = new File(UPLOAD_DIRECTORY, imageName);
+            if (fileExists(fileToDelete) && (deleteFileWithRetries(fileToDelete))) {
+                    deleteVillageImageById(id);
+
+            }
+        }
+    }
+
+    public boolean fileExists(File file) {
+        return file.exists();
+    }
+
+    public boolean deleteFileWithRetries(File file) {
+        int maxRetries = 6;
+        for (int i = 0; i < maxRetries; i++) {
+            if (file.delete()) {
+                return true;
+            }
             try {
-                File file = new File(UPLOAD_DIRECTORY, imageName);
-                if (!file.delete() && (file.exists())) {
-                    for (int i = 0; i < 6; i++) {
-                        Thread.sleep(500);
-                        System.gc();
-                        if (file.delete())
-                            break;
-                    }
-                }
-                deleteVillageImageById(id);
+                Thread.sleep(500);
+                System.gc();
             } catch (InterruptedException e) {
                 logger.error("An error occurred while deleting the image", e);
                 Thread.currentThread().interrupt();
             }
         }
+        return false;
     }
 
     public void deleteVillageImageById(Long id) {
