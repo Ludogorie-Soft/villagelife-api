@@ -276,7 +276,8 @@ public class VillageImageService {
                 }
                 deleteVillageImageById(id);
             } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                logger.error("An error occurred while deleting the image", e);
+                Thread.currentThread().interrupt();
             }
         }
     }
