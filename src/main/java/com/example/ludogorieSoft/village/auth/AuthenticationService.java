@@ -7,6 +7,7 @@ import com.example.ludogorieSoft.village.dtos.response.AuthenticationResponce;
 import com.example.ludogorieSoft.village.exeptions.AccessDeniedException;
 import com.example.ludogorieSoft.village.model.Administrator;
 import com.example.ludogorieSoft.village.repositories.AdministratorRepository;
+import com.example.ludogorieSoft.village.utils.TimestampUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,6 +27,7 @@ public class AuthenticationService {
     public String register(RegisterRequest request) {
         var user = Administrator.builder()
                 .fullName(request.getFullName())
+                .createdAt(TimestampUtils.getCurrentTimestamp())
                 .email(request.getEmail())
                 .mobile(request.getMobile())
                 .username(request.getUsername())
