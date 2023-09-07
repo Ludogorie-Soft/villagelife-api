@@ -49,6 +49,7 @@ class VillageImageServiceTest {
     private static final Logger logger = LoggerFactory.getLogger(VillageImageService.class);
     @Mock
     private File mockFile;
+
     @BeforeEach
     void setUp() {
         villageImageService = Mockito.spy(villageImageService);
@@ -165,7 +166,7 @@ class VillageImageServiceTest {
             return villageImage;
         }).when(modelMapper).map(any(VillageImageDTO.class), eq(VillageImage.class));
 
-        villageImageService.createVillageImageDTO(villageId, fileName, fixedTimestamp, false,null);
+        villageImageService.createVillageImageDTO(villageId, fileName, fixedTimestamp, false, null);
 
         verify(villageImageRepository).save(any(VillageImage.class));
     }
@@ -175,7 +176,7 @@ class VillageImageServiceTest {
     void testCreateImagePathsWithInvalidImages() {
         byte[] emptyImage = {};
         Long villageId = 123L;
-        List<String> result = villageImageService.createImagePaths(List.of(emptyImage), villageId, null, false,null);
+        List<String> result = villageImageService.createImagePaths(List.of(emptyImage), villageId, null, false, null);
         Assertions.assertTrue(result.isEmpty());
     }
 
@@ -582,4 +583,60 @@ class VillageImageServiceTest {
         Assertions.assertFalse(result);
         verify(mockFile).exists();
     }
+
+
+
+    @Test
+    void deleteFileWithRetriesWhenTrue() {
+        String filePath = "src/main/resources/static/village_images/test.jpg";
+
+        try {
+            File file = new File(filePath);
+            if (file.createNewFile()) {
+                System.out.println("File created successfully.");
+            } else {
+                System.out.println("File already exists.");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        boolean result = villageImageService.deleteFileWithRetries(new File(filePath));
+
+        Assertions.assertTrue(result);
+
+        File fileToDelete = new File(filePath);
+        if (fileToDelete.exists()) {
+            if (fileToDelete.delete()) {
+                System.out.println("File deleted successfully.");
+            } else {
+                System.out.println("Failed to delete file.");
+            }
+        }
+    }
+
+    @Test
+    void deleteFileWithRetriesWhenFalse() {
+        String filePath = UPLOAD_DIRECTORY + "testFile";
+        File file = new File(filePath);
+        boolean result = villageImageService.deleteFileWithRetries(file);
+        Assertions.assertFalse(result);
+    }
+
+//    @Test
+//    void testDeleteImageFileByIdWhenDeleteRetryFailed() {
+//        Long imageId = 1L;
+//        String imageName = "sample.jpg";
+//
+//        VillageImageDTO villageImageDTO = new VillageImageDTO();
+//        villageImageDTO.setImageName(imageName);
+//
+//        when(villageImageRepository.findById(imageId)).thenReturn(Optional.of(new VillageImage()));
+//        when(villageImageService.getVillageImageById(imageId)).thenReturn(villageImageDTO);
+//
+//        try {
+//            villageImageService.deleteImageFileById(imageId);
+//        } catch (Exception e) {
+//        }
+//    }
 }

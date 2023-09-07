@@ -266,8 +266,7 @@ public class VillageImageService {
             String imageName = villageImageDTO.getImageName();
             File fileToDelete = new File(UPLOAD_DIRECTORY, imageName);
             if (fileExists(fileToDelete) && (deleteFileWithRetries(fileToDelete))) {
-                    deleteVillageImageById(id);
-
+                deleteVillageImageById(id);
             }
         }
     }
