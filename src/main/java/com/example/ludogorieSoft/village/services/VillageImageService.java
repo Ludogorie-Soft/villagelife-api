@@ -19,7 +19,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.*;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -263,22 +262,22 @@ public class VillageImageService {
 
     public void deleteImageFileById(Long id) {
         VillageImageDTO villageImageDTO = getVillageImageById(id);
-
         if (villageImageDTO != null) {
             String imageName = villageImageDTO.getImageName();
-            Path imagePath = Paths.get(UPLOAD_DIRECTORY, imageName);
             try {
-                Files.delete(imagePath);
+                File file = new File(UPLOAD_DIRECTORY, imageName);
+                if (!file.delete() && (file.exists())) {
+                    for (int i = 0; i < 6; i++) {
+                        Thread.sleep(500);
+                        System.gc();
+                        if (file.delete())
+                            break;
+                    }
+                }
                 deleteVillageImageById(id);
-            } catch (NoSuchFileException e) {
-                logger.warn("Image does not exist: {}", imageName);
-            } catch (DirectoryNotEmptyException e) {
-                logger.error("Cannot delete non-empty directory: {}", imageName);
-            } catch (IOException e) {
-                logger.error("Failed to delete image: {}", imageName, e);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
-        } else {
-            logger.warn("Image with ID {} not found.", id);
         }
     }
 
