@@ -6,7 +6,6 @@ import com.example.ludogorieSoft.village.dtos.request.AdministratorRequest;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.Administrator;
 import com.example.ludogorieSoft.village.repositories.AdministratorRepository;
-import com.example.ludogorieSoft.village.repositories.VillageRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -33,18 +32,6 @@ public class AdministratorService {
                 .stream()
                 .map(this::administratorToAdministratorDTO)
                 .toList();
-    }
-
-    public AdministratorDTO createAdministrator(AdministratorRequest administratorRequest) {
-        if (administratorRepository.existsByUsername(administratorRequest.getUsername())) {
-            throw new ApiRequestException("Administrator already exists");
-        }
-        Administrator administrator = administratorRequestToAdministrator(administratorRequest);
-        String hashedPassword = BCrypt.hashpw(administrator.getPassword(), BCrypt.gensalt());
-        administrator.setPassword(hashedPassword);
-        administratorRepository.save(administrator);
-        administrator = administratorRepository.findByUsername(administratorRequest.getUsername());
-        return administratorToAdministratorDTO(administrator);
     }
 
     public AdministratorDTO getAdministratorById(Long id) {

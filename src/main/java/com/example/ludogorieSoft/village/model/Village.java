@@ -58,6 +58,9 @@ public class Village {
     @OneToMany(mappedBy = "village", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Population> populations;
 
+    @OneToMany(mappedBy = "village", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Inquiry> inquiries;
+
     private int approvedResponsesCount;
 
 
