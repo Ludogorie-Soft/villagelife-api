@@ -260,6 +260,12 @@ public class VillageImageService {
         }
         throw new ApiRequestException(VILLAGE_IMAGE_ID_MESSAGE + id + NOT_FOUND_MESSAGE);
     }
+    public void deleteAllImageFilesByVillageId(Long villageId){
+        List<VillageImage> villageImages = villageImageRepository.findByVillageId(villageId);
+        for (VillageImage villageImage: villageImages) {
+            deleteImageFileById(villageImage.getId());
+        }
+    }
 
 
     public void deleteImageFileById(Long id) {
