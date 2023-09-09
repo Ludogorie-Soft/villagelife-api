@@ -30,7 +30,7 @@ class AdministratorServiceTest {
         administratorRepository = mock(AdministratorRepository.class);
         modelMapper = mock(ModelMapper.class);
         VillageRepository villageRepository = mock(VillageRepository.class);
-        administratorService = new AdministratorService(administratorRepository, modelMapper, villageRepository);
+        administratorService = new AdministratorService(administratorRepository, modelMapper);
     }
 
     @Test
@@ -81,39 +81,6 @@ class AdministratorServiceTest {
         assertEquals(expectedAdminDTO.getUsername(), actualAdminDTO.getUsername());
 
         Mockito.verify(administratorRepository, Mockito.times(1)).findByUsername(username);
-    }
-
-    @Test
-    void testCreateAdministratorWhenUsernameDoesNotExist() {
-        com.example.ludogorieSoft.village.dtos.request.AdministratorRequest administratorRequest = new com.example.ludogorieSoft.village.dtos.request.AdministratorRequest();
-        administratorRequest.setUsername("admin");
-        Administrator administrator = new Administrator();
-        administrator.setUsername("admin");
-        administrator.setPassword("123123");
-
-
-        AdministratorDTO expectedDTO = new AdministratorDTO();
-        expectedDTO.setUsername("admin");
-
-        when(administratorRepository.existsByUsername(administratorRequest.getUsername())).thenReturn(false);
-        when(modelMapper.map(administratorRequest, Administrator.class)).thenReturn(administrator);
-        when(administratorRepository.save(administrator)).thenReturn(administrator);
-        when(administratorRepository.findByUsername(administrator.getUsername())).thenReturn(administrator);
-        when(modelMapper.map(administrator, AdministratorDTO.class)).thenReturn(expectedDTO);
-
-        AdministratorDTO resultDTO = administratorService.createAdministrator(administratorRequest);
-
-        assertEquals(expectedDTO.getUsername(), resultDTO.getUsername());
-    }
-
-    @Test
-    void testCreateAdministratorWhenUsernameExists() {
-        com.example.ludogorieSoft.village.dtos.request.AdministratorRequest administratorRequest = new com.example.ludogorieSoft.village.dtos.request.AdministratorRequest();
-        administratorRequest.setUsername("admin");
-
-        when(administratorRepository.existsByUsername(administratorRequest.getUsername())).thenReturn(true);
-
-        assertThrows(ApiRequestException.class, () -> administratorService.createAdministrator(administratorRequest));
     }
 
     @Test

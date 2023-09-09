@@ -18,21 +18,24 @@ public class InquiryService {
     public InquiryDTO createInquiry(InquiryDTO inquiryDTO) {
         try {
             Village village = villageService.checkVillage(inquiryDTO.getVillageId());
-            Inquiry inquiry = new Inquiry(null, inquiryDTO.getUserName(), inquiryDTO.getEmail(), inquiryDTO.getUserMessage(), inquiryDTO.getMobile(), village, inquiryDTO.getInquiryType());
+            Inquiry inquiry = new Inquiry(null, inquiryDTO.getUserName().trim(), inquiryDTO.getEmail().trim(), inquiryDTO.getUserMessage().trim(), inquiryDTO.getMobile().trim(), village, inquiryDTO.getInquiryType());
             inquiryRepository.save(inquiry);
-
-            emailSenderService.sendEmail(
-                    inquiry.getEmail(),
-                    "Име на потребител: " + inquiry.getUserName() +
-                            "\nТелефон: " + inquiry.getMobile() +
-                            "\nEmail: " + inquiry.getEmail() +
-                            "\nТип: " + inquiry.getInquiryType().getName() +
-                            "\nЗапитване или заявка за село " + village.getName() + " (област " + village.getRegion().getRegionName() + "): " +
-                            inquiry.getUserMessage(),
-                    "VillageLife - " + inquiry.getInquiryType().getName());
+            String emailBody = createInquiryEmailBody(inquiry);
+            emailSenderService.sendEmail(inquiry.getEmail(), emailBody, "VillageLife - " + inquiry.getInquiryType().getName());
             return inquiryDTO;
         } catch (Exception e) {
             throw new ApiRequestException("Error creating inquiry");
         }
+    }
+    public String createInquiryEmailBody(Inquiry inquiry){
+        StringBuilder emailBody = new StringBuilder();
+        emailBody.append("<html><body><table>");
+        emailSenderService.addTableRow(emailBody, "Име на потребител", inquiry.getUserName());
+        emailSenderService.addTableRow(emailBody, "Телефон", inquiry.getMobile());
+        emailSenderService.addTableRow(emailBody, "Email", inquiry.getEmail());
+        emailSenderService.addTableRow(emailBody, "Тип", inquiry.getInquiryType().getName());
+        emailSenderService.addTableRow(emailBody, "Запитване или заявка за село " + inquiry.getVillage().getName() + " (област " + inquiry.getVillage().getRegion().getRegionName() + ")", inquiry.getUserMessage());
+        emailBody.append("</table></body></html>");
+        return emailBody.toString();
     }
 }

@@ -25,13 +25,13 @@ public class UserService {
     }
 
     public UserDTO saveUser(UserDTO userDTO) {
-        Optional<User> foundUser = userRepository.findByEmail(userDTO.getEmail());
+        Optional<User> foundUser = userRepository.findByEmail(userDTO.getEmail().trim());
         if (foundUser.isPresent()) {
             return mapUserToUserDTO(foundUser.get());
         } else {
             User user = new User();
-            user.setFullName(userDTO.getFullName());
-            user.setEmail(userDTO.getEmail());
+            user.setFullName(userDTO.getFullName().trim());
+            user.setEmail(userDTO.getEmail().trim());
             user.setConsent(userDTO.getConsent());
             userRepository.save(user);
             return mapUserToUserDTO(user);

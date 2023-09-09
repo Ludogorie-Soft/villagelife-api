@@ -63,10 +63,10 @@ public class VillageService {
     }
 
     public VillageDTO createVillage(VillageDTO villageDTO) {
-        Village village = villageRepository.findSingleVillageByNameAndRegionName(villageDTO.getName(), villageDTO.getRegion());
+        Village village = villageRepository.findSingleVillageByNameAndRegionName(villageDTO.getName().trim(), villageDTO.getRegion());
         if (village == null) {
             village = new Village();
-            village.setName(villageDTO.getName());
+            village.setName(villageDTO.getName().trim());
             RegionDTO regionDTO = regionService.findRegionByName(villageDTO.getRegion());
             village.setRegion(regionService.checkRegion(regionDTO.getId()));
             village.setStatus(false);
