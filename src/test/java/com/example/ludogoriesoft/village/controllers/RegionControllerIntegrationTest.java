@@ -1,11 +1,24 @@
 package com.example.ludogorieSoft.village.controllers;
 
+import static org.hamcrest.core.StringContains.containsString;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.example.ludogorieSoft.village.dtos.RegionDTO;
 import com.example.ludogorieSoft.village.exeptions.handler.ApiExceptionHandler;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.services.RegionService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import javax.ws.rs.core.MediaType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,23 +29,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
-
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
-import javax.ws.rs.core.MediaType;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-
-import static org.hamcrest.core.StringContains.containsString;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(value = RegionController.class,
@@ -71,7 +70,7 @@ class RegionControllerIntegrationTest {
 
         when(regionService.getAllRegions()).thenReturn(regionDTOList);
 
-        MvcResult mvcResult = mockMvc.perform(get("/api/v1/regions")
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/regions")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(2))
@@ -93,7 +92,7 @@ class RegionControllerIntegrationTest {
 
         when(regionService.getRegionById(anyLong())).thenReturn(regionDTO);
 
-        MvcResult mvcResult = mockMvc.perform(get("/api/v1/regions/{id}", 1)
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/regions/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
@@ -155,7 +154,7 @@ class RegionControllerIntegrationTest {
     void testGetAllRegionsWhenNoRegionExist() throws Exception {
         when(regionService.getAllRegions()).thenReturn(Collections.emptyList());
 
-        mockMvc.perform(get("/api/v1/regions")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/regions")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(0))
@@ -170,7 +169,7 @@ class RegionControllerIntegrationTest {
         when(regionService.getRegionById(regionId))
                 .thenThrow(new ApiRequestException("Region with id: " + regionId + " not found"));
 
-        mockMvc.perform(get("/api/v1/regions/{id}", regionId)
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/regions/{id}", regionId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(containsString("Region with id: " + regionId + " not found")));
@@ -198,7 +197,7 @@ class RegionControllerIntegrationTest {
         when(regionService.getRegionById(invalidId))
                 .thenThrow(new ApiRequestException("Region with id: " + invalidId + " Not Found"));
 
-        mockMvc.perform(get("/api/v1/regions/{id}", invalidId)
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/regions/{id}", invalidId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("Region with id: " + invalidId + " Not Found"))
@@ -256,7 +255,7 @@ class RegionControllerIntegrationTest {
 
         when(regionService.existsRegionByName(regionName)).thenReturn(exists);
 
-        MvcResult mvcResult = mockMvc.perform(get("/api/v1/regions/name/{name}", regionName)
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/regions/name/{name}", regionName)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
