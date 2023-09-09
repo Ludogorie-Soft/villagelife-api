@@ -70,7 +70,7 @@ class RegionControllerIntegrationTest {
 
         when(regionService.getAllRegions()).thenReturn(regionDTOList);
 
-        MvcResult mvcResult = mockMvc.perform(get("/api/v1/regions")
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/regions")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(2))
@@ -92,7 +92,7 @@ class RegionControllerIntegrationTest {
 
         when(regionService.getRegionById(anyLong())).thenReturn(regionDTO);
 
-        MvcResult mvcResult = mockMvc.perform(get("/api/v1/regions/{id}", 1)
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/regions/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
@@ -154,7 +154,7 @@ class RegionControllerIntegrationTest {
     void testGetAllRegionsWhenNoRegionExist() throws Exception {
         when(regionService.getAllRegions()).thenReturn(Collections.emptyList());
 
-        mockMvc.perform(get("/api/v1/regions")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/regions")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(0))
@@ -169,7 +169,7 @@ class RegionControllerIntegrationTest {
         when(regionService.getRegionById(regionId))
                 .thenThrow(new ApiRequestException("Region with id: " + regionId + " not found"));
 
-        mockMvc.perform(get("/api/v1/regions/{id}", regionId)
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/regions/{id}", regionId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(containsString("Region with id: " + regionId + " not found")));
@@ -197,7 +197,7 @@ class RegionControllerIntegrationTest {
         when(regionService.getRegionById(invalidId))
                 .thenThrow(new ApiRequestException("Region with id: " + invalidId + " Not Found"));
 
-        mockMvc.perform(get("/api/v1/regions/{id}", invalidId)
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/regions/{id}", invalidId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("Region with id: " + invalidId + " Not Found"))
@@ -255,7 +255,7 @@ class RegionControllerIntegrationTest {
 
         when(regionService.existsRegionByName(regionName)).thenReturn(exists);
 
-        MvcResult mvcResult = mockMvc.perform(get("/api/v1/regions/name/{name}", regionName)
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/regions/name/{name}", regionName)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
