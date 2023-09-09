@@ -19,6 +19,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -264,9 +266,12 @@ public class VillageImageService {
         VillageImageDTO villageImageDTO = getVillageImageById(id);
         if (villageImageDTO != null) {
             String imageName = villageImageDTO.getImageName();
-            File fileToDelete = new File(UPLOAD_DIRECTORY, imageName);
-            if (fileExists(fileToDelete) && (deleteFileWithRetries(fileToDelete))) {
-                deleteVillageImageById(id);
+            if (imageName != null) {
+                String imagePath = UPLOAD_DIRECTORY + imageName;
+                File fileToDelete = new File(imagePath);
+                if (fileExists(fileToDelete) && deleteFileWithRetries(fileToDelete)) {
+                    deleteVillageImageById(id);
+                }
             }
         }
     }
@@ -278,15 +283,19 @@ public class VillageImageService {
     public boolean deleteFileWithRetries(File file) {
         int maxRetries = 6;
         for (int i = 0; i < maxRetries; i++) {
-            if (file.delete()) {
-                return true;
-            }
             try {
-                Thread.sleep(500);
-                System.gc();
-            } catch (InterruptedException e) {
-                logger.error("An error occurred while deleting the image", e);
-                Thread.currentThread().interrupt();
+                Path filePath = file.toPath();
+                Files.delete(filePath);
+                return true;
+            }catch (IOException e){
+                logger.error("An error occurred while deleting the image");
+                try {
+                    Thread.sleep(500);
+                    System.gc();
+                } catch (InterruptedException ex) {
+                    logger.error("Thread interrupted while sleeping");
+                    Thread.currentThread().interrupt();
+                }
             }
         }
         return false;
