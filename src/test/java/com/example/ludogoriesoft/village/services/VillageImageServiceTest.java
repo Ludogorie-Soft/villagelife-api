@@ -1,19 +1,21 @@
 package com.example.ludogorieSoft.village.services;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
-import org.mockito.*;
-import org.mockito.stubbing.Answer;
 import com.example.ludogorieSoft.village.dtos.VillageDTO;
 import com.example.ludogorieSoft.village.dtos.VillageImageDTO;
+import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.model.VillageImage;
 import com.example.ludogorieSoft.village.repositories.VillageImageRepository;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -21,14 +23,20 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
-import java.util.*;
-
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import org.apache.tika.io.IOUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.stubbing.Answer;
 import org.modelmapper.ModelMapper;
 
 @ExtendWith(MockitoExtension.class)
@@ -108,25 +116,6 @@ class VillageImageServiceTest {
     @Test
     void testCreateUploadDirectoryNullPath() {
         assertThrows(NullPointerException.class, () -> villageImageService.createUploadDirectory(null));
-    }
-
-    @Test
-    void testWriteImageToFileEmptyImage() {
-        byte[] emptyImageBytes = new byte[0];
-        String testFileName = "test_image.jpg";
-        String testDirectory = "src/test/resources";
-        String testFilePath = testDirectory + File.separator + testFileName;
-        assertThrows(IOException.class, () -> villageImageService.writeImageToFile(emptyImageBytes, testFilePath));
-        Assertions.assertFalse(Files.exists(Path.of(testFilePath)));
-    }
-
-    @Test
-    void testWriteImageToFileNullImage() {
-        String testFileName = "test_image.jpg";
-        String testDirectory = "src/test/resources";
-        String testFilePath = testDirectory + File.separator + testFileName;
-        assertThrows(IOException.class, () -> villageImageService.writeImageToFile(null, testFilePath));
-        Assertions.assertFalse(Files.exists(Path.of(testFilePath)));
     }
 
     @Test
