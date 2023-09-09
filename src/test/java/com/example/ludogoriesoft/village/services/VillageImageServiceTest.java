@@ -585,7 +585,6 @@ class VillageImageServiceTest {
     }
 
 
-
     @Test
     void deleteFileWithRetriesWhenTrue() {
         String filePath = "src/main/resources/static/village_images/test.jpg";
@@ -623,7 +622,7 @@ class VillageImageServiceTest {
         Assertions.assertFalse(result);
     }
 
-//    @Test
+    //    @Test
 //    void testDeleteImageFileByIdWhenDeleteRetryFailed() {
 //        Long imageId = 1L;
 //        String imageName = "sample.jpg";
@@ -639,4 +638,23 @@ class VillageImageServiceTest {
 //        } catch (Exception e) {
 //        }
 //    }
+    @Test
+    void testDeleteImageFileByIdWhenFileDoesNotExistAndDeletionFails() {
+        Long id = 1L;
+        String imageName = "testImage.jpg";
+
+        VillageImageDTO villageImageDTO = new VillageImageDTO();
+        villageImageDTO.setId(id);
+        villageImageDTO.setImageName(imageName);
+
+        VillageImage villageImage = new VillageImage();
+        villageImage.setId(id);
+        villageImage.setImageName(imageName);
+
+        when(villageImageRepository.findById(id)).thenReturn(Optional.of(villageImage));
+
+        villageImageService.deleteImageFileById(id);
+
+        verify(villageImageService, never()).deleteVillageImageById(id);
+    }
 }

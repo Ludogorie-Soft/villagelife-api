@@ -288,7 +288,7 @@ public class VillageImageService {
                 Files.delete(filePath);
                 return true;
             }catch (IOException e){
-                logger.error("An error occurred while deleting the image");
+                logger.error("An error occurred while deleting the image {}", file.getAbsolutePath());
                 try {
                     Thread.sleep(500);
                     System.gc();
