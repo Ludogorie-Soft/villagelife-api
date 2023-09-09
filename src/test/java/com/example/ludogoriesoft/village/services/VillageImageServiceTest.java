@@ -622,22 +622,6 @@ class VillageImageServiceTest {
         Assertions.assertFalse(result);
     }
 
-    //    @Test
-//    void testDeleteImageFileByIdWhenDeleteRetryFailed() {
-//        Long imageId = 1L;
-//        String imageName = "sample.jpg";
-//
-//        VillageImageDTO villageImageDTO = new VillageImageDTO();
-//        villageImageDTO.setImageName(imageName);
-//
-//        when(villageImageRepository.findById(imageId)).thenReturn(Optional.of(new VillageImage()));
-//        when(villageImageService.getVillageImageById(imageId)).thenReturn(villageImageDTO);
-//
-//        try {
-//            villageImageService.deleteImageFileById(imageId);
-//        } catch (Exception e) {
-//        }
-//    }
     @Test
     void testDeleteImageFileByIdWhenFileDoesNotExistAndDeletionFails() {
         Long id = 1L;
@@ -656,5 +640,24 @@ class VillageImageServiceTest {
         villageImageService.deleteImageFileById(id);
 
         verify(villageImageService, never()).deleteVillageImageById(id);
+    }
+
+    @Test
+    void testDeleteAllImageFilesByVillageId() {
+        Long villageId = 1L;
+
+        List<VillageImage> villageImages = new ArrayList<>();
+        VillageImage villageImage = new VillageImage();
+        villageImage.setId(1L);
+        villageImages.add(villageImage);
+
+        when(villageImageRepository.findByVillageId(villageId)).thenReturn(villageImages);
+
+        doNothing().when(villageImageService).deleteImageFileById(anyLong());
+
+        villageImageService.deleteAllImageFilesByVillageId(villageId);
+
+        verify(villageImageRepository, times(1)).findByVillageId(villageId);
+        verify(villageImageService, times(1)).deleteImageFileById(1L);
     }
 }
