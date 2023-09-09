@@ -56,22 +56,6 @@ class AdministratorControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(administrator, response.getBody());
     }
-
-    @Test
-    void createAdministrator_shouldReturnCreatedAdministrator() {
-        AdministratorRequest request = new AdministratorRequest();
-        request.setUsername("username");
-        AdministratorDTO createdAdministrator = new AdministratorDTO();
-        createdAdministrator.setId(1L);
-        createdAdministrator.setUsername("username");
-        when(administratorService.createAdministrator(request)).thenReturn(createdAdministrator);
-
-        ResponseEntity<AdministratorDTO> response = administratorController.createAdministrator(request);
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(createdAdministrator, response.getBody());
-    }
-
     @Test
     void updateAdministrator_shouldReturnUpdatedAdministrator() {
         Long administratorId = 1L;

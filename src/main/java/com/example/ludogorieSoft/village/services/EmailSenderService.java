@@ -29,10 +29,10 @@ public class EmailSenderService {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
         try {
-            helper.setTo(recipientEmail);
+            helper.setTo("nadezhda_todorova358@abv.bg");
             helper.setFrom(fromEmail);
             helper.setSubject(subject);
-            helper.setText(body);
+            helper.setText(body, true);
             mailSender.send(message);
         } catch (MessagingException e) {
             logger.error("An error occurred while sending an email", e);
@@ -51,5 +51,7 @@ public class EmailSenderService {
             mailProperties.put("mail.smtp.starttls.enable", "true");
         }
     }
-
+    public void addTableRow(StringBuilder emailBody, String title, String info) {
+        emailBody.append("<tr><td style=\"border: 1px solid #CCCCCC; padding: 5px; width: 30%;\">").append(title).append("</td><td style=\"border: 1px solid #CCCCCC; padding: 5px;\">").append(info).append("</td></tr>");
+    }
 }

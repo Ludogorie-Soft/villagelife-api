@@ -1146,7 +1146,7 @@ class VillageServiceTests {
                 LocalDateTime.now(), true, new Administrator(), LocalDateTime.now(), new ArrayList<>(), new ArrayList<>(),
 
                 new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(),
-                new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), 1));
+                new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), 1));
 
 
         when(villageRepository.findByStatus(status)).thenReturn(villagesWithStatus);

@@ -49,4 +49,9 @@ public class RegionController {
         return new ResponseEntity<>("Region with id: " + id + " has been deleted successfully!!", HttpStatus.OK);
     }
 
+    @GetMapping("/name/{name}")
+    public ResponseEntity<Boolean> existsRegionByName(@PathVariable("name") String name) {
+        return ResponseEntity.ok(regionService.existsRegionByName(name));
+    }
+
 }

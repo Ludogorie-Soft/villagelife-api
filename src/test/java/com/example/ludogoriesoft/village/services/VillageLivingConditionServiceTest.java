@@ -290,7 +290,7 @@ class VillageLivingConditionServiceTest {
         condition1.setId(1L);
         Village village1 = new Village(1L, "Village1", new Region(1L, "Region1"),
 
-                LocalDateTime.now(), true, new Administrator(), LocalDateTime.now(), null, null, null, null, null, null, null, null, null, 0);
+                LocalDateTime.now(), true, new Administrator(), LocalDateTime.now(), null, null, null, null, null, null, null, null, null, null, 0);
         condition1.setVillage(village1);
 
 
@@ -298,7 +298,7 @@ class VillageLivingConditionServiceTest {
         condition2.setId(2L);
         Village village2 = new Village(2L, "Village2", new Region(1L, "Region1"),
 
-                 LocalDateTime.now(), true, new Administrator(), LocalDateTime.now(), null, null, null, null, null, null, null, null, null, 0);
+                 LocalDateTime.now(), true, new Administrator(), LocalDateTime.now(), null, null, null, null, null, null, null, null, null, null, 0);
         condition2.setVillage(village2);
 
         List<VillageLivingConditions> villageLivingConditionsList = List.of(condition1, condition2);

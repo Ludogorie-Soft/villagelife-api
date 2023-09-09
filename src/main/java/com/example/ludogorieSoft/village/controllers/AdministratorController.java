@@ -27,12 +27,6 @@ public class AdministratorController {
         return ResponseEntity.ok(administratorService.getAdministratorById(id));
     }
 
-
-    @PostMapping
-    public ResponseEntity<AdministratorDTO> createAdministrator(@Valid @RequestBody AdministratorRequest administratorRequest) {
-        return ResponseEntity.ok(administratorService.createAdministrator(administratorRequest));
-    }
-
     @PutMapping("/update/{id}")
     public ResponseEntity<AdministratorDTO> updateAdministrator(@PathVariable("id") Long id, @Valid @RequestBody AdministratorRequest administratorRequest) {
         return ResponseEntity.ok(administratorService.updateAdministrator(id, administratorRequest));

@@ -86,24 +86,6 @@ class AdministratorControllerIntegrationTest {
         verify(administratorService, times(1)).getAdministratorById(1L);
     }
 
-    @Test
-    void createAdministrator_shouldReturnCreatedAdministrator() throws Exception {
-        AdministratorDTO createdAdministrator = new AdministratorDTO();
-        createdAdministrator.setId(1L);
-        createdAdministrator.setUsername("username");
-        when(administratorService.createAdministrator(any(AdministratorRequest.class))).thenReturn(createdAdministrator);
-        AdministratorRequest request = new AdministratorRequest();
-        request.setUsername("username");
-
-        mockMvc.perform(post("/api/v1/admins")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"username\":\"username\"}"))
-                .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1L))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.username").value("username"));
-
-        verify(administratorService, times(1)).createAdministrator(request);
-    }
 
     @Test
     void updateAdministrator_shouldReturnUpdatedAdministrator() throws Exception {

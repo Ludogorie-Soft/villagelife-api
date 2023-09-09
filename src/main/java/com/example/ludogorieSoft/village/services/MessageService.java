@@ -19,18 +19,23 @@ public class MessageService {
     }
     public MessageDTO createMessage(MessageDTO messageDTO) {
         try {
-            Message message = new Message(null, messageDTO.getUserName(), messageDTO.getEmail(), messageDTO.getUserMessage());
+            Message message = new Message(null, messageDTO.getUserName().trim(), messageDTO.getEmail().trim(), messageDTO.getUserMessage().trim());
             messageRepository.save(message);
-
-            emailSenderService.sendEmail(
-                    messageDTO.getEmail(),
-                    "Име на потребител: " + messageDTO.getUserName() +
-                            "\nEmail: " + messageDTO.getEmail() +
-                            "\nЗапитване или заявка: " + messageDTO.getUserMessage(),
-                    "VillageLife");
+            String emailBody = createMessageEmailBody(message);
+            emailSenderService.sendEmail(messageDTO.getEmail(), emailBody, "VillageLife");
             return messageDTO;
         } catch (Exception e) {
             throw new ApiRequestException("Error creating message");
         }
+    }
+
+    public String createMessageEmailBody(Message message){
+        StringBuilder emailBody = new StringBuilder();
+        emailBody.append("<html><body><table>");
+        emailSenderService.addTableRow(emailBody, "Име на потребител", message.getUserName());
+        emailSenderService.addTableRow(emailBody, "Email", message.getEmail());
+        emailSenderService.addTableRow(emailBody, "Запитване или заявка", message.getUserMessage());
+        emailBody.append("</table></body></html>");
+        return emailBody.toString();
     }
 }

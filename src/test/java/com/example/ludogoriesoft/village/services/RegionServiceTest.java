@@ -1,6 +1,8 @@
 package com.example.ludogorieSoft.village.services;
 
 import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.never;
@@ -237,5 +239,23 @@ class RegionServiceTest {
         verify(regionRepository).findByRegionName(regionName);
 
         Assertions.assertEquals("Region not found", exception.getMessage());
+    }
+
+    @Test
+    void testExistsRegionByNameWhenRegionExists() {
+        String regionName = "TestRegion";
+        Region region = new Region();
+        region.setRegionName(regionName);
+        when(regionRepository.findByRegionName(regionName)).thenReturn(region);
+        boolean result = regionService.existsRegionByName(regionName);
+        assertTrue(result);
+    }
+
+    @Test
+    void testExistsRegionByNameWhenRegionDoesNotExist() {
+        String regionName = "NonExistentRegion";
+        when(regionRepository.findByRegionName(regionName)).thenReturn(null);
+        boolean result = regionService.existsRegionByName(regionName);
+        assertFalse(result);
     }
 }
