@@ -323,4 +323,18 @@ class VillageImageControllerIntegrationTest {
 
         verifyNoInteractions(villageImageService);
     }
+
+    @Test
+    void testDeleteImageById() throws Exception {
+        Long imageIdToDelete = 1L;
+
+        doNothing().when(villageImageService).deleteImageFileById(imageIdToDelete);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/villageImages/" + imageIdToDelete)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Image with id " + imageIdToDelete + " has been deleted successfully!"));
+
+        verify(villageImageService, times(1)).deleteImageFileById(imageIdToDelete);
+    }
 }
