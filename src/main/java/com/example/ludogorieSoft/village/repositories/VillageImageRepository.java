@@ -18,4 +18,5 @@ public interface VillageImageRepository extends JpaRepository<VillageImage, Long
     @Query("SELECT v FROM VillageImage v WHERE v.village.id = :villageId " +
             "AND (v.dateDeleted IS NOT NULL) ")
     List<VillageImage> findDeletedByVillageId(Long villageId);
+    List<VillageImage> findByVillageId(Long villageId);
 }

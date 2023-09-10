@@ -3,10 +3,7 @@ package com.example.ludogorieSoft.village.controllers;
 import com.example.ludogorieSoft.village.dtos.VillageDTO;
 import com.example.ludogorieSoft.village.dtos.response.VillageInfo;
 import com.example.ludogorieSoft.village.dtos.response.VillageResponse;
-import com.example.ludogorieSoft.village.services.AdminVillageService;
-import com.example.ludogorieSoft.village.services.PopulationService;
-import com.example.ludogorieSoft.village.services.VillageInfoService;
-import com.example.ludogorieSoft.village.services.VillageService;
+import com.example.ludogorieSoft.village.services.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,10 +18,11 @@ public class AdminFunctionController {
     private final VillageService villageService;
     private final AdminVillageService adminVillageService;
     private final VillageInfoService villageInfoService;
-    private PopulationService populationService;
+    private final VillageImageService villageImageService;
 
     @DeleteMapping("/village-delete/{villageId}")
     public ResponseEntity<String> deleteVillageById(@PathVariable("villageId") Long villageId) {
+        villageImageService.deleteAllImageFilesByVillageId(villageId);
         villageService.deleteVillage(villageId);
         return new ResponseEntity<>("Village with id: " + villageId + " has been deleted successfully!!", HttpStatus.OK);
     }

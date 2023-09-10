@@ -19,7 +19,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -259,27 +260,51 @@ public class VillageImageService {
         }
         throw new ApiRequestException(VILLAGE_IMAGE_ID_MESSAGE + id + NOT_FOUND_MESSAGE);
     }
+    public void deleteAllImageFilesByVillageId(Long villageId){
+        List<VillageImage> villageImages = villageImageRepository.findByVillageId(villageId);
+        for (VillageImage villageImage: villageImages) {
+            deleteImageFileById(villageImage.getId());
+        }
+    }
 
 
     public void deleteImageFileById(Long id) {
         VillageImageDTO villageImageDTO = getVillageImageById(id);
-
         if (villageImageDTO != null) {
             String imageName = villageImageDTO.getImageName();
-            Path imagePath = Paths.get(UPLOAD_DIRECTORY, imageName);
-            try {
-                Files.delete(imagePath);
-                deleteVillageImageById(id);
-            } catch (NoSuchFileException e) {
-                logger.warn("Image does not exist: {}", imageName);
-            } catch (DirectoryNotEmptyException e) {
-                logger.error("Cannot delete non-empty directory: {}", imageName);
-            } catch (IOException e) {
-                logger.error("Failed to delete image: {}", imageName, e);
+            if (imageName != null) {
+                String imagePath = UPLOAD_DIRECTORY + imageName;
+                File fileToDelete = new File(imagePath);
+                if (fileExists(fileToDelete) && deleteFileWithRetries(fileToDelete)) {
+                    deleteVillageImageById(id);
+                }
             }
-        } else {
-            logger.warn("Image with ID {} not found.", id);
         }
+    }
+
+    public boolean fileExists(File file) {
+        return file.exists();
+    }
+
+    public boolean deleteFileWithRetries(File file) {
+        int maxRetries = 6;
+        for (int i = 0; i < maxRetries; i++) {
+            try {
+                Path filePath = file.toPath();
+                Files.delete(filePath);
+                return true;
+            }catch (IOException e){
+                logger.error("An error occurred while deleting the image {}", file.getAbsolutePath());
+                try {
+                    Thread.sleep(500);
+                    System.gc();
+                } catch (InterruptedException ex) {
+                    logger.error("Thread interrupted while sleeping");
+                    Thread.currentThread().interrupt();
+                }
+            }
+        }
+        return false;
     }
 
     public void deleteVillageImageById(Long id) {

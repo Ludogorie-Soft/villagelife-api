@@ -70,7 +70,7 @@ public class VillageImageController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteImageById(@PathVariable("id") Long id) {
-        villageImageService.deleteVillageImageById(id);
+        villageImageService.deleteImageFileById(id);
         return new ResponseEntity<>("Image with id " + id + " has been deleted successfully!", HttpStatus.OK);
     }
 

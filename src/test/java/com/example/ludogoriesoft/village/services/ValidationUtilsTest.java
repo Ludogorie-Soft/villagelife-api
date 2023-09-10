@@ -1,4 +1,4 @@
-package com.example.ludogoriesoft.village.services;
+package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.utils.ValidationUtils;
 import org.junit.jupiter.api.Test;
