@@ -1,5 +1,4 @@
-INSERT INTO ethnicities (ethnicity_name)
-VALUES
+INSERT INTO ethnicities (ethnicity_name) VALUES
     ('роми'),
     ('турци'),
     ('власи'),
@@ -8,5 +7,4 @@ VALUES
     ('гърци'),
     ('татари'),
     ('евреи'),
-    ('няма малцинствени групи')
-ORDER BY id ASC;
+    ('няма малцинствени групи');
