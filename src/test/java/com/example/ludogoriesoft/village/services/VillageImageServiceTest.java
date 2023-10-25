@@ -697,4 +697,27 @@ class VillageImageServiceTest {
         String villageName = villageImageService.getVillageNameFromFileName(fileName);
         assertEquals("село 123 4x", villageName);
     }
+    @Test
+    void testUploadImages() {
+        List<File> images = new ArrayList<>();
+        File image1 = new File("image1.jpg");
+        File image2 = new File("image2.png");
+        images.add(image1);
+        images.add(image2);
+
+        when(villageImageService.getAllImageFilesFromDirectory()).thenReturn(images);
+        when(villageImageService.getVillageNameFromFileName("image1.jpg")).thenReturn("Village1");
+        when(villageImageService.getVillageNameFromFileName("image2.png")).thenReturn("Village2");
+        VillageDTO villageDTO = new VillageDTO();
+        villageDTO.setId(1L);
+        villageDTO.setName("Village1");
+        when(villageService.getVillageByName("Village1")).thenReturn(villageDTO);
+        doThrow(new ApiRequestException("Village not found")).when(villageService).getVillageByName("Village2");
+
+        villageImageService.uploadImages();
+
+        verify(villageService, times(1)).getVillageByName("Village1");
+        verify(villageService, times(1)).getVillageByName("Village2");
+    }
+
 }
