@@ -1,7 +1,7 @@
 package com.example.ludogorieSoft.village.services;
 
 import static org.junit.Assert.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
@@ -16,9 +16,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -90,7 +87,7 @@ class VillageImageServiceTest {
     @Test
     void testGenerateFileName() {
         String fileName = villageImageService.generateFileName();
-        Assertions.assertTrue(fileName.endsWith(".jpg"));
+        assertTrue(fileName.endsWith(".jpg"));
         Assertions.assertNotNull(fileName);
         Assertions.assertNotEquals("", fileName);
         String anotherFileName = villageImageService.generateFileName();
@@ -104,8 +101,8 @@ class VillageImageServiceTest {
 
         villageImageService.createUploadDirectory(existingDirPath);
 
-        Assertions.assertTrue(existingDir.exists());
-        Assertions.assertTrue(existingDir.isDirectory());
+        assertTrue(existingDir.exists());
+        assertTrue(existingDir.isDirectory());
     }
 
     @Test
@@ -113,8 +110,8 @@ class VillageImageServiceTest {
         String nonExistingDirPath = "path/to/non/existing/directory";
         File nonExistingDir = new File(nonExistingDirPath);
         villageImageService.createUploadDirectory(nonExistingDirPath);
-        Assertions.assertTrue(nonExistingDir.exists());
-        Assertions.assertTrue(nonExistingDir.isDirectory());
+        assertTrue(nonExistingDir.exists());
+        assertTrue(nonExistingDir.isDirectory());
     }
 
     @Test
@@ -162,7 +159,7 @@ class VillageImageServiceTest {
         byte[] emptyImage = {};
         Long villageId = 123L;
         List<String> result = villageImageService.createImagePaths(List.of(emptyImage), villageId, null, false, null);
-        Assertions.assertTrue(result.isEmpty());
+        assertTrue(result.isEmpty());
     }
 
     @Test
@@ -218,7 +215,7 @@ class VillageImageServiceTest {
     @Test
     void testGetAllVillageDTOsWithImagesWhenNotFound() {
         List<VillageDTO> result = villageImageService.getAllApprovedVillageDTOsWithImages();
-        Assertions.assertTrue(result.isEmpty());
+        assertTrue(result.isEmpty());
     }
 
     @Test
@@ -435,7 +432,7 @@ class VillageImageServiceTest {
 
         verify(villageImageRepository).findByVillageIdAndVillageStatusAndDateDeletedIsNull(villageId, status);
 
-        Assertions.assertTrue(result.isEmpty());
+        assertTrue(result.isEmpty());
     }
 
     @Test
@@ -453,7 +450,7 @@ class VillageImageServiceTest {
 
         verify(villageImageRepository).findByVillageIdAndVillageStatusAndDateUpload(villageId, status, date);
 
-        Assertions.assertTrue(result.isEmpty());
+        assertTrue(result.isEmpty());
     }
 
     @Test
@@ -557,7 +554,7 @@ class VillageImageServiceTest {
     void testFileExistsWhenFileExists() {
         when(mockFile.exists()).thenReturn(true);
         boolean result = villageImageService.fileExists(mockFile);
-        Assertions.assertTrue(result);
+        assertTrue(result);
         verify(mockFile).exists();
     }
 
@@ -565,7 +562,7 @@ class VillageImageServiceTest {
     void testFileExistsWhenFileDoesNotExist() {
         when(mockFile.exists()).thenReturn(false);
         boolean result = villageImageService.fileExists(mockFile);
-        Assertions.assertFalse(result);
+        assertFalse(result);
         verify(mockFile).exists();
     }
 
@@ -587,7 +584,7 @@ class VillageImageServiceTest {
 
         boolean result = villageImageService.deleteFileWithRetries(new File(filePath));
 
-        Assertions.assertTrue(result);
+        assertTrue(result);
 
         File fileToDelete = new File(filePath);
         if (fileToDelete.exists()) {
@@ -604,7 +601,7 @@ class VillageImageServiceTest {
         String filePath = UPLOAD_DIRECTORY + "testFile";
         File file = new File(filePath);
         boolean result = villageImageService.deleteFileWithRetries(file);
-        Assertions.assertFalse(result);
+        assertFalse(result);
     }
 
     @Test
@@ -644,5 +641,33 @@ class VillageImageServiceTest {
 
         verify(villageImageRepository, times(1)).findByVillageId(villageId);
         verify(villageImageService, times(1)).deleteImageFileById(1L);
+    }
+
+    @Test
+    void testIsImageFileWithValidImage() {
+        String validImageFileName = "image.jpg";
+        boolean isImage = villageImageService.isImageFile(validImageFileName);
+        assertTrue(isImage);
+    }
+
+    @Test
+    void testIsImageFileWithInvalidImage() {
+        String invalidFileName = "document.pdf";
+        boolean isImage = villageImageService.isImageFile(invalidFileName);
+        assertFalse(isImage);
+    }
+
+    @Test
+    void testIsImageFileWithMixedCase() {
+        String mixedCaseFileName = "Image.PnG";
+        boolean isImage = villageImageService.isImageFile(mixedCaseFileName);
+        assertTrue(isImage);
+    }
+
+    @Test
+    void testIsImageFileWithNoExtension() {
+        String fileNameWithNoExtension = "fileWithNoExtension";
+        boolean isImage = villageImageService.isImageFile(fileNameWithNoExtension);
+        assertFalse(isImage);
     }
 }

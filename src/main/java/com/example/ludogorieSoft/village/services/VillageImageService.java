@@ -326,7 +326,7 @@ public class VillageImageService {
         throw new ApiRequestException(VILLAGE_IMAGE_ID_MESSAGE + id + NOT_FOUND_MESSAGE);
     }
 
-    private boolean isImageFile(String fileName) {
+    public boolean isImageFile(String fileName) {
         return fileName.toLowerCase().endsWith(".jpg") || fileName.toLowerCase().endsWith(".png");
     }
 
