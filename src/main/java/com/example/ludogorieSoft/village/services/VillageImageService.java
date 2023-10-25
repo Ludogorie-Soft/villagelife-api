@@ -371,7 +371,8 @@ public class VillageImageService {
             for (int i = parts[0].equalsIgnoreCase("село") ? 1 : 0; i < (parts[parts.length - 1].matches("[а-яА-Я]+") ? parts.length : parts.length - 1); i++) {
                 reconstructedFileName.append(parts[i]).append("-");
             }
-            fileName = reconstructedFileName.toString().replaceAll("-+$", "").trim();
+            String withoutHyphens = reconstructedFileName.toString().replace("-+", "");
+            fileName = withoutHyphens.trim();
         }
         return fileName.replaceAll("\\d+$", "").replace("-", " ");
     }
