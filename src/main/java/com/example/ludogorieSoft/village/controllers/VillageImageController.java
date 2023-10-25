@@ -91,7 +91,6 @@ public class VillageImageController {
             villageImageService.uploadImages();
             return ResponseEntity.ok("Images uploaded successfully.");
         } catch (Exception ex) {
-            ex.printStackTrace();
             return ResponseEntity.ok("Image upload failed: " + ex.getMessage());
         }
     }
