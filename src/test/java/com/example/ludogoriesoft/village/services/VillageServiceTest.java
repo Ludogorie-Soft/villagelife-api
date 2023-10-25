@@ -19,6 +19,7 @@ import org.modelmapper.ModelMapper;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -391,7 +392,24 @@ class VillageServiceTest {
         Long invalidVillageId = 456L;
         villageService.increaseApprovedResponsesCount(invalidVillageId);
         Mockito.verify(villageRepository, Mockito.never()).save(Mockito.any());
+    }
 
+    @Test
+    void testGetVillageByNameWhenNotFound() {
+        String villageName = "NonExistentVillage";
+        when(villageRepository.findByName(villageName)).thenReturn(Collections.emptyList());
+        assertThrows(ApiRequestException.class, () -> villageService.getVillageByName(villageName));
+    }
+
+    @Test
+    void testGetVillageByNameWhenMultipleFound() {
+        String villageName = "DuplicateVillage";
+        Village village1 = new Village();
+        Village village2 = new Village();
+        village1.setName(villageName);
+        village2.setName(villageName);
+        when(villageRepository.findByName(villageName)).thenReturn(List.of(village1, village2));
+        assertThrows(ApiRequestException.class, () -> villageService.getVillageByName(villageName));
     }
 
 }
