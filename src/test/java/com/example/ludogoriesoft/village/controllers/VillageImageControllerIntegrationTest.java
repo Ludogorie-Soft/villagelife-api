@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -336,5 +337,11 @@ class VillageImageControllerIntegrationTest {
                 .andExpect(content().string("Image with id " + imageIdToDelete + " has been deleted successfully!"));
 
         verify(villageImageService, times(1)).deleteImageFileById(imageIdToDelete);
+    }
+    @Test
+    void testUploadImagesSuccess() throws Exception {
+        mockMvc.perform(get("/api/v1/villageImages/upload-images"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Images uploaded successfully.")));
     }
 }
