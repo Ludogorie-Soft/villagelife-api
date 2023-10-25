@@ -409,4 +409,15 @@ public class VillageService {
         village.get().setApprovedResponsesCount(village.get().getApprovedResponsesCount() + 1);
         villageRepository.save(village.get());
     }
+    public VillageDTO getVillageByName(String name) {
+        List<Village> foundVillages = villageRepository.findByName(name);
+
+        if (foundVillages.isEmpty()) {
+            throw new ApiRequestException("Village with name " + name + ERROR_MESSAGE2);
+        }else if(foundVillages.size() == 1){
+            return villageToVillageDTO(foundVillages.get(0));
+        }else{
+            throw new ApiRequestException("There are " + foundVillages.size() + " villages with name " + name);
+        }
+    }
 }

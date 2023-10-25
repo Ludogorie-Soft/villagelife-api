@@ -85,4 +85,14 @@ public class VillageImageController {
         VillageImageDTO updatedVillageImage = villageImageService.updateVillageImage(id, villageImageDTO);
         return ResponseEntity.ok(updatedVillageImage);
     }
+    @GetMapping("/upload-images")
+    public ResponseEntity<String> uploadImages() {
+        try {
+            villageImageService.uploadImages();
+            return ResponseEntity.ok("Images uploaded successfully.");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return ResponseEntity.ok("Image upload failed: " + ex.getMessage());
+        }
+    }
 }

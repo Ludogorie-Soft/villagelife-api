@@ -131,4 +131,6 @@ public interface VillageRepository extends JpaRepository<Village, Long> {
             "WHERE ev.dateDeleted IS NOT NULL " +
             "ORDER BY ev.villageStatus DESC, ev.dateDeleted ASC")
     List<Village> findAllVillagesWithRejectedResponses();
+    List<Village> findByName(String name);
+
 }

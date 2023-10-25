@@ -7,6 +7,7 @@ import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.model.VillageImage;
 import com.example.ludogorieSoft.village.repositories.VillageImageRepository;
+import com.example.ludogorieSoft.village.utils.TimestampUtils;
 import lombok.AllArgsConstructor;
 import org.apache.tika.Tika;
 import org.apache.tika.io.IOUtils;
@@ -260,9 +261,10 @@ public class VillageImageService {
         }
         throw new ApiRequestException(VILLAGE_IMAGE_ID_MESSAGE + id + NOT_FOUND_MESSAGE);
     }
-    public void deleteAllImageFilesByVillageId(Long villageId){
+
+    public void deleteAllImageFilesByVillageId(Long villageId) {
         List<VillageImage> villageImages = villageImageRepository.findByVillageId(villageId);
-        for (VillageImage villageImage: villageImages) {
+        for (VillageImage villageImage : villageImages) {
             deleteImageFileById(villageImage.getId());
         }
     }
@@ -293,7 +295,7 @@ public class VillageImageService {
                 Path filePath = file.toPath();
                 Files.delete(filePath);
                 return true;
-            }catch (IOException e){
+            } catch (IOException e) {
                 logger.error("An error occurred while deleting the image {}", file.getAbsolutePath());
                 try {
                     Thread.sleep(500);
@@ -323,4 +325,55 @@ public class VillageImageService {
         }
         throw new ApiRequestException(VILLAGE_IMAGE_ID_MESSAGE + id + NOT_FOUND_MESSAGE);
     }
+
+    private boolean isImageFile(String fileName) {
+        return fileName.toLowerCase().endsWith(".jpg") || fileName.toLowerCase().endsWith(".png");
+    }
+
+    public List<File> getAllImageFilesFromDirectory() {
+        List<File> imageFiles = new ArrayList<>();
+        File directory = new File(UPLOAD_DIRECTORY);
+        if (!directory.exists() || !directory.isDirectory()) {
+            throw new IllegalArgumentException("Directory does not exist or is not a directory: " + UPLOAD_DIRECTORY);
+        }
+        File[] files = directory.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (file.isFile() && isImageFile(file.getName())) {
+                    imageFiles.add(file);
+                }
+            }
+        }
+        return imageFiles;
+    }
+
+    public void uploadImages() {
+        List<File> images = getAllImageFilesFromDirectory();
+        LocalDateTime localDateTime = TimestampUtils.getCurrentTimestamp();
+
+        for (File image : images) {
+            String name = getVillageNameFromFileName(image.getName());
+
+            try {
+                VillageDTO villageDTO = villageService.getVillageByName(name);
+                createVillageImageDTO(new VillageImageDTO(null, villageDTO.getId(), image.getName(), true, localDateTime, null, null, null));
+            } catch (Exception ex) {
+                logger.warn("Error while processing image with fileName {}", image.getName());
+            }
+        }
+    }
+
+    public String getVillageNameFromFileName(String fileName) {
+        fileName = fileName.replace(".png", "").replace(".jpg", "");
+        String[] parts = fileName.split("-");
+        if (parts.length > 1 && !parts[parts.length - 1].contains("x")) {
+            StringBuilder reconstructedFileName = new StringBuilder();
+            for (int i = parts[0].equalsIgnoreCase("село") ? 1 : 0; i < (parts[parts.length - 1].matches("[а-яА-Я]+") ? parts.length : parts.length - 1); i++) {
+                reconstructedFileName.append(parts[i]).append("-");
+            }
+            fileName = reconstructedFileName.toString().replaceAll("-+$", "").trim();
+        }
+        return fileName.replaceAll("\\d+$", "").replace("-", " ");
+    }
+
 }
