@@ -374,7 +374,8 @@ public class VillageImageService {
             String withoutHyphens = reconstructedFileName.toString().replace("-+", "");
             fileName = withoutHyphens.trim();
         }
-        return fileName.replaceAll("\\d+$", "").replace("-", " ");
+        String withoutDigits = fileName.replaceFirst("\\d+$", "");
+        return withoutDigits.replace("-", " ").trim();
     }
 
 }
