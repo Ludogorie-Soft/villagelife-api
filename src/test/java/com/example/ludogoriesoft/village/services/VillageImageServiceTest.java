@@ -670,4 +670,31 @@ class VillageImageServiceTest {
         boolean isImage = villageImageService.isImageFile(fileNameWithNoExtension);
         assertFalse(isImage);
     }
+    @Test
+    void testGetVillageNameFromFileNameWhenValid() {
+        String villageName = "име на село";
+        String result = villageImageService.getVillageNameFromFileName(villageName + ".jpg");
+        assertEquals(villageName, result);
+    }
+
+    @Test
+    void testGetVillageNameFromFileNameOnlyVillageName() {
+        String villageName = "Черковна";
+        String result = villageImageService.getVillageNameFromFileName(villageName + ".png");
+        assertEquals(villageName, result);
+    }
+
+    @Test
+    void testGetVillageNameFromFileNameWithMixedCaseInput() {
+        String fileName = "село-VilLaGe-2x.jpg";
+        String villageName = villageImageService.getVillageNameFromFileName(fileName);
+        assertEquals("село VilLaGe 2x", villageName);
+    }
+
+    @Test
+    void testGetVillageNameFromFileNameWithDigits() {
+        String fileName = "село-123-4x.png";
+        String villageName = villageImageService.getVillageNameFromFileName(fileName);
+        assertEquals("село 123 4x", villageName);
+    }
 }
