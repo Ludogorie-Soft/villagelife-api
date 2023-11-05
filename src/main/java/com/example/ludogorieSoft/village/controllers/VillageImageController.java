@@ -88,6 +88,7 @@ public class VillageImageController {
     @GetMapping("/upload-images")
     public ResponseEntity<String> uploadImages() {
         try {
+            System.out.println("upload images controller backend");
             villageImageService.uploadImages();
             return ResponseEntity.ok("Images uploaded successfully.");
         } catch (Exception ex) {

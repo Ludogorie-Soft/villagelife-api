@@ -353,10 +353,11 @@ public class VillageImageService {
 
         for (File image : images) {
             String name = getVillageNameFromFileName(image.getName());
-
+            System.out.println("village name: " + name);
             try {
                 VillageDTO villageDTO = villageService.getVillageByName(name);
                 createVillageImageDTO(new VillageImageDTO(null, villageDTO.getId(), image.getName(), true, localDateTime, null, null, null));
+                System.out.println("villageDTO id: " + villageDTO.getId() + "\nvillageDTO name: " + villageDTO.getName());
             } catch (Exception ex) {
                 logger.warn("Error while processing image with fileName {}", image.getName());
             }
