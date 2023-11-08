@@ -331,6 +331,7 @@ public class VillageImageService {
     }
 
     public List<File> getAllImageFilesFromDirectory() {
+        System.out.println("----------------- getAllImageFilesFromDirectory ----------");
         List<File> imageFiles = new ArrayList<>();
         File directory = new File(UPLOAD_DIRECTORY);
         if (!directory.exists() || !directory.isDirectory()) {
@@ -350,7 +351,7 @@ public class VillageImageService {
     public void uploadImages() {
         List<File> images = getAllImageFilesFromDirectory();
         LocalDateTime localDateTime = TimestampUtils.getCurrentTimestamp();
-
+        System.out.println("--------------- Start --------------- ");
         for (File image : images) {
             String name = getVillageNameFromFileName(image.getName());
             System.out.println("village name: " + name);
@@ -362,6 +363,7 @@ public class VillageImageService {
                 logger.warn("Error while processing image with fileName {}", image.getName());
             }
         }
+        System.out.println("--------------- End --------------- ");
     }
 
     public String getVillageNameFromFileName(String fileName) {
