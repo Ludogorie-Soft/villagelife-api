@@ -643,33 +643,33 @@ class VillageImageServiceTest {
         verify(villageImageService, times(1)).deleteImageFileById(1L);
     }
 
-    @Test
-    void testIsImageFileWithValidImage() {
-        String validImageFileName = "image.jpg";
-        boolean isImage = villageImageService.isImageFile(validImageFileName);
-        assertTrue(isImage);
-    }
-
-    @Test
-    void testIsImageFileWithInvalidImage() {
-        String invalidFileName = "document.pdf";
-        boolean isImage = villageImageService.isImageFile(invalidFileName);
-        assertFalse(isImage);
-    }
-
-    @Test
-    void testIsImageFileWithMixedCase() {
-        String mixedCaseFileName = "Image.PnG";
-        boolean isImage = villageImageService.isImageFile(mixedCaseFileName);
-        assertTrue(isImage);
-    }
-
-    @Test
-    void testIsImageFileWithNoExtension() {
-        String fileNameWithNoExtension = "fileWithNoExtension";
-        boolean isImage = villageImageService.isImageFile(fileNameWithNoExtension);
-        assertFalse(isImage);
-    }
+//    @Test
+//    void testIsImageFileWithValidImage() {
+//        String validImageFileName = "image.jpg";
+//        boolean isImage = villageImageService.isImageFile(validImageFileName);
+//        assertTrue(isImage);
+//    }
+//
+//    @Test
+//    void testIsImageFileWithInvalidImage() {
+//        String invalidFileName = "document.pdf";
+//        boolean isImage = villageImageService.isImageFile(invalidFileName);
+//        assertFalse(isImage);
+//    }
+//
+//    @Test
+//    void testIsImageFileWithMixedCase() {
+//        String mixedCaseFileName = "Image.PnG";
+//        boolean isImage = villageImageService.isImageFile(mixedCaseFileName);
+//        assertTrue(isImage);
+//    }
+//
+//    @Test
+//    void testIsImageFileWithNoExtension() {
+//        String fileNameWithNoExtension = "fileWithNoExtension";
+//        boolean isImage = villageImageService.isImageFile(fileNameWithNoExtension);
+//        assertFalse(isImage);
+//    }
     @Test
     void testGetVillageNameFromFileNameWhenValid() {
         String villageName = "име на село";

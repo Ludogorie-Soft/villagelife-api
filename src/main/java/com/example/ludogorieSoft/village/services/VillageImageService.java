@@ -20,10 +20,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @AllArgsConstructor
@@ -326,25 +330,35 @@ public class VillageImageService {
         throw new ApiRequestException(VILLAGE_IMAGE_ID_MESSAGE + id + NOT_FOUND_MESSAGE);
     }
 
-    public boolean isImageFile(String fileName) {
-        return fileName.toLowerCase().endsWith(".jpg") || fileName.toLowerCase().endsWith(".png");
+    public boolean isImageFile(File imageFile) {
+        return imageFile.getName().toLowerCase().endsWith(".jpg") || imageFile.getName().toLowerCase().endsWith(".png");
     }
 
     public List<File> getAllImageFilesFromDirectory() {
-        System.out.println("----------------- getAllImageFilesFromDirectory ----------");
+        System.out.println("----------------- getAllImageFilesFromDirectory ---------- " + UPLOAD_DIRECTORY);
+
         List<File> imageFiles = new ArrayList<>();
         File directory = new File(UPLOAD_DIRECTORY);
         if (!directory.exists() || !directory.isDirectory()) {
             throw new IllegalArgumentException("Directory does not exist or is not a directory: " + UPLOAD_DIRECTORY);
         }
+
         File[] files = directory.listFiles();
-        if (files != null) {
-            for (File file : files) {
-                if (file.isFile() && isImageFile(file.getName())) {
-                    imageFiles.add(file);
-                }
-            }
+        System.out.println("----------------" + files.length + "----------------");
+
+        try (Stream<Path> stream = Files.list(Paths.get(UPLOAD_DIRECTORY))) {
+            List<File> images = stream
+                    .filter(file -> !Files.isDirectory(file))
+                    .map(Path::toFile)
+                    .filter(this::isImageFile)  // Филтрираме само изображенията
+                    .collect(Collectors.toList());
+
+            imageFiles.addAll(images);
+            System.out.println("------------------------" + images.size() + "------------------------");
+        } catch (IOException ioException) {
+            throw new ApiRequestException("Files.list does not work");
         }
+
         return imageFiles;
     }
 
