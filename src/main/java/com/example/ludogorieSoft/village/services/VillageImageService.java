@@ -339,10 +339,11 @@ public class VillageImageService {
 
         List<File> imageFiles = new ArrayList<>();
         File directory = new File(getUploadDirectoryPath());
+        System.out.println("---- isDirectory: " + directory.isDirectory() + "---Name: " + directory.getName() + "---AbsolutePath: " + directory.getAbsolutePath() + "---------");
         if (!directory.exists() || !directory.isDirectory()) {
             throw new IllegalArgumentException("Directory does not exist or is not a directory: " + UPLOAD_DIRECTORY);
         }
-
+        System.out.println("--------- after if ---------------");
         File[] files = directory.listFiles();
         System.out.println("----------------" + files.length + "----------------");
 
