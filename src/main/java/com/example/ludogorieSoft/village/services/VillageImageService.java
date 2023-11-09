@@ -335,10 +335,10 @@ public class VillageImageService {
     }
 
     public List<File> getAllImageFilesFromDirectory() {
-        System.out.println("----------------- getAllImageFilesFromDirectory ---------- " + UPLOAD_DIRECTORY);
+        System.out.println("----------------- getAllImageFilesFromDirectory ---------- " + UPLOAD_DIRECTORY + "---" + getUploadDirectoryPath());
 
         List<File> imageFiles = new ArrayList<>();
-        File directory = new File(UPLOAD_DIRECTORY);
+        File directory = new File(getUploadDirectoryPath());
         if (!directory.exists() || !directory.isDirectory()) {
             throw new IllegalArgumentException("Directory does not exist or is not a directory: " + UPLOAD_DIRECTORY);
         }
@@ -346,11 +346,11 @@ public class VillageImageService {
         File[] files = directory.listFiles();
         System.out.println("----------------" + files.length + "----------------");
 
-        try (Stream<Path> stream = Files.list(Paths.get(UPLOAD_DIRECTORY))) {
+        try (Stream<Path> stream = Files.list(Paths.get(getUploadDirectoryPath()))) {
             List<File> images = stream
                     .filter(file -> !Files.isDirectory(file))
                     .map(Path::toFile)
-                    .filter(this::isImageFile)  // Филтрираме само изображенията
+                    .filter(this::isImageFile)
                     .collect(Collectors.toList());
 
             imageFiles.addAll(images);
@@ -377,7 +377,7 @@ public class VillageImageService {
                 logger.warn("Error while processing image with fileName {}", image.getName());
             }
         }
-        System.out.println("--------------- End --------------- ");
+        System.out.println("--------------- End --------------- " + getUploadDirectoryPath());
     }
 
     public String getVillageNameFromFileName(String fileName) {
