@@ -338,7 +338,7 @@ public class VillageImageService {
         System.out.println("----------------- getAllImageFilesFromDirectory ---------- " + UPLOAD_DIRECTORY + "---" + getUploadDirectoryPath());
 
         List<File> imageFiles = new ArrayList<>();
-        File directory = new File(getUploadDirectoryPath());
+        File directory = new File("/opt/villagelife/villagelife-api/src/main/resources/static/village_images");
         System.out.println("---- isDirectory: " + directory.isDirectory() + "---Name: " + directory.getName() + "---AbsolutePath: " + directory.getAbsolutePath() + "---------");
         if (!directory.exists() || !directory.isDirectory()) {
             throw new IllegalArgumentException("Directory does not exist or is not a directory: " + UPLOAD_DIRECTORY);
@@ -347,7 +347,7 @@ public class VillageImageService {
         File[] files = directory.listFiles();
         System.out.println("----------------" + files.length + "----------------");
 
-        try (Stream<Path> stream = Files.list(Paths.get(getUploadDirectoryPath()))) {
+        try (Stream<Path> stream = Files.list(Paths.get("/opt/villagelife/villagelife-api/src/main/resources/static/village_images"))) {
             List<File> images = stream
                     .filter(file -> !Files.isDirectory(file))
                     .map(Path::toFile)
@@ -379,9 +379,6 @@ public class VillageImageService {
             }
         }
         System.out.println("--------------- End --------------- " + getUploadDirectoryPath());
-        File directory = new File(getUploadDirectoryPath());
-        System.out.println("---- isDirectory: " + directory.isDirectory() + "---Name: " + directory.getName() + "---AbsolutePath: " + directory.getAbsolutePath() + "---------");
-
     }
 
     public String getVillageNameFromFileName(String fileName) {
