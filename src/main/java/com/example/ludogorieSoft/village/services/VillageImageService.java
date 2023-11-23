@@ -347,7 +347,7 @@ public class VillageImageService {
         File[] files = directory.listFiles();
         System.out.println("----------------" + files.length + "----------------");
 
-        try (Stream<Path> stream = Files.list(Paths.get("/opt/villagelife/villagelife-api/src/main/resources/static/village_images"))) {
+        try (Stream<Path> stream = Files.list(Paths.get("/opt/villagelife/villagelife-api/target/src/main/resources/static/village_images"))) {
             List<File> images = stream
                     .filter(file -> !Files.isDirectory(file))
                     .map(Path::toFile)
