@@ -14,13 +14,14 @@ import org.apache.tika.io.IOUtils;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -166,6 +167,19 @@ public class VillageImageService {
     public List<VillageDTO> getAllApprovedVillageDTOsWithImages() {
         List<VillageDTO> villageDTOsWithImages = new ArrayList<>();
         List<VillageDTO> allVillageDTOs = villageService.getVillagesByStatus(true);
+
+        for (VillageDTO village : allVillageDTOs) {
+            List<String> images = getAllImagesForVillageByStatusAndDate(village.getId(), true, null);
+            village.setImages(images);
+            villageDTOsWithImages.add(village);
+        }
+
+        return villageDTOsWithImages;
+    }
+    public List<VillageDTO> getApprovedVillageDTOsWithImages(int pageNumber, int elementsCount) {
+        List<VillageDTO> villageDTOsWithImages = new ArrayList<>();
+        Pageable page = PageRequest.of(pageNumber, elementsCount);
+        List<VillageDTO> allVillageDTOs = villageService.getVillagesByStatus(true, page);
 
         for (VillageDTO village : allVillageDTOs) {
             List<String> images = getAllImagesForVillageByStatusAndDate(village.getId(), true, null);

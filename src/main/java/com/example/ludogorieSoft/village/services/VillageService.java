@@ -16,6 +16,7 @@ import com.example.ludogorieSoft.village.repositories.VillageRepository;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -393,6 +394,15 @@ public class VillageService {
 
     public List<VillageDTO> getVillagesByStatus(boolean status) {
         List<Village> villagesWithStatus = villageRepository.findByStatus(status);
+        List<VillageDTO> villageDTOsWithStatus = new ArrayList<>();
+        for (Village village : villagesWithStatus) {
+            VillageDTO villageDTO = modelMapper.map(village, VillageDTO.class);
+            villageDTOsWithStatus.add(villageDTO);
+        }
+        return villageDTOsWithStatus;
+    }
+    public List<VillageDTO> getVillagesByStatus(boolean status, Pageable page) {
+        List<Village> villagesWithStatus = villageRepository.findByStatus(status, page);
         List<VillageDTO> villageDTOsWithStatus = new ArrayList<>();
         for (Village village : villagesWithStatus) {
             VillageDTO villageDTO = modelMapper.map(village, VillageDTO.class);

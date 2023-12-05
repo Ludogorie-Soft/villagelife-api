@@ -38,6 +38,15 @@ public class VillageImageController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+    @GetMapping("/approved/{page}/{elements}")
+    public ResponseEntity<List<VillageDTO>> getAllApprovedVillageDTOsWithImages(@PathVariable("page") int page, @PathVariable("elements") int elements) {
+        List<VillageDTO> villageDTOS = villageImageService.getApprovedVillageDTOsWithImages(page, elements);
+        if (!villageDTOS.isEmpty()) {
+            return new ResponseEntity<>(villageDTOS, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 
 
     @PostMapping("/admin-upload")

@@ -6,12 +6,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 
 public interface VillageRepository extends JpaRepository<Village, Long> {
 
     List<Village> findByStatus(Boolean status);
+    List<Village> findByStatus(Boolean status, Pageable page);
 
     @Query("SELECT v FROM Village v JOIN v.region r WHERE v.status = 1 ORDER BY r.regionName ASC")
     List<Village> findAllApprovedVillages();
