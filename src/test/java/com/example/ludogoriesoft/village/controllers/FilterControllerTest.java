@@ -47,9 +47,9 @@ class FilterControllerTest {
         village2.setName("Village 2");
         expectedVillages.add(village2);
 
-        when(villageSearchService.getAllSearchVillages(name)).thenReturn(expectedVillages);
+        when(villageSearchService.getAllSearchVillages(name, 0, 6)).thenReturn(expectedVillages);
 
-        ResponseEntity<List<VillageDTO>> response = filterController.getVillageByName(name);
+        ResponseEntity<List<VillageDTO>> response = filterController.getVillageByName( 0, name);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
@@ -77,9 +77,9 @@ class FilterControllerTest {
         village2.setName("Village 2");
         expectedVillages.add(village2);
 
-        when(villageSearchService.getAllSearchVillagesByRegionName(region)).thenReturn(expectedVillages);
+        when(villageSearchService.getAllSearchVillagesByRegionName(region, 0, 6)).thenReturn(expectedVillages);
 
-        ResponseEntity<List<VillageDTO>> response = filterController.getVillageByRegion(region);
+        ResponseEntity<List<VillageDTO>> response = filterController.getVillageByRegion(0, region);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
@@ -110,9 +110,9 @@ class FilterControllerTest {
         village2.setName("Village 2");
         expectedVillages.add(village2);
 
-        when(villageSearchService.getAllSearchVillagesByNameAndRegionName(region, keyword)).thenReturn(expectedVillages);
+        when(villageSearchService.getAllSearchVillagesByNameAndRegionName(region, keyword, 0, 6)).thenReturn(expectedVillages);
 
-        ResponseEntity<List<VillageDTO>> responseEntity = filterController.getVillageByNameAndRegion(region, keyword, sort);
+        ResponseEntity<List<VillageDTO>> responseEntity = filterController.getVillageByNameAndRegion(0, region, keyword, sort);
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
@@ -142,9 +142,9 @@ class FilterControllerTest {
         village2.setName("Village 2");
         expectedVillages.add(village2);
 
-        when(villageSearchService.getAllSearchVillagesByNameAndRegionName(region, keyword)).thenReturn(expectedVillages);
+        when(villageSearchService.getAllSearchVillagesByNameAndRegionName(region, keyword, 0, 6)).thenReturn(expectedVillages);
 
-        ResponseEntity<List<VillageDTO>> responseEntity = filterController.getVillageByNameAndRegion(region, keyword, sort);
+        ResponseEntity<List<VillageDTO>> responseEntity = filterController.getVillageByNameAndRegion(0, region, keyword, sort);
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
@@ -449,9 +449,9 @@ class FilterControllerTest {
         village2.setName("Village 2");
         expectedVillages.add(village2);
 
-        when(villageSearchService.getAllApprovedVillages()).thenReturn(expectedVillages);
+        when(villageSearchService.getAllApprovedVillages(0, 6)).thenReturn(expectedVillages);
 
-        ResponseEntity<List<VillageDTO>> response = filterController.getAllApprovedVillages();
+        ResponseEntity<List<VillageDTO>> response = filterController.getAllApprovedVillages(0);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
@@ -463,7 +463,7 @@ class FilterControllerTest {
         assertEquals(expectedVillages.get(1).getId(), actualVillages.get(1).getId());
         assertEquals(expectedVillages.get(1).getName(), actualVillages.get(1).getName());
 
-        verify(villageSearchService, times(1)).getAllApprovedVillages();
+        verify(villageSearchService, times(1)).getAllApprovedVillages(0, 6);
     }
 
 

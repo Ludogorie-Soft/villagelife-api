@@ -102,7 +102,7 @@ class FilterControllerIntegrationTest {
 
         String name = "Example Name";
 
-        when(villageSearchService.getAllSearchVillages(name)).thenReturn(villageDTOList);
+        when(villageSearchService.getAllSearchVillages(name, 0, 6)).thenReturn(villageDTOList);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/byName")
                         .param("name", name)
@@ -136,7 +136,7 @@ class FilterControllerIntegrationTest {
 
         String region = "Example Region";
 
-        when(villageSearchService.getAllSearchVillagesByRegionName(region)).thenReturn(villageDTOList);
+        when(villageSearchService.getAllSearchVillagesByRegionName(region, 0, 6)).thenReturn(villageDTOList);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/byRegion")
                         .param("region", region)
@@ -171,7 +171,7 @@ class FilterControllerIntegrationTest {
         String region = "Example Region";
         String keyword = "Example Keyword";
 
-        when(villageSearchService.getAllSearchVillagesByNameAndRegionName(region, keyword)).thenReturn(villageDTOList);
+        when(villageSearchService.getAllSearchVillagesByNameAndRegionName(region, keyword, 0, 6)).thenReturn(villageDTOList);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/searchAll")
                         .param("region", region)
@@ -454,7 +454,7 @@ class FilterControllerIntegrationTest {
     @Test
     void testGetVillageByNameVillageNotFound() throws Exception {
         String name = "Nonexistent Village";
-        when(villageSearchService.getAllSearchVillages(name)).thenReturn(Collections.emptyList());
+        when(villageSearchService.getAllSearchVillages(name, 0, 6)).thenReturn(Collections.emptyList());
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/byName")
                         .param("name", name)
@@ -466,7 +466,7 @@ class FilterControllerIntegrationTest {
     @Test
     void testGetVillageByRegionRegionNotFound() throws Exception {
         String region = "Nonexistent Region";
-        when(villageSearchService.getAllSearchVillagesByRegionName(region)).thenReturn(Collections.emptyList());
+        when(villageSearchService.getAllSearchVillagesByRegionName(region, 0, 6)).thenReturn(Collections.emptyList());
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/byRegion")
                         .param("region", region)
@@ -482,7 +482,7 @@ class FilterControllerIntegrationTest {
             "'Nonexistent Region','Existing Village'"
     })
     void testGetVillageByNameAndRegion(String region, String keyword) throws Exception {
-        when(villageSearchService.getAllSearchVillagesByNameAndRegionName(region, keyword)).thenReturn(Collections.emptyList());
+        when(villageSearchService.getAllSearchVillagesByNameAndRegionName(region, keyword, 0, 6)).thenReturn(Collections.emptyList());
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/searchAll")
                         .param("region", region)

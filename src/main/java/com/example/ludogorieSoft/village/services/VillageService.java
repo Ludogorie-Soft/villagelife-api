@@ -16,6 +16,9 @@ import com.example.ludogorieSoft.village.repositories.VillageRepository;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +26,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.time.LocalDateTime.now;
 
@@ -143,63 +147,67 @@ public class VillageService {
     }
 
 
-    public List<VillageDTO> getAllSearchVillages(String name) {
-        List<Village> villages = villageRepository.findByNameContainingIgnoreCaseOrderByRegionNameAsc(name);
-        return villages.stream()
-                .map(this::villageToVillageDTO)
-                .toList();
+    public Page<VillageDTO> getAllSearchVillages(String name, int pageNumber, int elementsCount) {
+        Pageable page = PageRequest.of(pageNumber, elementsCount);
+        Page<Village> villages = villageRepository.findByNameContainingIgnoreCaseOrderByRegionNameAsc(name, page);
+        return new PageImpl<>(villages.stream().map(this::villageToVillageDTO).toList(), page, villages.getTotalElements());
     }
 
 
-    public List<VillageDTO> getAllSearchVillagesByRegionName(String regionName) {
-        List<Village> villages = villageRepository.findByRegionName(regionName);
-        return villages.stream()
-                .map(this::villageToVillageDTO)
-                .toList();
+    public Page<VillageDTO> getAllSearchVillagesByRegionName(String regionName, int pageNumber, int elementsCount) {
+        Pageable page = PageRequest.of(pageNumber, elementsCount);
+        Page<Village> villages = villageRepository.findByRegionName(regionName, page);
+        return new PageImpl<>(villages.stream().map(this::villageToVillageDTO).toList(), page, villages.getTotalElements());
     }
 
 
-    public List<VillageDTO> getAllSearchVillagesByNameAndRegionName(String regionName, String name) {
-        List<Village> villages = villageRepository.findByNameContainingIgnoreCaseAndRegionName(regionName, name);
-        return villages.stream()
-                .map(this::villageToVillageDTO)
-                .toList();
+    public Page<VillageDTO> getAllSearchVillagesByNameAndRegionName(String regionName, String name, int pageNumber, int elementsCount) {
+        Pageable page = PageRequest.of(pageNumber, elementsCount);
+        Page<Village> villages = villageRepository.findByNameContainingIgnoreCaseAndRegionName(regionName, name, page);
+        return new PageImpl<>(villages.stream().map(this::villageToVillageDTO).toList(), page, villages.getTotalElements());
     }
 
 
-    public List<VillageDTO> getSearchVillages(List<String> objectAroundVillageDTOS, List<String> livingConditionDTOS, Children children) {
-        List<Village> villages = villageRepository.searchVillages(objectAroundVillageDTOS, livingConditionDTOS, children.getEnumValue());
-        return convertToDTO(villages);
+    public Page<VillageDTO> getSearchVillages(List<String> objectAroundVillageDTOS, List<String> livingConditionDTOS, Children children, int pageNumber, int elementsCount) {
+        Pageable page = PageRequest.of(pageNumber, elementsCount);
+        Page<Village> villages = villageRepository.searchVillages(objectAroundVillageDTOS, livingConditionDTOS, children.getEnumValue(), page);
+        return new PageImpl<>(villages.stream().map(this::villageToVillageDTO).toList(), page, villages.getTotalElements());
     }
 
-    public List<VillageDTO> getSearchVillagesByLivingConditionAndChildren(List<String> livingConditionDTOS, Children children) {
-        List<Village> villages = villageRepository.searchVillagesByLivingConditionAndChildren(livingConditionDTOS, children.getEnumValue());
-        return villageToVillageDTOWithoutObject(villages);
+    public Page<VillageDTO> getSearchVillagesByLivingConditionAndChildren(List<String> livingConditionDTOS, Children children, int pageNumber, int elementsCount) {
+        Pageable page = PageRequest.of(pageNumber, elementsCount);
+        Page<Village> villages = villageRepository.searchVillagesByLivingConditionAndChildren(livingConditionDTOS, children.getEnumValue(), page);
+        return new PageImpl<>(villages.stream().map(this::villageToVillageDTO).toList(), page, villages.getTotalElements());
     }
 
-    public List<VillageDTO> getSearchVillagesByObjectAndChildren(List<String> objectAroundVillageDTOS, Children children) {
-        List<Village> villages = villageRepository.searchVillagesByObjectAndChildren(objectAroundVillageDTOS, children.getEnumValue());
-        return villageToVillageDTOWithoutLivingCondition(villages);
+    public Page<VillageDTO> getSearchVillagesByObjectAndChildren(List<String> objectAroundVillageDTOS, Children children, int pageNumber, int elementsCount) {
+        Pageable page = PageRequest.of(pageNumber, elementsCount);
+        Page<Village> villages = villageRepository.searchVillagesByObjectAndChildren(objectAroundVillageDTOS, children.getEnumValue(), page);
+        return new PageImpl<>(villages.stream().map(this::villageToVillageDTO).toList(), page, villages.getTotalElements());
     }
 
-    public List<VillageDTO> getSearchVillagesByObjectAndLivingCondition(List<String> objectAroundVillageDTOS, List<String> livingConditionDTOS) {
-        List<Village> villages = villageRepository.searchVillagesByObjectAndLivingCondition(objectAroundVillageDTOS, livingConditionDTOS);
-        return villageToVillageDTOWithoutChildren(villages);
+    public Page<VillageDTO> getSearchVillagesByObjectAndLivingCondition(List<String> objectAroundVillageDTOS, List<String> livingConditionDTOS, int pageNumber, int elementsCount) {
+        Pageable page = PageRequest.of(pageNumber, elementsCount);
+        Page<Village> villages = villageRepository.searchVillagesByObjectAndLivingCondition(objectAroundVillageDTOS, livingConditionDTOS, page);
+        return new PageImpl<>(villages.stream().map(this::villageToVillageDTO).toList(), page, villages.getTotalElements());
     }
 
-    public List<VillageDTO> getSearchVillagesByChildrenCount(Children children) {
-        List<Village> villages = villageRepository.searchVillagesByChildrenCount(children.getEnumValue());
-        return villageToVillageDTOChildren(villages);
+    public Page<VillageDTO> getSearchVillagesByChildrenCount(Children children, int pageNumber, int elementsCount) {
+        Pageable page = PageRequest.of(pageNumber, elementsCount);
+        Page<Village> villages = villageRepository.searchVillagesByChildrenCount(children.getEnumValue(), page);
+        return new PageImpl<>(villages.stream().map(this::villageToVillageDTO).toList(), page, villages.getTotalElements());
     }
 
-    public List<VillageDTO> getSearchVillagesByObject(List<String> objectAroundVillageDTOS) {
-        List<Village> villages = villageRepository.searchVillagesByObject(objectAroundVillageDTOS);
-        return villageToVillageDTOObject(villages);
+    public Page<VillageDTO> getSearchVillagesByObject(List<String> objectAroundVillageDTOS, int pageNumber, int elementsCount) {
+        Pageable page = PageRequest.of(pageNumber, elementsCount);
+        Page<Village> villages = villageRepository.searchVillagesByObject(objectAroundVillageDTOS, page);
+        return new PageImpl<>(villages.stream().map(this::villageToVillageDTO).toList(), page, villages.getTotalElements());
     }
 
-    public List<VillageDTO> getSearchVillagesByLivingCondition(List<String> livingConditionDTOS) {
-        List<Village> villages = villageRepository.searchVillagesByLivingCondition(livingConditionDTOS);
-        return villageToVillageDTOLivingCondition(villages);
+    public Page<VillageDTO> getSearchVillagesByLivingCondition(List<String> livingConditionDTOS, int pageNumber, int elementsCount) {
+        Pageable page = PageRequest.of(pageNumber, elementsCount);
+        Page<Village> villages = villageRepository.searchVillagesByLivingCondition(livingConditionDTOS, page);
+        return new PageImpl<>(villages.stream().map(this::villageToVillageDTO).toList(), page, villages.getTotalElements());
     }
 
 
@@ -385,11 +393,10 @@ public class VillageService {
         return populationDTO;
     }
 
-    public List<VillageDTO> getAllApprovedVillages() {
-        List<Village> approvedVillages = villageRepository.findAllApprovedVillages();
-        return approvedVillages.stream()
-                .map(this::villageToVillageDTO)
-                .toList();
+    public Page<VillageDTO> getAllApprovedVillages(int pageNumber, int elementsCount) {
+        Pageable page = PageRequest.of(pageNumber, elementsCount);
+        Page<Village> approvedVillages = villageRepository.findAllApprovedVillages(page);
+        return new PageImpl<>(approvedVillages.stream().map(this::villageToVillageDTO).toList(), page, approvedVillages.getTotalElements());
     }
 
     public List<VillageDTO> getVillagesByStatus(boolean status) {
@@ -401,14 +408,14 @@ public class VillageService {
         }
         return villageDTOsWithStatus;
     }
-    public List<VillageDTO> getVillagesByStatus(boolean status, Pageable page) {
-        List<Village> villagesWithStatus = villageRepository.findByStatus(status, page);
-        List<VillageDTO> villageDTOsWithStatus = new ArrayList<>();
-        for (Village village : villagesWithStatus) {
-            VillageDTO villageDTO = modelMapper.map(village, VillageDTO.class);
-            villageDTOsWithStatus.add(villageDTO);
-        }
-        return villageDTOsWithStatus;
+    public Page<VillageDTO> getVillagesByStatus(boolean status, Pageable page) {
+        Page<Village> villagesWithStatusPage = villageRepository.findByStatus(status, page);
+        List<VillageDTO> villageDTOsWithStatus = villagesWithStatusPage.getContent()
+                .stream()
+                .map(village -> modelMapper.map(village, VillageDTO.class))
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(villageDTOsWithStatus, page, villagesWithStatusPage.getTotalElements());
     }
 
     public void increaseApprovedResponsesCount(Long villageId){

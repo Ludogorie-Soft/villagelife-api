@@ -14,6 +14,8 @@ import org.apache.tika.io.IOUtils;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -176,19 +178,22 @@ public class VillageImageService {
 
         return villageDTOsWithImages;
     }
-    public List<VillageDTO> getApprovedVillageDTOsWithImages(int pageNumber, int elementsCount) {
-        List<VillageDTO> villageDTOsWithImages = new ArrayList<>();
+    public Page<VillageDTO> getApprovedVillageDTOsWithImages(int pageNumber, int elementsCount) {
         Pageable page = PageRequest.of(pageNumber, elementsCount);
-        List<VillageDTO> allVillageDTOs = villageService.getVillagesByStatus(true, page);
+        Page<VillageDTO> allVillageDTOs = villageService.getVillagesByStatus(true, page);
 
-        for (VillageDTO village : allVillageDTOs) {
-            List<String> images = getAllImagesForVillageByStatusAndDate(village.getId(), true, null);
-            village.setImages(images);
-            villageDTOsWithImages.add(village);
-        }
+        List<VillageDTO> villageDTOsWithImages = allVillageDTOs.getContent()
+                .stream()
+                .map(village -> {
+                    List<String> images = getAllImagesForVillageByStatusAndDate(village.getId(), true, null);
+                    village.setImages(images);
+                    return village;
+                })
+                .collect(Collectors.toList());
 
-        return villageDTOsWithImages;
+        return new PageImpl<>(villageDTOsWithImages, page, allVillageDTOs.getTotalElements());
     }
+
 
     public void updateVillageImagesStatus(Long id, boolean status, String localDateTime) {
         List<VillageImage> villageImages = villageImageRepository.findByVillageIdAndVillageStatusAndDateUpload(id, status, localDateTime);

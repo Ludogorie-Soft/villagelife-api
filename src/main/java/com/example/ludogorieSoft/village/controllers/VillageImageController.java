@@ -40,12 +40,17 @@ public class VillageImageController {
     }
     @GetMapping("/approved/{page}/{elements}")
     public ResponseEntity<List<VillageDTO>> getAllApprovedVillageDTOsWithImages(@PathVariable("page") int page, @PathVariable("elements") int elements) {
-        List<VillageDTO> villageDTOS = villageImageService.getApprovedVillageDTOsWithImages(page, elements);
+        List<VillageDTO> villageDTOS = villageImageService.getApprovedVillageDTOsWithImages(page, elements).getContent();
         if (!villageDTOS.isEmpty()) {
             return new ResponseEntity<>(villageDTOS, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+    @GetMapping("/approved/pagesCount/{page}/{elements}")
+    public ResponseEntity<Integer> getAllApprovedVillageDTOsWithImagesPageCount(@PathVariable("page") int page, @PathVariable("elements") int elements) {
+        int pagesCount = villageImageService.getApprovedVillageDTOsWithImages(page, elements).getTotalPages();
+        return new ResponseEntity<>(Math.max(pagesCount, 0), HttpStatus.OK);
     }
 
 

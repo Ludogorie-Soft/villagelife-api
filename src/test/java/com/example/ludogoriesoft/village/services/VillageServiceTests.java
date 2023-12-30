@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 
 import org.mockito.*;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageRequest;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -67,11 +68,11 @@ class VillageServiceTests {
 
         VillageDTO villageDTO2 = new VillageDTO();
         villageDTO2.setName("Village2");
-        when(villageRepository.findByNameContainingIgnoreCaseOrderByRegionNameAsc("Village")).thenReturn(mockVillages);
+        when(villageRepository.findByNameContainingIgnoreCaseOrderByRegionNameAsc("Village", PageRequest.of(0, 6))).thenReturn(mockVillages);
         when(modelMapper.map(village1, VillageDTO.class)).thenReturn(villageDTO1);
         when(modelMapper.map(village2, VillageDTO.class)).thenReturn(villageDTO2);
 
-        List<VillageDTO> result = villageService.getAllSearchVillages("Village");
+        List<VillageDTO> result = villageService.getAllSearchVillages("Village", 0, 6);
 
         assertNotNull(result);
         assertEquals(2, result.size());
@@ -105,11 +106,11 @@ class VillageServiceTests {
         when(modelMapper.map(village1, VillageDTO.class)).thenReturn(villageDTO1);
         when(modelMapper.map(village2, VillageDTO.class)).thenReturn(villageDTO2);
 
-        when(villageRepository.findByRegionName("Region1")).thenReturn(mockVillages);
+        when(villageRepository.findByRegionName("Region1", PageRequest.of(0, 6))).thenReturn(mockVillages);
 
-        List<VillageDTO> result = villageService.getAllSearchVillagesByRegionName("Region1");
+        List<VillageDTO> result = villageService.getAllSearchVillagesByRegionName("Region1", 0, 6);
 
-        verify(villageRepository).findByRegionName("Region1");
+        verify(villageRepository).findByRegionName("Region1", PageRequest.of(0, 6));
 
         assertNotNull(result);
         assertEquals(2, result.size());
@@ -131,7 +132,7 @@ class VillageServiceTests {
 
         List<Village> mockVillages = Arrays.asList(village1, village2);
 
-        when(villageRepository.findByNameContainingIgnoreCaseAndRegionName("Region1", "Village1"))
+        when(villageRepository.findByNameContainingIgnoreCaseAndRegionName("Region1", "Village1", PageRequest.of(0, 6)))
                 .thenReturn(mockVillages);
 
         VillageDTO villageDTO1 = new VillageDTO();
@@ -143,9 +144,9 @@ class VillageServiceTests {
         when(modelMapper.map(village1, VillageDTO.class)).thenReturn(villageDTO1);
         when(modelMapper.map(village2, VillageDTO.class)).thenReturn(villageDTO2);
 
-        List<VillageDTO> result = villageService.getAllSearchVillagesByNameAndRegionName("Region1", "Village1");
+        List<VillageDTO> result = villageService.getAllSearchVillagesByNameAndRegionName("Region1", "Village1", 0, 6);
 
-        verify(villageRepository).findByNameContainingIgnoreCaseAndRegionName("Region1", "Village1");
+        verify(villageRepository).findByNameContainingIgnoreCaseAndRegionName("Region1", "Village1", PageRequest.of(0, 6));
 
         assertNotNull(result);
         assertEquals(2, result.size());
@@ -157,11 +158,11 @@ class VillageServiceTests {
     @Test
     void testGetAllSearchVillagesByRegionNameNoVillagesFound() {
 
-        when(villageRepository.findByRegionName("NonExistentRegion")).thenReturn(Collections.emptyList());
+        when(villageRepository.findByRegionName("NonExistentRegion", PageRequest.of(0, 6))).thenReturn(Collections.emptyList());
 
-        List<VillageDTO> result = villageService.getAllSearchVillagesByRegionName("NonExistentRegion");
+        List<VillageDTO> result = villageService.getAllSearchVillagesByRegionName("NonExistentRegion", 0, 6);
 
-        verify(villageRepository).findByRegionName("NonExistentRegion");
+        verify(villageRepository).findByRegionName("NonExistentRegion", PageRequest.of(0, 6));
 
         assertNotNull(result);
         Assertions.assertTrue(result.isEmpty());
@@ -169,12 +170,12 @@ class VillageServiceTests {
 
     @Test
     void testGetAllSearchVillagesByNameAndRegionNameNoVillagesFound() {
-        when(villageRepository.findByNameContainingIgnoreCaseAndRegionName("Region1", "NonExistentVillage"))
+        when(villageRepository.findByNameContainingIgnoreCaseAndRegionName("Region1", "NonExistentVillage", PageRequest.of(0, 6)))
                 .thenReturn(Collections.emptyList());
 
-        List<VillageDTO> result = villageService.getAllSearchVillagesByNameAndRegionName("Region1", "NonExistentVillage");
+        List<VillageDTO> result = villageService.getAllSearchVillagesByNameAndRegionName("Region1", "NonExistentVillage", 0, 6);
 
-        verify(villageRepository).findByNameContainingIgnoreCaseAndRegionName("Region1", "NonExistentVillage");
+        verify(villageRepository).findByNameContainingIgnoreCaseAndRegionName("Region1", "NonExistentVillage", PageRequest.of(0, 6));
 
         assertNotNull(result);
         Assertions.assertTrue(result.isEmpty());
@@ -1119,7 +1120,7 @@ class VillageServiceTests {
         villages.add(village1);
         villages.add(village2);
 
-        when(villageRepository.findAllApprovedVillages()).thenReturn(villages);
+        when(villageRepository.findAllApprovedVillages(PageRequest.of(0, 6))).thenReturn(villages);
 
         VillageDTO villageDTO1 = new VillageDTO();
         villageDTO1.setName("Village1");
@@ -1132,7 +1133,7 @@ class VillageServiceTests {
         when(modelMapper.map(village1, VillageDTO.class)).thenReturn(villageDTO1);
         when(modelMapper.map(village2, VillageDTO.class)).thenReturn(villageDTO2);
 
-        List<VillageDTO> approvedVillages = villageService.getAllApprovedVillages();
+        List<VillageDTO> approvedVillages = villageService.getAllApprovedVillages(0, 6);
 
         assertEquals("Village1", approvedVillages.get(0).getName());
     }
