@@ -3,6 +3,7 @@ package com.example.ludogorieSoft.village.controllers;
 import com.example.ludogorieSoft.village.dtos.VillageDTO;
 import com.example.ludogorieSoft.village.enums.Children;
 import com.example.ludogorieSoft.village.exeptions.handler.ApiExceptionHandler;
+import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.services.VillageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -14,6 +15,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -73,7 +76,7 @@ class FilterControllerIntegrationTest {
 
         when(villageSearchService.getAllVillages()).thenReturn(villageDTOList);
 
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter")
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/0")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -102,9 +105,9 @@ class FilterControllerIntegrationTest {
 
         String name = "Example Name";
 
-        when(villageSearchService.getAllSearchVillages(name, 0, 6)).thenReturn(villageDTOList);
+        when(villageSearchService.getAllSearchVillages(name, 0, 6)).thenReturn(new PageImpl<>(villageDTOList, PageRequest.of(0, 6), villageDTOList.size()));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/byName")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/byName/0")
                         .param("name", name)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -136,9 +139,9 @@ class FilterControllerIntegrationTest {
 
         String region = "Example Region";
 
-        when(villageSearchService.getAllSearchVillagesByRegionName(region, 0, 6)).thenReturn(villageDTOList);
+        when(villageSearchService.getAllSearchVillagesByRegionName(region, 0, 6)).thenReturn(new PageImpl<>(villageDTOList, PageRequest.of(0, 6), villageDTOList.size()));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/byRegion")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/byRegion/0")
                         .param("region", region)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -171,9 +174,9 @@ class FilterControllerIntegrationTest {
         String region = "Example Region";
         String keyword = "Example Keyword";
 
-        when(villageSearchService.getAllSearchVillagesByNameAndRegionName(region, keyword, 0, 6)).thenReturn(villageDTOList);
+        when(villageSearchService.getAllSearchVillagesByNameAndRegionName(region, keyword, 0, 6)).thenReturn(new PageImpl<>(villageDTOList, PageRequest.of(0, 6), villageDTOList.size()));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/searchAll")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/searchAll/0")
                         .param("region", region)
                         .param("keyword", keyword)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -209,10 +212,10 @@ class FilterControllerIntegrationTest {
         List<String> livingConditionDTOS = Arrays.asList("condition1", "condition2");
         String children = "FROM_21_TO_50";
 
-        when(villageSearchService.getSearchVillages(objectAroundVillageDTOS, livingConditionDTOS, Children.FROM_21_TO_50))
-                .thenReturn(villageDTOList);
+        when(villageSearchService.getSearchVillages(objectAroundVillageDTOS, livingConditionDTOS, Children.FROM_21_TO_50, 0, 6))
+                .thenReturn(new PageImpl<>(villageDTOList, PageRequest.of(0, 6), villageDTOList.size()));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/searchVillages")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/searchVillages/0")
                         .param("objectAroundVillageDTOS", "object1", "object2")
                         .param("livingConditionDTOS", "condition1", "condition2")
                         .param("children", children)
@@ -245,12 +248,12 @@ class FilterControllerIntegrationTest {
 
         List<VillageDTO> villageDTOList = Arrays.asList(villageDTO1, villageDTO2);
         List<String> livingConditionDTOS = Arrays.asList("condition1", "condition2");
-        String children = Children.FROM_21_TO_50.name(); // Use the enum name here
+        String children = Children.FROM_21_TO_50.name();
 
-        when(villageSearchService.getSearchVillagesByLivingConditionAndChildren(livingConditionDTOS, Children.FROM_21_TO_50))
-                .thenReturn(villageDTOList);
+        when(villageSearchService.getSearchVillagesByLivingConditionAndChildren(livingConditionDTOS, Children.FROM_21_TO_50, 0, 6))
+                .thenReturn(new PageImpl<>(villageDTOList, PageRequest.of(0, 6), villageDTOList.size()));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/searchVillagesByLivingConditionAndChildren")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/searchVillagesByLivingConditionAndChildren/0")
                         .param("livingConditionDTOS", "condition1", "condition2")
                         .param("children", children)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -281,12 +284,12 @@ class FilterControllerIntegrationTest {
 
         List<VillageDTO> villageDTOList = Arrays.asList(villageDTO1, villageDTO2);
         List<String> objectAroundVillageDTOS = Arrays.asList("object1", "object2");
-        String children = Children.FROM_21_TO_50.name(); // Use the enum name here
+        String children = Children.FROM_21_TO_50.name();
 
-        when(villageSearchService.getSearchVillagesByObjectAndChildren(objectAroundVillageDTOS, Children.FROM_21_TO_50))
-                .thenReturn(villageDTOList);
+        when(villageSearchService.getSearchVillagesByObjectAndChildren(objectAroundVillageDTOS, Children.FROM_21_TO_50, 0, 6))
+                .thenReturn(new PageImpl<>(villageDTOList, PageRequest.of(0, 6), villageDTOList.size()));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/searchVillagesByObjectAndChildren")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/searchVillagesByObjectAndChildren/0")
                         .param("objectAroundVillageDTOS", "object1", "object2")
                         .param("children", children)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -320,10 +323,10 @@ class FilterControllerIntegrationTest {
         List<String> objectAroundVillageDTOS = Arrays.asList("object1", "object2");
         List<String> livingConditionDTOS = Arrays.asList("condition1", "condition2");
 
-        when(villageSearchService.getSearchVillagesByObjectAndLivingCondition(objectAroundVillageDTOS, livingConditionDTOS))
-                .thenReturn(villageDTOList);
+        when(villageSearchService.getSearchVillagesByObjectAndLivingCondition(objectAroundVillageDTOS, livingConditionDTOS, 0, 6))
+                .thenReturn(new PageImpl<>(villageDTOList, PageRequest.of(0, 6), villageDTOList.size()));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/searchVillagesByObjectAndLivingCondition")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/searchVillagesByObjectAndLivingCondition/0")
                         .param("objectAroundVillageDTOS", "object1", "object2")
                         .param("livingConditionDTOS", "condition1", "condition2")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -355,10 +358,10 @@ class FilterControllerIntegrationTest {
         List<VillageDTO> villageDTOList = Arrays.asList(villageDTO1, villageDTO2);
         String children = "FROM_21_TO_50";
 
-        when(villageSearchService.getSearchVillagesByChildrenCount(Children.FROM_21_TO_50))
-                .thenReturn(villageDTOList);
+        when(villageSearchService.getSearchVillagesByChildrenCount(Children.FROM_21_TO_50, 0, 6))
+                .thenReturn(new PageImpl<>(villageDTOList, PageRequest.of(0, 6), villageDTOList.size()));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/searchVillagesByChildrenCount")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/searchVillagesByChildrenCount/0")
                         .param("children", children)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -389,10 +392,10 @@ class FilterControllerIntegrationTest {
         List<VillageDTO> villageDTOList = Arrays.asList(villageDTO1, villageDTO2);
         List<String> objectAroundVillageDTOS = Arrays.asList("object1", "object2");
 
-        when(villageSearchService.getSearchVillagesByObject(objectAroundVillageDTOS))
-                .thenReturn(villageDTOList);
+        when(villageSearchService.getSearchVillagesByObject(objectAroundVillageDTOS, 0, 6))
+                .thenReturn(new PageImpl<>(villageDTOList, PageRequest.of(0, 6), villageDTOList.size()));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/searchVillagesByObject")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/searchVillagesByObject/0")
                         .param("objectAroundVillageDTOS", "object1", "object2")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -423,10 +426,10 @@ class FilterControllerIntegrationTest {
         List<VillageDTO> villageDTOList = Arrays.asList(villageDTO1, villageDTO2);
         List<String> livingConditionDTOS = Arrays.asList("condition1", "condition2");
 
-        when(villageSearchService.getSearchVillagesByLivingCondition(livingConditionDTOS))
-                .thenReturn(villageDTOList);
+        when(villageSearchService.getSearchVillagesByLivingCondition(livingConditionDTOS, 0, 6))
+                .thenReturn(new PageImpl<>(villageDTOList, PageRequest.of(0, 6), villageDTOList.size()));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/searchVillagesByLivingCondition")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/searchVillagesByLivingCondition/0")
                         .param("livingConditionDTOS", "condition1", "condition2")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -445,7 +448,7 @@ class FilterControllerIntegrationTest {
     void testGetAllApprovedVillagesNoVillages() throws Exception {
         when(villageSearchService.getAllVillages()).thenReturn(Collections.emptyList());
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/0")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json("[]"));
@@ -454,9 +457,9 @@ class FilterControllerIntegrationTest {
     @Test
     void testGetVillageByNameVillageNotFound() throws Exception {
         String name = "Nonexistent Village";
-        when(villageSearchService.getAllSearchVillages(name, 0, 6)).thenReturn(Collections.emptyList());
+        when(villageSearchService.getAllSearchVillages(name, 0, 6)).thenReturn(new PageImpl<>(Collections.emptyList()));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/byName")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/byName/0")
                         .param("name", name)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -466,9 +469,9 @@ class FilterControllerIntegrationTest {
     @Test
     void testGetVillageByRegionRegionNotFound() throws Exception {
         String region = "Nonexistent Region";
-        when(villageSearchService.getAllSearchVillagesByRegionName(region, 0, 6)).thenReturn(Collections.emptyList());
+        when(villageSearchService.getAllSearchVillagesByRegionName(region, 0, 6)).thenReturn(new PageImpl<>(Collections.emptyList()));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/byRegion")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/byRegion/0")
                         .param("region", region)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -482,9 +485,9 @@ class FilterControllerIntegrationTest {
             "'Nonexistent Region','Existing Village'"
     })
     void testGetVillageByNameAndRegion(String region, String keyword) throws Exception {
-        when(villageSearchService.getAllSearchVillagesByNameAndRegionName(region, keyword, 0, 6)).thenReturn(Collections.emptyList());
+        when(villageSearchService.getAllSearchVillagesByNameAndRegionName(region, keyword, 0, 6)).thenReturn(new PageImpl<>(Collections.emptyList()));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/searchAll")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/searchAll/0")
                         .param("region", region)
                         .param("keyword", keyword)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -494,7 +497,7 @@ class FilterControllerIntegrationTest {
 
     @Test
     void testSearchVillagesByObjectAndLivingConditionNoData() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/searchVillagesByObjectAndLivingCondition")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/searchVillagesByObjectAndLivingCondition/0")
                         .param("objectAroundVillageDTOS", "")
                         .param("livingConditionDTOS", "")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -515,7 +518,7 @@ class FilterControllerIntegrationTest {
 
     @Test
     void testSearchVillagesByLivingConditionNoLivingConditions() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/searchVillagesByLivingCondition")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/searchVillagesByLivingCondition/0")
                         .param("livingConditionDTOS", "")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())

@@ -8,6 +8,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -47,7 +51,7 @@ class FilterControllerTest {
         village2.setName("Village 2");
         expectedVillages.add(village2);
 
-        when(villageSearchService.getAllSearchVillages(name, 0, 6)).thenReturn(expectedVillages);
+        when(villageSearchService.getAllSearchVillages(name, 0, 6)).thenReturn(new PageImpl<>(expectedVillages, PageRequest.of(0, 6), expectedVillages.size()));
 
         ResponseEntity<List<VillageDTO>> response = filterController.getVillageByName( 0, name);
 
@@ -77,7 +81,7 @@ class FilterControllerTest {
         village2.setName("Village 2");
         expectedVillages.add(village2);
 
-        when(villageSearchService.getAllSearchVillagesByRegionName(region, 0, 6)).thenReturn(expectedVillages);
+        when(villageSearchService.getAllSearchVillagesByRegionName(region, 0, 6)).thenReturn(new PageImpl<>(expectedVillages, PageRequest.of(0, 6), expectedVillages.size()));
 
         ResponseEntity<List<VillageDTO>> response = filterController.getVillageByRegion(0, region);
 
@@ -110,7 +114,7 @@ class FilterControllerTest {
         village2.setName("Village 2");
         expectedVillages.add(village2);
 
-        when(villageSearchService.getAllSearchVillagesByNameAndRegionName(region, keyword, 0, 6)).thenReturn(expectedVillages);
+        when(villageSearchService.getAllSearchVillagesByNameAndRegionName(region, keyword, 0, 6)).thenReturn(new PageImpl<>(expectedVillages, PageRequest.of(0, 6), expectedVillages.size()));
 
         ResponseEntity<List<VillageDTO>> responseEntity = filterController.getVillageByNameAndRegion(0, region, keyword, sort);
 
@@ -142,7 +146,7 @@ class FilterControllerTest {
         village2.setName("Village 2");
         expectedVillages.add(village2);
 
-        when(villageSearchService.getAllSearchVillagesByNameAndRegionName(region, keyword, 0, 6)).thenReturn(expectedVillages);
+        when(villageSearchService.getAllSearchVillagesByNameAndRegionName(region, keyword, 0, 6)).thenReturn(new PageImpl<>(expectedVillages, PageRequest.of(0, 6), expectedVillages.size()));
 
         ResponseEntity<List<VillageDTO>> responseEntity = filterController.getVillageByNameAndRegion(0, region, keyword, sort);
 
@@ -170,30 +174,32 @@ class FilterControllerTest {
         String children = "BELOW_10";
         String sort = "nameAsc";
 
-        List<VillageDTO> expectedVillages = new ArrayList<>();
+        List<VillageDTO> expectedVillagesList = new ArrayList<>();
         VillageDTO village1 = new VillageDTO();
         village1.setId(1L);
         village1.setName("Village 1");
-        expectedVillages.add(village1);
+        expectedVillagesList.add(village1);
 
         VillageDTO village2 = new VillageDTO();
         village2.setId(2L);
         village2.setName("Village 2");
-        expectedVillages.add(village2);
+        expectedVillagesList.add(village2);
 
-        when(villageSearchService.getSearchVillages(objectAroundVillageDTOS, livingConditionDTOS, Children.BELOW_10)).thenReturn(expectedVillages);
+        Pageable page = PageRequest.of(0, 6);
+        Page<VillageDTO> expectedVillagesPage = new PageImpl<>(expectedVillagesList, page, expectedVillagesList.size());
+        when(villageSearchService.getSearchVillages(objectAroundVillageDTOS, livingConditionDTOS, Children.BELOW_10, 0, 6)).thenReturn(expectedVillagesPage);
 
-        ResponseEntity<List<VillageDTO>> response = filterController.searchVillagesByCriteria(objectAroundVillageDTOS, livingConditionDTOS, children, sort);
+        ResponseEntity<List<VillageDTO>> response = filterController.searchVillagesByCriteria(0, objectAroundVillageDTOS, livingConditionDTOS, children, sort);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
         List<VillageDTO> actualVillages = response.getBody();
         assert actualVillages != null;
-        assertEquals(expectedVillages.size(), actualVillages.size());
-        assertEquals(expectedVillages.get(0).getId(), actualVillages.get(0).getId());
-        assertEquals(expectedVillages.get(0).getName(), actualVillages.get(0).getName());
-        assertEquals(expectedVillages.get(1).getId(), actualVillages.get(1).getId());
-        assertEquals(expectedVillages.get(1).getName(), actualVillages.get(1).getName());
+        assertEquals(expectedVillagesList, actualVillages);
+        assertEquals(expectedVillagesList.get(0).getId(), actualVillages.get(0).getId());
+        assertEquals(expectedVillagesList.get(0).getName(), actualVillages.get(0).getName());
+        assertEquals(expectedVillagesList.get(1).getId(), actualVillages.get(1).getId());
+        assertEquals(expectedVillagesList.get(1).getName(), actualVillages.get(1).getName());
     }
 
 
@@ -221,9 +227,10 @@ class FilterControllerTest {
         village2.setName("Village 2");
         expectedVillages.add(village2);
 
-        when(villageSearchService.getSearchVillages(objectAroundVillageDTOS, livingConditionDTOS, Children.BELOW_10)).thenReturn(expectedVillages);
+        Pageable page = PageRequest.of(0, 6);
+        when(villageSearchService.getSearchVillages(objectAroundVillageDTOS, livingConditionDTOS, Children.BELOW_10, 0, 6)).thenReturn(new PageImpl<>(expectedVillages, page, expectedVillages.size()));
 
-        ResponseEntity<List<VillageDTO>> response = filterController.searchVillagesByCriteria(objectAroundVillageDTOS, livingConditionDTOS, children, sort);
+        ResponseEntity<List<VillageDTO>> response = filterController.searchVillagesByCriteria(0, objectAroundVillageDTOS, livingConditionDTOS, children, sort);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
@@ -255,9 +262,10 @@ class FilterControllerTest {
         village2.setName("Village 2");
         expectedVillages.add(village2);
 
-        when(villageSearchService.getSearchVillagesByLivingConditionAndChildren(livingConditionDTOS,Children.BELOW_10)).thenReturn(expectedVillages);
+        Pageable page = PageRequest.of(0, 6);
+        when(villageSearchService.getSearchVillagesByLivingConditionAndChildren(livingConditionDTOS,Children.BELOW_10, 0, 6)).thenReturn(new PageImpl<>(expectedVillages, page, expectedVillages.size()));
 
-        ResponseEntity<List<VillageDTO>> response = filterController.searchVillagesByLivingConditionAndChildren(livingConditionDTOS, children);
+        ResponseEntity<List<VillageDTO>> response = filterController.searchVillagesByLivingConditionAndChildren(0, livingConditionDTOS, children);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
@@ -289,9 +297,10 @@ class FilterControllerTest {
         village2.setName("Village 2");
         expectedVillages.add(village2);
 
-        when(villageSearchService.getSearchVillagesByObjectAndChildren(objectAroundVillageDTOS, Children.BELOW_10)).thenReturn(expectedVillages);
+        Pageable page = PageRequest.of(0, 6);
+        when(villageSearchService.getSearchVillagesByObjectAndChildren(objectAroundVillageDTOS, Children.BELOW_10, 0, 6)).thenReturn(new PageImpl<>(expectedVillages, page, expectedVillages.size()));
 
-        ResponseEntity<List<VillageDTO>> response = filterController.searchVillagesByObjectAndChildren(objectAroundVillageDTOS, children);
+        ResponseEntity<List<VillageDTO>> response = filterController.searchVillagesByObjectAndChildren(0, objectAroundVillageDTOS, children);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
@@ -325,9 +334,10 @@ class FilterControllerTest {
         village2.setName("Village 2");
         expectedVillages.add(village2);
 
-        when(villageSearchService.getSearchVillagesByObjectAndLivingCondition(objectAroundVillageDTOS, livingConditionDTOS)).thenReturn(expectedVillages);
+        Pageable page = PageRequest.of(0, 6);
+        when(villageSearchService.getSearchVillagesByObjectAndLivingCondition(objectAroundVillageDTOS, livingConditionDTOS, 0, 6)).thenReturn(new PageImpl<>(expectedVillages, page, expectedVillages.size()));
 
-        ResponseEntity<List<VillageDTO>> response = filterController.searchVillagesByObjectAndLivingCondition(objectAroundVillageDTOS, livingConditionDTOS);
+        ResponseEntity<List<VillageDTO>> response = filterController.searchVillagesByObjectAndLivingCondition(0, objectAroundVillageDTOS, livingConditionDTOS);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
@@ -355,9 +365,10 @@ class FilterControllerTest {
         village2.setName("Village 2");
         expectedVillages.add(village2);
 
-        when(villageSearchService.getSearchVillagesByChildrenCount(Children.OVER_50)).thenReturn(expectedVillages);
+        Pageable page = PageRequest.of(0, 6);
+        when(villageSearchService.getSearchVillagesByChildrenCount(Children.OVER_50, 0, 6)).thenReturn(new PageImpl<>(expectedVillages, page, expectedVillages.size()));
 
-        ResponseEntity<List<VillageDTO>> response = filterController.searchVillagesByChildrenCount(children);
+        ResponseEntity<List<VillageDTO>> response = filterController.searchVillagesByChildrenCount(0, children);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
@@ -387,9 +398,10 @@ class FilterControllerTest {
         village2.setName("Village 2");
         expectedVillages.add(village2);
 
-        when(villageSearchService.getSearchVillagesByObject(objectAroundVillageDTOS)).thenReturn(expectedVillages);
+        Pageable page = PageRequest.of(0, 6);
+        when(villageSearchService.getSearchVillagesByObject(objectAroundVillageDTOS, 0, 6)).thenReturn(new PageImpl<>(expectedVillages, page, expectedVillages.size()));
 
-        ResponseEntity<List<VillageDTO>> response = filterController.searchVillagesByObject(objectAroundVillageDTOS);
+        ResponseEntity<List<VillageDTO>> response = filterController.searchVillagesByObject(0, objectAroundVillageDTOS);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
@@ -419,9 +431,10 @@ class FilterControllerTest {
         village2.setName("Village 2");
         expectedVillages.add(village2);
 
-        when(villageSearchService.getSearchVillagesByLivingCondition(livingConditionDTOS)).thenReturn(expectedVillages);
+        Pageable page = PageRequest.of(0, 6);
+        when(villageSearchService.getSearchVillagesByLivingCondition(livingConditionDTOS, 0, 6)).thenReturn(new PageImpl<>(expectedVillages, page, expectedVillages.size()));
 
-        ResponseEntity<List<VillageDTO>> response = filterController.searchVillagesByLivingCondition(livingConditionDTOS);
+        ResponseEntity<List<VillageDTO>> response = filterController.searchVillagesByLivingCondition(0, livingConditionDTOS);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
@@ -449,7 +462,8 @@ class FilterControllerTest {
         village2.setName("Village 2");
         expectedVillages.add(village2);
 
-        when(villageSearchService.getAllApprovedVillages(0, 6)).thenReturn(expectedVillages);
+        Pageable page = PageRequest.of(0, 6);
+        when(villageSearchService.getAllApprovedVillages(0, 6)).thenReturn(new PageImpl<>(expectedVillages, page, expectedVillages.size()));
 
         ResponseEntity<List<VillageDTO>> response = filterController.getAllApprovedVillages(0);
 

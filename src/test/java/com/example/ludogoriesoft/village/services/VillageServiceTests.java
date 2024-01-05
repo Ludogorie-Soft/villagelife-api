@@ -15,7 +15,10 @@ import org.junit.jupiter.api.Test;
 
 import org.mockito.*;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -68,16 +71,17 @@ class VillageServiceTests {
 
         VillageDTO villageDTO2 = new VillageDTO();
         villageDTO2.setName("Village2");
-        when(villageRepository.findByNameContainingIgnoreCaseOrderByRegionNameAsc("Village", PageRequest.of(0, 6))).thenReturn(mockVillages);
+        Pageable page = PageRequest.of(0, 6);
+        when(villageRepository.findByNameContainingIgnoreCaseOrderByRegionNameAsc("Village", PageRequest.of(0, 6))).thenReturn(new PageImpl<>(mockVillages, page, mockVillages.size()));
         when(modelMapper.map(village1, VillageDTO.class)).thenReturn(villageDTO1);
         when(modelMapper.map(village2, VillageDTO.class)).thenReturn(villageDTO2);
 
-        List<VillageDTO> result = villageService.getAllSearchVillages("Village", 0, 6);
+        Page<VillageDTO> result = villageService.getAllSearchVillages("Village", 0, 6);
 
         assertNotNull(result);
-        assertEquals(2, result.size());
-        assertEquals("Village1", result.get(0).getName());
-        assertEquals("Village2", result.get(1).getName());
+        assertEquals(2, result.getTotalElements());
+        assertEquals("Village1", result.getContent().get(0).getName());
+        assertEquals("Village2", result.getContent().get(1).getName());
     }
 
 
@@ -106,16 +110,17 @@ class VillageServiceTests {
         when(modelMapper.map(village1, VillageDTO.class)).thenReturn(villageDTO1);
         when(modelMapper.map(village2, VillageDTO.class)).thenReturn(villageDTO2);
 
-        when(villageRepository.findByRegionName("Region1", PageRequest.of(0, 6))).thenReturn(mockVillages);
+        Pageable page = PageRequest.of(0, 6);
+        when(villageRepository.findByRegionName("Region1", page)).thenReturn(new PageImpl<>(mockVillages, page, mockVillages.size()));
 
-        List<VillageDTO> result = villageService.getAllSearchVillagesByRegionName("Region1", 0, 6);
+        Page<VillageDTO> result = villageService.getAllSearchVillagesByRegionName("Region1", 0, 6);
 
-        verify(villageRepository).findByRegionName("Region1", PageRequest.of(0, 6));
+        verify(villageRepository).findByRegionName("Region1", page);
 
         assertNotNull(result);
-        assertEquals(2, result.size());
-        assertEquals("Village1", result.get(0).getName());
-        assertEquals("Village2", result.get(1).getName());
+        assertEquals(2, result.getTotalElements());
+        assertEquals("Village1", result.getContent().get(0).getName());
+        assertEquals("Village2", result.getContent().get(1).getName());
     }
 
     @Test
@@ -132,8 +137,9 @@ class VillageServiceTests {
 
         List<Village> mockVillages = Arrays.asList(village1, village2);
 
-        when(villageRepository.findByNameContainingIgnoreCaseAndRegionName("Region1", "Village1", PageRequest.of(0, 6)))
-                .thenReturn(mockVillages);
+        Pageable page = PageRequest.of(0, 6);
+        when(villageRepository.findByNameContainingIgnoreCaseAndRegionName("Region1", "Village1", page))
+                .thenReturn(new PageImpl<>(mockVillages, page, mockVillages.size()));
 
         VillageDTO villageDTO1 = new VillageDTO();
         villageDTO1.setName("Village1");
@@ -144,23 +150,22 @@ class VillageServiceTests {
         when(modelMapper.map(village1, VillageDTO.class)).thenReturn(villageDTO1);
         when(modelMapper.map(village2, VillageDTO.class)).thenReturn(villageDTO2);
 
-        List<VillageDTO> result = villageService.getAllSearchVillagesByNameAndRegionName("Region1", "Village1", 0, 6);
+        Page<VillageDTO> result = villageService.getAllSearchVillagesByNameAndRegionName("Region1", "Village1", 0, 6);
 
         verify(villageRepository).findByNameContainingIgnoreCaseAndRegionName("Region1", "Village1", PageRequest.of(0, 6));
 
         assertNotNull(result);
-        assertEquals(2, result.size());
-        assertEquals("Village1", result.get(0).getName());
-        assertEquals("Village2", result.get(1).getName());
+        assertEquals(2, result.getTotalElements());
+        assertEquals("Village1", result.getContent().get(0).getName());
+        assertEquals("Village2", result.getContent().get(1).getName());
     }
 
 
     @Test
     void testGetAllSearchVillagesByRegionNameNoVillagesFound() {
+        when(villageRepository.findByRegionName("NonExistentRegion", PageRequest.of(0, 6))).thenReturn(new PageImpl<>(new ArrayList<>(), PageRequest.of(0, 6), 0));
 
-        when(villageRepository.findByRegionName("NonExistentRegion", PageRequest.of(0, 6))).thenReturn(Collections.emptyList());
-
-        List<VillageDTO> result = villageService.getAllSearchVillagesByRegionName("NonExistentRegion", 0, 6);
+        Page<VillageDTO> result = villageService.getAllSearchVillagesByRegionName("NonExistentRegion", 0, 6);
 
         verify(villageRepository).findByRegionName("NonExistentRegion", PageRequest.of(0, 6));
 
@@ -171,9 +176,9 @@ class VillageServiceTests {
     @Test
     void testGetAllSearchVillagesByNameAndRegionNameNoVillagesFound() {
         when(villageRepository.findByNameContainingIgnoreCaseAndRegionName("Region1", "NonExistentVillage", PageRequest.of(0, 6)))
-                .thenReturn(Collections.emptyList());
+                .thenReturn(new PageImpl<>(new ArrayList<>(), PageRequest.of(0, 6), 0));
 
-        List<VillageDTO> result = villageService.getAllSearchVillagesByNameAndRegionName("Region1", "NonExistentVillage", 0, 6);
+        Page<VillageDTO> result = villageService.getAllSearchVillagesByNameAndRegionName("Region1", "NonExistentVillage", 0, 6);
 
         verify(villageRepository).findByNameContainingIgnoreCaseAndRegionName("Region1", "NonExistentVillage", PageRequest.of(0, 6));
 
@@ -184,16 +189,16 @@ class VillageServiceTests {
 
     @Test
     void testGetSearchVillagesWhenNoVillagesFoundWithParamsNoVillagesFound() {
-
-        when(villageRepository.searchVillages(anyList(), anyList(), any(Children.class))).thenReturn(Collections.emptyList());
+        Page<Village> mockedPage = new PageImpl<>(Collections.emptyList());
+        when(villageRepository.searchVillages(anyList(), anyList(), any(Children.class), any())).thenReturn(mockedPage);
 
         List<String> objectAroundVillageDTOS = Arrays.asList("object1", "object2");
         List<String> livingConditionDTOS = Arrays.asList("condition1", "condition2");
         Children children = Children.FROM_21_TO_50;
 
-        List<VillageDTO> result = villageService.getSearchVillages(objectAroundVillageDTOS, livingConditionDTOS, children);
+        Page<VillageDTO> result = villageService.getSearchVillages(objectAroundVillageDTOS, livingConditionDTOS, children, 0, 6);
 
-        verify(villageRepository).searchVillages(objectAroundVillageDTOS, livingConditionDTOS, children);
+        verify(villageRepository).searchVillages(eq(objectAroundVillageDTOS), eq(livingConditionDTOS), eq(children), any());
 
         assertNotNull(result);
         Assertions.assertTrue(result.isEmpty());
@@ -201,12 +206,12 @@ class VillageServiceTests {
 
     @Test
     void testGetSearchVillagesWhenNoVillagesFoundWithEmptyParams() {
+        Page<Village> mockedPage = new PageImpl<>(Collections.emptyList());
+        when(villageRepository.searchVillages(anyList(), anyList(), any(Children.class), any())).thenReturn(mockedPage);
 
-        when(villageRepository.searchVillages(anyList(), anyList(), any(Children.class))).thenReturn(Collections.emptyList());
+        Page<VillageDTO> result = villageService.getSearchVillages(new ArrayList<>(), new ArrayList<>(), Children.OVER_50, 0, 6);
 
-        List<VillageDTO> result = villageService.getSearchVillages(new ArrayList<>(), new ArrayList<>(), Children.OVER_50);
-
-        verify(villageRepository).searchVillages(anyList(), anyList(), any(Children.class));
+        verify(villageRepository).searchVillages(anyList(), anyList(), any(Children.class), any());
 
         assertNotNull(result);
         Assertions.assertTrue(result.isEmpty());
@@ -215,14 +220,14 @@ class VillageServiceTests {
 
     @Test
     void testGetSearchVillagesByLivingConditionAndChildrenNoVillagesFound() {
-
-        when(villageRepository.searchVillagesByLivingConditionAndChildren(anyList(), any(Children.class))).thenReturn(Collections.emptyList());
+        Page<Village> mockedPage = new PageImpl<>(Collections.emptyList());
+        when(villageRepository.searchVillagesByLivingConditionAndChildren(anyList(), any(Children.class), any())).thenReturn(mockedPage);
 
         List<String> livingConditionDTOS = Arrays.asList("condition1", "condition2");
         Children children = Children.BELOW_10;
-        List<VillageDTO> result = villageService.getSearchVillagesByLivingConditionAndChildren(livingConditionDTOS, children);
+        Page<VillageDTO> result = villageService.getSearchVillagesByLivingConditionAndChildren(livingConditionDTOS, children, 0, 6);
 
-        verify(villageRepository).searchVillagesByLivingConditionAndChildren(livingConditionDTOS, children.getEnumValue());
+        verify(villageRepository).searchVillagesByLivingConditionAndChildren(eq(livingConditionDTOS), eq(children.getEnumValue()), any());
 
         assertNotNull(result);
         Assertions.assertTrue(result.isEmpty());
@@ -247,22 +252,23 @@ class VillageServiceTests {
         PopulationDTO populationDTO1 = new PopulationDTO();
         populationDTO1.setChildren(Children.FROM_21_TO_50);
         villageDTO1.setPopulations(Collections.singletonList(populationDTO1));
-
+        Pageable page = PageRequest.of(0, 6);
         when(villageRepository.searchVillagesByChildrenCount(
-                ArgumentMatchers.any(Children.class)
-        )).thenReturn(Arrays.asList(village1));
+                ArgumentMatchers.any(Children.class), ArgumentMatchers.eq(page)
+        )).thenReturn(new PageImpl<>(Arrays.asList(village1), page, 1));
+        when(villageService.villageToVillageDTO(village1)).thenReturn(villageDTO1);
 
         Children children = Children.FROM_21_TO_50;
 
-        List<VillageDTO> result = villageService.getSearchVillagesByChildrenCount(children);
+        Page<VillageDTO> result = villageService.getSearchVillagesByChildrenCount(children, 0, 6);
 
         Mockito.verify(villageRepository).searchVillagesByChildrenCount(
-                children.getEnumValue()
+                children.getEnumValue(), page
         );
 
-        assertEquals(1, result.size());
+        assertEquals(1, result.getTotalElements());
 
-        VillageDTO expectedDTO = result.get(0);
+        VillageDTO expectedDTO = result.getContent().get(0);
         assertEquals(villageDTO1.getId(), expectedDTO.getId());
         assertEquals(villageDTO1.getName(), expectedDTO.getName());
         assertEquals(villageDTO1.getRegion(), expectedDTO.getRegion());
@@ -359,7 +365,7 @@ class VillageServiceTests {
     void testConvertToPopulationDTO() {
         Children children = Children.OVER_50;
 
-        VillageService villageService = new VillageService(null, null, null, null);
+        VillageService villageService = new VillageService(null, new ModelMapper(), null, null);
         PopulationDTO populationDTO = villageService.convertToPopulationDTO(children);
 
         assertEquals(Children.OVER_50, populationDTO.getChildren());
@@ -400,7 +406,7 @@ class VillageServiceTests {
                         true, LocalDateTime.now(), LocalDateTime.now())
         ));villages.add(village2);
 
-        VillageService villageService = new VillageService(null, null, null, null);
+        VillageService villageService = new VillageService(null, new ModelMapper(), null, null);
         List<VillageDTO> villageDTOs = villageService.villageToVillageDTOWithoutObject(villages);
 
         assertEquals(2, villageDTOs.size());
@@ -459,23 +465,24 @@ class VillageServiceTests {
                         true, LocalDateTime.now(), LocalDateTime.now())
         ));
         villages.add(village2);
+        Pageable page = PageRequest.of(0, 6);
 
         VillageRepository mockRepository = mock(VillageRepository.class);
-        when(mockRepository.searchVillagesByLivingConditionAndChildren(livingConditions, children.getEnumValue())).thenReturn(villages);
+        when(mockRepository.searchVillagesByLivingConditionAndChildren(livingConditions, children.getEnumValue(), page)).thenReturn(new PageImpl<>(villages, page, villages.size()));
 
-        VillageService villageService = new VillageService(mockRepository, null, null, null);
-        List<VillageDTO> villageDTOs = villageService.getSearchVillagesByLivingConditionAndChildren(livingConditions, children);
+        VillageService villageService = new VillageService(mockRepository, new ModelMapper(), null, null);
+        Page<VillageDTO> villageDTOs = villageService.getSearchVillagesByLivingConditionAndChildren(livingConditions, children, 0, 6);
 
-        assertEquals(2, villageDTOs.size());
+        assertEquals(2, villageDTOs.getTotalElements());
 
-        VillageDTO dto1 = villageDTOs.get(0);
+        VillageDTO dto1 = villageDTOs.getContent().get(0);
         assertEquals(1L, dto1.getId());
         assertEquals("Village1", dto1.getName());
         assertEquals("Region1", dto1.getRegion());
         assertEquals(1, dto1.getLivingConditions().size());
         assertEquals(Children.FROM_21_TO_50, dto1.getPopulations().get(0).getChildren());
 
-        VillageDTO dto2 = villageDTOs.get(1);
+        VillageDTO dto2 = villageDTOs.getContent().get(1);
         assertEquals(2L, dto2.getId());
         assertEquals("Village2", dto2.getName());
         assertEquals("Region2", dto2.getRegion());
@@ -495,7 +502,7 @@ class VillageServiceTests {
         ov2.setObject(new ObjectAroundVillage(2L, "Type2"));
         objectVillages.add(ov2);
 
-        VillageService villageService = new VillageService(null, null, null, null);
+        VillageService villageService = new VillageService(null, new ModelMapper(), null, null);
         List<ObjectAroundVillageDTO> objectAroundVillageDTOs = villageService.convertToObjectAroundVillageDTOList(objectVillages);
 
         assertEquals(2, objectAroundVillageDTOs.size());
@@ -544,7 +551,7 @@ class VillageServiceTests {
         ));
         villages.add(village2);
 
-        VillageService villageService = new VillageService(null, null, null, null);
+        VillageService villageService = new VillageService(null, new ModelMapper(), null, null);
         List<VillageDTO> villageDTOs = villageService.villageToVillageDTOWithoutLivingCondition(villages);
 
         assertEquals(2, villageDTOs.size());
@@ -601,21 +608,21 @@ class VillageServiceTests {
         villages.add(village2);
 
         VillageRepository mockRepository = mock(VillageRepository.class);
-        when(mockRepository.searchVillagesByObjectAndChildren(anyList(), any(Children.class))).thenReturn(villages);
+        when(mockRepository.searchVillagesByObjectAndChildren(anyList(), any(Children.class), any())).thenReturn(new PageImpl<>(villages, PageRequest.of(0, 6), villages.size()));
 
-        VillageService villageService = new VillageService(mockRepository, null, null, null);
-        List<VillageDTO> villageDTOs = villageService.getSearchVillagesByObjectAndChildren(Collections.singletonList("Object1"), Children.OVER_50);
+        VillageService villageService = new VillageService(mockRepository, new ModelMapper(), null, null);
+        Page<VillageDTO> villageDTOs = villageService.getSearchVillagesByObjectAndChildren(Collections.singletonList("Object1"), Children.OVER_50, 0, 6);
 
-        assertEquals(2, villageDTOs.size());
+        assertEquals(2, villageDTOs.getTotalElements());
 
-        VillageDTO dto1 = villageDTOs.get(0);
+        VillageDTO dto1 = villageDTOs.getContent().get(0);
         assertEquals(1L, dto1.getId());
         assertEquals("Village1", dto1.getName());
         assertEquals("Region1", dto1.getRegion());
         assertEquals(1, dto1.getObject().size());
         assertEquals(Children.FROM_21_TO_50, dto1.getPopulations().get(0).getChildren());
 
-        VillageDTO dto2 = villageDTOs.get(1);
+        VillageDTO dto2 = villageDTOs.getContent().get(1);
         assertEquals(2L, dto2.getId());
         assertEquals("Village2", dto2.getName());
         assertEquals("Region2", dto2.getRegion());
@@ -658,7 +665,7 @@ class VillageServiceTests {
         village2.setVillageLivingConditions(List.of(villageLivingConditions2));
         villages.add(village2);
 
-        VillageService villageService = new VillageService(null, null, null, null);
+        VillageService villageService = new VillageService(null, new ModelMapper(), null, null);
         List<VillageDTO> villageDTOs = villageService.villageToVillageDTOWithoutChildren(villages);
 
         assertEquals(2, villageDTOs.size());
@@ -714,21 +721,22 @@ class VillageServiceTests {
         villages.add(village2);
 
         VillageRepository mockRepository = mock(VillageRepository.class);
-        when(mockRepository.searchVillagesByObjectAndLivingCondition(anyList(), anyList())).thenReturn(villages);
+        when(mockRepository.searchVillagesByObjectAndLivingCondition(anyList(), anyList(), any())).thenReturn(new PageImpl<>(villages));
 
-        VillageService villageService = new VillageService(mockRepository, null, null, null);
-        List<VillageDTO> villageDTOs = villageService.getSearchVillagesByObjectAndLivingCondition(Collections.singletonList("Object1"), Collections.singletonList("LivingCondition1"));
+        VillageService villageService = new VillageService(mockRepository, new ModelMapper(), null, null);
 
-        assertEquals(2, villageDTOs.size());
+        Page<VillageDTO> villageDTOs = villageService.getSearchVillagesByObjectAndLivingCondition(Collections.singletonList("Object1"), Collections.singletonList("LivingCondition1"), 0, 6);
 
-        VillageDTO dto1 = villageDTOs.get(0);
+        assertEquals(2, villageDTOs.getTotalElements());
+
+        VillageDTO dto1 = villageDTOs.getContent().get(0);
         assertEquals(1L, dto1.getId());
         assertEquals("Village1", dto1.getName());
         assertEquals("Region1", dto1.getRegion());
         assertEquals(1, dto1.getObject().size());
         assertEquals(1, dto1.getLivingConditions().size());
 
-        VillageDTO dto2 = villageDTOs.get(1);
+        VillageDTO dto2 = villageDTOs.getContent().get(1);
         assertEquals(2L, dto2.getId());
         assertEquals("Village2", dto2.getName());
         assertEquals("Region2", dto2.getRegion());
@@ -759,7 +767,7 @@ class VillageServiceTests {
         ));
         villages.add(village2);
 
-        VillageService villageService = new VillageService(null, null, null, null);
+        VillageService villageService = new VillageService(null, new ModelMapper(), null, null);
         List<VillageDTO> villageDTOs = villageService.villageToVillageDTOChildren(villages);
 
         assertEquals(2, villageDTOs.size());
@@ -803,7 +811,7 @@ class VillageServiceTests {
         village2.setObjectVillages(List.of(objectVillage2));
         villages.add(village2);
 
-        VillageService villageService = new VillageService(null, null, null, null);
+        VillageService villageService = new VillageService(null, new ModelMapper(), null, null);
         List<VillageDTO> villageDTOs = villageService.villageToVillageDTOObject(villages);
 
         assertEquals(2, villageDTOs.size());
@@ -847,20 +855,20 @@ class VillageServiceTests {
         villages.add(village2);
 
         VillageRepository mockRepository = mock(VillageRepository.class);
-        when(mockRepository.searchVillagesByObject(anyList())).thenReturn(villages);
+        when(mockRepository.searchVillagesByObject(anyList(), any())).thenReturn(new PageImpl<>(villages, PageRequest.of(0, 6), villages.size()));
 
-        VillageService villageService = new VillageService(mockRepository, null, null, null);
-        List<VillageDTO> villageDTOs = villageService.getSearchVillagesByObject(Collections.singletonList("Object1"));
+        VillageService villageService = new VillageService(mockRepository, new ModelMapper(), null, null);
+        Page<VillageDTO> villageDTOs = villageService.getSearchVillagesByObject(Collections.singletonList("Object1"), 0, 6);
 
-        assertEquals(2, villageDTOs.size());
+        assertEquals(2, villageDTOs.getTotalElements());
 
-        VillageDTO dto1 = villageDTOs.get(0);
+        VillageDTO dto1 = villageDTOs.getContent().get(0);
         assertEquals(1L, dto1.getId());
         assertEquals("Village1", dto1.getName());
         assertEquals("Region1", dto1.getRegion());
         assertEquals(1, dto1.getObject().size());
 
-        VillageDTO dto2 = villageDTOs.get(1);
+        VillageDTO dto2 = villageDTOs.getContent().get(1);
         assertEquals(2L, dto2.getId());
         assertEquals("Village2", dto2.getName());
         assertEquals("Region2", dto2.getRegion());
@@ -891,7 +899,7 @@ class VillageServiceTests {
         village2.setVillageLivingConditions(List.of(villageLivingConditions2));
         villages.add(village2);
 
-        VillageService villageService = new VillageService(null, null, null, null);
+        VillageService villageService = new VillageService(null, new ModelMapper(), null, null);
         List<VillageDTO> villageDTOs = villageService.villageToVillageDTOLivingCondition(villages);
 
         assertEquals(2, villageDTOs.size());
@@ -956,7 +964,7 @@ class VillageServiceTests {
 
         villages.add(village2);
 
-        VillageService villageService = new VillageService(null, null, null, null);
+        VillageService villageService = new VillageService(null, new ModelMapper(), null, null);
         List<VillageDTO> villageDTOs = villageService.convertToDTO(villages);
 
         assertEquals(2, villageDTOs.size());
@@ -1000,20 +1008,20 @@ class VillageServiceTests {
         villages.add(village2);
 
         VillageRepository mockRepository = mock(VillageRepository.class);
-        when(mockRepository.searchVillagesByLivingCondition(anyList())).thenReturn(villages);
+        when(mockRepository.searchVillagesByLivingCondition(anyList(), any())).thenReturn(new PageImpl<>(villages, PageRequest.of(0, 6), villages.size()));
 
-        VillageService villageService = new VillageService(mockRepository, null, null, null);
-        List<VillageDTO> villageDTOs = villageService.getSearchVillagesByLivingCondition(Collections.singletonList("LivingCondition1"));
+        VillageService villageService = new VillageService(mockRepository, new ModelMapper(), null, null);
+        Page<VillageDTO> villageDTOs = villageService.getSearchVillagesByLivingCondition(Collections.singletonList("LivingCondition1"), 0, 6);
 
-        assertEquals(2, villageDTOs.size());
+        assertEquals(2, villageDTOs.getTotalElements());
 
-        VillageDTO dto1 = villageDTOs.get(0);
+        VillageDTO dto1 = villageDTOs.getContent().get(0);
         assertEquals(1L, dto1.getId());
         assertEquals("Village1", dto1.getName());
         assertEquals("Region1", dto1.getRegion());
         assertEquals(1, dto1.getLivingConditions().size());
 
-        VillageDTO dto2 = villageDTOs.get(1);
+        VillageDTO dto2 = villageDTOs.getContent().get(1);
         assertEquals(2L, dto2.getId());
         assertEquals("Village2", dto2.getName());
         assertEquals("Region2", dto2.getRegion());
@@ -1049,18 +1057,18 @@ class VillageServiceTests {
         villages.add(village1);
 
         VillageRepository mockRepository = mock(VillageRepository.class);
-        when(mockRepository.searchVillages(anyList(), anyList(), any())).thenReturn(villages);
+        when(mockRepository.searchVillages(anyList(), anyList(), any(), any())).thenReturn(new PageImpl<>(villages, PageRequest.of(0, 6), villages.size()));
 
-        VillageService villageService = new VillageService(mockRepository, null, null, null);
-        List<VillageDTO> villageDTOs = villageService.getSearchVillages(
+        VillageService villageService = new VillageService(mockRepository, new ModelMapper(), null, null);
+        Page<VillageDTO> villageDTOs = villageService.getSearchVillages(
                 Collections.singletonList("Type1"),
                 Collections.singletonList("LivingCondition1"),
-                Children.FROM_21_TO_50
+                Children.FROM_21_TO_50, 0, 6
         );
 
-        assertEquals(1, villageDTOs.size());
+        assertEquals(1, villageDTOs.getTotalElements());
 
-        VillageDTO dto1 = villageDTOs.get(0);
+        VillageDTO dto1 = villageDTOs.getContent().get(0);
         assertEquals(1L, dto1.getId());
         assertEquals("Village1", dto1.getName());
         assertEquals("Region1", dto1.getRegion());
@@ -1120,7 +1128,8 @@ class VillageServiceTests {
         villages.add(village1);
         villages.add(village2);
 
-        when(villageRepository.findAllApprovedVillages(PageRequest.of(0, 6))).thenReturn(villages);
+        Page<Village> mockedPage = new PageImpl<>(villages, PageRequest.of(0, 6), villages.size());
+        when(villageRepository.findAllApprovedVillages(PageRequest.of(0, 6))).thenReturn(mockedPage);
 
         VillageDTO villageDTO1 = new VillageDTO();
         villageDTO1.setName("Village1");
@@ -1133,9 +1142,9 @@ class VillageServiceTests {
         when(modelMapper.map(village1, VillageDTO.class)).thenReturn(villageDTO1);
         when(modelMapper.map(village2, VillageDTO.class)).thenReturn(villageDTO2);
 
-        List<VillageDTO> approvedVillages = villageService.getAllApprovedVillages(0, 6);
+        Page<VillageDTO> approvedVillages = villageService.getAllApprovedVillages(0, 6);
 
-        assertEquals("Village1", approvedVillages.get(0).getName());
+        assertEquals("Village1", approvedVillages.getContent().get(0).getName());
     }
 
     @Test
