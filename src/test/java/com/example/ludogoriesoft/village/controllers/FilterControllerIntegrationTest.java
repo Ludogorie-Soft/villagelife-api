@@ -3,7 +3,6 @@ package com.example.ludogorieSoft.village.controllers;
 import com.example.ludogorieSoft.village.dtos.VillageDTO;
 import com.example.ludogorieSoft.village.enums.Children;
 import com.example.ludogorieSoft.village.exeptions.handler.ApiExceptionHandler;
-import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.services.VillageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;

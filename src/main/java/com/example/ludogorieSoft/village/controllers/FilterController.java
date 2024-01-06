@@ -22,12 +22,16 @@ public class FilterController {
 
     @GetMapping("/{page}")
     public ResponseEntity<List<VillageDTO>> getAllApprovedVillages(@PathVariable("page") int page) {
+        System.out.println("111111111111111111");
         List<VillageDTO> approvedVillages = villageSearchService.getAllApprovedVillages(page, 6).getContent();
+        System.out.println("222222222222222222");
         return ResponseEntity.ok(approvedVillages);
     }
     @GetMapping("/{page}/elementsCount")
     public ResponseEntity<Long> getAllApprovedVillagesElementsCount(@PathVariable("page") int page) {
+        System.out.println("33333333333333333");
         Long count = villageSearchService.getAllApprovedVillages(page, 6).getTotalElements();
+        System.out.println("444444444444444444");
         return ResponseEntity.ok(count);
     }
 
