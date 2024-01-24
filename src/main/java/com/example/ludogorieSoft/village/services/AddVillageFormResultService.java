@@ -45,18 +45,19 @@ public class AddVillageFormResultService {
         createObjectVillagesFromAddVillageFormResult(savedVillage.getId(), addVillageFormResult, timestamp);//ddd
         createVillagePopulationAssertionsFromAddVillageFormResult(savedVillage.getId(), addVillageFormResult, timestamp);
         createVillageLivingConditionFromAddVillageFormResult(savedVillage.getId(), addVillageFormResult, timestamp);
-        villageImageService.createImagePaths(addVillageFormResult.getImageBytes(), savedVillage.getId(), timestamp, false, userDTO);
+        //villageImageService.createImagePaths(addVillageFormResult.getImageBytes(), savedVillage.getId(), timestamp, false, userDTO);
+        villageImageService.createImagePaths2222(addVillageFormResult.getImagesUUID(),savedVillage.getId(), timestamp, false, userDTO);
         return addVillageFormResult;
     }
 
     public void checkIsImagesHasUserConsent(AddVillageFormResult addVillageFormResult) {
 
-        if (!addVillageFormResult.getImageBytes().isEmpty()
-                && (addVillageFormResult.getUserDTO().getFullName().isEmpty()
-                || addVillageFormResult.getUserDTO().getEmail().isEmpty()
-                || !addVillageFormResult.getUserDTO().getConsent())) {
-            throw new NoConsentException("При добавяне на снимки трябва да се съгласите с условията!");
-        }
+//        if (!addVillageFormResult.getImageBytes().isEmpty()
+//                && (addVillageFormResult.getUserDTO().getFullName().isEmpty()
+//                || addVillageFormResult.getUserDTO().getEmail().isEmpty()
+//                || !addVillageFormResult.getUserDTO().getConsent())) {
+//            throw new NoConsentException("При добавяне на снимки трябва да се съгласите с условията!");
+//        }
 
     }
 

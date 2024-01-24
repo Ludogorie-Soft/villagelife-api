@@ -4,6 +4,7 @@ import com.example.ludogorieSoft.village.dtos.UserDTO;
 import com.example.ludogorieSoft.village.dtos.VillageDTO;
 import com.example.ludogorieSoft.village.dtos.VillageImageDTO;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
+import com.example.ludogorieSoft.village.model.User;
 import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.model.VillageImage;
 import com.example.ludogorieSoft.village.repositories.VillageImageRepository;
@@ -32,6 +33,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.util.stream.Collectors.toList;
+
 @Service
 @AllArgsConstructor
 public class VillageImageService {
@@ -57,6 +60,14 @@ public class VillageImageService {
             }
         }
         return imagePaths;
+    }
+
+    public void createImagePaths2222(List<String> imageUUID, long villageId, LocalDateTime localDateTime, boolean status, UserDTO userDTO){
+        List<String> imagePaths = new ArrayList<>();
+        for (String image : imageUUID) {
+            createVillageImageDTO(villageId, image, localDateTime, status, userDTO);
+
+        }
     }
 
     public String processImage(byte[] image) {
@@ -125,7 +136,7 @@ public class VillageImageService {
     }
 
     public List<String> getAllImagesForVillageByStatusAndDate(Long villageId, boolean status, String date) {
-        List<String> base64Images = new ArrayList<>();
+        List<String> imagesUUID = new ArrayList<>();
         List<VillageImage> villageImages;
         if (status) {
             villageImages = villageImageRepository.findByVillageIdAndVillageStatusAndDateDeletedIsNull(villageId, true);
@@ -134,11 +145,15 @@ public class VillageImageService {
 
         }
         if (villageImages.isEmpty()) {
-            base64Images.add(null);
+            imagesUUID.add(null);
         } else {
-            addVillageImages(base64Images, villageImages);
+           //addVillageImages(base64Images, villageImages);
+          imagesUUID =  villageImages.stream()
+                    .map(VillageImage::getImageName)
+                    .collect(toList());
+
         }
-        return base64Images;
+        return imagesUUID;
     }
 
     public void addVillageImages(List<String> base64Images, List<VillageImage> villageImages) {
@@ -166,18 +181,18 @@ public class VillageImageService {
         return Base64.getEncoder().encodeToString(imageBytes);
     }
 
-    public List<VillageDTO> getAllApprovedVillageDTOsWithImages() {
-        List<VillageDTO> villageDTOsWithImages = new ArrayList<>();
-        List<VillageDTO> allVillageDTOs = villageService.getVillagesByStatus(true);
-
-        for (VillageDTO village : allVillageDTOs) {
-            List<String> images = getAllImagesForVillageByStatusAndDate(village.getId(), true, null);
-            village.setImages(images);
-            villageDTOsWithImages.add(village);
-        }
-
-        return villageDTOsWithImages;
-    }
+//    public List<VillageDTO> getAllApprovedVillageDTOsWithImages() {
+//        List<VillageDTO> villageDTOsWithImages = new ArrayList<>();
+//        List<VillageDTO> allVillageDTOs = villageService.getVillagesByStatus(true);
+//
+//        for (VillageDTO village : allVillageDTOs) {
+//            List<String> images = getAllImagesForVillageByStatusAndDate(village.getId(), true, null);
+//            village.setImages(images);
+//            villageDTOsWithImages.add(village);
+//        }
+//
+//        return villageDTOsWithImages;
+//    }
     public Page<VillageDTO> getApprovedVillageDTOsWithImages(int pageNumber, int elementsCount) {
         Pageable page = PageRequest.of(pageNumber, elementsCount);
         Page<VillageDTO> allVillageDTOs = villageService.getVillagesByStatus(true, page);
@@ -189,7 +204,7 @@ public class VillageImageService {
                     village.setImages(images);
                     return village;
                 })
-                .collect(Collectors.toList());
+                .collect(toList());
 
         return new PageImpl<>(villageDTOsWithImages, page, allVillageDTOs.getTotalElements());
     }
@@ -371,7 +386,7 @@ public class VillageImageService {
                     .filter(file -> !Files.isDirectory(file))
                     .map(Path::toFile)
                     .filter(this::isImageFile)
-                    .collect(Collectors.toList());
+                    .collect(toList());
 
             imageFiles.addAll(images);
             System.out.println("------------------------" + images.size() + "------------------------");
