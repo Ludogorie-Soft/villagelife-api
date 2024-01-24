@@ -63,10 +63,8 @@ public class VillageImageService {
     }
 
     public void createImagePaths2222(List<String> imageUUID, long villageId, LocalDateTime localDateTime, boolean status, UserDTO userDTO){
-        List<String> imagePaths = new ArrayList<>();
         for (String image : imageUUID) {
             createVillageImageDTO(villageId, image, localDateTime, status, userDTO);
-
         }
     }
 

@@ -104,7 +104,7 @@ class FilterControllerIntegrationTest {
 
         String name = "Example Name";
 
-        when(villageSearchService.getAllSearchVillages(name, 0, 6)).thenReturn(new PageImpl<>(villageDTOList, PageRequest.of(0, 6), villageDTOList.size()));
+        when(villageSearchService.getAllSearchVillages(name, 0, 6, "nameAsc")).thenReturn(new PageImpl<>(villageDTOList, PageRequest.of(0, 6), villageDTOList.size()));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/byName/0")
                         .param("name", name)
@@ -456,7 +456,7 @@ class FilterControllerIntegrationTest {
     @Test
     void testGetVillageByNameVillageNotFound() throws Exception {
         String name = "Nonexistent Village";
-        when(villageSearchService.getAllSearchVillages(name, 0, 6)).thenReturn(new PageImpl<>(Collections.emptyList()));
+        when(villageSearchService.getAllSearchVillages(name, 0, 6, "nameAsc")).thenReturn(new PageImpl<>(Collections.emptyList()));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/byName/0")
                         .param("name", name)

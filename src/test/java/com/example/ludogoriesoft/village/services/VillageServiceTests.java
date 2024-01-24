@@ -76,7 +76,7 @@ class VillageServiceTests {
         when(modelMapper.map(village1, VillageDTO.class)).thenReturn(villageDTO1);
         when(modelMapper.map(village2, VillageDTO.class)).thenReturn(villageDTO2);
 
-        Page<VillageDTO> result = villageService.getAllSearchVillages("Village", 0, 6);
+        Page<VillageDTO> result = villageService.getAllSearchVillages("Village", 0, 6, "nameAsc");
 
         assertNotNull(result);
         assertEquals(2, result.getTotalElements());

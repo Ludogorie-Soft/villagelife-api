@@ -8,10 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -51,9 +48,9 @@ class FilterControllerTest {
         village2.setName("Village 2");
         expectedVillages.add(village2);
 
-        when(villageSearchService.getAllSearchVillages(name, 0, 6)).thenReturn(new PageImpl<>(expectedVillages, PageRequest.of(0, 6), expectedVillages.size()));
+        when(villageSearchService.getAllSearchVillages(name, 0, 6, "nameAsc")).thenReturn(new PageImpl<>(expectedVillages, PageRequest.of(0, 6), expectedVillages.size()));
 
-        ResponseEntity<List<VillageDTO>> response = filterController.getVillageByName( 0, name);
+        ResponseEntity<List<VillageDTO>> response = filterController.getVillageByName( 0, name, "nameAsc");
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
