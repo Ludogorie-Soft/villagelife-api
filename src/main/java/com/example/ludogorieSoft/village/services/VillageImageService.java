@@ -10,6 +10,7 @@ import com.example.ludogorieSoft.village.model.VillageImage;
 import com.example.ludogorieSoft.village.repositories.VillageImageRepository;
 import com.example.ludogorieSoft.village.utils.TimestampUtils;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.tika.Tika;
 import org.apache.tika.io.IOUtils;
 import org.modelmapper.ModelMapper;
@@ -33,10 +34,12 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.util.UUID.randomUUID;
 import static java.util.stream.Collectors.toList;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class VillageImageService {
     private final VillageImageRepository villageImageRepository;
     private static final String UPLOAD_DIRECTORY = "src/main/resources/static/village_images/";
@@ -47,22 +50,43 @@ public class VillageImageService {
     private static final String VILLAGE_IMAGE_ID_MESSAGE = "VillageImage with id: ";
     private static final String NOT_FOUND_MESSAGE = " not found";
     private static final Logger logger = LoggerFactory.getLogger(VillageImageService.class);
+    private final ImageService imageService;
 
+    ///original method
+//    public List<String> createImagePaths(List<byte[]> imageBytes, Long villageId, LocalDateTime localDateTime, Boolean status, UserDTO userDTO) { //ddd
+//        List<String> imagePaths = new ArrayList<>();
+//        for (byte[] image : imageBytes) {
+//            if (image.length > 0) {
+//                String imagePath = processImage(image);
+//                if (imagePath != null) {
+//                    imagePaths.add(imagePath);
+//                    createVillageImageDTO(villageId, imagePath, localDateTime, status, userDTO);
+//                }
+//            }
+//        }
+//        return imagePaths;
+//    }
     public List<String> createImagePaths(List<byte[]> imageBytes, Long villageId, LocalDateTime localDateTime, Boolean status, UserDTO userDTO) { //ddd
         List<String> imagePaths = new ArrayList<>();
+
         for (byte[] image : imageBytes) {
-            if (image.length > 0) {
-                String imagePath = processImage(image);
-                if (imagePath != null) {
-                    imagePaths.add(imagePath);
-                    createVillageImageDTO(villageId, imagePath, localDateTime, status, userDTO);
+            if (imageBytes.size() > 0) {
+                String imageUUID= randomUUID().toString();
+                String imageName = imageService.uploadImage(image, imageUUID);
+
+                System.out.println("image name " + imageName);
+                if (imageName != null) {
+                    imagePaths.add(imageName);
+                    createVillageImageDTO(villageId, imageName, localDateTime, status, userDTO);
                 }
             }
         }
+
+
         return imagePaths;
     }
 
-    public void createImagePaths2222(List<String> imageUUID, long villageId, LocalDateTime localDateTime, boolean status, UserDTO userDTO){
+    public void createImagePaths2222(List<String> imageUUID, long villageId, LocalDateTime localDateTime, boolean status, UserDTO userDTO) {
         for (String image : imageUUID) {
             createVillageImageDTO(villageId, image, localDateTime, status, userDTO);
         }
@@ -88,7 +112,7 @@ public class VillageImageService {
     }
 
     public String generateFileName() {
-        return UUID.randomUUID() + ".jpg";
+        return randomUUID() + ".jpg";
     }
 
     public void createUploadDirectory(String filePath) {
@@ -133,42 +157,85 @@ public class VillageImageService {
         return modelMapper.map(villageImage, VillageImageDTO.class);
     }
 
-    public List<String> getAllImagesForVillageByStatusAndDate(Long villageId, boolean status, String date) {
-        List<String> imagesUUID = new ArrayList<>();
-        List<VillageImage> villageImages;
-        if (status) {
-            villageImages = villageImageRepository.findByVillageIdAndVillageStatusAndDateDeletedIsNull(villageId, true);
-        } else {
-            villageImages = villageImageRepository.findByVillageIdAndVillageStatusAndDateUpload(villageId, false, date);
+//    public List<String> getAllImagesForVillageByStatusAndDate(Long villageId, boolean status, String date) {
+//        List<String> imagesUUID = new ArrayList<>();
+//        List<VillageImage> villageImages;
+//        if (status) {
+//            villageImages = villageImageRepository.findByVillageIdAndVillageStatusAndDateDeletedIsNull(villageId, true);
+//        } else {
+//            villageImages = villageImageRepository.findByVillageIdAndVillageStatusAndDateUpload(villageId, false, date);
+//
+//        }
+//        if (villageImages.isEmpty()) {
+//            imagesUUID.add(null);
+//        } else {
+//            //addVillageImages(base64Images, villageImages);
+//            imagesUUID = villageImages.stream()
+//                    .map(VillageImage::getImageName)
+//                    .collect(toList());
+//
+//        }
+//        return imagesUUID;
+//    }
+public List<String> getAllImagesForVillageByStatusAndDate(Long villageId, boolean status, String date) {
+    List<String> base64Images = new ArrayList<>();
+    List<VillageImage> villageImages;
+    if (status) {
+        villageImages = villageImageRepository.findByVillageIdAndVillageStatusAndDateDeletedIsNull(villageId, true);
+    } else {
+        villageImages = villageImageRepository.findByVillageIdAndVillageStatusAndDateUpload(villageId, false, date);
 
-        }
-        if (villageImages.isEmpty()) {
-            imagesUUID.add(null);
-        } else {
-           //addVillageImages(base64Images, villageImages);
-          imagesUUID =  villageImages.stream()
-                    .map(VillageImage::getImageName)
-                    .collect(toList());
-
-        }
-        return imagesUUID;
     }
+    if (villageImages.isEmpty()) {
+        base64Images.add(null);
+    } else {
+        System.out.println("555555555555555" + villageImages.get(0));
+        //addVillageImages(base64Images, villageImages);
+        base64Images = villageImages.stream()
+                    .map(villageImage -> imageService.getImageFromSpace(villageImage.getImageName())) .toList();
 
+//        List<String> imagesResponse = Objects.requireNonNull(villageImageClient.getAllImagesForVillage(villageInfo.getVillageDTO().getId(), status, answerDate).getBody()).stream().map(imageName -> {
+//            imageName = villageImageService.getImageFromSpace(imageName);
+//            return imageName;
+//        }).toList();
+    }
+    System.out.println("6666666666666" + base64Images);
+    return base64Images;
+}
     public void addVillageImages(List<String> base64Images, List<VillageImage> villageImages) {
         for (VillageImage villageImage : villageImages) {
-            String imagePath = UPLOAD_DIRECTORY + villageImage.getImageName();
-            try {
+            String imagePath = villageImage.getImageName();
+            //try {
+
                 File imageFile = new File(imagePath);
-                if (imageFile.exists()) {
-                    byte[] imageBytes = readImageBytes(imageFile);
-                    String base64Image = encodeImageToBase64(imageBytes);
+                if (imagePath != null) {
+                   String base64Image =  imageService.getImageFromSpace(imagePath);
+//                    byte[] imageBytes = readImageBytes(imageFile);
+//                    String base64Image = encodeImageToBase64(imageBytes);
                     base64Images.add(base64Image);
                 }
-            } catch (IOException e) {
-                logger.error(ERROR_MESSAGE, e);
-            }
+//            } catch (IOException e) {
+//                logger.error(ERROR_MESSAGE, e);
+//            }
         }
     }
+
+//    public void addVillageImages(List<String> base64Images, List<VillageImage> villageImages) {
+//        for (VillageImage villageImage : villageImages) {
+//            String imagePath = UPLOAD_DIRECTORY + villageImage.getImageName();
+//            try {
+//
+//                File imageFile = new File(imagePath);
+//                if (imageFile.exists()) {
+//                    byte[] imageBytes = readImageBytes(imageFile);
+//                    String base64Image = encodeImageToBase64(imageBytes);
+//                    base64Images.add(base64Image);
+//                }
+//            } catch (IOException e) {
+//                logger.error(ERROR_MESSAGE, e);
+//            }
+//        }
+//    }
 
     public byte[] readImageBytes(File imageFile) throws IOException {
         FileInputStream inputStream = new FileInputStream(imageFile);
@@ -179,7 +246,7 @@ public class VillageImageService {
         return Base64.getEncoder().encodeToString(imageBytes);
     }
 
-//    public List<VillageDTO> getAllApprovedVillageDTOsWithImages() {
+    //    public List<VillageDTO> getAllApprovedVillageDTOsWithImages() {
 //        List<VillageDTO> villageDTOsWithImages = new ArrayList<>();
 //        List<VillageDTO> allVillageDTOs = villageService.getVillagesByStatus(true);
 //
