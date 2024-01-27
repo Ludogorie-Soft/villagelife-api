@@ -31,7 +31,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.UUID.randomUUID;
@@ -332,7 +331,12 @@ public List<String> getAllImagesForVillageByStatusAndDate(Long villageId, boolea
     }
 
     public List<VillageImageDTO> getVillageImageDTOsByVillageId(List<VillageImage> villageImages) {
-        List<VillageImageDTO> villageImagesWithBase64Images = new ArrayList<>();
+        return villageImages.stream().map(villageImage -> {
+            VillageImageDTO villageImageDTO = villageImageToVillageImageDTO(villageImage);
+            villageImageDTO.setBase64Image(imageService.getImageFromSpace(villageImage.getImageName()));
+            return villageImageDTO;
+        }).toList();
+        /*List<VillageImageDTO> villageImagesWithBase64Images = new ArrayList<>();
         for (VillageImage villageImage : villageImages) {
             VillageImageDTO villageImageDTO = villageImageToVillageImageDTO(villageImage);
             String imagePath = UPLOAD_DIRECTORY + villageImage.getImageName();
@@ -348,7 +352,7 @@ public List<String> getAllImagesForVillageByStatusAndDate(Long villageId, boolea
             }
             villageImagesWithBase64Images.add(villageImageDTO);
         }
-        return villageImagesWithBase64Images;
+        return villageImagesWithBase64Images;*/
     }
 
     public VillageImageDTO getVillageImageById(Long id) {
