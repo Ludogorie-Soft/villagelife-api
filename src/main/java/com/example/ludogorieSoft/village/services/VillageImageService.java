@@ -380,14 +380,16 @@ public List<String> getAllImagesForVillageByStatusAndDate(Long villageId, boolea
     public void deleteImageFileById(Long id) {
         VillageImageDTO villageImageDTO = getVillageImageById(id);
         if (villageImageDTO != null) {
-            String imageName = villageImageDTO.getImageName();
+            imageService.deleteImage(villageImageDTO.getImageName());
+            deleteVillageImageById(id);
+            /*String imageName = villageImageDTO.getImageName();
             if (imageName != null) {
                 String imagePath = UPLOAD_DIRECTORY + imageName;
                 File fileToDelete = new File(imagePath);
                 if (fileExists(fileToDelete) && deleteFileWithRetries(fileToDelete)) {
                     deleteVillageImageById(id);
                 }
-            }
+            }*/
         }
     }
 

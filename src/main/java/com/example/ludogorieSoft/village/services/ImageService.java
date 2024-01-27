@@ -5,6 +5,7 @@ import com.example.ludogorieSoft.village.model.VillageImage;
 import io.minio.GetObjectArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
+import io.minio.RemoveObjectArgs;
 import io.minio.errors.MinioException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,28 +27,18 @@ public class ImageService {
     @Value("${digital.ocean.bucket.name}")
     private String digitalOceanBucketName;
     private final MinioClient minioClient;
+
     public String uploadImage(final byte[] imageData, String randomUuid) {
         try {
-            // Convert the byte array to an InputStream
             InputStream inputStream = new ByteArrayInputStream(imageData);
-
-            // Upload the file to DigitalOcean Spaces
-            minioClient.putObject(PutObjectArgs.builder()
-                    .bucket(digitalOceanBucketName)
-                    .object(randomUuid)
-                    .contentType("image/jpeg")  // Set the appropriate content type
-                    .stream(inputStream, inputStream.available(), -1)
-                    .build());
+            minioClient.putObject(PutObjectArgs.builder().bucket(digitalOceanBucketName).object(randomUuid).contentType("image/jpeg").stream(inputStream, inputStream.available(), -1).build());
 
             return randomUuid;
         } catch (MinioException e) {
-            // Handle Minio-specific exceptions
             log.warn("Minio error: " + e.getMessage());
         } catch (IOException e) {
-            // Handle general IO exceptions
             log.warn("Error uploading file: " + e.getMessage());
         } catch (Exception e) {
-            // Handle other exceptions
             log.warn("An unexpected error occurred: " + e.getMessage());
         }
         return null;
@@ -84,13 +75,8 @@ public class ImageService {
 //    }
 
     private byte[] concatenateBytes(List<byte[]> byteArrays) throws IOException {
-        // Calculate the total size of the concatenated byte array
         int totalSize = byteArrays.stream().mapToInt(array -> array.length).sum();
-
-        // Create a new byte array with the total size
         byte[] result = new byte[totalSize];
-
-        // Copy each byte array into the result array
         int offset = 0;
         for (byte[] byteArray : byteArrays) {
             System.arraycopy(byteArray, 0, result, offset, byteArray.length);
@@ -102,10 +88,7 @@ public class ImageService {
 
     public String getImageFromSpace(String objectKey) {
         try {
-            try (InputStream inputStream = minioClient.getObject(GetObjectArgs.builder()
-                    .bucket(digitalOceanBucketName)
-                    .object(objectKey)
-                    .build())) {
+            try (InputStream inputStream = minioClient.getObject(GetObjectArgs.builder().bucket(digitalOceanBucketName).object(objectKey).build())) {
                 byte[] imageBytes = IOUtils.toByteArray(inputStream);
                 return Base64.encodeBase64String(imageBytes);
             }
@@ -115,6 +98,18 @@ public class ImageService {
             log.warn("An unexpected error occurred: " + e.getMessage());
         }
         return null;
+    }
+
+    public boolean deleteImage(String objectName) {
+        try {
+            minioClient.removeObject(RemoveObjectArgs.builder().bucket(digitalOceanBucketName).object(objectName).build());
+            return true;
+        } catch (MinioException e) {
+            log.warn("Minio error while deleting image: " + e.getMessage());
+        } catch (Exception e) {
+            log.warn("An unexpected error occurred: " + e.getMessage());
+        }
+        return false;
     }
 
 //    public List<VillageDTO> getVillagesWithImages(List<VillageDTO> villages) {
