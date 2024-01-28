@@ -13,12 +13,10 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +29,11 @@ public class ImageService {
     public String uploadImage(final byte[] imageData, String randomUuid) {
         try {
             InputStream inputStream = new ByteArrayInputStream(imageData);
-            minioClient.putObject(PutObjectArgs.builder().bucket(digitalOceanBucketName).object(randomUuid).contentType("image/jpeg").stream(inputStream, inputStream.available(), -1).build());
+            minioClient.putObject(PutObjectArgs.builder()
+                    .bucket(digitalOceanBucketName)
+                    .object(randomUuid).contentType("image/jpeg")
+                    .stream(inputStream, inputStream.available(), -1)
+                    .build());
 
             return randomUuid;
         } catch (MinioException e) {
@@ -74,17 +76,17 @@ public class ImageService {
 //        return null;
 //    }
 
-    private byte[] concatenateBytes(List<byte[]> byteArrays) throws IOException {
-        int totalSize = byteArrays.stream().mapToInt(array -> array.length).sum();
-        byte[] result = new byte[totalSize];
-        int offset = 0;
-        for (byte[] byteArray : byteArrays) {
-            System.arraycopy(byteArray, 0, result, offset, byteArray.length);
-            offset += byteArray.length;
-        }
-
-        return result;
-    }
+//    private byte[] concatenateBytes(List<byte[]> byteArrays) throws IOException {
+//        int totalSize = byteArrays.stream().mapToInt(array -> array.length).sum();
+//        byte[] result = new byte[totalSize];
+//        int offset = 0;
+//        for (byte[] byteArray : byteArrays) {
+//            System.arraycopy(byteArray, 0, result, offset, byteArray.length);
+//            offset += byteArray.length;
+//        }
+//
+//        return result;
+//    }
 
     public String getImageFromSpace(String objectKey) {
         try {
