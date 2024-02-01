@@ -52,13 +52,11 @@ public class FilterController {
 
     @GetMapping("/searchAll/{page}")
     public ResponseEntity<List<VillageDTO>> getVillageByNameAndRegion(@PathVariable("page") int page, @RequestParam String region, @RequestParam String keyword, @RequestParam(required = false) String sort) {
-        System.out.println("1111111111");
         List<VillageDTO> villages = villageSearchService.getAllSearchVillagesByNameAndRegionName(region, keyword, page, 6, sort).getContent();
         return ResponseEntity.ok(villages);
     }
     @GetMapping("/searchAll/{page}/elementsCount")
     public ResponseEntity<Long> getVillageByNameAndRegionElementsCount(@PathVariable("page") int page, @RequestParam String region, @RequestParam String keyword) {
-        System.out.println("2222222");
         Long count = villageSearchService.getAllSearchVillagesByNameAndRegionName(region, keyword, page, 6, "").getTotalElements();
         return ResponseEntity.ok(count);
     }
@@ -70,7 +68,6 @@ public class FilterController {
             @RequestParam("children") String children,
             @RequestParam(required = false) String sort
     ) {
-        System.out.println("3333");
         Children childrenEnum = Children.valueOf(children);
         List<VillageDTO> villages = villageSearchService.getSearchVillages(objectAroundVillageDTOS, livingConditionDTOS, childrenEnum, page, 6, sort).getContent();
         return ResponseEntity.ok(villages);

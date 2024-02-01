@@ -243,18 +243,6 @@ public class VillageImageService {
         return Base64.getEncoder().encodeToString(imageBytes);
     }
 
-    //    public List<VillageDTO> getAllApprovedVillageDTOsWithImages() {
-//        List<VillageDTO> villageDTOsWithImages = new ArrayList<>();
-//        List<VillageDTO> allVillageDTOs = villageService.getVillagesByStatus(true);
-//
-//        for (VillageDTO village : allVillageDTOs) {
-//            List<String> images = getAllImagesForVillageByStatusAndDate(village.getId(), true, null);
-//            village.setImages(images);
-//            villageDTOsWithImages.add(village);
-//        }
-//
-//        return villageDTOsWithImages;
-//    }
     public Page<VillageDTO> getApprovedVillageDTOsWithImages(int pageNumber, int elementsCount) {
         Pageable page = PageRequest.of(pageNumber, elementsCount);
         Page<VillageDTO> allVillageDTOs = villageService.getVillagesByStatus(true, page);
@@ -454,8 +442,7 @@ public class VillageImageService {
             List<File> images = stream
                     .filter(file -> !Files.isDirectory(file))
                     .map(Path::toFile)
-                    .filter(this::isImageFile)
-                    .collect(toList());
+                    .filter(this::isImageFile).toList();
 
             imageFiles.addAll(images);
             System.out.println("------------------------" + images.size() + "------------------------");

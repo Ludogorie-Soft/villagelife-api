@@ -59,8 +59,7 @@ public class VillageService {
     public VillageDTO getVillageById(Long id) {
         Optional<Village> optionalVillage = villageRepository.findById(id);
         if (optionalVillage.isPresent()) {
-            VillageDTO villageDTO = villageToVillageDTO(optionalVillage.get());
-            return villageDTO;
+            return villageToVillageDTO(optionalVillage.get());
         } else {
             throw new ApiRequestException(ERROR_MESSAGE1 + id + ERROR_MESSAGE2);
         }
@@ -186,7 +185,6 @@ public class VillageService {
             System.out.println("return Sort.by(Sort.Order.desc(\"region\"));");
             return Sort.by(Sort.Order.desc("region"));
         }
-        System.out.println("???????????");
         return Sort.unsorted();
     }
 
@@ -232,21 +230,6 @@ public class VillageService {
         return new PageImpl<>(villages.stream().map(this::villageToVillageDTO).toList(), page, villages.getTotalElements());
     }
 
-
-//    protected List<ObjectAroundVillageDTO> convertToObjectAroundVillageDTOList(List<ObjectVillage> objectVillages) {
-//        List<ObjectAroundVillageDTO> objectAroundVillageDTOs = new ArrayList<>();
-//
-//        for (ObjectVillage ov : objectVillages) {
-//            ObjectAroundVillageDTO objectAroundVillageDTO = new ObjectAroundVillageDTO();
-//
-//            objectAroundVillageDTO.setId(ov.getObject().getId());
-//            objectAroundVillageDTO.setType(ov.getObject().getType());
-//
-//            objectAroundVillageDTOs.add(objectAroundVillageDTO);
-//        }
-//
-//        return objectAroundVillageDTOs;
-//    }
 
 //    protected List<VillageDTO> villageToVillageDTOObject(List<Village> villages) {
 //        List<VillageDTO> villageDTOs = new ArrayList<>();
