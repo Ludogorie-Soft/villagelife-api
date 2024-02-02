@@ -13,20 +13,27 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static java.time.LocalDateTime.now;
 import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 
 class VillageServiceTest {
+    private static final int pageNumber = 0;
+    private static final int elementsCount = 6;
+    private static final String sort = "nameAsc";
     @InjectMocks
     private VillageService villageService;
     @Mock
@@ -35,6 +42,8 @@ class VillageServiceTest {
     private ModelMapper modelMapper;
     @Mock
     private RegionService regionService;
+    @Mock
+    private AuthService authService;
 
     @BeforeEach
     public void setup() {
@@ -76,7 +85,6 @@ class VillageServiceTest {
 
     @Test
     void testGetVillageByIdWhenExist() {
-
         Long villageId = 1L;
 
         VillageDTO expectedVillageDTO = new VillageDTO();
@@ -86,7 +94,6 @@ class VillageServiceTest {
         village.setId(1L);
 
         when(modelMapper.map(village, VillageDTO.class)).thenReturn(expectedVillageDTO);
-
         when(villageRepository.findById(villageId)).thenReturn(Optional.of(village));
 
         VillageDTO villageDTO = villageService.getVillageById(villageId);
@@ -97,7 +104,6 @@ class VillageServiceTest {
 
     @Test
     void testGetVillageByIdWhenNotExist() {
-
         Long villageId = 1L;
 
         when(villageRepository.findById(villageId)).thenReturn(Optional.empty());
@@ -107,7 +113,6 @@ class VillageServiceTest {
     }
     @Test
     void testUpdateVillageExceptionCase() {
-
         Long villageId = 1L;
 
         VillageDTO villageDTO = new VillageDTO();
@@ -122,7 +127,6 @@ class VillageServiceTest {
 
     @Test
     void testDeleteVillagePositiveCase() {
-
         Long villageId = 1L;
 
         when(villageRepository.existsById(villageId)).thenReturn(true);
@@ -194,7 +198,7 @@ class VillageServiceTest {
         VillageDTO villageDTO = new VillageDTO();
         villageDTO.setName("NewVillage");
         villageDTO.setRegion("NewRegion");
-        villageDTO.setDateUpload(LocalDateTime.now());
+        villageDTO.setDateUpload(now());
         villageDTO.setStatus(false);
 
         RegionDTO regionDTO = new RegionDTO();
@@ -218,8 +222,8 @@ class VillageServiceTest {
         assertEquals("NewVillage", result.getName());
         assertEquals("NewRegion", result.getRegion());
         assertFalse(result.getStatus());
-        assertTrue(result.getDateUpload().isBefore(LocalDateTime.now().plusSeconds(1)));
-        assertTrue(result.getDateUpload().isAfter(LocalDateTime.now().minusSeconds(1)));
+        assertTrue(result.getDateUpload().isBefore(now().plusSeconds(1)));
+        assertTrue(result.getDateUpload().isAfter(now().minusSeconds(1)));
     }
 
     @Test
@@ -228,7 +232,7 @@ class VillageServiceTest {
         villageDTO.setName("ExistingVillage");
         villageDTO.setRegion("ExistingRegion");
         villageDTO.setStatus(true);
-        villageDTO.setDateUpload(LocalDateTime.now());
+        villageDTO.setDateUpload(now());
 
         Village existingVillage = new Village();
         existingVillage.setName("ExistingVillage");
@@ -243,8 +247,8 @@ class VillageServiceTest {
         assertEquals("ExistingVillage", result.getName());
         assertEquals("ExistingRegion", result.getRegion());
         assertTrue(result.getStatus());
-        assertTrue(result.getDateUpload().isBefore(LocalDateTime.now().plusSeconds(1)));
-        assertTrue(result.getDateUpload().isAfter(LocalDateTime.now().minusSeconds(1)));
+        assertTrue(result.getDateUpload().isBefore(now().plusSeconds(1)));
+        assertTrue(result.getDateUpload().isAfter(now().minusSeconds(1)));
     }
 
     @Test
@@ -283,5 +287,108 @@ class VillageServiceTest {
         village2.setName(villageName);
         when(villageRepository.findByName(villageName)).thenReturn(List.of(village1, village2));
         assertThrows(ApiRequestException.class, () -> villageService.getVillageByName(villageName));
+    }
+    @Test
+    void testUpdateVillageStatusSuccess() {
+        Long villageId = 1L;
+        VillageDTO villageDTO = new VillageDTO();
+        villageDTO.setId(villageId);
+        villageDTO.setName("UpdatedVillage");
+        villageDTO.setRegion("UpdatedRegion");
+        villageDTO.setStatus(true);
+
+        Village existingVillage = new Village();
+        existingVillage.setId(villageId);
+        existingVillage.setName("OriginalVillage");
+        existingVillage.setRegion(new Region());
+        existingVillage.setStatus(false);
+
+        RegionDTO updatedRegionDTO = new RegionDTO();
+        updatedRegionDTO.setId(1L);
+
+        AdministratorDTO administratorDTO = new AdministratorDTO();
+        administratorDTO.setId(1L);
+
+        when(villageRepository.findById(villageId)).thenReturn(Optional.of(existingVillage));
+        when(regionService.findRegionByName(villageDTO.getRegion())).thenReturn(updatedRegionDTO);
+        when(authService.getAdministratorInfo()).thenReturn(administratorDTO);
+        when(villageRepository.save(any(Village.class))).thenReturn(existingVillage);
+        when(modelMapper.map(any(Village.class), eq(VillageDTO.class))).thenReturn(villageDTO);
+        when(modelMapper.map(any(Administrator.class), eq(AdministratorDTO.class))).thenReturn(new AdministratorDTO());
+
+        VillageDTO updatedVillageDTO = villageService.updateVillageStatus(villageId, villageDTO);
+
+        assertNotNull(updatedVillageDTO);
+        assertEquals(villageId, updatedVillageDTO.getId());
+        assertEquals(villageDTO.getName(), updatedVillageDTO.getName());
+        assertTrue(updatedVillageDTO.getStatus());
+    }
+    @Test
+    void testUpdateVillageStatusNotFound() {
+        Long villageId = 1L;
+        VillageDTO villageDTO = new VillageDTO();
+        villageDTO.setId(villageId);
+
+        when(villageRepository.findById(villageId)).thenReturn(Optional.empty());
+
+        assertThrows(ApiRequestException.class, () -> villageService.updateVillageStatus(villageId, villageDTO));
+    }
+    @Test
+    void testGetAllSearchVillagesByNameAndRegionName() {
+        String regionName = "TestRegion";
+        String name = "TestName";
+
+        Village village1 = new Village();
+        village1.setId(1L);
+        village1.setName("TestVillage1");
+        village1.setRegion(new Region());
+
+        VillageDTO villageDTO = new VillageDTO();
+        villageDTO.setName("TestVillage1");
+        villageDTO.setRegion("NewRegion");
+        villageDTO.setDateUpload(now());
+        villageDTO.setStatus(false);
+
+        List<Village> villageList = List.of(village1);
+        Page<Village> page = new PageImpl<>(villageList, PageRequest.of(pageNumber, elementsCount), villageList.size());
+
+        when(villageRepository.findByNameContainingIgnoreCaseAndRegionName(regionName, name, PageRequest.of(pageNumber, elementsCount, Sort.by(Sort.Order.asc("name")))))
+                .thenReturn(page);
+        when(modelMapper.map(any(Village.class), eq(VillageDTO.class))).thenReturn(villageDTO);
+
+        Page<VillageDTO> resultPage = villageService.getAllSearchVillagesByNameAndRegionName(regionName, name, pageNumber, elementsCount, sort);
+
+        assertEquals(1, resultPage.getTotalElements());
+        assertEquals(1, resultPage.getContent().size());
+        assertEquals("TestVillage1", resultPage.getContent().get(0).getName());
+    }
+    @Test
+    void testGetVillagesByStatus() {
+        boolean status = true;
+
+        Village village1 = new Village();
+        village1.setId(1L);
+        village1.setName("TestVillage1");
+        village1.setStatus(status);
+
+        VillageDTO villageDTO = new VillageDTO();
+        villageDTO.setName("TestVillage1");
+        villageDTO.setRegion("NewRegion");
+        villageDTO.setDateUpload(now());
+        villageDTO.setStatus(false);
+
+        List<Village> villageList = List.of(village1);
+        Page<Village> page = new PageImpl<>(villageList, PageRequest.of(pageNumber, elementsCount), villageList.size());
+
+        when(villageRepository.findByStatus(status, PageRequest.of(pageNumber, elementsCount)))
+                .thenReturn(page);
+        when(modelMapper.map(any(Village.class), eq(VillageDTO.class))).thenReturn(villageDTO);
+
+
+        Page<VillageDTO> resultPage = villageService.getVillagesByStatus(status, PageRequest.of(pageNumber, elementsCount));
+
+        assertEquals(1, resultPage.getTotalElements());
+        assertEquals(1, resultPage.getContent().size());
+        assertEquals("TestVillage1", resultPage.getContent().get(0).getName());
     }
 }

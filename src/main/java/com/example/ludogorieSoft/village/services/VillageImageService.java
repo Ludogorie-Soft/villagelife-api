@@ -234,14 +234,14 @@ public class VillageImageService {
 //        }
 //    }
 
-    public byte[] readImageBytes(File imageFile) throws IOException {
-        FileInputStream inputStream = new FileInputStream(imageFile);
-        return IOUtils.toByteArray(inputStream);
-    }
+//    public byte[] readImageBytes(File imageFile) throws IOException {
+//        FileInputStream inputStream = new FileInputStream(imageFile);
+//        return IOUtils.toByteArray(inputStream);
+//    }
 
-    public String encodeImageToBase64(byte[] imageBytes) {
+  /*  public String encodeImageToBase64(byte[] imageBytes) {
         return Base64.getEncoder().encodeToString(imageBytes);
-    }
+    }*/
 
     public Page<VillageDTO> getApprovedVillageDTOsWithImages(int pageNumber, int elementsCount) {
         Pageable page = PageRequest.of(pageNumber, elementsCount);
@@ -379,11 +379,11 @@ public class VillageImageService {
         }
     }
 
-    public boolean fileExists(File file) {
+   /* public boolean fileExists(File file) {
         return file.exists();
-    }
+    }*/
 
-    public boolean deleteFileWithRetries(File file) {
+  /*  public boolean deleteFileWithRetries(File file) {
         int maxRetries = 6;
         for (int i = 0; i < maxRetries; i++) {
             try {
@@ -402,7 +402,7 @@ public class VillageImageService {
             }
         }
         return false;
-    }
+    }*/
 
     public void deleteVillageImageById(Long id) {
         if (villageImageRepository.existsById(id)) {
