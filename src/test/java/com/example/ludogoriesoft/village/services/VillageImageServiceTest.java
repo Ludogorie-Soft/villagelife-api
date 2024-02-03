@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
+import com.example.ludogorieSoft.village.dtos.UserDTO;
 import com.example.ludogorieSoft.village.dtos.VillageDTO;
 import com.example.ludogorieSoft.village.dtos.VillageImageDTO;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
@@ -14,13 +15,10 @@ import com.example.ludogorieSoft.village.model.VillageImage;
 import com.example.ludogorieSoft.village.repositories.VillageImageRepository;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 
-import org.apache.tika.io.IOUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,11 +45,6 @@ class VillageImageServiceTest {
     private ImageService imageService;
     @InjectMocks
     private VillageImageService villageImageService;
-    private static final String UPLOAD_DIRECTORY = "src/main/resources/static/village_images/";
-
-    @Mock
-    private File mockFile;
-
     @BeforeEach
     void setUp() {
         villageImageService = Mockito.spy(villageImageService);
@@ -175,42 +168,6 @@ class VillageImageServiceTest {
         byte[] image = {0x12, 0x34, 0x56, 0x78};
         String result = villageImageService.processImage(image);
         Assertions.assertNull(result);
-    }
-
-    @Test
-    void testEncodeImageToBase64EmptyImage() {
-        byte[] emptyImageBytes = new byte[0];
-        String expectedBase64 = "";
-
-        String result = villageImageService.encodeImageToBase64(emptyImageBytes);
-
-        Assertions.assertEquals(expectedBase64, result);
-    }
-
-    @Test
-    void testEncodeImageToBase64NullImage() {
-        Assertions.assertThrows(NullPointerException.class, () -> villageImageService.encodeImageToBase64(null));
-    }
-
-    @Test
-    void testReadImageBytes() throws IOException {
-        File imageFile = File.createTempFile("test-image", ".png");
-
-        try {
-            FileOutputStream outputStream = new FileOutputStream(imageFile);
-            byte[] dummyImageData = {0x01, 0x02, 0x03};
-            outputStream.write(dummyImageData);
-            outputStream.close();
-
-            byte[] result = villageImageService.readImageBytes(imageFile);
-
-            FileInputStream inputStream = new FileInputStream(imageFile);
-            byte[] expected = IOUtils.toByteArray(inputStream);
-            inputStream.close();
-            Assertions.assertArrayEquals(expected, result);
-        } finally {
-            imageFile.delete();
-        }
     }
 
     @Test
@@ -579,61 +536,6 @@ class VillageImageServiceTest {
         villageImageService.deleteVillageImageById(id);
         verify(villageImageRepository).deleteById(id);
     }
-
-    @Test
-    void testFileExistsWhenFileExists() {
-        when(mockFile.exists()).thenReturn(true);
-        boolean result = villageImageService.fileExists(mockFile);
-        assertTrue(result);
-        verify(mockFile).exists();
-    }
-
-    @Test
-    void testFileExistsWhenFileDoesNotExist() {
-        when(mockFile.exists()).thenReturn(false);
-        boolean result = villageImageService.fileExists(mockFile);
-        assertFalse(result);
-        verify(mockFile).exists();
-    }
-
-
-    @Test
-    void deleteFileWithRetriesWhenTrue() {
-        String filePath = "src/main/resources/static/village_images/test.jpg";
-
-        try {
-            File file = new File(filePath);
-            if (file.createNewFile()) {
-                System.out.println("File created successfully.");
-            } else {
-                System.out.println("File already exists.");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        boolean result = villageImageService.deleteFileWithRetries(new File(filePath));
-
-        assertTrue(result);
-
-        File fileToDelete = new File(filePath);
-        if (fileToDelete.exists()) {
-            if (fileToDelete.delete()) {
-                System.out.println("File deleted successfully.");
-            } else {
-                System.out.println("Failed to delete file.");
-            }
-        }
-    }
-
-    @Test
-    void deleteFileWithRetriesWhenFalse() {
-        String filePath = UPLOAD_DIRECTORY + "testFile";
-        File file = new File(filePath);
-        boolean result = villageImageService.deleteFileWithRetries(file);
-        assertFalse(result);
-    }
-
     @Test
     void testDeleteImageFileByIdWhenFileDoesNotExistAndDeletionFails() {
         Long id = 1L;
@@ -758,28 +660,19 @@ class VillageImageServiceTest {
         verify(modelMapper).map(any(VillageImage.class), eq(VillageImageDTO.class));
         verify(villageImageService).updateVillageImage(eq(id), any(VillageImageDTO.class));
     }
+    @Test
+    void testCreateImagePaths2222() {
+        List<String> imageUUIDs = Arrays.asList("uuid1", "uuid2");
+        long villageId = 1L;
+        LocalDateTime localDateTime = LocalDateTime.now();
+        boolean status = true;
+        UserDTO userDTO = new UserDTO();
 
-//    @Test
-//    void testUploadImages() {
-//        List<File> images = new ArrayList<>();
-//        File image1 = new File("image1.jpg");
-//        File image2 = new File("image2.png");
-//        images.add(image1);
-//        images.add(image2);
-//
-//        when(villageImageService.getAllImageFilesFromDirectory()).thenReturn(images);
-//        when(villageImageService.getVillageNameFromFileName("image1.jpg")).thenReturn("Village1");
-//        when(villageImageService.getVillageNameFromFileName("image2.png")).thenReturn("Village2");
-//        VillageDTO villageDTO = new VillageDTO();
-//        villageDTO.setId(1L);
-//        villageDTO.setName("Village1");
-//        when(villageService.getVillageByName("Village1")).thenReturn(villageDTO);
-//        doThrow(new ApiRequestException("Village not found")).when(villageService).getVillageByName("Village2");
-//
-//        villageImageService.uploadImages();
-//
-//        verify(villageService, times(1)).getVillageByName("Village1");
-//        verify(villageService, times(1)).getVillageByName("Village2");
-//    }
+        doNothing().when(villageImageService).createVillageImageDTO(eq(villageId), anyString(), eq(localDateTime), eq(status), eq(userDTO));
 
+        villageImageService.createImagePaths2222(imageUUIDs, villageId, localDateTime, status, userDTO);
+
+        verify(villageImageService, times(imageUUIDs.size()))
+                .createVillageImageDTO(eq(villageId), anyString(), eq(localDateTime), eq(status), eq(userDTO));
+    }
 }
