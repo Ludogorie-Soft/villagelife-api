@@ -13,6 +13,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -93,12 +95,12 @@ class VillageImageControllerIntegrationTest {
         images2.add("img5");
         villageDTO2.setImages(images2);
 
-        List<VillageDTO> villageDTOList = Arrays.asList(villageDTO1, villageDTO2);
+        Page<VillageDTO> villageDTOList = new PageImpl<>(List.of(villageDTO1,villageDTO2));
 
-        when(villageImageService.getAllApprovedVillageDTOsWithImages()).thenReturn(villageDTOList);
+        when(villageImageService.getApprovedVillageDTOsWithImages(1,1)).thenReturn(villageDTOList);
 
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageImages/approved")
+        mockMvc.perform(get("/api/v1/villageImages/approved/1/1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.[0].id").value(1))
@@ -114,9 +116,9 @@ class VillageImageControllerIntegrationTest {
 
     @Test
     void testGetAllVillageDTOsWithImagesWhenNotFound() throws Exception {
-        when(villageImageService.getAllApprovedVillageDTOsWithImages()).thenReturn(Collections.emptyList());
+        when(villageImageService.getApprovedVillageDTOsWithImages(1, 1)).thenReturn(new PageImpl<>(Collections.emptyList()));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageImages/approved")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageImages/approved/1/1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andReturn();

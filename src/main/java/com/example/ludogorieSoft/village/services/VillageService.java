@@ -45,9 +45,9 @@ public class VillageService {
     public VillageDTO villageToVillageDTO(Village village) {
         return modelMapper.map(village, VillageDTO.class);
     }
-    public VillageResponse villageToVillageResponse(Village village){
-        return modelMapper.map(village, VillageResponse.class);
-    }
+//    public VillageResponse villageToVillageResponse(Village village){
+//        return modelMapper.map(village, VillageResponse.class);
+//    }
 
     public List<VillageDTO> getAllVillages() {
         List<Village> villages = villageRepository.findAll();
@@ -59,8 +59,7 @@ public class VillageService {
     public VillageDTO getVillageById(Long id) {
         Optional<Village> optionalVillage = villageRepository.findById(id);
         if (optionalVillage.isPresent()) {
-            VillageDTO villageDTO = villageToVillageDTO(optionalVillage.get());
-            return villageDTO;
+            return villageToVillageDTO(optionalVillage.get());
         } else {
             throw new ApiRequestException(ERROR_MESSAGE1 + id + ERROR_MESSAGE2);
         }
@@ -165,6 +164,7 @@ public class VillageService {
         Page<Village> villages = villageRepository.findByNameContainingIgnoreCaseAndRegionName(regionName, name, page);
         return new PageImpl<>(villages.stream().map(this::villageToVillageDTO).toList(), page, villages.getTotalElements());
     }
+
     public Page<VillageDTO> getAllSearchVillagesByNameAndRegionName(String regionName, String name, int pageNumber, int elementsCount, String sort) {
         Pageable page = PageRequest.of(pageNumber, elementsCount, getSort(sort));
         Page<Village> villages = villageRepository.findByNameContainingIgnoreCaseAndRegionName(regionName, name, page);
@@ -185,7 +185,6 @@ public class VillageService {
             System.out.println("return Sort.by(Sort.Order.desc(\"region\"));");
             return Sort.by(Sort.Order.desc("region"));
         }
-        System.out.println("???????????");
         return Sort.unsorted();
     }
 
@@ -232,187 +231,171 @@ public class VillageService {
     }
 
 
-    protected List<ObjectAroundVillageDTO> convertToObjectAroundVillageDTOList(List<ObjectVillage> objectVillages) {
-        List<ObjectAroundVillageDTO> objectAroundVillageDTOs = new ArrayList<>();
+//    protected List<VillageDTO> villageToVillageDTOObject(List<Village> villages) {
+//        List<VillageDTO> villageDTOs = new ArrayList<>();
+//
+//        for (Village village : villages) {
+//            VillageDTO villageDTO = new VillageDTO();
+//            villageDTO.setId(village.getId());
+//            villageDTO.setName(village.getName());
+//            villageDTO.setRegion(String.valueOf(village.getRegion().getRegionName()));
+//
+//            villageDTO.setObject(convertToObjectAroundVillageDTOList(village.getObjectVillages()));
+//
+//            villageDTOs.add(villageDTO);
+//        }
+//
+//        return villageDTOs;
+//    }
 
-        for (ObjectVillage ov : objectVillages) {
-            ObjectAroundVillageDTO objectAroundVillageDTO = new ObjectAroundVillageDTO();
+//    protected List<VillageDTO> villageToVillageDTOLivingCondition(List<Village> villages) {
+//        List<VillageDTO> villageDTOs = new ArrayList<>();
+//
+//        for (Village village : villages) {
+//            VillageDTO villageDTO = new VillageDTO();
+//            villageDTO.setId(village.getId());
+//            villageDTO.setName(village.getName());
+//            villageDTO.setRegion(String.valueOf(village.getRegion().getRegionName()));
+//
+//            villageDTO.setLivingConditions(convertToLivingConditionDTOList(village.getVillageLivingConditions()));
+//
+//            villageDTOs.add(villageDTO);
+//        }
+//
+//        return villageDTOs;
+//    }
 
-            objectAroundVillageDTO.setId(ov.getObject().getId());
-            objectAroundVillageDTO.setType(ov.getObject().getType());
+//
+//    protected List<VillageDTO> villageToVillageDTOChildren(List<Village> villages) {
+//        List<VillageDTO> villageDTOs = new ArrayList<>();
+//
+//        for (Village village : villages) {
+//            VillageDTO villageDTO = new VillageDTO();
+//            villageDTO.setId(village.getId());
+//            villageDTO.setName(village.getName());
+//            villageDTO.setRegion(String.valueOf(village.getRegion().getRegionName()));
+//
+//            mapPopulationsToDTOs(village, villageDTO);
+//
+//            villageDTOs.add(villageDTO);
+//        }
+//
+//        return villageDTOs;
+//    }
 
-            objectAroundVillageDTOs.add(objectAroundVillageDTO);
-        }
-
-        return objectAroundVillageDTOs;
-    }
-
-    protected List<VillageDTO> villageToVillageDTOObject(List<Village> villages) {
-        List<VillageDTO> villageDTOs = new ArrayList<>();
-
-        for (Village village : villages) {
-            VillageDTO villageDTO = new VillageDTO();
-            villageDTO.setId(village.getId());
-            villageDTO.setName(village.getName());
-            villageDTO.setRegion(String.valueOf(village.getRegion().getRegionName()));
-
-            villageDTO.setObject(convertToObjectAroundVillageDTOList(village.getObjectVillages()));
-
-            villageDTOs.add(villageDTO);
-        }
-
-        return villageDTOs;
-    }
-
-    protected List<VillageDTO> villageToVillageDTOLivingCondition(List<Village> villages) {
-        List<VillageDTO> villageDTOs = new ArrayList<>();
-
-        for (Village village : villages) {
-            VillageDTO villageDTO = new VillageDTO();
-            villageDTO.setId(village.getId());
-            villageDTO.setName(village.getName());
-            villageDTO.setRegion(String.valueOf(village.getRegion().getRegionName()));
-
-            villageDTO.setLivingConditions(convertToLivingConditionDTOList(village.getVillageLivingConditions()));
-
-            villageDTOs.add(villageDTO);
-        }
-
-        return villageDTOs;
-    }
-
-
-    protected List<VillageDTO> villageToVillageDTOChildren(List<Village> villages) {
-        List<VillageDTO> villageDTOs = new ArrayList<>();
-
-        for (Village village : villages) {
-            VillageDTO villageDTO = new VillageDTO();
-            villageDTO.setId(village.getId());
-            villageDTO.setName(village.getName());
-            villageDTO.setRegion(String.valueOf(village.getRegion().getRegionName()));
-
-            mapPopulationsToDTOs(village, villageDTO);
-
-            villageDTOs.add(villageDTO);
-        }
-
-        return villageDTOs;
-    }
-
-    protected List<VillageDTO> villageToVillageDTOWithoutChildren(List<Village> villages) {
-        List<VillageDTO> villageDTOs = new ArrayList<>();
-
-        for (Village village : villages) {
-            VillageDTO villageDTO = new VillageDTO();
-            villageDTO.setId(village.getId());
-            villageDTO.setName(village.getName());
-            villageDTO.setRegion(String.valueOf(village.getRegion().getRegionName()));
-
-            villageDTO.setObject(convertToObjectAroundVillageDTOList(village.getObjectVillages()));
-            villageDTO.setLivingConditions(convertToLivingConditionDTOList(village.getVillageLivingConditions()));
-
-            villageDTOs.add(villageDTO);
-        }
-
-        return villageDTOs;
-    }
+//    protected List<VillageDTO> villageToVillageDTOWithoutChildren(List<Village> villages) {
+//        List<VillageDTO> villageDTOs = new ArrayList<>();
+//
+//        for (Village village : villages) {
+//            VillageDTO villageDTO = new VillageDTO();
+//            villageDTO.setId(village.getId());
+//            villageDTO.setName(village.getName());
+//            villageDTO.setRegion(String.valueOf(village.getRegion().getRegionName()));
+//
+//            villageDTO.setObject(convertToObjectAroundVillageDTOList(village.getObjectVillages()));
+//            villageDTO.setLivingConditions(convertToLivingConditionDTOList(village.getVillageLivingConditions()));
+//
+//            villageDTOs.add(villageDTO);
+//        }
+//
+//        return villageDTOs;
+//    }
 
 
-    protected List<VillageDTO> villageToVillageDTOWithoutObject(List<Village> villages) {
-        List<VillageDTO> villageDTOs = new ArrayList<>();
-
-        for (Village village : villages) {
-            VillageDTO villageDTO = new VillageDTO();
-            villageDTO.setId(village.getId());
-            villageDTO.setName(village.getName());
-            villageDTO.setRegion(String.valueOf(village.getRegion().getRegionName()));
-
-            villageDTO.setLivingConditions(convertToLivingConditionDTOList(village.getVillageLivingConditions()));
-
-            mapPopulationsToDTOs(village, villageDTO);
-
-            villageDTOs.add(villageDTO);
-        }
-
-        return villageDTOs;
-    }
-
-
-
-    protected List<VillageDTO> villageToVillageDTOWithoutLivingCondition(List<Village> villages) {
-        List<VillageDTO> villageDTOs = new ArrayList<>();
-
-        for (Village village : villages) {
-            VillageDTO villageDTO = new VillageDTO();
-            villageDTO.setId(village.getId());
-            villageDTO.setName(village.getName());
-            villageDTO.setRegion(String.valueOf(village.getRegion().getRegionName()));
-
-            villageDTO.setObject(convertToObjectAroundVillageDTOList(village.getObjectVillages()));
-            mapPopulationsToDTOs(village, villageDTO);
-
-            villageDTOs.add(villageDTO);
-        }
-
-        return villageDTOs;
-    }
-
-    protected List<VillageDTO> convertToDTO(List<Village> villages) {
-        List<VillageDTO> villageDTOs = new ArrayList<>();
-
-        for (Village village : villages) {
-            VillageDTO villageDTO = new VillageDTO();
-            villageDTO.setId(village.getId());
-            villageDTO.setName(village.getName());
-            villageDTO.setRegion(String.valueOf(village.getRegion().getRegionName()));
-
-            villageDTO.setObject(convertToObjectAroundVillageDTOList(village.getObjectVillages()));
-            villageDTO.setLivingConditions(convertToLivingConditionDTOList(village.getVillageLivingConditions()));
-
-            mapPopulationsToDTOs(village, villageDTO);
-
-            villageDTOs.add(villageDTO);
-        }
-
-        return villageDTOs;
-    }
+//    protected List<VillageDTO> villageToVillageDTOWithoutObject(List<Village> villages) {
+//        List<VillageDTO> villageDTOs = new ArrayList<>();
+//
+//        for (Village village : villages) {
+//            VillageDTO villageDTO = new VillageDTO();
+//            villageDTO.setId(village.getId());
+//            villageDTO.setName(village.getName());
+//            villageDTO.setRegion(String.valueOf(village.getRegion().getRegionName()));
+//
+//            villageDTO.setLivingConditions(convertToLivingConditionDTOList(village.getVillageLivingConditions()));
+//
+//            mapPopulationsToDTOs(village, villageDTO);
+//
+//            villageDTOs.add(villageDTO);
+//        }
+//
+//        return villageDTOs;
+//    }
 
 
-    protected List<LivingConditionDTO> convertToLivingConditionDTOList(List<VillageLivingConditions> villageLivingConditions) {
-        List<LivingConditionDTO> livingConditionDTOs = new ArrayList<>();
+//    protected List<VillageDTO> villageToVillageDTOWithoutLivingCondition(List<Village> villages) {
+//        List<VillageDTO> villageDTOs = new ArrayList<>();
+//
+//        for (Village village : villages) {
+//            VillageDTO villageDTO = new VillageDTO();
+//            villageDTO.setId(village.getId());
+//            villageDTO.setName(village.getName());
+//            villageDTO.setRegion(String.valueOf(village.getRegion().getRegionName()));
+//
+//            villageDTO.setObject(convertToObjectAroundVillageDTOList(village.getObjectVillages()));
+//            mapPopulationsToDTOs(village, villageDTO);
+//
+//            villageDTOs.add(villageDTO);
+//        }
+//
+//        return villageDTOs;
+//    }
 
-        for (VillageLivingConditions vl : villageLivingConditions) {
-            LivingConditionDTO livingConditionDTO = new LivingConditionDTO();
-
-            livingConditionDTO.setId(vl.getLivingCondition().getId());
-            livingConditionDTO.setLivingConditionName(vl.getLivingCondition().getLivingConditionName());
-
-            livingConditionDTOs.add(livingConditionDTO);
-        }
-
-        return livingConditionDTOs;
-    }
-
-
-    private void mapPopulationsToDTOs(Village village, VillageDTO villageDTO) {
-        List<PopulationDTO> populationDTOs = new ArrayList<>();
-        for (Population population : village.getPopulations()) {
-            Children childrenEnum = population.getChildren().getEnumValue();
-            PopulationDTO populationDTO = convertToPopulationDTO(childrenEnum);
-            populationDTOs.add(populationDTO);
-        }
-        villageDTO.setPopulations(populationDTOs);
-    }
+//    protected List<VillageDTO> convertToDTO(List<Village> villages) {
+//        List<VillageDTO> villageDTOs = new ArrayList<>();
+//
+//        for (Village village : villages) {
+//            VillageDTO villageDTO = new VillageDTO();
+//            villageDTO.setId(village.getId());
+//            villageDTO.setName(village.getName());
+//            villageDTO.setRegion(String.valueOf(village.getRegion().getRegionName()));
+//
+//            villageDTO.setObject(convertToObjectAroundVillageDTOList(village.getObjectVillages()));
+//            villageDTO.setLivingConditions(convertToLivingConditionDTOList(village.getVillageLivingConditions()));
+//
+//            mapPopulationsToDTOs(village, villageDTO);
+//
+//            villageDTOs.add(villageDTO);
+//        }
+//
+//        return villageDTOs;
+//    }
 
 
-    protected PopulationDTO convertToPopulationDTO(Children children) {
-        Children childrenEnum = children.getEnumValue();
-        PopulationDTO populationDTO = new PopulationDTO();
+//    protected List<LivingConditionDTO> convertToLivingConditionDTOList(List<VillageLivingConditions> villageLivingConditions) {
+//        List<LivingConditionDTO> livingConditionDTOs = new ArrayList<>();
+//
+//        for (VillageLivingConditions vl : villageLivingConditions) {
+//            LivingConditionDTO livingConditionDTO = new LivingConditionDTO();
+//
+//            livingConditionDTO.setId(vl.getLivingCondition().getId());
+//            livingConditionDTO.setLivingConditionName(vl.getLivingCondition().getLivingConditionName());
+//
+//            livingConditionDTOs.add(livingConditionDTO);
+//        }
+//
+//        return livingConditionDTOs;
+//    }
 
-        populationDTO.setChildren(childrenEnum);
 
-        return populationDTO;
-    }
+//    private void mapPopulationsToDTOs(Village village, VillageDTO villageDTO) {
+//        List<PopulationDTO> populationDTOs = new ArrayList<>();
+//        for (Population population : village.getPopulations()) {
+//            Children childrenEnum = population.getChildren().getEnumValue();
+//            PopulationDTO populationDTO = convertToPopulationDTO(childrenEnum);
+//            populationDTOs.add(populationDTO);
+//        }
+//        villageDTO.setPopulations(populationDTOs);
+//    }
+
+
+//    protected PopulationDTO convertToPopulationDTO(Children children) {
+//        Children childrenEnum = children.getEnumValue();
+//        PopulationDTO populationDTO = new PopulationDTO();
+//
+//        populationDTO.setChildren(childrenEnum);
+//
+//        return populationDTO;
+//    }
 
     public Page<VillageDTO> getAllApprovedVillages(int pageNumber, int elementsCount, String sort) {
         Pageable page = PageRequest.of(pageNumber, elementsCount, getSort(sort));
@@ -420,15 +403,15 @@ public class VillageService {
         return new PageImpl<>(approvedVillages.stream().map(this::villageToVillageDTO).toList(), page, approvedVillages.getTotalElements());
     }
 
-    public List<VillageDTO> getVillagesByStatus(boolean status) {
-        List<Village> villagesWithStatus = villageRepository.findByStatus(status);
-        List<VillageDTO> villageDTOsWithStatus = new ArrayList<>();
-        for (Village village : villagesWithStatus) {
-            VillageDTO villageDTO = modelMapper.map(village, VillageDTO.class);
-            villageDTOsWithStatus.add(villageDTO);
-        }
-        return villageDTOsWithStatus;
-    }
+    //    public List<VillageDTO> getVillagesByStatus(boolean status) {
+//        List<Village> villagesWithStatus = villageRepository.findByStatus(status);
+//        List<VillageDTO> villageDTOsWithStatus = new ArrayList<>();
+//        for (Village village : villagesWithStatus) {
+//            VillageDTO villageDTO = modelMapper.map(village, VillageDTO.class);
+//            villageDTOsWithStatus.add(villageDTO);
+//        }
+//        return villageDTOsWithStatus;
+//    }
     public Page<VillageDTO> getVillagesByStatus(boolean status, Pageable page) {
         Page<Village> villagesWithStatusPage = villageRepository.findByStatus(status, page);
         List<VillageDTO> villageDTOsWithStatus = villagesWithStatusPage.getContent()
@@ -439,22 +422,23 @@ public class VillageService {
         return new PageImpl<>(villageDTOsWithStatus, page, villagesWithStatusPage.getTotalElements());
     }
 
-    public void increaseApprovedResponsesCount(Long villageId){
+    public void increaseApprovedResponsesCount(Long villageId) {
         Optional<Village> village = villageRepository.findById(villageId);
-        if(village.isEmpty()){
+        if (village.isEmpty()) {
             return;
         }
         village.get().setApprovedResponsesCount(village.get().getApprovedResponsesCount() + 1);
         villageRepository.save(village.get());
     }
+
     public VillageDTO getVillageByName(String name) {
         List<Village> foundVillages = villageRepository.findByName(name);
 
         if (foundVillages.isEmpty()) {
             throw new ApiRequestException("Village with name " + name + ERROR_MESSAGE2);
-        }else if(foundVillages.size() == 1){
+        } else if (foundVillages.size() == 1) {
             return villageToVillageDTO(foundVillages.get(0));
-        }else{
+        } else {
             throw new ApiRequestException("There are " + foundVillages.size() + " villages with name " + name);
         }
     }

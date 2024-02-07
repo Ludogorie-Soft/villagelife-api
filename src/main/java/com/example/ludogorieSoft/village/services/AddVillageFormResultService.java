@@ -52,12 +52,12 @@ public class AddVillageFormResultService {
 
     public void checkIsImagesHasUserConsent(AddVillageFormResult addVillageFormResult) {
 
-//        if (!addVillageFormResult.getImageBytes().isEmpty()
-//                && (addVillageFormResult.getUserDTO().getFullName().isEmpty()
-//                || addVillageFormResult.getUserDTO().getEmail().isEmpty()
-//                || !addVillageFormResult.getUserDTO().getConsent())) {
-//            throw new NoConsentException("При добавяне на снимки трябва да се съгласите с условията!");
-//        }
+        if (!addVillageFormResult.getImageBytes().isEmpty()
+                && (addVillageFormResult.getUserDTO().getFullName().isEmpty()
+                || addVillageFormResult.getUserDTO().getEmail().isEmpty()
+                || !addVillageFormResult.getUserDTO().getConsent())) {
+            throw new NoConsentException("При добавяне на снимки трябва да се съгласите с условията!");
+        }
 
     }
 
