@@ -1,12 +1,8 @@
 package com.example.ludogorieSoft.village.services;
 
-import com.example.ludogorieSoft.village.dtos.VillageDTO;
-import com.example.ludogorieSoft.village.model.VillageImage;
-import io.minio.GetObjectArgs;
-import io.minio.MinioClient;
-import io.minio.PutObjectArgs;
-import io.minio.RemoveObjectArgs;
-import io.minio.errors.MinioException;
+import io.minio.*;
+import io.minio.errors.*;
+import io.minio.messages.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
@@ -17,6 +13,12 @@ import org.springframework.stereotype.Service;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import io.minio.ListObjectsArgs;
+import io.minio.MinioClient;
+import io.minio.Result;
 
 @Service
 @RequiredArgsConstructor
@@ -87,6 +89,32 @@ public class ImageService {
 //
 //        return result;
 //    }
+    //    public List<VillageDTO> getVillagesWithImages(List<VillageDTO> villages) {
+//        System.out.println("1111111" + villages.get(villages.size() - 1).getImages());
+//        return villages.stream()
+//                .map(villageDTO -> {
+//                    villageDTO.setImages(villageDTO.getImages().stream()
+//                            .map(this::getImageFromSpace)
+//                            .toList());
+//                    System.out.println("2222222" + villages.get(villages.size() - 1).getImages());
+//                    System.out.println("33333" + villageDTO.getImages());
+//                    return villageDTO;
+//                }).toList();
+//    }
+
+//public List<VillageImage> getVillagesWithImages(List<VillageImage> villages) {
+//    System.out.println("1111111" + villages.get(villages.size() - 1).getImageName());
+//    return villages.stream()
+//            .map(villageImage -> {
+//                villageImage.setImageName(villageImage.getImages().stream()
+//                        .map(this::getImageFromSpace)
+//                        .toList());
+//                System.out.println("2222222" + villages.get(villages.size() - 1).getImages());
+//                System.out.println("33333" + villageImage.getImages());
+//                return villageImage;
+//            }).toList();
+//}
+
 
     public String getImageFromSpace(String objectKey) {
         try {
@@ -114,29 +142,48 @@ public class ImageService {
         return false;
     }
 
-//    public List<VillageDTO> getVillagesWithImages(List<VillageDTO> villages) {
-//        System.out.println("1111111" + villages.get(villages.size() - 1).getImages());
-//        return villages.stream()
-//                .map(villageDTO -> {
-//                    villageDTO.setImages(villageDTO.getImages().stream()
-//                            .map(this::getImageFromSpace)
-//                            .toList());
-//                    System.out.println("2222222" + villages.get(villages.size() - 1).getImages());
-//                    System.out.println("33333" + villageDTO.getImages());
-//                    return villageDTO;
-//                }).toList();
-//    }
-//public List<VillageImage> getVillagesWithImages(List<VillageImage> villages) {
-//    System.out.println("1111111" + villages.get(villages.size() - 1).getImageName());
-//    return villages.stream()
-//            .map(villageImage -> {
-//                villageImage.setImageName(villageImage.getImages().stream()
-//                        .map(this::getImageFromSpace)
-//                        .toList());
-//                System.out.println("2222222" + villages.get(villages.size() - 1).getImages());
-//                System.out.println("33333" + villageImage.getImages());
-//                return villageImage;
-//            }).toList();
-//}
+    public List<String> getAllImageNamesFromSpace() {
+        List<String> imageNames = new ArrayList<>();
+        try {
+            Iterable<Result<Item>> results = minioClient.listObjects(
+                    ListObjectsArgs.builder().bucket(digitalOceanBucketName).recursive(true).build());
+            for (Result<Item> result : results) {
+                System.out.println("1111111111111111111");
+                Item item = result.get();
+                System.out.println("222222222222222222222");
+                String objectKey = item.objectName();
+                System.out.println("3333333333333333333333");
+                imageNames.add(objectKey);
+            }
+        } catch (MinioException e) {
+            log.warn("Minio error: " + e.getMessage());
+            e.printStackTrace();
+        } catch (Exception e) {
+            log.warn("An unexpected error occurred: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return imageNames;
+    }
+
+    /*public void test() {
+        System.out.println("---- in test ----");
+        ListObjectsArgs lArgs = ListObjectsArgs.builder().bucket(digitalOceanBucketName).build();
+        System.out.println("1");
+        Iterable<Result<Item>> resp = minioClient.listObjects(lArgs);
+        System.out.println("2");
+        Iterator<Result<Item>> it = resp.iterator();
+        System.out.println("3");
+        while (it.hasNext()){
+            try {
+                System.out.println("4");
+                Item i = it.next().get();
+                System.out.println("+++++++" + i.objectName() + "++++++++");
+            } catch (MinioException e) {
+                log.warn("Minio error: " + e.getMessage());
+            } catch (Exception e) {
+                log.warn("An unexpected error occurred: " + e.getMessage());
+            }
+        }
+    }*/
 
 }
