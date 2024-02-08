@@ -18,6 +18,10 @@ import com.example.ludogorieSoft.village.repositories.VillageImageRepository;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -25,6 +29,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -48,6 +54,8 @@ class VillageImageServiceTest {
     private ImageService imageService;
     @Mock
     private UserService userService;
+    @Mock
+    private File file;
     @InjectMocks
     private VillageImageService villageImageService;
 
@@ -716,6 +724,25 @@ class VillageImageServiceTest {
 
         verify(villageImageService, times(imageUUIDs.size()))
                 .createVillageImageDTO(eq(VILLAGE_ID), anyString(), eq(localDateTime), eq(status), eq(userDTO));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"test.jpg","test.png"})
+    void testIsImageFileWithJpgFile(String imageName) {
+        when(file.getName()).thenReturn(imageName);
+
+        boolean result = villageImageService.isImageFile(file);
+
+        assertTrue(result);
+    }
+
+    @Test
+    void testIsImageFileWithNonImageFile() {
+        when(file.getName()).thenReturn("test.txt");
+
+        boolean result = villageImageService.isImageFile(file);
+
+        assertFalse(result);
     }
 
 }

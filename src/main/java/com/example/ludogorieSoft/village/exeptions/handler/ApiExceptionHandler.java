@@ -4,8 +4,11 @@ import com.example.ludogorieSoft.village.exeptions.AccessDeniedException;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.exeptions.NoConsentException;
 import com.example.ludogorieSoft.village.exeptions.TokenExpiredException;
+import com.example.ludogorieSoft.village.slack.SlackMessage;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -16,8 +19,14 @@ import org.springframework.web.context.request.WebRequest;
 
 
 @RestControllerAdvice
-@Slf4j
+@AllArgsConstructor
 public class ApiExceptionHandler {
+    private SlackMessage slackMessage;
+    @ExceptionHandler(Exception.class)
+    public void alertSlackChannelWhenUnhandledExceptionOccurs(Exception ex) {
+        slackMessage.publishMessage("villagelife-notifications",
+                "Error occured from the backend application ->" + ex.getMessage());
+    }
     @ExceptionHandler(value = {ApiRequestException.class})
     public ResponseEntity<String> handleApiRequestException(ApiRequestException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
@@ -53,4 +62,5 @@ public class ApiExceptionHandler {
         String errorMessage = ex.getCause().getCause().getMessage();
         return ResponseEntity.status(HttpStatus.CONFLICT).body(errorMessage);
     }
+
 }
