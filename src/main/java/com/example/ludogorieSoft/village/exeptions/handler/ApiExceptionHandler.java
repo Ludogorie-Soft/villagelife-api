@@ -8,6 +8,7 @@ import com.example.ludogorieSoft.village.slack.SlackMessage;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -20,6 +21,7 @@ import org.springframework.web.context.request.WebRequest;
 
 @RestControllerAdvice
 @AllArgsConstructor
+@NoArgsConstructor
 public class ApiExceptionHandler {
     private SlackMessage slackMessage;
     @ExceptionHandler(Exception.class)
