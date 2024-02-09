@@ -16,10 +16,10 @@ import java.time.format.DateTimeFormatter;
 
 @Configuration
 public class AppConfig {
-    @Value("${digital.ocean.access.key}")
-    private String digitalOceanAccessKey;
     @Value("${space.bucket.origin.url}")
     private String spaceBucketOriginUrl;
+    @Value("${digital.ocean.access.key}")
+    private String digitalOceanAccessKey;
     @Value("${digital.ocean.secret.key}")
     private String digitalOceanSecretKey;
     @Bean
