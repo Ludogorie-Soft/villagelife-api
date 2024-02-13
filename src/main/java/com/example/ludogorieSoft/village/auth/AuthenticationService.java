@@ -5,6 +5,7 @@ import com.example.ludogorieSoft.village.dtos.request.AuthenticationRequest;
 import com.example.ludogorieSoft.village.dtos.request.RegisterRequest;
 import com.example.ludogorieSoft.village.dtos.response.AuthenticationResponce;
 import com.example.ludogorieSoft.village.exeptions.AccessDeniedException;
+import com.example.ludogorieSoft.village.exeptions.UsernamePasswordException;
 import com.example.ludogorieSoft.village.model.Administrator;
 import com.example.ludogorieSoft.village.repositories.AdministratorRepository;
 import com.example.ludogorieSoft.village.utils.TimestampUtils;
@@ -54,7 +55,7 @@ public class AuthenticationService {
                     .token(jwtToken)
                     .build();
         } catch (Exception e) {
-            throw new AccessDeniedException("Wrong username or password");
+            throw new UsernamePasswordException("Wrong username or password");
         }
     }
 }

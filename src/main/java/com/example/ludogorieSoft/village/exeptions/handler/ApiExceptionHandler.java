@@ -1,9 +1,6 @@
 package com.example.ludogorieSoft.village.exeptions.handler;
 
-import com.example.ludogorieSoft.village.exeptions.AccessDeniedException;
-import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
-import com.example.ludogorieSoft.village.exeptions.NoConsentException;
-import com.example.ludogorieSoft.village.exeptions.TokenExpiredException;
+import com.example.ludogorieSoft.village.exeptions.*;
 import com.example.ludogorieSoft.village.slack.SlackMessage;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -41,7 +38,7 @@ public class ApiExceptionHandler {
 
     @ExceptionHandler(TokenExpiredException.class)
     public ResponseEntity<Object> handleTokenExpiredException(TokenExpiredException ex, WebRequest request) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token has expired");
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Token has expired");
     }
 
     @ExceptionHandler(AccessDeniedException.class)
@@ -51,7 +48,7 @@ public class ApiExceptionHandler {
 
     @ExceptionHandler(MalformedJwtException.class)
     public ResponseEntity<String> handleGlobalException(MalformedJwtException ex) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
     }
 
     @ExceptionHandler(ExpiredJwtException.class)
@@ -64,5 +61,8 @@ public class ApiExceptionHandler {
         String errorMessage = ex.getCause().getCause().getMessage();
         return ResponseEntity.status(HttpStatus.CONFLICT).body(errorMessage);
     }
-
+    @ExceptionHandler(UsernamePasswordException.class)
+    public ResponseEntity<Object> handleUsernamePasswordException(UsernamePasswordException ex, WebRequest request) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Wrong username or password");
+    }
 }
