@@ -5,10 +5,9 @@ import com.example.ludogorieSoft.village.dtos.request.AuthenticationRequest;
 import com.example.ludogorieSoft.village.dtos.request.RegisterRequest;
 import com.example.ludogorieSoft.village.dtos.response.AuthenticationResponce;
 import com.example.ludogorieSoft.village.enums.Role;
-import com.example.ludogorieSoft.village.exeptions.AccessDeniedException;
+import com.example.ludogorieSoft.village.exeptions.UsernamePasswordException;
 import com.example.ludogorieSoft.village.model.Administrator;
 import com.example.ludogorieSoft.village.repositories.AdministratorRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -80,12 +79,12 @@ class AuthenticationServiceTest {
     }
     @Test
     void testAuthenticate_Failure() {
-        // Mock necessary behavior
+
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
-                .thenThrow(UsernameNotFoundException.class); // Simulate authentication failure
+                .thenThrow(UsernameNotFoundException.class);
 
         AuthenticationRequest request = new AuthenticationRequest("invalidUsername", "invalidPassword");
 
-        assertThrows(AccessDeniedException.class, () -> authenticationService.authenticate(request));
+        assertThrows(UsernamePasswordException.class, () -> authenticationService.authenticate(request));
     }
 }
