@@ -37,12 +37,14 @@ public class AdminVillageService {
         String keyWord = "toApprove";
         for (Village village : villagesWithAnswers) {
             VillageResponse villageResponse = createVillageResponse(village, formatter, status, keyWord);
+            villageResponse.setImagesCount(villageImageService.getImageCountByVillageId(village.getId()));
             villageResponses.add(villageResponse);
 
         }
 
         return villageResponses;
     }
+
     public void updateVillageStatusAndVillageResponsesStatus(Long villageId, String answerDate) {
         villageService.increaseApprovedResponsesCount(villageId);
         boolean status = false;
@@ -55,6 +57,7 @@ public class AdminVillageService {
         ethnicityVillageService.updateEthnicityVillageStatus(villageId, status, answerDate);
         villageGroundCategoryService.updateVillageGroundCategoryStatus(villageId, status, answerDate);
     }
+
     public void rejectVillageResponses(Long villageId, String answerDate) {
         LocalDateTime timestamp = TimestampUtils.getCurrentTimestamp();
         boolean status = false;
@@ -80,12 +83,13 @@ public class AdminVillageService {
         String keyWord = "rejected";
 
         for (Village village : villagesWithRejectedResponses) {
-            VillageResponse villageResponse = createVillageResponse(village, formatter, status,keyWord);
+            VillageResponse villageResponse = createVillageResponse(village, formatter, status, keyWord);
             villageResponses.add(villageResponse);
         }
 
         return villageResponses;
     }
+
     protected VillageResponse createVillageResponse(Village village, DateTimeFormatter formatter, boolean status, String keyWord) {
         VillageResponse villageResponse = new VillageResponse();
         villageResponse.setId(village.getId());
@@ -100,7 +104,7 @@ public class AdminVillageService {
         }
         List<Population> answers = new ArrayList<>();
 
-        if (keyWord.equals("rejected")){
+        if (keyWord.equals("rejected")) {
             answers = getRejectedAnswersForVillage(village.getId(), status);
         } else if (keyWord.equals("toApprove")) {
             answers = getAnswersToApprove(village.getId(), status);
@@ -114,7 +118,8 @@ public class AdminVillageService {
     protected List<Population> getRejectedAnswersForVillage(Long villageId, boolean status) {
         return populationService.findByVillageIdAndVillageStatusDateDeleteNotNull(villageId, status);
     }
-    protected List<Population> getAnswersToApprove(Long villageId, boolean status){
+
+    protected List<Population> getAnswersToApprove(Long villageId, boolean status) {
         return populationService.findByVillageIdAndVillageStatus(villageId, status);
     }
 

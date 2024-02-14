@@ -6,14 +6,11 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.context.request.WebRequest;
 
 
 @RestControllerAdvice
@@ -21,11 +18,13 @@ import org.springframework.web.context.request.WebRequest;
 @NoArgsConstructor
 public class ApiExceptionHandler {
     private SlackMessage slackMessage;
+
     @ExceptionHandler(Exception.class)
     public void alertSlackChannelWhenUnhandledExceptionOccurs(Exception ex) {
         slackMessage.publishMessage("villagelife-notifications",
                 "Error occured from the backend application ->" + ex.getMessage());
     }
+
     @ExceptionHandler(value = {ApiRequestException.class})
     public ResponseEntity<String> handleApiRequestException(ApiRequestException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
@@ -37,7 +36,7 @@ public class ApiExceptionHandler {
     }
 
     @ExceptionHandler(TokenExpiredException.class)
-    public ResponseEntity<Object> handleTokenExpiredException(TokenExpiredException ex, WebRequest request) {
+    public ResponseEntity<Object> handleTokenExpiredException() {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Token has expired");
     }
 
@@ -61,8 +60,9 @@ public class ApiExceptionHandler {
         String errorMessage = ex.getCause().getCause().getMessage();
         return ResponseEntity.status(HttpStatus.CONFLICT).body(errorMessage);
     }
+
     @ExceptionHandler(UsernamePasswordException.class)
-    public ResponseEntity<Object> handleUsernamePasswordException(UsernamePasswordException ex, WebRequest request) {
+    public ResponseEntity<Object> handleUsernamePasswordException() {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Wrong username or password");
     }
 }

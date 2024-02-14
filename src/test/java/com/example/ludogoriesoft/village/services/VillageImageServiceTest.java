@@ -18,10 +18,6 @@ import com.example.ludogorieSoft.village.repositories.VillageImageRepository;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -183,7 +179,7 @@ class VillageImageServiceTest {
     }
 
     @Test
-    public void testGetAllImagesForVillageByStatusAndDate() {
+    void testGetAllImagesForVillageByStatusAndDate() {
         VillageImage villageImage1 = new VillageImage();
         villageImage1.setImageName("image1.png");
         List<VillageImage> villageImages = new ArrayList<>();
@@ -372,7 +368,7 @@ class VillageImageServiceTest {
     }
 
     @Test
-    public void testGetNotDeletedVillageImageDTOsByVillageId() {
+    void testGetNotDeletedVillageImageDTOsByVillageId() {
         VillageImage villageImage1 = new VillageImage();
         villageImage1.setImageName("image1.png");
         VillageImageDTO villageImageDTO = new VillageImageDTO();
@@ -655,7 +651,7 @@ class VillageImageServiceTest {
     }
 
     @Test
-    public void testGetApprovedVillageDTOsWithImages() {
+    void testGetApprovedVillageDTOsWithImages() {
         int pageNumber = 0;
         int elementsCount = 10;
 
@@ -668,7 +664,7 @@ class VillageImageServiceTest {
         villageDTO1.setName("Village 1");
 
         when(villageService.getVillagesByStatus(eq(true), any(Pageable.class))).thenReturn(new PageImpl<>(List.of(villageDTO1)));
-        when(villageImageRepository.findByVillageIdAndVillageStatusAndDateDeletedIsNull(eq(VILLAGE_ID), eq(true)))
+        when(villageImageRepository.findByVillageIdAndVillageStatusAndDateDeletedIsNull(VILLAGE_ID, true))
                 .thenReturn(Collections.emptyList());
 
         Page<VillageDTO> resultPage = villageImageService.getApprovedVillageDTOsWithImages(pageNumber, elementsCount);
@@ -679,12 +675,12 @@ class VillageImageServiceTest {
         assertEquals("Village 1", resultVillageDTO.getName());
 
         verify(villageService).getVillagesByStatus(eq(true), any(Pageable.class));
-        verify(villageImageRepository).findByVillageIdAndVillageStatusAndDateDeletedIsNull(eq(VILLAGE_ID), eq(true));
-        verify(imageService, never()).getImageFromSpace(anyString()); // Assuming imageService should not be called in this test
+        verify(villageImageRepository).findByVillageIdAndVillageStatusAndDateDeletedIsNull(VILLAGE_ID, true);
+        verify(imageService, never()).getImageFromSpace(anyString());
     }
 
     @Test
-    public void testUpdateVillageImagesStatus() {
+    void testUpdateVillageImagesStatus() {
         boolean status = true;
         String localDateTime = "2022-01-01T12:00:00";
 
@@ -698,7 +694,7 @@ class VillageImageServiceTest {
 
         List<VillageImage> villageImages = List.of(villageImage1);
 
-        when(villageImageRepository.findByVillageIdAndVillageStatusAndDateUpload(eq(VILLAGE_ID), eq(status), eq(localDateTime)))
+        when(villageImageRepository.findByVillageIdAndVillageStatusAndDateUpload(VILLAGE_ID, status, localDateTime))
                 .thenReturn(villageImages);
         when(modelMapper.map(any(VillageImage.class), eq(VillageImageDTO.class)))
                 .thenReturn(villageImageDTO);
@@ -706,7 +702,7 @@ class VillageImageServiceTest {
 
         villageImageService.updateVillageImagesStatus(VILLAGE_ID, status, localDateTime);
 
-        verify(villageImageRepository).findByVillageIdAndVillageStatusAndDateUpload(eq(VILLAGE_ID), eq(status), eq(localDateTime));
+        verify(villageImageRepository).findByVillageIdAndVillageStatusAndDateUpload(VILLAGE_ID, status, localDateTime);
         verify(modelMapper).map(any(VillageImage.class), eq(VillageImageDTO.class));
         verify(villageImageService).updateVillageImage(eq(VILLAGE_ID), any(VillageImageDTO.class));
     }
@@ -727,7 +723,7 @@ class VillageImageServiceTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"test.jpg","test.png"})
+    @ValueSource(strings = {"test.jpg", "test.png"})
     void testIsImageFileWithJpgFile(String imageName) {
         when(file.getName()).thenReturn(imageName);
 

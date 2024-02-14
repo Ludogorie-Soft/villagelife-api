@@ -103,14 +103,15 @@ public class ObjectVillageService {
                 .toList();
     }
 
-    public boolean existsByVillageIdAndObjectIdAndDistance(Long villageId, Long objectId, Distance distance){
+    public boolean existsByVillageIdAndObjectIdAndDistance(Long villageId, Long objectId, Distance distance) {
         return objectVillageRepository.existsByVillageIdAndObjectIdAndDistance(villageId, objectId, distance);
     }
-    public List<ObjectVillageDTO> getDistinctObjectVillagesByVillageId(Long villageId, boolean status, String date){
+
+    public List<ObjectVillageDTO> getDistinctObjectVillagesByVillageId(Long villageId, boolean status, String date) {
         List<ObjectVillage> allObjectVillages;
-        if(status){
-           allObjectVillages = objectVillageRepository.findByVillageIdAndVillageStatus(villageId, true);
-        }else {
+        if (status) {
+            allObjectVillages = objectVillageRepository.findByVillageIdAndVillageStatus(villageId, true);
+        } else {
             allObjectVillages = objectVillageRepository.findByVillageIdAndVillageStatusAndDateUpload(villageId, status, date);
         }
         Set<String> uniqueCombinations = new HashSet<>();
@@ -125,13 +126,14 @@ public class ObjectVillageService {
 
         return filteredObjectVillages;
     }
-    public List<ObjectVillageResponse> getObjectVillageResponses(List<ObjectVillageDTO> objectVillageDTOS){
+
+    public List<ObjectVillageResponse> getObjectVillageResponses(List<ObjectVillageDTO> objectVillageDTOS) {
         List<ObjectVillageResponse> objectVillageResponses = new ArrayList<>();
         Distance[] distances = Distance.values();
         for (Distance distance : distances) {
             List<ObjectVillageDTO> filteredList = objectVillageDTOS.stream()
-                            .filter(obj -> obj.getDistance() == distance)
-                            .toList();
+                    .filter(obj -> obj.getDistance() == distance)
+                    .toList();
             if (distance != Distance.OVER_50_KM && !filteredList.isEmpty()) {
                 StringBuilder objects = new StringBuilder();
                 ObjectVillageResponse objectVillageResponse = new ObjectVillageResponse();
@@ -146,7 +148,8 @@ public class ObjectVillageService {
         }
         return objectVillageResponses;
     }
-    public List<ObjectVillageDTO> getDistinctObjectVillagesByVillageIdForAdmin(Long villageId, boolean status){///ddd
+
+    public List<ObjectVillageDTO> getDistinctObjectVillagesByVillageIdForAdmin(Long villageId, boolean status) {
         List<ObjectVillage> allObjectVillages = objectVillageRepository.findByVillageIdAndVillageStatus(villageId, status);
         Set<String> uniqueCombinations = new HashSet<>();
         List<ObjectVillageDTO> filteredObjectVillages = new ArrayList<>();
