@@ -476,7 +476,6 @@ class FilterControllerIntegrationTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.length()").value(0));
     }
-/*
     @Test
     void testGetAllApprovedVillagesElementsCount() throws Exception {
         int page = 0;
@@ -541,5 +540,5 @@ class FilterControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").value(expectedCount));
-    }*/
+    }
 }
