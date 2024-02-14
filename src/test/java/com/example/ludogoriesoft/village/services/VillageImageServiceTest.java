@@ -740,5 +740,18 @@ class VillageImageServiceTest {
 
         assertFalse(result);
     }
+    @Test
+    void testGetImageCountByVillageId() {
+        Long villageId = 1L;
+        List<VillageImage> images = new ArrayList<>();
+        images.add(new VillageImage());
+        images.add(new VillageImage());
+        when(villageImageRepository.findNotDeletedByVillageId(villageId)).thenReturn(images);
+
+        int expectedCount = images.size();
+        int actualCount = villageImageService.getImageCountByVillageId(villageId);
+
+        assertEquals(expectedCount, actualCount);
+    }
 
 }

@@ -30,4 +30,21 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
          assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
      }
+     @Test
+     void testHandleTokenExpiredException() {
+         ApiExceptionHandler exceptionHandler = new ApiExceptionHandler();
+         TokenExpiredException ex = new TokenExpiredException("Token has expired");
+         ResponseEntity<Object> response = exceptionHandler.handleTokenExpiredException();
+         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+         assertEquals("Token has expired", response.getBody());
+     }
+
+     @Test
+     void testHandleAccessDeniedException() {
+         ApiExceptionHandler exceptionHandler = new ApiExceptionHandler();
+         AccessDeniedException ex = new AccessDeniedException("Access Denied");
+         ResponseEntity<String> response = exceptionHandler.handleAccessDeniedException(ex);
+         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+         assertEquals("Access Denied", response.getBody());
+     }
 }
