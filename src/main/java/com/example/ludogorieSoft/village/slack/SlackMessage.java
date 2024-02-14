@@ -18,7 +18,7 @@ public class SlackMessage {
     public void publishMessage(String channelName, String message) {
         MethodsClient client = Slack.getInstance().methods();
         try {
-            ChatPostMessageResponse response = client.chatPostMessage(r -> r
+            client.chatPostMessage(r -> r
                     .token(SLACK_TOKEN)
                     .channel(channelName)
                     .text(message)

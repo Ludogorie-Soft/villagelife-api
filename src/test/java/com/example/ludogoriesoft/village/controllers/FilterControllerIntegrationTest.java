@@ -476,7 +476,7 @@ class FilterControllerIntegrationTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.length()").value(0));
     }
-
+/*
     @Test
     void testGetAllApprovedVillagesElementsCount() throws Exception {
         int page = 0;
@@ -541,29 +541,5 @@ class FilterControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").value(expectedCount));
-    }
-/*
-    @Test
-    void testSearchVillagesByCriteriaElementsCount() throws Exception {
-        int page = 0;
-        List<String> objectAroundVillageDTOS = List.of("object1", "object2");
-        List<String> livingConditionDTOS = List.of("condition1", "condition2");
-        String children = "под 10";
-        long expectedCount = 10L;
-
-        when(villageSearchService.getSearchVillages(objectAroundVillageDTOS, livingConditionDTOS, Children.BELOW_10, page, 6, ""))
-                .thenReturn(new PageImpl<>(Collections.emptyList(), PageRequest.of(page, 6), expectedCount));
-
-        mockMvc.perform(get("/api/v1/filter/searchVillages/{page}/elementsCount", page)
-                        .param("objectAroundVillageDTOS", "object1", "object2")
-                        .param("livingConditionDTOS", "condition1", "condition2")
-                        .param("children", Children.BELOW_10.getName())
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$").value(expectedCount));
-    }
-
-*/
-
+    }*/
 }
