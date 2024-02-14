@@ -59,7 +59,7 @@ class FilterControllerIntegrationTest {
     }
 
     @Test
-    public void testGetAllApprovedVillages() throws Exception {
+    void testGetAllApprovedVillages() throws Exception {
 
         VillageDTO villageDTO1 = new VillageDTO();
         villageDTO1.setId(1L);
@@ -90,7 +90,7 @@ class FilterControllerIntegrationTest {
     }
 
     @Test
-    public void testGetVillageByName() throws Exception {
+    void testGetVillageByName() throws Exception {
         String name = "SomeVillageName";
 
         VillageDTO villageDTO1 = new VillageDTO();
@@ -123,7 +123,7 @@ class FilterControllerIntegrationTest {
     }
 
     @Test
-    public void testGetVillageByRegion() throws Exception {
+    void testGetVillageByRegion() throws Exception {
         String region = "SomeRegionName";
 
         VillageDTO villageDTO1 = new VillageDTO();
@@ -156,7 +156,7 @@ class FilterControllerIntegrationTest {
     }
 
     @Test
-    public void testGetVillageByNameAndRegion() throws Exception {
+    void testGetVillageByNameAndRegion() throws Exception {
         String region = "Example Region";
         String keyword = "Example Keyword";
 
@@ -191,7 +191,7 @@ class FilterControllerIntegrationTest {
     }
 
     @Test
-    public void testSearchVillagesByCriteria() throws Exception {
+    void testSearchVillagesByCriteria() throws Exception {
         List<String> objectAroundVillageDTOS = Arrays.asList("Object1", "Object2");
         List<String> livingConditionDTOS = Arrays.asList("Condition1", "Condition2");
         String children = "FROM_21_TO_50";
@@ -228,7 +228,7 @@ class FilterControllerIntegrationTest {
     }
 
     @Test
-    public void testSearchVillagesByLivingConditionAndChildren() throws Exception {
+    void testSearchVillagesByLivingConditionAndChildren() throws Exception {
         List<String> livingConditionDTOS = Arrays.asList("Condition1", "Condition2");
         String children = Children.FROM_21_TO_50.name();
 
@@ -264,7 +264,7 @@ class FilterControllerIntegrationTest {
 
 
     @Test
-    public void testSearchVillagesByObjectAndChildren() throws Exception {
+    void testSearchVillagesByObjectAndChildren() throws Exception {
         List<String> objectAroundVillageDTOS = Arrays.asList("Object1", "Object2");
         String children = Children.FROM_21_TO_50.name();
 
@@ -300,7 +300,7 @@ class FilterControllerIntegrationTest {
     }
 
     @Test
-    public void testSearchVillagesByObjectAndLivingCondition() throws Exception {
+    void testSearchVillagesByObjectAndLivingCondition() throws Exception {
         List<String> objectAroundVillageDTOS = Arrays.asList("Object1", "Object2");
         List<String> livingConditionDTOS = Arrays.asList("Condition1", "Condition2");
 
@@ -336,7 +336,7 @@ class FilterControllerIntegrationTest {
     }
 
     @Test
-    public void testSearchVillagesByChildrenCount() throws Exception {
+    void testSearchVillagesByChildrenCount() throws Exception {
         String children = "FROM_21_TO_50";
 
         VillageDTO villageDTO1 = new VillageDTO();
@@ -369,7 +369,7 @@ class FilterControllerIntegrationTest {
     }
 
     @Test
-    public void testSearchVillagesByObject() throws Exception {
+    void testSearchVillagesByObject() throws Exception {
         List<String> objectAroundVillageDTOS = Arrays.asList("Object1", "Object2");
 
         VillageDTO villageDTO1 = new VillageDTO();
@@ -402,7 +402,7 @@ class FilterControllerIntegrationTest {
     }
 
     @Test
-    public void testSearchVillagesByLivingCondition() throws Exception {
+    void testSearchVillagesByLivingCondition() throws Exception {
         List<String> livingConditionDTOS = Arrays.asList("Condition1", "Condition2");
 
         VillageDTO villageDTO1 = new VillageDTO();
@@ -435,7 +435,7 @@ class FilterControllerIntegrationTest {
     }
 
     @Test
-    public void testGetAllApprovedVillagesWhenEmpty() throws Exception {
+    void testGetAllApprovedVillagesWhenEmpty() throws Exception {
         when(villageSearchService.getAllApprovedVillages(pageNumber, elementsCount, sort))
                 .thenReturn(new PageImpl<>(List.of(), PageRequest.of(pageNumber, elementsCount), 0));
 
@@ -448,7 +448,7 @@ class FilterControllerIntegrationTest {
     }
 
     @Test
-    public void testGetVillageByNameWhenNoMatch() throws Exception {
+    void testGetVillageByNameWhenNoMatch() throws Exception {
         String name = "Nonexistent Village";
 
         when(villageSearchService.getAllSearchVillages(name, pageNumber, elementsCount, sort))
@@ -476,4 +476,94 @@ class FilterControllerIntegrationTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.length()").value(0));
     }
+
+    @Test
+    void testGetAllApprovedVillagesElementsCount() throws Exception {
+        int page = 0;
+        long expectedCount = 10L;
+
+        when(villageSearchService.getAllApprovedVillages(page, 6, ""))
+                .thenReturn(new PageImpl<>(Collections.emptyList(), PageRequest.of(page, 6), expectedCount));
+
+        mockMvc.perform(get("/api/v1/filter/{page}/elementsCount", page)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").value(expectedCount));
+    }
+    @Test
+    void testGetVillageByNameElementsCount() throws Exception {
+        int page = 0;
+        String name = "YourVillageName";
+        long expectedCount = 10L;
+
+        when(villageSearchService.getAllSearchVillages(name, page, 6, ""))
+                .thenReturn(new PageImpl<>(Collections.emptyList(), PageRequest.of(page, 6), expectedCount));
+
+        mockMvc.perform(get("/api/v1/filter/byName/{page}/elementsCount", page)
+                        .param("name", name)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").value(expectedCount));
+    }
+
+    @Test
+    void testGetVillageByRegionElementsCount() throws Exception {
+        int page = 0;
+        String region = "YourRegionName";
+        long expectedCount = 10L;
+
+        when(villageSearchService.getAllSearchVillagesByRegionName(region, page, 6, ""))
+                .thenReturn(new PageImpl<>(Collections.emptyList(), PageRequest.of(page, 6), expectedCount));
+
+        mockMvc.perform(get("/api/v1/filter/byRegion/{page}/elementsCount", page)
+                        .param("region", region)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").value(expectedCount));
+    }
+    @Test
+    void testGetVillageByNameAndRegionElementsCount() throws Exception {
+        int page = 0;
+        String region = "YourRegionName";
+        String keyword = "YourKeyword";
+        long expectedCount = 10L;
+
+        when(villageSearchService.getAllSearchVillagesByNameAndRegionName(region, keyword, page, 6, ""))
+                .thenReturn(new PageImpl<>(Collections.emptyList(), PageRequest.of(page, 6), expectedCount));
+
+        mockMvc.perform(get("/api/v1/filter/searchAll/{page}/elementsCount", page)
+                        .param("region", region)
+                        .param("keyword", keyword)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").value(expectedCount));
+    }
+/*
+    @Test
+    void testSearchVillagesByCriteriaElementsCount() throws Exception {
+        int page = 0;
+        List<String> objectAroundVillageDTOS = List.of("object1", "object2");
+        List<String> livingConditionDTOS = List.of("condition1", "condition2");
+        String children = "под 10";
+        long expectedCount = 10L;
+
+        when(villageSearchService.getSearchVillages(objectAroundVillageDTOS, livingConditionDTOS, Children.BELOW_10, page, 6, ""))
+                .thenReturn(new PageImpl<>(Collections.emptyList(), PageRequest.of(page, 6), expectedCount));
+
+        mockMvc.perform(get("/api/v1/filter/searchVillages/{page}/elementsCount", page)
+                        .param("objectAroundVillageDTOS", "object1", "object2")
+                        .param("livingConditionDTOS", "condition1", "condition2")
+                        .param("children", Children.BELOW_10.getName())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").value(expectedCount));
+    }
+
+*/
+
 }
