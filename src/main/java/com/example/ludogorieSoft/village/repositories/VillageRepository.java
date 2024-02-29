@@ -16,6 +16,7 @@ import java.util.List;
 public interface VillageRepository extends JpaRepository<Village, Long> {
 
     List<Village> findByStatus(Boolean status);
+
     Page<Village> findByStatus(Boolean status, Pageable page);
 
 
@@ -34,6 +35,24 @@ public interface VillageRepository extends JpaRepository<Village, Long> {
     @Query("SELECT v FROM Village v JOIN v.region r WHERE v.name = :villageName AND r.regionName = :regionName")
     Village findSingleVillageByNameAndRegionName(@Param("villageName") String villageName, @Param("regionName") String regionName);
 
+    //    @Query(value = "SELECT DISTINCT v FROM Village v " +
+//            "JOIN v.objectVillages ov " +
+//            "JOIN ov.object o " +
+//            "JOIN v.villageLivingConditions vl " +
+//            "JOIN vl.livingCondition lc " +
+//            "JOIN Population p ON v.id = p.village.id " +
+//            "JOIN v.region r " +
+//            "WHERE o.type IN :objectTypes " +
+//            "AND lc.livingConditionName IN :livingConditionNames " +
+//            "AND p.children = :childrenCount " +
+//            "AND ov.distance = 'IN_THE_VILLAGE' " +
+//            "AND vl.consents = 'COMPLETELY_AGREED' " +
+//            "AND v.status = 1 " +
+//            "GROUP BY v.name " +
+//            "ORDER BY r.regionName ASC")
+//    Page<Village> searchVillages(@Param("objectTypes") List<String> objectAroundVillageDTOS,
+//                                 @Param("livingConditionNames") List<String> livingConditionDTOS,
+//                                 @Param("childrenCount") Children children, Pageable pageable);
     @Query(value = "SELECT DISTINCT v FROM Village v " +
             "JOIN v.objectVillages ov " +
             "JOIN ov.object o " +
@@ -41,18 +60,42 @@ public interface VillageRepository extends JpaRepository<Village, Long> {
             "JOIN vl.livingCondition lc " +
             "JOIN Population p ON v.id = p.village.id " +
             "JOIN v.region r " +
-            "WHERE o.type IN :objectTypes " +
-            "AND lc.livingConditionName IN :livingConditionNames " +
-            "AND p.children = :childrenCount " +
+            "WHERE (:regions IS NULL OR r.regionName LIKE %:regions%)" +
+            "And (:villageName IS NULL OR v.name LIKE %:villageName%)" +
+            "AND (coalesce(:objectTypes) IS NULL OR o.type IN (:objectTypes)) " +
+            "AND (coalesce(:livingConditionNames) IS NULL OR lc.livingConditionName IN (:livingConditionNames)) " +
+            "AND (:childrenCount IS NULL OR p.children = :childrenCount) " +
             "AND ov.distance = 'IN_THE_VILLAGE' " +
             "AND vl.consents = 'COMPLETELY_AGREED' " +
-            "AND v.status = 1 " +
-            "GROUP BY v.name " +
-            "ORDER BY r.regionName ASC")
-    Page<Village> searchVillages(@Param("objectTypes") List<String> objectAroundVillageDTOS,
-                                 @Param("livingConditionNames") List<String> livingConditionDTOS,
-                                 @Param("childrenCount") Children children, Pageable pageable);
+            "AND v.status = 1 " )
+    Page<Village> searchVillages(
+            @Param("regions") String region,
+            @Param("villageName") String villageName,
+            @Param("objectTypes") List<String> objectTypes,
+            @Param("livingConditionNames") List<String> livingConditionNames,
+            @Param("childrenCount") Children children,
+            Pageable pageable);
 
+
+//@Query(value = "SELECT DISTINCT v FROM Village v " +
+//        "JOIN v.objectVillages ov " +
+//        "JOIN ov.object o " +
+//        "JOIN v.villageLivingConditions vl " +
+//        "JOIN vl.livingCondition lc " +
+//        "JOIN v.population p " +
+//        "JOIN v.region r " +
+//        "WHERE (:objectTypes IS NULL OR o.type IN :objectTypes) " +
+//        "AND (:livingConditionNames IS NULL OR lc.livingConditionName IN :livingConditionNames) " +
+//        "AND (:childrenCount IS NULL OR p.children = :childrenCount) " +
+//        "AND ov.distance = 'IN_THE_VILLAGE' " +
+//        "AND vl.consents = 'COMPLETELY_AGREED' " +
+//        "AND v.status = 1 " +
+//        "GROUP BY v " +
+//        "ORDER BY r.regionName ASC")
+//Page<Village> searchVillages(@Param("objectTypes") List<String> objectTypes,
+//                             @Param("livingConditionNames") List<String> livingConditionNames,
+//                             @Param("childrenCount") Children childrenCount,
+//                             Pageable pageable);
 
     @Query(value = "SELECT DISTINCT v FROM Village v " +
             "JOIN v.villageLivingConditions vl " +
@@ -133,11 +176,13 @@ public interface VillageRepository extends JpaRepository<Village, Long> {
             "GROUP BY v.name " +
             "ORDER BY r.regionName ASC")
     Page<Village> searchVillagesByLivingCondition(@Param("livingConditionNames") List<String> livingConditionDTOS, Pageable pageable);
+
     @Query("SELECT DISTINCT v FROM Village v " +
             "JOIN v.ethnicityVillages ev " +
             "WHERE ev.dateDeleted IS NOT NULL " +
             "ORDER BY ev.villageStatus DESC, ev.dateDeleted ASC")
     List<Village> findAllVillagesWithRejectedResponses();
+
     List<Village> findByName(String name);
 
 }
