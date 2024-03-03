@@ -39,11 +39,11 @@ public interface VillageRepository extends JpaRepository<Village, Long> {
             "LEFT JOIN vl.livingCondition lc " +
             "LEFT JOIN Population p ON v.id = p.village.id " +
             "LEFT JOIN v.region r " +
-            "WHERE (:regions IS NULL OR r.regionName =:regions AND v.status = 1) " +
-            "AND (:villageName IS NULL OR v.name LIKE :villageName% AND v.status = 1) " +
-            "AND (coalesce(:objectTypes) IS NULL OR o.type IN (:objectTypes) AND ov.distance = 'IN_THE_VILLAGE' AND vl.consents = 'COMPLETELY_AGREED' AND v.status = 1) " +
-            "AND (coalesce(:livingConditionNames) IS NULL OR lc.livingConditionName IN (:livingConditionNames) AND ov.distance = 'IN_THE_VILLAGE' AND vl.consents = 'COMPLETELY_AGREED' AND v.status = 1) " +
-            "AND (:childrenCount IS NULL OR p.children = :childrenCount AND ov.distance = 'IN_THE_VILLAGE' AND vl.consents = 'COMPLETELY_AGREED' AND v.status = 1) " +
+            "WHERE (:regions IS NULL OR r.regionName =:regions) " +
+            "AND (:villageName IS NULL OR v.name LIKE :villageName%) " +
+            "AND (coalesce(:objectTypes) IS NULL OR o.type IN (:objectTypes) AND ov.distance = 'IN_THE_VILLAGE' AND vl.consents = 'COMPLETELY_AGREED') " +
+            "AND (coalesce(:livingConditionNames) IS NULL OR lc.livingConditionName IN (:livingConditionNames) AND ov.distance = 'IN_THE_VILLAGE' AND vl.consents = 'COMPLETELY_AGREED') " +
+            "AND (:childrenCount IS NULL OR p.children = :childrenCount AND ov.distance = 'IN_THE_VILLAGE' AND vl.consents = 'COMPLETELY_AGREED') " +
             "AND status=1"
     )
     Page<Village> searchVillages(
