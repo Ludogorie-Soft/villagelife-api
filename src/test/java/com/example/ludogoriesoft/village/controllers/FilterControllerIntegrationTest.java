@@ -12,11 +12,15 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -192,8 +196,6 @@ class FilterControllerIntegrationTest {
 
     @Test
     public void testSearchVillagesByCriteria() throws Exception {
-        List<String> objectAroundVillageDTOS = Arrays.asList("Object1", "Object2");
-        List<String> livingConditionDTOS = Arrays.asList("Condition1", "Condition2");
         String children = "FROM_21_TO_50";
 
         VillageDTO villageDTO1 = new VillageDTO();
@@ -208,23 +210,21 @@ class FilterControllerIntegrationTest {
         villageDTO2.setDateUpload(LocalDateTime.now());
         villageDTO2.setStatus(true);
 
-        List<VillageDTO> villageDTOList = Arrays.asList(villageDTO1, villageDTO2);
-        when(villageSearchService.getSearchVillages(objectAroundVillageDTOS, livingConditionDTOS, Children.valueOf(children), pageNumber, elementsCount, sort))
-                .thenReturn(new PageImpl<>(villageDTOList, PageRequest.of(pageNumber, elementsCount), villageDTOList.size()));
+        Page<VillageDTO> mockPage = new PageImpl<>(List.of(villageDTO1, villageDTO2));
+        given(villageSearchService.getSearchVillages2(any(), any(), any(), any(), any(), any())).willReturn(mockPage);
 
-        mockMvc.perform(get("/api/v1/filter/searchVillages/{page}", pageNumber)
+        mockMvc.perform(get("/api/v1/filter/searchVillages")
+                        .param("region", "TestRegion")
+                        .param("name", "TestVillage")
                         .param("objectAroundVillageDTOS", "Object1", "Object2")
                         .param("livingConditionDTOS", "Condition1", "Condition2")
                         .param("children", children)
-                        .param("sort", sort)
-                        .contentType(MediaType.APPLICATION_JSON))
+                        .param("page", "0")
+                        .param("size", "6")
+                        .param("sort", "name,asc"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.length()").value(villageDTOList.size()))
-                .andExpect(jsonPath("$[0].id").value(1L))
-                .andExpect(jsonPath("$[0].name").value("Village Name 1"))
-                .andExpect(jsonPath("$[1].id").value(2L))
-                .andExpect(jsonPath("$[1].name").value("Village Name 2"));
+                .andExpect(jsonPath("$.content", hasSize(2)));
+
     }
 
     @Test

@@ -10,10 +10,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/v1/filter")
@@ -71,20 +68,8 @@ public class FilterController {
         return ResponseEntity.ok(count);
     }
 
-    //    @GetMapping("/searchVillages/{page}")
-//    public ResponseEntity<List<VillageDTO>> searchVillagesByCriteria(
-//            @PathVariable("page") int page,
-//            @RequestParam("objectAroundVillageDTOS") List<String> objectAroundVillageDTOS,
-//            @RequestParam("livingConditionDTOS") List<String> livingConditionDTOS,
-//            @RequestParam("children") String children,
-//            @RequestParam(required = false) String sort
-//    ) {
-//        Children childrenEnum = Children.valueOf(children);
-//        List<VillageDTO> villages = villageSearchService.getSearchVillages(objectAroundVillageDTOS, livingConditionDTOS, childrenEnum, page, 6, sort).getContent();
-//        return ResponseEntity.ok(villages);
-//    }
     @GetMapping("/searchVillages")
-    public ResponseEntity<List<VillageDTO>> searchVillagesByCriteria(
+    public ResponseEntity<Page<VillageDTO>> searchVillagesByCriteria(
             @RequestParam(value = "region", required = false) String region,
             @RequestParam(value = "name", required = false) String villageName,
             @RequestParam(value = "objectAroundVillageDTOS", required = false) List<String> objectAroundVillageDTOS,
@@ -92,19 +77,13 @@ public class FilterController {
             @RequestParam(value = "children", required = false) String children,
             @PageableDefault(size = 6, sort = "name") Pageable pageable
     ) {
-        System.out.println("1" + objectAroundVillageDTOS);
-        System.out.println("2" + livingConditionDTOS);
-        System.out.println("3 " + children);
-        System.out.println("4 " + pageable);
         Children childrenEnum;
-        String decodedSort = URLDecoder.decode(String.valueOf(pageable.getSort()), StandardCharsets.UTF_8);
-        System.out.println("decoded " + decodedSort);
         if (children != null) {
             childrenEnum = Children.valueOf(children);
         } else {
             childrenEnum = null;
         }
-        List<VillageDTO> villages = villageSearchService.getSearchVillages2(region, villageName, objectAroundVillageDTOS, livingConditionDTOS, childrenEnum, pageable);
+        Page<VillageDTO> villages = villageSearchService.getSearchVillages2(region, villageName, objectAroundVillageDTOS, livingConditionDTOS, childrenEnum, pageable);
         return ResponseEntity.ok(villages);
     }
 
