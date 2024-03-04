@@ -2,9 +2,13 @@ package com.example.ludogorieSoft.village.repositories;
 
 import com.example.ludogorieSoft.village.enums.Children;
 import com.example.ludogorieSoft.village.model.Village;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.parameters.P;
 
 import java.util.List;
 
@@ -12,18 +16,20 @@ import java.util.List;
 public interface VillageRepository extends JpaRepository<Village, Long> {
 
     List<Village> findByStatus(Boolean status);
+    Page<Village> findByStatus(Boolean status, Pageable page);
+
 
     @Query("SELECT v FROM Village v JOIN v.region r WHERE v.status = 1 ORDER BY r.regionName ASC")
-    List<Village> findAllApprovedVillages();
+    Page<Village> findAllApprovedVillages(Pageable pageable);
 
     @Query("SELECT v FROM Village v JOIN v.region r WHERE LOWER(v.name) LIKE %:keyword% AND v.status = 1 ORDER BY r.regionName ASC")
-    List<Village> findByNameContainingIgnoreCaseOrderByRegionNameAsc(@Param("keyword") String keyword);
+    Page<Village> findByNameContainingIgnoreCaseOrderByRegionNameAsc(@Param("keyword") String keyword, Pageable pageable);
 
     @Query("SELECT v FROM Village v JOIN v.region r WHERE LOWER(r.regionName) = :regionName AND v.status = 1 ORDER BY r.regionName ASC")
-    List<Village> findByRegionName(@Param("regionName") String regionName);
+    Page<Village> findByRegionName(@Param("regionName") String regionName, Pageable pageable);
 
     @Query("SELECT v FROM Village v JOIN v.region r WHERE r.regionName = :regionName AND LOWER(v.name) LIKE %:keyword% AND v.status = 1 ORDER BY r.regionName ASC")
-    List<Village> findByNameContainingIgnoreCaseAndRegionName(@Param("regionName") String regionName, @Param("keyword") String keyword);
+    Page<Village> findByNameContainingIgnoreCaseAndRegionName(@Param("regionName") String regionName, @Param("keyword") String keyword, Pageable pageable);
 
     @Query("SELECT v FROM Village v JOIN v.region r WHERE v.name = :villageName AND r.regionName = :regionName")
     Village findSingleVillageByNameAndRegionName(@Param("villageName") String villageName, @Param("regionName") String regionName);
@@ -43,9 +49,9 @@ public interface VillageRepository extends JpaRepository<Village, Long> {
             "AND v.status = 1 " +
             "GROUP BY v.name " +
             "ORDER BY r.regionName ASC")
-    List<Village> searchVillages(@Param("objectTypes") List<String> objectAroundVillageDTOS,
+    Page<Village> searchVillages(@Param("objectTypes") List<String> objectAroundVillageDTOS,
                                  @Param("livingConditionNames") List<String> livingConditionDTOS,
-                                 @Param("childrenCount") Children children);
+                                 @Param("childrenCount") Children children, Pageable pageable);
 
 
     @Query(value = "SELECT DISTINCT v FROM Village v " +
@@ -59,9 +65,9 @@ public interface VillageRepository extends JpaRepository<Village, Long> {
             "AND v.status = 1 " +
             "GROUP BY v.name " +
             "ORDER BY r.regionName ASC")
-    List<Village> searchVillagesByLivingConditionAndChildren(
+    Page<Village> searchVillagesByLivingConditionAndChildren(
             @Param("livingConditionNames") List<String> livingConditionDTOS,
-            @Param("childrenCount") Children children);
+            @Param("childrenCount") Children children, Pageable pageable);
 
 
     @Query(value = "SELECT DISTINCT v FROM Village v " +
@@ -75,8 +81,8 @@ public interface VillageRepository extends JpaRepository<Village, Long> {
             "AND v.status = 1 " +
             "GROUP BY v.name " +
             "ORDER BY r.regionName ASC")
-    List<Village> searchVillagesByObjectAndChildren(@Param("objectTypes") List<String> objectAroundVillageDTOS,
-                                                    @Param("childrenCount") Children children);
+    Page<Village> searchVillagesByObjectAndChildren(@Param("objectTypes") List<String> objectAroundVillageDTOS,
+                                                    @Param("childrenCount") Children children, Pageable pageable);
 
 
     @Query(value = "SELECT DISTINCT v FROM Village v " +
@@ -92,8 +98,9 @@ public interface VillageRepository extends JpaRepository<Village, Long> {
             "AND v.status = 1 " +
             "GROUP BY v.name " +
             "ORDER BY r.regionName ASC")
-    List<Village> searchVillagesByObjectAndLivingCondition(@Param("objectTypes") List<String> objectAroundVillageDTOS,
-                                                           @Param("livingConditionNames") List<String> livingConditionDTOS);
+    Page<Village> searchVillagesByObjectAndLivingCondition(@Param("objectTypes") List<String> objectAroundVillageDTOS,
+                                                           @Param("livingConditionNames") List<String> livingConditionDTOS,
+                                                           Pageable pageable);
 
 
     @Query("SELECT DISTINCT v FROM Village v " +
@@ -103,7 +110,7 @@ public interface VillageRepository extends JpaRepository<Village, Long> {
             "AND v.status = 1 " +
             "GROUP BY v.name " +
             "ORDER BY r.regionName ASC")
-    List<Village> searchVillagesByChildrenCount(@Param("childrenCount") Children children);
+    Page<Village> searchVillagesByChildrenCount(@Param("childrenCount") Children children, Pageable pageable);
 
     @Query(value = "SELECT DISTINCT v FROM Village v " +
             "JOIN v.objectVillages ov " +
@@ -114,7 +121,7 @@ public interface VillageRepository extends JpaRepository<Village, Long> {
             "AND v.status = 1 " +
             "GROUP BY v.name " +
             "ORDER BY r.regionName ASC")
-    List<Village> searchVillagesByObject(@Param("objectTypes") List<String> objectAroundVillageDTOS);
+    Page<Village> searchVillagesByObject(@Param("objectTypes") List<String> objectAroundVillageDTOS, Pageable pageable);
 
     @Query(value = "SELECT DISTINCT v FROM Village v " +
             "JOIN v.villageLivingConditions vl " +
@@ -125,10 +132,12 @@ public interface VillageRepository extends JpaRepository<Village, Long> {
             "AND v.status = 1 " +
             "GROUP BY v.name " +
             "ORDER BY r.regionName ASC")
-    List<Village> searchVillagesByLivingCondition(@Param("livingConditionNames") List<String> livingConditionDTOS);
+    Page<Village> searchVillagesByLivingCondition(@Param("livingConditionNames") List<String> livingConditionDTOS, Pageable pageable);
     @Query("SELECT DISTINCT v FROM Village v " +
             "JOIN v.ethnicityVillages ev " +
             "WHERE ev.dateDeleted IS NOT NULL " +
             "ORDER BY ev.villageStatus DESC, ev.dateDeleted ASC")
     List<Village> findAllVillagesWithRejectedResponses();
+    List<Village> findByName(String name);
+
 }

@@ -13,12 +13,16 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -92,12 +96,12 @@ class VillageImageControllerIntegrationTest {
         images2.add("img5");
         villageDTO2.setImages(images2);
 
-        List<VillageDTO> villageDTOList = Arrays.asList(villageDTO1, villageDTO2);
+        Page<VillageDTO> villageDTOList = new PageImpl<>(List.of(villageDTO1,villageDTO2));
 
-        when(villageImageService.getAllApprovedVillageDTOsWithImages()).thenReturn(villageDTOList);
+        when(villageImageService.getApprovedVillageDTOsWithImages(1,1)).thenReturn(villageDTOList);
 
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageImages/approved")
+        mockMvc.perform(get("/api/v1/villageImages/approved/1/1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.[0].id").value(1))
@@ -113,9 +117,9 @@ class VillageImageControllerIntegrationTest {
 
     @Test
     void testGetAllVillageDTOsWithImagesWhenNotFound() throws Exception {
-        when(villageImageService.getAllApprovedVillageDTOsWithImages()).thenReturn(Collections.emptyList());
+        when(villageImageService.getApprovedVillageDTOsWithImages(1, 1)).thenReturn(new PageImpl<>(Collections.emptyList()));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageImages/approved")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageImages/approved/1/1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andReturn();
@@ -336,5 +340,27 @@ class VillageImageControllerIntegrationTest {
                 .andExpect(content().string("Image with id " + imageIdToDelete + " has been deleted successfully!"));
 
         verify(villageImageService, times(1)).deleteImageFileById(imageIdToDelete);
+    }
+    @Test
+    void testUploadImagesSuccess() throws Exception {
+        mockMvc.perform(get("/api/v1/villageImages/upload-images"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Images uploaded successfully.")));
+    }
+
+    @Test
+    void testGetAllApprovedVillageDTOsWithImagesPageCount() throws Exception {
+        int page = 0;
+        int elements = 10;
+        int expectedPagesCount = 1;
+
+        when(villageImageService.getApprovedVillageDTOsWithImages(page, elements))
+                .thenReturn(new PageImpl<>(Collections.emptyList(), PageRequest.of(page, elements), expectedPagesCount));
+
+        mockMvc.perform(get("/api/v1/villageImages/approved/pagesCount/{page}/{elements}", page, elements)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").value(expectedPagesCount));
     }
 }

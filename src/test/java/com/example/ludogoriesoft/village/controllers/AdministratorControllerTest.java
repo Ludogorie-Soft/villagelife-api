@@ -20,6 +20,7 @@ class AdministratorControllerTest {
     @Mock
     private AdministratorService administratorService;
     AdministratorController administratorController;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -56,6 +57,7 @@ class AdministratorControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(administrator, response.getBody());
     }
+
     @Test
     void updateAdministrator_shouldReturnUpdatedAdministrator() {
         Long administratorId = 1L;
@@ -82,21 +84,4 @@ class AdministratorControllerTest {
         assertEquals("Administrator with id: " + administratorId + " has been deleted successfully!!", response.getBody());
         verify(administratorService, times(1)).deleteAdministratorById(administratorId);
     }
-
-
-//    @Test
-//    void getAllVillages_shouldReturnListOfVillageResponses() {
-//        VillageResponse villageResponse1 = new VillageResponse();
-//        villageResponse1.setId(1L);
-//        VillageResponse villageResponse2 = new VillageResponse();
-//        villageResponse2.setId(3L);
-//        List<VillageResponse> villages = Arrays.asList(villageResponse1,villageResponse2);
-//
-//        when(villageService.getAllVillagesWithAdmin()).thenReturn(villages);
-//
-//        List<VillageResponse> response = administratorController.getAllVillages();
-//
-//        assertEquals(villages, response);
-//    }
-
 }

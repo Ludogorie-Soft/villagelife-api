@@ -39,10 +39,10 @@ public class AddVillageFormResultService {
         VillageDTO savedVillage = villageService.createVillage(villageDTO);
 
         createPopulationFromAddVillageFormResult(savedVillage.getId(), addVillageFormResult, timestamp);
-        createVillageGroundCategoryFromAddVillageFormResult(savedVillage.getId(), addVillageFormResult, timestamp);//ddd
-        createEthnicityVillagesFromAddVillageFormResult(savedVillage.getId(), addVillageFormResult, timestamp);//ddd
+        createVillageGroundCategoryFromAddVillageFormResult(savedVillage.getId(), addVillageFormResult, timestamp);
+        createEthnicityVillagesFromAddVillageFormResult(savedVillage.getId(), addVillageFormResult, timestamp);
         createVillageAnswerQuestionsFromAddVillageFormResult(savedVillage.getId(), addVillageFormResult, timestamp);
-        createObjectVillagesFromAddVillageFormResult(savedVillage.getId(), addVillageFormResult, timestamp);//ddd
+        createObjectVillagesFromAddVillageFormResult(savedVillage.getId(), addVillageFormResult, timestamp);
         createVillagePopulationAssertionsFromAddVillageFormResult(savedVillage.getId(), addVillageFormResult, timestamp);
         createVillageLivingConditionFromAddVillageFormResult(savedVillage.getId(), addVillageFormResult, timestamp);
         villageImageService.createImagePaths(addVillageFormResult.getImageBytes(), savedVillage.getId(), timestamp, false, userDTO);

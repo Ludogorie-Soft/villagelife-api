@@ -110,7 +110,7 @@ class AdminFunctionControllerTest {
     }
     @Test
     void testFindUnapprovedVillageResponseByVillageId() throws Exception {
-        List<VillageResponse> villageResponses = new ArrayList<>(); // Create your mock responses
+        List<VillageResponse> villageResponses = new ArrayList<>();
         when(adminVillageService.getUnapprovedVillageResponsesWithSortedAnswers(false)).thenReturn(villageResponses);
 
         mockMvc.perform(get("/api/v1/admins/functions/toApprove"))
@@ -122,7 +122,7 @@ class AdminFunctionControllerTest {
     @Test
     void testRejectVillageResponse() throws Exception {
         Long villageId = 1L;
-        String answerDate = "2023-08-10"; // Adjust the date as needed
+        String answerDate = "2023-08-10";
 
         mockMvc.perform(post("/api/v1/admins/functions/reject/{villageId}", villageId)
                         .param("villageId", String.valueOf(villageId))

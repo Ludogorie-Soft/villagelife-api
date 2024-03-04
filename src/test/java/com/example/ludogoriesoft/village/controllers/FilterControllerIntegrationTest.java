@@ -5,8 +5,6 @@ import com.example.ludogorieSoft.village.enums.Children;
 import com.example.ludogorieSoft.village.exeptions.handler.ApiExceptionHandler;
 import com.example.ludogorieSoft.village.services.VillageService;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -14,14 +12,16 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import org.junit.jupiter.api.Test;
-import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.mockito.Mockito.when;
 
@@ -43,6 +43,9 @@ import java.util.List;
         }
 )
 class FilterControllerIntegrationTest {
+    private static final int pageNumber = 0;
+    private static final int elementsCount = 6;
+    private static final String sort = "asc";
 
     @Autowired
     private MockMvc mockMvc;
@@ -57,6 +60,7 @@ class FilterControllerIntegrationTest {
 
     @Test
     void testGetAllApprovedVillages() throws Exception {
+
         VillageDTO villageDTO1 = new VillageDTO();
         villageDTO1.setId(1L);
         villageDTO1.setName("Village Name 1");
@@ -69,23 +73,26 @@ class FilterControllerIntegrationTest {
         villageDTO2.setDateUpload(LocalDateTime.now());
         villageDTO2.setStatus(true);
 
-        List<VillageDTO> villageDTOList = Arrays.asList(villageDTO1, villageDTO2);
+        List<VillageDTO> villageDTOList = List.of(villageDTO1, villageDTO2);
+        when(villageSearchService.getAllApprovedVillages(pageNumber, elementsCount, sort))
+                .thenReturn(new PageImpl<>(villageDTOList, PageRequest.of(pageNumber, elementsCount), villageDTOList.size()));
 
-        when(villageSearchService.getAllVillages()).thenReturn(villageDTOList);
-
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter")
+        mockMvc.perform(get("/api/v1/filter/{page}", pageNumber)
+                        .param("sort", sort)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andReturn();
-
-        String response = mvcResult.getResponse().getContentAsString();
-
-        assertNotNull(response);
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.length()").value(villageDTOList.size()))
+                .andExpect(jsonPath("$[0].id").value(1L))
+                .andExpect(jsonPath("$[0].name").value("Village Name 1"))
+                .andExpect(jsonPath("$[1].id").value(2L))
+                .andExpect(jsonPath("$[1].name").value("Village Name 2"));
     }
-
 
     @Test
     void testGetVillageByName() throws Exception {
+        String name = "SomeVillageName";
+
         VillageDTO villageDTO1 = new VillageDTO();
         villageDTO1.setId(1L);
         villageDTO1.setName("Village Name 1");
@@ -99,27 +106,26 @@ class FilterControllerIntegrationTest {
         villageDTO2.setStatus(true);
 
         List<VillageDTO> villageDTOList = Arrays.asList(villageDTO1, villageDTO2);
+        when(villageSearchService.getAllSearchVillages(name, pageNumber, elementsCount, sort))
+                .thenReturn(new PageImpl<>(villageDTOList, PageRequest.of(pageNumber, elementsCount), villageDTOList.size()));
 
-        String name = "Example Name";
-
-        when(villageSearchService.getAllSearchVillages(name)).thenReturn(villageDTOList);
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/byName")
+        mockMvc.perform(get("/api/v1/filter/byName/{page}", pageNumber)
                         .param("name", name)
+                        .param("sort", sort)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.length()").value(villageDTOList.size()))
+                .andExpect(jsonPath("$[0].id").value(1L))
                 .andExpect(jsonPath("$[0].name").value("Village Name 1"))
-                .andExpect(jsonPath("$[0].dateUpload").exists())
-                .andExpect(jsonPath("$[0].status").value(true))
-                .andExpect(jsonPath("$[1].id").value(2))
-                .andExpect(jsonPath("$[1].name").value("Village Name 2"))
-                .andExpect(jsonPath("$[1].dateUpload").exists())
-                .andExpect(jsonPath("$[1].status").value(true));
+                .andExpect(jsonPath("$[1].id").value(2L))
+                .andExpect(jsonPath("$[1].name").value("Village Name 2"));
     }
 
     @Test
     void testGetVillageByRegion() throws Exception {
+        String region = "SomeRegionName";
+
         VillageDTO villageDTO1 = new VillageDTO();
         villageDTO1.setId(1L);
         villageDTO1.setName("Village Name 1");
@@ -133,64 +139,63 @@ class FilterControllerIntegrationTest {
         villageDTO2.setStatus(true);
 
         List<VillageDTO> villageDTOList = Arrays.asList(villageDTO1, villageDTO2);
+        when(villageSearchService.getAllSearchVillagesByRegionName(region, pageNumber, elementsCount, sort))
+                .thenReturn(new PageImpl<>(villageDTOList, PageRequest.of(pageNumber, elementsCount), villageDTOList.size()));
 
-        String region = "Example Region";
-
-        when(villageSearchService.getAllSearchVillagesByRegionName(region)).thenReturn(villageDTOList);
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/byRegion")
+        mockMvc.perform(get("/api/v1/filter/byRegion/{page}", pageNumber)
                         .param("region", region)
+                        .param("sort", sort)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.length()").value(villageDTOList.size()))
+                .andExpect(jsonPath("$[0].id").value(1L))
                 .andExpect(jsonPath("$[0].name").value("Village Name 1"))
-                .andExpect(jsonPath("$[0].dateUpload").exists())
-                .andExpect(jsonPath("$[0].status").value(true))
-                .andExpect(jsonPath("$[1].id").value(2))
-                .andExpect(jsonPath("$[1].name").value("Village Name 2"))
-                .andExpect(jsonPath("$[1].dateUpload").exists())
-                .andExpect(jsonPath("$[1].status").value(true));
+                .andExpect(jsonPath("$[1].id").value(2L))
+                .andExpect(jsonPath("$[1].name").value("Village Name 2"));
     }
 
     @Test
     void testGetVillageByNameAndRegion() throws Exception {
-        VillageDTO villageDTO1 = new VillageDTO();
-        villageDTO1.setId(1L);
-        villageDTO1.setName("Village Name 1");
-        villageDTO1.setDateUpload(LocalDateTime.now());
-        villageDTO1.setStatus(true);
-
-        VillageDTO villageDTO2 = new VillageDTO();
-        villageDTO2.setId(2L);
-        villageDTO2.setName("Village Name 2");
-        villageDTO2.setDateUpload(LocalDateTime.now());
-        villageDTO2.setStatus(true);
-
-        List<VillageDTO> villageDTOList = Arrays.asList(villageDTO1, villageDTO2);
-
         String region = "Example Region";
         String keyword = "Example Keyword";
 
-        when(villageSearchService.getAllSearchVillagesByNameAndRegionName(region, keyword)).thenReturn(villageDTOList);
+        VillageDTO villageDTO1 = new VillageDTO();
+        villageDTO1.setId(1L);
+        villageDTO1.setName("Village Name 1");
+        villageDTO1.setDateUpload(LocalDateTime.now());
+        villageDTO1.setStatus(true);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/searchAll")
+        VillageDTO villageDTO2 = new VillageDTO();
+        villageDTO2.setId(2L);
+        villageDTO2.setName("Village Name 2");
+        villageDTO2.setDateUpload(LocalDateTime.now());
+        villageDTO2.setStatus(true);
+
+        List<VillageDTO> villageDTOList = Arrays.asList(villageDTO1, villageDTO2);
+        when(villageSearchService.getAllSearchVillagesByNameAndRegionName(region, keyword, pageNumber, elementsCount, sort))
+                .thenReturn(new PageImpl<>(villageDTOList, PageRequest.of(pageNumber, elementsCount), villageDTOList.size()));
+
+        mockMvc.perform(get("/api/v1/filter/searchAll/{page}", pageNumber)
                         .param("region", region)
                         .param("keyword", keyword)
+                        .param("sort", sort)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.length()").value(villageDTOList.size()))
+                .andExpect(jsonPath("$[0].id").value(1L))
                 .andExpect(jsonPath("$[0].name").value("Village Name 1"))
-                .andExpect(jsonPath("$[0].dateUpload").exists())
-                .andExpect(jsonPath("$[0].status").value(true))
-                .andExpect(jsonPath("$[1].id").value(2))
-                .andExpect(jsonPath("$[1].name").value("Village Name 2"))
-                .andExpect(jsonPath("$[1].dateUpload").exists())
-                .andExpect(jsonPath("$[1].status").value(true));
+                .andExpect(jsonPath("$[1].id").value(2L))
+                .andExpect(jsonPath("$[1].name").value("Village Name 2"));
     }
-
 
     @Test
     void testSearchVillagesByCriteria() throws Exception {
+        List<String> objectAroundVillageDTOS = Arrays.asList("Object1", "Object2");
+        List<String> livingConditionDTOS = Arrays.asList("Condition1", "Condition2");
+        String children = "FROM_21_TO_50";
+
         VillageDTO villageDTO1 = new VillageDTO();
         villageDTO1.setId(1L);
         villageDTO1.setName("Village Name 1");
@@ -204,33 +209,29 @@ class FilterControllerIntegrationTest {
         villageDTO2.setStatus(true);
 
         List<VillageDTO> villageDTOList = Arrays.asList(villageDTO1, villageDTO2);
+        when(villageSearchService.getSearchVillages(objectAroundVillageDTOS, livingConditionDTOS, Children.valueOf(children), pageNumber, elementsCount, sort))
+                .thenReturn(new PageImpl<>(villageDTOList, PageRequest.of(pageNumber, elementsCount), villageDTOList.size()));
 
-        List<String> objectAroundVillageDTOS = Arrays.asList("object1", "object2");
-        List<String> livingConditionDTOS = Arrays.asList("condition1", "condition2");
-        String children = "FROM_21_TO_50";
-
-        when(villageSearchService.getSearchVillages(objectAroundVillageDTOS, livingConditionDTOS, Children.FROM_21_TO_50))
-                .thenReturn(villageDTOList);
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/searchVillages")
-                        .param("objectAroundVillageDTOS", "object1", "object2")
-                        .param("livingConditionDTOS", "condition1", "condition2")
+        mockMvc.perform(get("/api/v1/filter/searchVillages/{page}", pageNumber)
+                        .param("objectAroundVillageDTOS", "Object1", "Object2")
+                        .param("livingConditionDTOS", "Condition1", "Condition2")
                         .param("children", children)
+                        .param("sort", sort)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.length()").value(villageDTOList.size()))
+                .andExpect(jsonPath("$[0].id").value(1L))
                 .andExpect(jsonPath("$[0].name").value("Village Name 1"))
-                .andExpect(jsonPath("$[0].dateUpload").exists())
-                .andExpect(jsonPath("$[0].status").value(true))
-                .andExpect(jsonPath("$[1].id").value(2))
-                .andExpect(jsonPath("$[1].name").value("Village Name 2"))
-                .andExpect(jsonPath("$[1].dateUpload").exists())
-                .andExpect(jsonPath("$[1].status").value(true));
+                .andExpect(jsonPath("$[1].id").value(2L))
+                .andExpect(jsonPath("$[1].name").value("Village Name 2"));
     }
-
 
     @Test
     void testSearchVillagesByLivingConditionAndChildren() throws Exception {
+        List<String> livingConditionDTOS = Arrays.asList("Condition1", "Condition2");
+        String children = Children.FROM_21_TO_50.name();
+
         VillageDTO villageDTO1 = new VillageDTO();
         villageDTO1.setId(1L);
         villageDTO1.setName("Village Name 1");
@@ -244,29 +245,29 @@ class FilterControllerIntegrationTest {
         villageDTO2.setStatus(true);
 
         List<VillageDTO> villageDTOList = Arrays.asList(villageDTO1, villageDTO2);
-        List<String> livingConditionDTOS = Arrays.asList("condition1", "condition2");
-        String children = Children.FROM_21_TO_50.name(); // Use the enum name here
+        when(villageSearchService.getSearchVillagesByLivingConditionAndChildren(livingConditionDTOS, Children.valueOf(children), pageNumber, elementsCount, sort))
+                .thenReturn(new PageImpl<>(villageDTOList, PageRequest.of(pageNumber, elementsCount), villageDTOList.size()));
 
-        when(villageSearchService.getSearchVillagesByLivingConditionAndChildren(livingConditionDTOS, Children.FROM_21_TO_50))
-                .thenReturn(villageDTOList);
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/searchVillagesByLivingConditionAndChildren")
-                        .param("livingConditionDTOS", "condition1", "condition2")
+        mockMvc.perform(get("/api/v1/filter/searchVillagesByLivingConditionAndChildren/{page}", pageNumber)
+                        .param("livingConditionDTOS", "Condition1", "Condition2")
                         .param("children", children)
+                        .param("sort", sort)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.length()").value(villageDTOList.size()))
+                .andExpect(jsonPath("$[0].id").value(1L))
                 .andExpect(jsonPath("$[0].name").value("Village Name 1"))
-                .andExpect(jsonPath("$[0].dateUpload").exists())
-                .andExpect(jsonPath("$[0].status").value(true))
-                .andExpect(jsonPath("$[1].id").value(2))
-                .andExpect(jsonPath("$[1].name").value("Village Name 2"))
-                .andExpect(jsonPath("$[1].dateUpload").exists())
-                .andExpect(jsonPath("$[1].status").value(true));
+                .andExpect(jsonPath("$[1].id").value(2L))
+                .andExpect(jsonPath("$[1].name").value("Village Name 2"));
     }
+
 
     @Test
     void testSearchVillagesByObjectAndChildren() throws Exception {
+        List<String> objectAroundVillageDTOS = Arrays.asList("Object1", "Object2");
+        String children = Children.FROM_21_TO_50.name();
+
         VillageDTO villageDTO1 = new VillageDTO();
         villageDTO1.setId(1L);
         villageDTO1.setName("Village Name 1");
@@ -280,30 +281,29 @@ class FilterControllerIntegrationTest {
         villageDTO2.setStatus(true);
 
         List<VillageDTO> villageDTOList = Arrays.asList(villageDTO1, villageDTO2);
-        List<String> objectAroundVillageDTOS = Arrays.asList("object1", "object2");
-        String children = Children.FROM_21_TO_50.name(); // Use the enum name here
 
-        when(villageSearchService.getSearchVillagesByObjectAndChildren(objectAroundVillageDTOS, Children.FROM_21_TO_50))
-                .thenReturn(villageDTOList);
+        when(villageSearchService.getSearchVillagesByObjectAndChildren(objectAroundVillageDTOS, Children.valueOf(children), pageNumber, elementsCount, sort))
+                .thenReturn(new PageImpl<>(villageDTOList, PageRequest.of(pageNumber, elementsCount), villageDTOList.size()));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/searchVillagesByObjectAndChildren")
-                        .param("objectAroundVillageDTOS", "object1", "object2")
+        mockMvc.perform(get("/api/v1/filter/searchVillagesByObjectAndChildren/{page}", pageNumber)
+                        .param("objectAroundVillageDTOS", "Object1", "Object2")
                         .param("children", children)
+                        .param("sort", sort)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.length()").value(villageDTOList.size()))
+                .andExpect(jsonPath("$[0].id").value(1L))
                 .andExpect(jsonPath("$[0].name").value("Village Name 1"))
-                .andExpect(jsonPath("$[0].dateUpload").exists())
-                .andExpect(jsonPath("$[0].status").value(true))
-                .andExpect(jsonPath("$[1].id").value(2))
-                .andExpect(jsonPath("$[1].name").value("Village Name 2"))
-                .andExpect(jsonPath("$[1].dateUpload").exists())
-                .andExpect(jsonPath("$[1].status").value(true));
+                .andExpect(jsonPath("$[1].id").value(2L))
+                .andExpect(jsonPath("$[1].name").value("Village Name 2"));
     }
-
 
     @Test
     void testSearchVillagesByObjectAndLivingCondition() throws Exception {
+        List<String> objectAroundVillageDTOS = Arrays.asList("Object1", "Object2");
+        List<String> livingConditionDTOS = Arrays.asList("Condition1", "Condition2");
+
         VillageDTO villageDTO1 = new VillageDTO();
         villageDTO1.setId(1L);
         villageDTO1.setName("Village Name 1");
@@ -317,29 +317,28 @@ class FilterControllerIntegrationTest {
         villageDTO2.setStatus(true);
 
         List<VillageDTO> villageDTOList = Arrays.asList(villageDTO1, villageDTO2);
-        List<String> objectAroundVillageDTOS = Arrays.asList("object1", "object2");
-        List<String> livingConditionDTOS = Arrays.asList("condition1", "condition2");
 
-        when(villageSearchService.getSearchVillagesByObjectAndLivingCondition(objectAroundVillageDTOS, livingConditionDTOS))
-                .thenReturn(villageDTOList);
+        when(villageSearchService.getSearchVillagesByObjectAndLivingCondition(objectAroundVillageDTOS, livingConditionDTOS, pageNumber, elementsCount, sort))
+                .thenReturn(new PageImpl<>(villageDTOList, PageRequest.of(pageNumber, elementsCount), villageDTOList.size()));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/searchVillagesByObjectAndLivingCondition")
-                        .param("objectAroundVillageDTOS", "object1", "object2")
-                        .param("livingConditionDTOS", "condition1", "condition2")
+        mockMvc.perform(get("/api/v1/filter/searchVillagesByObjectAndLivingCondition/{page}", pageNumber)
+                        .param("objectAroundVillageDTOS", "Object1", "Object2")
+                        .param("livingConditionDTOS", "Condition1", "Condition2")
+                        .param("sort", sort)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.length()").value(villageDTOList.size()))
+                .andExpect(jsonPath("$[0].id").value(1L))
                 .andExpect(jsonPath("$[0].name").value("Village Name 1"))
-                .andExpect(jsonPath("$[0].dateUpload").exists())
-                .andExpect(jsonPath("$[0].status").value(true))
-                .andExpect(jsonPath("$[1].id").value(2))
-                .andExpect(jsonPath("$[1].name").value("Village Name 2"))
-                .andExpect(jsonPath("$[1].dateUpload").exists())
-                .andExpect(jsonPath("$[1].status").value(true));
+                .andExpect(jsonPath("$[1].id").value(2L))
+                .andExpect(jsonPath("$[1].name").value("Village Name 2"));
     }
 
     @Test
     void testSearchVillagesByChildrenCount() throws Exception {
+        String children = "FROM_21_TO_50";
+
         VillageDTO villageDTO1 = new VillageDTO();
         villageDTO1.setId(1L);
         villageDTO1.setName("Village Name 1");
@@ -353,27 +352,26 @@ class FilterControllerIntegrationTest {
         villageDTO2.setStatus(true);
 
         List<VillageDTO> villageDTOList = Arrays.asList(villageDTO1, villageDTO2);
-        String children = "FROM_21_TO_50";
+        when(villageSearchService.getSearchVillagesByChildrenCount(Children.valueOf(children), pageNumber, elementsCount, sort))
+                .thenReturn(new PageImpl<>(villageDTOList, PageRequest.of(pageNumber, elementsCount), villageDTOList.size()));
 
-        when(villageSearchService.getSearchVillagesByChildrenCount(Children.FROM_21_TO_50))
-                .thenReturn(villageDTOList);
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/searchVillagesByChildrenCount")
+        mockMvc.perform(get("/api/v1/filter/searchVillagesByChildrenCount/{page}", pageNumber)
                         .param("children", children)
+                        .param("sort", sort)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.length()").value(villageDTOList.size()))
+                .andExpect(jsonPath("$[0].id").value(1L))
                 .andExpect(jsonPath("$[0].name").value("Village Name 1"))
-                .andExpect(jsonPath("$[0].dateUpload").exists())
-                .andExpect(jsonPath("$[0].status").value(true))
-                .andExpect(jsonPath("$[1].id").value(2))
-                .andExpect(jsonPath("$[1].name").value("Village Name 2"))
-                .andExpect(jsonPath("$[1].dateUpload").exists())
-                .andExpect(jsonPath("$[1].status").value(true));
+                .andExpect(jsonPath("$[1].id").value(2L))
+                .andExpect(jsonPath("$[1].name").value("Village Name 2"));
     }
 
     @Test
     void testSearchVillagesByObject() throws Exception {
+        List<String> objectAroundVillageDTOS = Arrays.asList("Object1", "Object2");
+
         VillageDTO villageDTO1 = new VillageDTO();
         villageDTO1.setId(1L);
         villageDTO1.setName("Village Name 1");
@@ -387,27 +385,26 @@ class FilterControllerIntegrationTest {
         villageDTO2.setStatus(true);
 
         List<VillageDTO> villageDTOList = Arrays.asList(villageDTO1, villageDTO2);
-        List<String> objectAroundVillageDTOS = Arrays.asList("object1", "object2");
+        when(villageSearchService.getSearchVillagesByObject(objectAroundVillageDTOS, pageNumber, elementsCount, sort))
+                .thenReturn(new PageImpl<>(villageDTOList, PageRequest.of(pageNumber, elementsCount), villageDTOList.size()));
 
-        when(villageSearchService.getSearchVillagesByObject(objectAroundVillageDTOS))
-                .thenReturn(villageDTOList);
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/searchVillagesByObject")
-                        .param("objectAroundVillageDTOS", "object1", "object2")
+        mockMvc.perform(get("/api/v1/filter/searchVillagesByObject/{page}", pageNumber)
+                        .param("objectAroundVillageDTOS", "Object1", "Object2")
+                        .param("sort", sort)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.length()").value(villageDTOList.size()))
+                .andExpect(jsonPath("$[0].id").value(1L))
                 .andExpect(jsonPath("$[0].name").value("Village Name 1"))
-                .andExpect(jsonPath("$[0].dateUpload").exists())
-                .andExpect(jsonPath("$[0].status").value(true))
-                .andExpect(jsonPath("$[1].id").value(2))
-                .andExpect(jsonPath("$[1].name").value("Village Name 2"))
-                .andExpect(jsonPath("$[1].dateUpload").exists())
-                .andExpect(jsonPath("$[1].status").value(true));
+                .andExpect(jsonPath("$[1].id").value(2L))
+                .andExpect(jsonPath("$[1].name").value("Village Name 2"));
     }
 
     @Test
     void testSearchVillagesByLivingCondition() throws Exception {
+        List<String> livingConditionDTOS = Arrays.asList("Condition1", "Condition2");
+
         VillageDTO villageDTO1 = new VillageDTO();
         villageDTO1.setId(1L);
         villageDTO1.setName("Village Name 1");
@@ -421,106 +418,127 @@ class FilterControllerIntegrationTest {
         villageDTO2.setStatus(true);
 
         List<VillageDTO> villageDTOList = Arrays.asList(villageDTO1, villageDTO2);
-        List<String> livingConditionDTOS = Arrays.asList("condition1", "condition2");
+        when(villageSearchService.getSearchVillagesByLivingCondition(livingConditionDTOS, pageNumber, elementsCount, sort))
+                .thenReturn(new PageImpl<>(villageDTOList, PageRequest.of(pageNumber, elementsCount), villageDTOList.size()));
 
-        when(villageSearchService.getSearchVillagesByLivingCondition(livingConditionDTOS))
-                .thenReturn(villageDTOList);
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/searchVillagesByLivingCondition")
-                        .param("livingConditionDTOS", "condition1", "condition2")
+        mockMvc.perform(get("/api/v1/filter/searchVillagesByLivingCondition/{page}", pageNumber)
+                        .param("livingConditionDTOS", "Condition1", "Condition2")
+                        .param("sort", sort)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.length()").value(villageDTOList.size()))
+                .andExpect(jsonPath("$[0].id").value(1L))
                 .andExpect(jsonPath("$[0].name").value("Village Name 1"))
-                .andExpect(jsonPath("$[0].dateUpload").exists())
-                .andExpect(jsonPath("$[0].status").value(true))
-                .andExpect(jsonPath("$[1].id").value(2))
-                .andExpect(jsonPath("$[1].name").value("Village Name 2"))
-                .andExpect(jsonPath("$[1].dateUpload").exists())
-                .andExpect(jsonPath("$[1].status").value(true));
+                .andExpect(jsonPath("$[1].id").value(2L))
+                .andExpect(jsonPath("$[1].name").value("Village Name 2"));
     }
 
-
     @Test
-    void testGetAllApprovedVillagesNoVillages() throws Exception {
-        when(villageSearchService.getAllVillages()).thenReturn(Collections.emptyList());
+    void testGetAllApprovedVillagesWhenEmpty() throws Exception {
+        when(villageSearchService.getAllApprovedVillages(pageNumber, elementsCount, sort))
+                .thenReturn(new PageImpl<>(List.of(), PageRequest.of(pageNumber, elementsCount), 0));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter")
+        mockMvc.perform(get("/api/v1/filter/{page}", pageNumber)
+                        .param("sort", sort)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().json("[]"));
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.length()").value(0));
     }
 
     @Test
-    void testGetVillageByNameVillageNotFound() throws Exception {
+    void testGetVillageByNameWhenNoMatch() throws Exception {
         String name = "Nonexistent Village";
-        when(villageSearchService.getAllSearchVillages(name)).thenReturn(Collections.emptyList());
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/byName")
+        when(villageSearchService.getAllSearchVillages(name, pageNumber, elementsCount, sort))
+                .thenReturn(new PageImpl<>(Collections.emptyList(), PageRequest.of(pageNumber, elementsCount), 0));
+
+        mockMvc.perform(get("/api/v1/filter/byName/{page}", pageNumber)
                         .param("name", name)
+                        .param("sort", sort)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().json("[]"));
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.length()").value(0));
     }
 
     @Test
     void testGetVillageByRegionRegionNotFound() throws Exception {
         String region = "Nonexistent Region";
-        when(villageSearchService.getAllSearchVillagesByRegionName(region)).thenReturn(Collections.emptyList());
+        when(villageSearchService.getAllSearchVillagesByRegionName(region, pageNumber, elementsCount, sort))
+                .thenReturn(new PageImpl<>(Collections.emptyList(), PageRequest.of(pageNumber, elementsCount), 0));
+        mockMvc.perform(get("/api/v1/filter/byRegion/{page}", pageNumber)
+                        .param("region", region)
+                        .param("sort", sort)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.length()").value(0));
+    }
+    @Test
+    void testGetAllApprovedVillagesElementsCount() throws Exception {
+        int page = 0;
+        long expectedCount = 10L;
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/byRegion")
+        when(villageSearchService.getAllApprovedVillages(page, 6, ""))
+                .thenReturn(new PageImpl<>(Collections.emptyList(), PageRequest.of(page, 6), expectedCount));
+
+        mockMvc.perform(get("/api/v1/filter/{page}/elementsCount", page)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").value(expectedCount));
+    }
+    @Test
+    void testGetVillageByNameElementsCount() throws Exception {
+        int page = 0;
+        String name = "YourVillageName";
+        long expectedCount = 10L;
+
+        when(villageSearchService.getAllSearchVillages(name, page, 6, ""))
+                .thenReturn(new PageImpl<>(Collections.emptyList(), PageRequest.of(page, 6), expectedCount));
+
+        mockMvc.perform(get("/api/v1/filter/byName/{page}/elementsCount", page)
+                        .param("name", name)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").value(expectedCount));
+    }
+
+    @Test
+    void testGetVillageByRegionElementsCount() throws Exception {
+        int page = 0;
+        String region = "YourRegionName";
+        long expectedCount = 10L;
+
+        when(villageSearchService.getAllSearchVillagesByRegionName(region, page, 6, ""))
+                .thenReturn(new PageImpl<>(Collections.emptyList(), PageRequest.of(page, 6), expectedCount));
+
+        mockMvc.perform(get("/api/v1/filter/byRegion/{page}/elementsCount", page)
                         .param("region", region)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().json("[]"));
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").value(expectedCount));
     }
+    @Test
+    void testGetVillageByNameAndRegionElementsCount() throws Exception {
+        int page = 0;
+        String region = "YourRegionName";
+        String keyword = "YourKeyword";
+        long expectedCount = 10L;
 
-    @ParameterizedTest
-    @CsvSource({
-            "'Nonexistent Region','Nonexistent Village'",
-            "'Existing Region','Nonexistent Village'",
-            "'Nonexistent Region','Existing Village'"
-    })
-    void testGetVillageByNameAndRegion(String region, String keyword) throws Exception {
-        when(villageSearchService.getAllSearchVillagesByNameAndRegionName(region, keyword)).thenReturn(Collections.emptyList());
+        when(villageSearchService.getAllSearchVillagesByNameAndRegionName(region, keyword, page, 6, ""))
+                .thenReturn(new PageImpl<>(Collections.emptyList(), PageRequest.of(page, 6), expectedCount));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/searchAll")
+        mockMvc.perform(get("/api/v1/filter/searchAll/{page}/elementsCount", page)
                         .param("region", region)
                         .param("keyword", keyword)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().json("[]"));
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").value(expectedCount));
     }
-
-    @Test
-    void testSearchVillagesByObjectAndLivingConditionNoData() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/searchVillagesByObjectAndLivingCondition")
-                        .param("objectAroundVillageDTOS", "")
-                        .param("livingConditionDTOS", "")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().json("[]"));
-    }
-
-
-    @Test
-    void testSearchVillagesByObjectNoObjects() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/searchVillagesByObject")
-                        .param("objectAroundVillageDTOS", "")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().json("[]"));
-    }
-
-
-    @Test
-    void testSearchVillagesByLivingConditionNoLivingConditions() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/filter/searchVillagesByLivingCondition")
-                        .param("livingConditionDTOS", "")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().json("[]"));
-    }
-
-
 }

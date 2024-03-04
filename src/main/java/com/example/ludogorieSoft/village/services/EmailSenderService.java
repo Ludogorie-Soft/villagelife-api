@@ -1,8 +1,9 @@
 package com.example.ludogorieSoft.village.services;
 
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -15,9 +16,9 @@ import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 
 @Service
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class EmailSenderService {
-
-    @Autowired
     private JavaMailSender mailSender;
     @Value("${spring.mail.username}")
     private String recipientEmail;
