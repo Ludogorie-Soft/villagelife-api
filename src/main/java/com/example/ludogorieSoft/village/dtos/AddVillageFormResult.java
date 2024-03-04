@@ -19,6 +19,5 @@ public class AddVillageFormResult {
     private List<ObjectVillageDTO> objectVillageDTOS;
     private List<VillagePopulationAssertionDTO> villagePopulationAssertionDTOS;
     private List<byte[]> imageBytes;
-   // private List<String> imagesUUID;
     private UserDTO userDTO;
 }

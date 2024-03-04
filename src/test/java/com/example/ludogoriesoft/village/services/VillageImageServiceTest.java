@@ -25,6 +25,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -48,6 +50,8 @@ class VillageImageServiceTest {
     private ImageService imageService;
     @Mock
     private UserService userService;
+    @Mock
+    private File file;
     @InjectMocks
     private VillageImageService villageImageService;
 
@@ -175,7 +179,7 @@ class VillageImageServiceTest {
     }
 
     @Test
-    public void testGetAllImagesForVillageByStatusAndDate() {
+    void testGetAllImagesForVillageByStatusAndDate() {
         VillageImage villageImage1 = new VillageImage();
         villageImage1.setImageName("image1.png");
         List<VillageImage> villageImages = new ArrayList<>();
@@ -364,7 +368,7 @@ class VillageImageServiceTest {
     }
 
     @Test
-    public void testGetNotDeletedVillageImageDTOsByVillageId() {
+    void testGetNotDeletedVillageImageDTOsByVillageId() {
         VillageImage villageImage1 = new VillageImage();
         villageImage1.setImageName("image1.png");
         VillageImageDTO villageImageDTO = new VillageImageDTO();
@@ -647,7 +651,7 @@ class VillageImageServiceTest {
     }
 
     @Test
-    public void testGetApprovedVillageDTOsWithImages() {
+    void testGetApprovedVillageDTOsWithImages() {
         int pageNumber = 0;
         int elementsCount = 10;
 
@@ -660,7 +664,7 @@ class VillageImageServiceTest {
         villageDTO1.setName("Village 1");
 
         when(villageService.getVillagesByStatus(eq(true), any(Pageable.class))).thenReturn(new PageImpl<>(List.of(villageDTO1)));
-        when(villageImageRepository.findByVillageIdAndVillageStatusAndDateDeletedIsNull(eq(VILLAGE_ID), eq(true)))
+        when(villageImageRepository.findByVillageIdAndVillageStatusAndDateDeletedIsNull(VILLAGE_ID, true))
                 .thenReturn(Collections.emptyList());
 
         Page<VillageDTO> resultPage = villageImageService.getApprovedVillageDTOsWithImages(pageNumber, elementsCount);
@@ -671,12 +675,12 @@ class VillageImageServiceTest {
         assertEquals("Village 1", resultVillageDTO.getName());
 
         verify(villageService).getVillagesByStatus(eq(true), any(Pageable.class));
-        verify(villageImageRepository).findByVillageIdAndVillageStatusAndDateDeletedIsNull(eq(VILLAGE_ID), eq(true));
-        verify(imageService, never()).getImageFromSpace(anyString()); // Assuming imageService should not be called in this test
+        verify(villageImageRepository).findByVillageIdAndVillageStatusAndDateDeletedIsNull(VILLAGE_ID, true);
+        verify(imageService, never()).getImageFromSpace(anyString());
     }
 
     @Test
-    public void testUpdateVillageImagesStatus() {
+    void testUpdateVillageImagesStatus() {
         boolean status = true;
         String localDateTime = "2022-01-01T12:00:00";
 
@@ -690,7 +694,7 @@ class VillageImageServiceTest {
 
         List<VillageImage> villageImages = List.of(villageImage1);
 
-        when(villageImageRepository.findByVillageIdAndVillageStatusAndDateUpload(eq(VILLAGE_ID), eq(status), eq(localDateTime)))
+        when(villageImageRepository.findByVillageIdAndVillageStatusAndDateUpload(VILLAGE_ID, status, localDateTime))
                 .thenReturn(villageImages);
         when(modelMapper.map(any(VillageImage.class), eq(VillageImageDTO.class)))
                 .thenReturn(villageImageDTO);
@@ -698,7 +702,7 @@ class VillageImageServiceTest {
 
         villageImageService.updateVillageImagesStatus(VILLAGE_ID, status, localDateTime);
 
-        verify(villageImageRepository).findByVillageIdAndVillageStatusAndDateUpload(eq(VILLAGE_ID), eq(status), eq(localDateTime));
+        verify(villageImageRepository).findByVillageIdAndVillageStatusAndDateUpload(VILLAGE_ID, status, localDateTime);
         verify(modelMapper).map(any(VillageImage.class), eq(VillageImageDTO.class));
         verify(villageImageService).updateVillageImage(eq(VILLAGE_ID), any(VillageImageDTO.class));
     }
@@ -716,6 +720,38 @@ class VillageImageServiceTest {
 
         verify(villageImageService, times(imageUUIDs.size()))
                 .createVillageImageDTO(eq(VILLAGE_ID), anyString(), eq(localDateTime), eq(status), eq(userDTO));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"test.jpg", "test.png"})
+    void testIsImageFileWithJpgFile(String imageName) {
+        when(file.getName()).thenReturn(imageName);
+
+        boolean result = villageImageService.isImageFile(file);
+
+        assertTrue(result);
+    }
+
+    @Test
+    void testIsImageFileWithNonImageFile() {
+        when(file.getName()).thenReturn("test.txt");
+
+        boolean result = villageImageService.isImageFile(file);
+
+        assertFalse(result);
+    }
+    @Test
+    void testGetImageCountByVillageId() {
+        Long villageId = 1L;
+        List<VillageImage> images = new ArrayList<>();
+        images.add(new VillageImage());
+        images.add(new VillageImage());
+        when(villageImageRepository.findNotDeletedByVillageId(villageId)).thenReturn(images);
+
+        int expectedCount = images.size();
+        int actualCount = villageImageService.getImageCountByVillageId(villageId);
+
+        assertEquals(expectedCount, actualCount);
     }
 
 }

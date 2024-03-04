@@ -12,8 +12,6 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 class MessageTest {
 
@@ -53,169 +51,118 @@ class MessageTest {
 
     @Test
     void createMessage_IdGenerated_Success() {
-        // Arrange
         String userName = "John";
         String email = "john@example.com";
         String userMessage = "Hello";
-
-        // Act
         Message message = new Message(null, userName, email, userMessage);
-
-        // Assert
         assertNotNull(message.getId() == null);
     }
 
 
     @Test
     void hasNoArgsConstructor() {
-        // Arrange
         Class<?> messageClass = Message.class;
-        boolean hasNoArgsConstructor = false;
+        boolean hasNoArgsConstructor;
         try {
             messageClass.getDeclaredConstructor();
             hasNoArgsConstructor = true;
         } catch (NoSuchMethodException e) {
-            // Ignore
+            throw new RuntimeException(e);
         }
-
-        // Assert
-        assertTrue(hasNoArgsConstructor);
+        Assertions.assertTrue(hasNoArgsConstructor);
     }
 
     @Test
     void hasAllArgsConstructor() {
-        // Arrange
         Class<?> messageClass = Message.class;
-        boolean hasAllArgsConstructor = false;
+        boolean hasAllArgsConstructor;
         try {
             messageClass.getDeclaredConstructor(Long.class, String.class, String.class, String.class);
             hasAllArgsConstructor = true;
         } catch (NoSuchMethodException e) {
-            // Ignore
+            throw new RuntimeException(e);
         }
-
-        // Assert
-        assertTrue(hasAllArgsConstructor);
+        Assertions.assertTrue(hasAllArgsConstructor);
     }
 
     @Test
     void validateNotBlankUserName_ValidValue_NoValidationErrors() {
-        // Arrange
         Message message = new Message();
         message.setUserName("John");
-
-        // Validate
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<Message>> violations = validator.validateProperty(message, "userName");
-
-        // Assert
-        assertEquals(0, violations.size());
+        Assertions.assertEquals(0, violations.size());
     }
 
     @Test
     void validateNotBlankUserName_NullValue_ValidationErrors() {
-        // Arrange
         Message message = new Message();
         message.setUserName(null);
-
-        // Validate
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<Message>> violations = validator.validateProperty(message, "userName");
-
-        // Assert
-        assertEquals(1, violations.size());
+        Assertions.assertEquals(1, violations.size());
         ConstraintViolation<Message> violation = violations.iterator().next();
-        assertEquals("Name cannot be empty!", violation.getMessage());
+        Assertions.assertEquals("Name cannot be empty!", violation.getMessage());
     }
 
     @Test
     void validateNotBlankEmail_ValidValue_NoValidationErrors() {
-        // Arrange
         Message message = new Message();
         message.setEmail("john@example.com");
-
-        // Validate
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<Message>> violations = validator.validateProperty(message, "email");
-
-        // Assert
-        assertEquals(0, violations.size());
+        Assertions.assertEquals(0, violations.size());
     }
 
     @Test
     void validateNotBlankEmail_NullValue_ValidationErrors() {
-        // Arrange
         Message message = new Message();
         message.setEmail(null);
-
-        // Validate
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<Message>> violations = validator.validateProperty(message, "email");
-
-        // Assert
-        assertEquals(1, violations.size());
+        Assertions.assertEquals(1, violations.size());
         ConstraintViolation<Message> violation = violations.iterator().next();
-        assertEquals("Email cannot be empty!", violation.getMessage());
+        Assertions.assertEquals("Email cannot be empty!", violation.getMessage());
     }
 
     @Test
     void validateEmail_ValidValue_NoValidationErrors() {
-        // Arrange
         Message message = new Message();
         message.setEmail("john@example.com");
-
-        // Validate
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<Message>> violations = validator.validateProperty(message, "email");
-
-        // Assert
-        assertEquals(0, violations.size());
+        Assertions.assertEquals(0, violations.size());
     }
 
     @Test
     void validateEmail_InvalidValue_ValidationErrors() {
-        // Arrange
         Message message = new Message();
         message.setEmail("invalid-email");
-
-        // Validate
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<Message>> violations = validator.validateProperty(message, "email");
-
-        // Assert
-        assertEquals(1, violations.size());
+        Assertions.assertEquals(1, violations.size());
         ConstraintViolation<Message> violation = violations.iterator().next();
-        assertEquals("Please enter a valid email address!", violation.getMessage());
+        Assertions.assertEquals("Please enter a valid email address!", violation.getMessage());
     }
 
     @Test
     void validateNotBlankUserMessage_ValidValue_NoValidationErrors() {
-        // Arrange
         Message message = new Message();
         message.setUserMessage("Hello");
-
-        // Validate
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<Message>> violations = validator.validateProperty(message, "userMessage");
-
-        // Assert
-        assertEquals(0, violations.size());
+        Assertions.assertEquals(0, violations.size());
     }
 
     @Test
     void validateNotBlankUserMessage_NullValue_ValidationErrors() {
-        // Arrange
         Message message = new Message();
         message.setUserMessage(null);
-
-        // Validate
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<Message>> violations = validator.validateProperty(message, "userMessage");
-
-        // Assert
-        assertEquals(1, violations.size());
+        Assertions.assertEquals(1, violations.size());
         ConstraintViolation<Message> violation = violations.iterator().next();
-        assertEquals("must not be blank", violation.getMessage());
+        Assertions.assertEquals("must not be blank", violation.getMessage());
     }
 
 

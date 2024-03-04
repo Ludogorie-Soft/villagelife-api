@@ -15,6 +15,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -345,5 +346,21 @@ class VillageImageControllerIntegrationTest {
         mockMvc.perform(get("/api/v1/villageImages/upload-images"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Images uploaded successfully.")));
+    }
+
+    @Test
+    void testGetAllApprovedVillageDTOsWithImagesPageCount() throws Exception {
+        int page = 0;
+        int elements = 10;
+        int expectedPagesCount = 1;
+
+        when(villageImageService.getApprovedVillageDTOsWithImages(page, elements))
+                .thenReturn(new PageImpl<>(Collections.emptyList(), PageRequest.of(page, elements), expectedPagesCount));
+
+        mockMvc.perform(get("/api/v1/villageImages/approved/pagesCount/{page}/{elements}", page, elements)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").value(expectedPagesCount));
     }
 }

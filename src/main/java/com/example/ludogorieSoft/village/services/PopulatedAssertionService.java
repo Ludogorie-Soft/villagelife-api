@@ -103,13 +103,13 @@ public class PopulatedAssertionService {
         for (PopulatedAssertionDTO populatedAssertionDTO : populatedAssertionDTOList) {
             PopulationAssertionResponse populationAssertionResponse = new PopulationAssertionResponse();
             populationAssertionResponse.setPopulationAssertionName(getPopulatedAssertionById(populatedAssertionDTO.getId()).getPopulatedAssertionName());
-            List<VillagePopulationAssertion> villagePopulationAssertions ;
+            List<VillagePopulationAssertion> villagePopulationAssertions;
             if (status) {
 
                 villagePopulationAssertions = villagePopulationAssertionRepository.findByVillageIdAndPopulatedAssertionIDIdAndVillageStatus(villageId, populatedAssertionDTO.getId(), true);
-            }else {
+            } else {
 
-                villagePopulationAssertions = villagePopulationAssertionRepository.findByVillageIdAndPopulatedAssertionIDIdAndVillageStatusAndDateUpload(villageId, populatedAssertionDTO.getId(), status,date);
+                villagePopulationAssertions = villagePopulationAssertionRepository.findByVillageIdAndPopulatedAssertionIDIdAndVillageStatusAndDateUpload(villageId, populatedAssertionDTO.getId(), status, date);
             }
             double percentage = 0;
             for (VillagePopulationAssertion villagePopulationAssertion : villagePopulationAssertions) {
@@ -123,7 +123,7 @@ public class PopulatedAssertionService {
         return populationAssertionResponses;
     }
 
-    public List<PopulationAssertionResponse> getPopulationAssertionResponse(Long villageId, boolean status) {//ddd
+    public List<PopulationAssertionResponse> getPopulationAssertionResponse(Long villageId, boolean status) {
         List<PopulatedAssertionDTO> populatedAssertionDTOList = getAllPopulatedAssertion();
         List<PopulationAssertionResponse> populationAssertionResponses = new ArrayList<>();
         for (PopulatedAssertionDTO populatedAssertionDTO : populatedAssertionDTOList) {

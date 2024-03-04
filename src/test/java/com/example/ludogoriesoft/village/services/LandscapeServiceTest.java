@@ -224,7 +224,7 @@ class LandscapeServiceTest {
     @Test
     void testCreateLandscapeWithBlankLandscapeName() {
         LandscapeDTO landscapeDTO = new LandscapeDTO();
-        landscapeDTO.setLandscapeName(""); // Setting blank landscape name
+        landscapeDTO.setLandscapeName("");
 
         ApiRequestException exception = assertThrows(ApiRequestException.class, () -> landscapeService.createLandscape(landscapeDTO));
         assertEquals("Landscape is blank", exception.getMessage());

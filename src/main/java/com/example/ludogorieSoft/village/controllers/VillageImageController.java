@@ -29,15 +29,6 @@ public class VillageImageController {
         }
     }
 
-//    @GetMapping("/approved")
-//    public ResponseEntity<List<VillageDTO>> getAllApprovedVillageDTOsWithImages() {
-//        List<VillageDTO> villageDTOS = villageImageService.getAllApprovedVillageDTOsWithImages();
-//        if (!villageDTOS.isEmpty()) {
-//            return new ResponseEntity<>(villageDTOS, HttpStatus.OK);
-//        } else {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//    }
     @GetMapping("/approved/{page}/{elements}")
     public ResponseEntity<List<VillageDTO>> getAllApprovedVillageDTOsWithImages(@PathVariable("page") int page, @PathVariable("elements") int elements) {
         List<VillageDTO> villageDTOS = villageImageService.getApprovedVillageDTOsWithImages(page, elements).getContent();
@@ -47,6 +38,7 @@ public class VillageImageController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
     @GetMapping("/approved/pagesCount/{page}/{elements}")
     public ResponseEntity<Integer> getAllApprovedVillageDTOsWithImagesPageCount(@PathVariable("page") int page, @PathVariable("elements") int elements) {
         int pagesCount = villageImageService.getApprovedVillageDTOsWithImages(page, elements).getTotalPages();
@@ -57,7 +49,7 @@ public class VillageImageController {
     @PostMapping("/admin-upload")
     public ResponseEntity<List<byte[]>> adminUploadImages(@RequestParam("villageId") Long villageId,
                                                           @RequestBody List<byte[]> imageBytesList) {
-        villageImageService.createImagePaths(imageBytesList, villageId, LocalDateTime.now(), true,null);
+        villageImageService.createImagePaths(imageBytesList, villageId, LocalDateTime.now(), true, null);
         return ResponseEntity.ok(imageBytesList);
     }
 
@@ -99,10 +91,10 @@ public class VillageImageController {
         VillageImageDTO updatedVillageImage = villageImageService.updateVillageImage(id, villageImageDTO);
         return ResponseEntity.ok(updatedVillageImage);
     }
+
     @GetMapping("/upload-images")
     public ResponseEntity<String> uploadImages() {
         try {
-            System.out.println("upload images controller backend");
             villageImageService.uploadImages();
             return ResponseEntity.ok("Images uploaded successfully.");
         } catch (Exception ex) {

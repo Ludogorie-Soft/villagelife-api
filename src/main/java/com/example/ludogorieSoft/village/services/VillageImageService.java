@@ -31,7 +31,6 @@ import java.util.*;
 import java.util.stream.Stream;
 
 import static java.util.UUID.randomUUID;
-import static java.util.stream.Collectors.toList;
 
 @Service
 @AllArgsConstructor
@@ -48,7 +47,7 @@ public class VillageImageService {
     private static final Logger logger = LoggerFactory.getLogger(VillageImageService.class);
     private final ImageService imageService;
 
-    public List<String> createImagePaths(List<byte[]> imageBytes, Long villageId, LocalDateTime localDateTime, Boolean status, UserDTO userDTO) { //ddd
+    public List<String> createImagePaths(List<byte[]> imageBytes, Long villageId, LocalDateTime localDateTime, Boolean status, UserDTO userDTO) {
         List<String> imagePaths = new ArrayList<>();
 
         for (byte[] image : imageBytes) {
@@ -150,7 +149,6 @@ public class VillageImageService {
         if (villageImages.isEmpty()) {
             base64Images.add(null);
         } else {
-            //addVillageImages(base64Images, villageImages);
             base64Images = villageImages.stream()
                     .map(villageImage -> imageService.getImageFromSpace(villageImage.getImageName())).toList();
 
@@ -161,11 +159,8 @@ public class VillageImageService {
     public void addVillageImages(List<String> base64Images, List<VillageImage> villageImages) {
         for (VillageImage villageImage : villageImages) {
             String imagePath = villageImage.getImageName();
-
-            /* File imageFile = new File(imagePath);*/
             if (imagePath != null) {
                 String base64Image = imageService.getImageFromSpace(imagePath);
-
                 base64Images.add(base64Image);
             }
         }
@@ -182,7 +177,7 @@ public class VillageImageService {
                     village.setImages(images);
                     return village;
                 })
-                .collect(toList());
+                .toList();
 
         return new PageImpl<>(villageDTOsWithImages, page, allVillageDTOs.getTotalElements());
     }
@@ -303,20 +298,7 @@ public class VillageImageService {
     }
 
     public List<File> getAllImageFilesFromDirectory() {
-        //System.out.println("----------------- getAllImageFilesFromDirectory ---------- " + UPLOAD_DIRECTORY + "---" + getUploadDirectoryPath());
-
         List<File> imageFiles = new ArrayList<>();
-        //File directory = new File("/opt/villagelife/villagelife-api/src/main/resources/static/village_images");
-        //File directory = new File(UPLOAD_DIRECTORY);
-        //System.out.println("---- isDirectory: " + directory.isDirectory() + "---Name: " + directory.getName() + "---AbsolutePath: " + directory.getAbsolutePath() + "---------");
-        //if (!directory.exists() || !directory.isDirectory()) {
-        //    throw new IllegalArgumentException("Directory does not exist or is not a directory: " + UPLOAD_DIRECTORY);
-        //}
-        //System.out.println("--------- after if ---------------");
-        //File[] files = directory.listFiles();
-        //System.out.println("----------------" + files.length + "----------------");
-
-        //try (Stream<Path> stream = Files.list(Paths.get("/opt/villagelife/villagelife-api/target/src/main/resources/static/village_images"))) {
         try (Stream<Path> stream = Files.list(Paths.get(UPLOAD_DIRECTORY))) {
             List<File> images = stream
                     .filter(file -> !Files.isDirectory(file))
@@ -324,7 +306,6 @@ public class VillageImageService {
                     .filter(this::isImageFile).toList();
 
             imageFiles.addAll(images);
-            //System.out.println("------------------------" + images.size() + "------------------------");
         } catch (IOException ioException) {
             throw new ApiRequestException("Files.list does not work");
         }
@@ -335,17 +316,11 @@ public class VillageImageService {
     public void uploadImages() {
         List<File> images = getAllImageFilesFromDirectory();
         LocalDateTime localDateTime = TimestampUtils.getCurrentTimestamp();
-        //System.out.println("--------------- Start --------------- ");
         for (File image : images) {
             String name = getVillageNameFromFileName(image.getName());
-            //System.out.println("village name: " + name);
             try {
                 VillageDTO villageDTO = villageService.getVillageByName(name);
                 createVillageImageDTO(new VillageImageDTO(null, villageDTO.getId(), image.getName(), true, localDateTime, null, null, null));
-
-
-
-
                 byte[] imageData;
                 try {
                     imageData = Files.readAllBytes(image.toPath());
@@ -353,34 +328,11 @@ public class VillageImageService {
                     throw new RuntimeException(e);
                 }
                 imageService.uploadImage(imageData, image.getName());
-
-
-                //System.out.println("villageDTO id: " + villageDTO.getId() + "\nvillageDTO name: " + villageDTO.getName());
             } catch (Exception ex) {
                 logger.warn("Error while processing image with fileName {}", image.getName());
             }
         }
-
-
-        //System.out.println("--------------- End --------------- " + getUploadDirectoryPath());
     }
-/*    public void uploadImages() {
-        System.out.println("------------------ uploadImages() -----");
-        List<String> imageNames = imageService.getAllImageNamesFromSpace();
-        System.out.println("------------------ imageNames.size():  " + imageNames.size() + " -----");
-        LocalDateTime localDateTime = TimestampUtils.getCurrentTimestamp();
-        for (String name : imageNames) {
-            try {
-                System.out.println("------------------ name1:  " + name + " -----");
-                name = getVillageNameFromFileName(name);
-                System.out.println("------------------ name2:  " + name + " -----");
-                VillageDTO villageDTO = villageService.getVillageByName(name);
-                createVillageImageDTO(new VillageImageDTO(null, villageDTO.getId(), name, true, localDateTime, null, null, null));
-            } catch (Exception ex) {
-                logger.warn("Error while processing image with fileName {}", name);
-            }
-        }
-    }*/
 
     public String getVillageNameFromFileName(String fileName) {
         fileName = fileName.replace(".png", "").replace(".jpg", "");
@@ -397,4 +349,7 @@ public class VillageImageService {
         return withoutDigits.replace("-", " ").trim();
     }
 
+    public int getImageCountByVillageId(Long id) {
+        return villageImageRepository.findNotDeletedByVillageId(id).size();
+    }
 }
