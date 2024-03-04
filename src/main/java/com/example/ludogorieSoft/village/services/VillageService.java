@@ -174,8 +174,13 @@ public class VillageService {
 
     public Page<VillageDTO> getSearchVillages(List<String> objectAroundVillageDTOS, List<String> livingConditionDTOS, Children children, int pageNumber, int elementsCount, String sort) {
         Pageable page = PageRequest.of(pageNumber, elementsCount, getSort(sort));
-        Page<Village> villages = villageRepository.searchVillages(objectAroundVillageDTOS, livingConditionDTOS, children.getEnumValue(), page);
+        Page<Village> villages = villageRepository.searchVillages("region", "name", objectAroundVillageDTOS, livingConditionDTOS, children.getEnumValue(), page);
         return new PageImpl<>(villages.stream().map(this::villageToVillageDTO).toList(), page, villages.getTotalElements());
+    }
+
+    public Page<VillageDTO> getSearchVillages2(String region, String villageName, List<String> objectAroundVillageDTOS, List<String> livingConditionDTOS, Children children, Pageable pageable) {
+        Page<Village> villages = villageRepository.searchVillages(region, villageName, objectAroundVillageDTOS, livingConditionDTOS, children, pageable);
+        return villages.map(this::villageToVillageDTO);
     }
 
     public Page<VillageDTO> getSearchVillagesByLivingConditionAndChildren(List<String> livingConditionDTOS, Children children, int pageNumber, int elementsCount, String sort) {

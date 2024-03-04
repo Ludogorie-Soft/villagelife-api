@@ -180,7 +180,7 @@ class VillageServiceTests {
     @Test
     void testGetSearchVillagesWhenNoVillagesFoundWithParamsNoVillagesFound() {
         Page<Village> mockedPage = new PageImpl<>(Collections.emptyList());
-        when(villageRepository.searchVillages(anyList(), anyList(), any(Children.class), any())).thenReturn(mockedPage);
+        when(villageRepository.searchVillages(anyString(), anyString(), anyList(), anyList(), any(Children.class), any())).thenReturn(mockedPage);
 
         List<String> objectAroundVillageDTOS = List.of("object1", "object2");
         List<String> livingConditionDTOS = List.of("condition1", "condition2");
@@ -188,7 +188,7 @@ class VillageServiceTests {
 
         Page<VillageDTO> result = villageService.getSearchVillages(objectAroundVillageDTOS, livingConditionDTOS, children, pageNumber, elementsCount, sort);
 
-        verify(villageRepository).searchVillages(eq(objectAroundVillageDTOS), eq(livingConditionDTOS), eq(children), any());
+        verify(villageRepository).searchVillages(eq("region"), eq("name"), eq(objectAroundVillageDTOS), eq(livingConditionDTOS), eq(children), any());
 
         assertNotNull(result);
         Assertions.assertTrue(result.isEmpty());
@@ -197,11 +197,11 @@ class VillageServiceTests {
     @Test
     void testGetSearchVillagesWhenNoVillagesFoundWithEmptyParams() {
         Page<Village> mockedPage = new PageImpl<>(Collections.emptyList());
-        when(villageRepository.searchVillages(anyList(), anyList(), any(Children.class), any())).thenReturn(mockedPage);
+        when(villageRepository.searchVillages(anyString(), anyString(), anyList(), anyList(), any(Children.class), any())).thenReturn(mockedPage);
 
         Page<VillageDTO> result = villageService.getSearchVillages(List.of(), List.of(), Children.OVER_50, pageNumber, elementsCount, sort);
 
-        verify(villageRepository).searchVillages(anyList(), anyList(), any(Children.class), any());
+        verify(villageRepository).searchVillages(anyString(), anyString(), anyList(), anyList(), any(Children.class), any());
 
         assertNotNull(result);
         Assertions.assertTrue(result.isEmpty());
@@ -610,7 +610,7 @@ class VillageServiceTests {
         villages.add(village1);
 
         VillageRepository mockRepository = mock(VillageRepository.class);
-        when(mockRepository.searchVillages(anyList(), anyList(), any(), any())).thenReturn(new PageImpl<>(villages, PageRequest.of(pageNumber, elementsCount), villages.size()));
+        when(mockRepository.searchVillages(anyString(), anyString(), anyList(), anyList(), any(), any())).thenReturn(new PageImpl<>(villages, PageRequest.of(pageNumber, elementsCount), villages.size()));
 
         VillageService villageService = new VillageService(mockRepository, new ModelMapper(), null, null);
         Page<VillageDTO> villageDTOs = villageService.getSearchVillages(
