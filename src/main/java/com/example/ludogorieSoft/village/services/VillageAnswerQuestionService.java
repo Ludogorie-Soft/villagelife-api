@@ -22,7 +22,7 @@ import java.util.*;
 public class VillageAnswerQuestionService {
     private final VillageAnswerQuestionRepository villageAnswerQuestionRepository;
     private final VillageRepository villageRepository;
-    private final QuestionRepository questionRepository;
+//    private final QuestionRepository questionRepository;
     private final ModelMapper modelMapper;
     private final VillageService villageService;
     private final QuestionService questionService;
@@ -123,7 +123,7 @@ public class VillageAnswerQuestionService {
     public Map<String, List<String>> groupAnswersByQuestion(List<VillageAnswerQuestion> villageAnswerQuestions) {
         Map<String, List<String>> questionToAnswersMap = new HashMap<>();
         for (VillageAnswerQuestion villageAnswerQuestion : villageAnswerQuestions) {
-            String questionName = villageAnswerQuestion.getQuestion().getQuestionName();
+            String questionName = villageAnswerQuestion.getQuestion().getInformMessage();
             String answer = villageAnswerQuestion.getAnswer();
 
             questionToAnswersMap.computeIfAbsent(questionName, k -> new ArrayList<>()).add(answer);

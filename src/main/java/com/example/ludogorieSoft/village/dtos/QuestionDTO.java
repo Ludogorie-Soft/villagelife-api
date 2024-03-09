@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class QuestionDTO {
     private Long id;
     private String question;
+    private String informMessage;
 }

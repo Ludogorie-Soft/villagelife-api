@@ -20,5 +20,8 @@ public class Question {
     @NotBlank
     @Column(name = "question_name", unique = true, nullable = false)
     private String questionName;
+    @NotBlank
+    @Column(name = "inform_message", unique = true, nullable = false)
+    private String informMessage;
 
 }
