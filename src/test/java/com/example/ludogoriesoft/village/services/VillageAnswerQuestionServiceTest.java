@@ -468,10 +468,10 @@ class VillageAnswerQuestionServiceTest {
     void testGroupAnswersByQuestion() {
         Village village1 = new Village();
         village1.setId(1L);
-        VillageAnswerQuestion answerQuestion1 = new VillageAnswerQuestion(1L, village1, new Question(1L, "Question 1"), "Answer 1", true, LocalDateTime.now(),null);
-        VillageAnswerQuestion answerQuestion2 = new VillageAnswerQuestion(2L, village1, new Question(1L,"Question 1"), "Answer 2", true, LocalDateTime.now(),null);
-        VillageAnswerQuestion answerQuestion3 = new VillageAnswerQuestion(3L, village1, new Question(2L,"Question 2"), "Answer 3", true, LocalDateTime.now(),null);
-        VillageAnswerQuestion answerQuestion4 = new VillageAnswerQuestion(4L, village1, new Question(2L,"Question 2"), "Answer 4", true, LocalDateTime.now(),null);
+        VillageAnswerQuestion answerQuestion1 = new VillageAnswerQuestion(1L, village1, new Question(1L, "Question 1", null), "Answer 1", true, LocalDateTime.now(),null);
+        VillageAnswerQuestion answerQuestion2 = new VillageAnswerQuestion(2L, village1, new Question(1L,"Question 1", null), "Answer 2", true, LocalDateTime.now(),null);
+        VillageAnswerQuestion answerQuestion3 = new VillageAnswerQuestion(3L, village1, new Question(2L,"Question 2", null), "Answer 3", true, LocalDateTime.now(),null);
+        VillageAnswerQuestion answerQuestion4 = new VillageAnswerQuestion(4L, village1, new Question(2L,"Question 2", null), "Answer 4", true, LocalDateTime.now(),null);
 
         List<VillageAnswerQuestion> villageAnswerQuestions = new ArrayList<>();
         villageAnswerQuestions.add(answerQuestion1);
