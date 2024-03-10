@@ -175,7 +175,7 @@ class AddVillageFormResultServiceTest {
         AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
         addVillageFormResult.setQuestionResponses(questionResponses);
 
-        List<QuestionDTO> questionsDTO = Arrays.asList(new QuestionDTO(1L, "Question 1"), new QuestionDTO(2L, "Question 2"), new QuestionDTO(3L, "Question 3"));
+        List<QuestionDTO> questionsDTO = Arrays.asList(new QuestionDTO(1L, "Question 1", "Question 1"), new QuestionDTO(2L, "Question 2", "Question 2"), new QuestionDTO(3L, "Question 3", "Question 3"));
         Mockito.when(questionService.getAllQuestions()).thenReturn(questionsDTO);
 
         addVillageFormResultService.createVillageAnswerQuestionsFromAddVillageFormResult(villageId, addVillageFormResult, TimestampUtils.getCurrentTimestamp());
@@ -260,7 +260,7 @@ class AddVillageFormResultServiceTest {
         AddVillageFormResult addVillageFormResult = new AddVillageFormResult();
         addVillageFormResult.setQuestionResponses(Arrays.asList("Answer 1", "Answer 2"));
 
-        List<QuestionDTO> questionsDTO = Arrays.asList(new QuestionDTO(1L, "Question 1"), new QuestionDTO(2L, "Question 2"), new QuestionDTO(3L, "Question 3"));
+        List<QuestionDTO> questionsDTO = Arrays.asList(new QuestionDTO(1L, "Question 1", "Question 1"), new QuestionDTO(2L, "Question 2","Question 2"), new QuestionDTO(3L, "Question 3","Question 3"));
         when(questionService.getAllQuestions()).thenReturn(questionsDTO);
 
         addVillageFormResultService.createVillageAnswerQuestionsFromAddVillageFormResult(villageId, addVillageFormResult, TimestampUtils.getCurrentTimestamp());

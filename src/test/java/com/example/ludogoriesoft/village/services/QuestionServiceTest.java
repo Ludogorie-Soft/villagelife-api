@@ -127,7 +127,7 @@ class QuestionServiceTest {
 
     @Test
     void createQuestionBlankQuestionThrowsApiRequestException() {
-        QuestionDTO questionDTO = new QuestionDTO(null, " ");
+        QuestionDTO questionDTO = new QuestionDTO(null, " ", " ");
 
         assertThrows(ApiRequestException.class, () -> questionService.createQuestion(questionDTO));
     }
@@ -135,7 +135,7 @@ class QuestionServiceTest {
     @Test
     void createQuestionDuplicateQuestionThrowsApiRequestException() {
         String questionText = "Same question?";
-        QuestionDTO questionDTO = new QuestionDTO(null, questionText);
+        QuestionDTO questionDTO = new QuestionDTO(null, questionText, questionText);
         when(questionRepository.existsByQuestionName(questionText)).thenReturn(true);
 
         assertThrows(ApiRequestException.class, () -> questionService.createQuestion(questionDTO));
