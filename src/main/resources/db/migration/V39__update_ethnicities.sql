@@ -1,0 +1,9 @@
+UPDATE `ethnicities` SET `ethnicity_name` = 'ethnicities.roma' WHERE `id` = 1;
+UPDATE `ethnicities` SET `ethnicity_name` = 'ethnicities.turks' WHERE `id` = 2;
+UPDATE `ethnicities` SET `ethnicity_name` = 'ethnicities.vlasi' WHERE `id` = 3;
+UPDATE `ethnicities` SET `ethnicity_name` = 'ethnicities.armenian' WHERE `id` = 4;
+UPDATE `ethnicities` SET `ethnicity_name` = 'ethnicities.karakachani' WHERE `id` = 5;
+UPDATE `ethnicities` SET `ethnicity_name` = 'ethnicities.greeks' WHERE `id` = 6;
+UPDATE `ethnicities` SET `ethnicity_name` = 'ethnicities.tatars' WHERE `id` = 7;
+UPDATE `ethnicities` SET `ethnicity_name` = 'ethnicities.jews' WHERE `id` = 8;
+UPDATE `ethnicities` SET `ethnicity_name` = 'ethnicities.noEthnicities' WHERE `id` = 9;
