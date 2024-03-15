@@ -7,9 +7,9 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum Foreigners {
 
-    YES ("Да", 1),
-    I_DONT_KNOW("Не знам", 2),
-    NO("Не", 3);
+    YES ("foreigners.yes", 1),
+    I_DONT_KNOW("foreigners.i_dont_know", 2),
+    NO("foreigners.no", 3);
 
     private final String name;
     private final int valueAsNumber;
