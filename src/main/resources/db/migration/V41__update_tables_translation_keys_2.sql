@@ -1,28 +1,41 @@
-UPDATE `regions` SET `region_name` = 'regions.blagoevgrad' WHERE `id` = 1;
-UPDATE `regions` SET `region_name` = 'regions.burgas' WHERE `id` = 2;
-UPDATE `regions` SET `region_name` = 'regions.varna' WHERE `id` = 3;
-UPDATE `regions` SET `region_name` = 'regions.velikoTarnovo' WHERE `id` = 4;
-UPDATE `regions` SET `region_name` = 'regions.vidin' WHERE `id` = 5;
-UPDATE `regions` SET `region_name` = 'regions.vratsa' WHERE `id` = 6;
-UPDATE `regions` SET `region_name` = 'regions.gabrovo' WHERE `id` = 7;
-UPDATE `regions` SET `region_name` = 'regions.dobrich' WHERE `id` = 8;
-UPDATE `regions` SET `region_name` = 'regions.kardzhali' WHERE `id` = 9;
-UPDATE `regions` SET `region_name` = 'regions.kyustendil' WHERE `id` = 10;
-UPDATE `regions` SET `region_name` = 'regions.lovech' WHERE `id` = 11;
-UPDATE `regions` SET `region_name` = 'regions.montana' WHERE `id` = 12;
-UPDATE `regions` SET `region_name` = 'regions.pazardzhik' WHERE `id` = 13;
-UPDATE `regions` SET `region_name` = 'regions.pernik' WHERE `id` = 14;
-UPDATE `regions` SET `region_name` = 'regions.pleven' WHERE `id` = 15;
-UPDATE `regions` SET `region_name` = 'regions.plovdiv' WHERE `id` = 16;
-UPDATE `regions` SET `region_name` = 'regions.razgrad' WHERE `id` = 17;
-UPDATE `regions` SET `region_name` = 'regions.ruse' WHERE `id` = 18;
-UPDATE `regions` SET `region_name` = 'regions.silistra' WHERE `id` = 19;
-UPDATE `regions` SET `region_name` = 'regions.sliven' WHERE `id` = 20;
-UPDATE `regions` SET `region_name` = 'regions.smolyan' WHERE `id` = 21;
-UPDATE `regions` SET `region_name` = 'regions.sofiaRegion' WHERE `id` = 22;
-UPDATE `regions` SET `region_name` = 'regions.sofia' WHERE `id` = 23;
-UPDATE `regions` SET `region_name` = 'regions.staraZagora' WHERE `id` = 24;
-UPDATE `regions` SET `region_name` = 'regions.targovishte' WHERE `id` = 25;
-UPDATE `regions` SET `region_name` = 'regions.haskovo' WHERE `id` = 26;
-UPDATE `regions` SET `region_name` = 'regions.shumen' WHERE `id` = 27;
-UPDATE `regions` SET `region_name` = 'regions.yambol' WHERE `id` = 28;
+UPDATE `regions` SET `region_name` =
+    CASE
+        WHEN `id` = 1 THEN 'regions.blagoevgrad'
+        WHEN `id` = 2 THEN 'regions.burgas'
+        WHEN `id` = 3 THEN 'regions.varna'
+        WHEN `id` = 4 THEN 'regions.velikoTarnovo'
+        WHEN `id` = 5 THEN 'regions.vidin'
+        WHEN `id` = 6 THEN 'regions.vratsa'
+        WHEN `id` = 7 THEN 'regions.gabrovo'
+        WHEN `id` = 8 THEN 'regions.dobrich'
+        WHEN `id` = 9 THEN 'regions.kardzhali'
+        WHEN `id` = 10 THEN 'regions.kyustendil'
+        WHEN `id` = 11 THEN 'regions.lovech'
+        WHEN `id` = 12 THEN 'regions.montana'
+        WHEN `id` = 13 THEN 'regions.pazardzhik'
+        WHEN `id` = 14 THEN 'regions.pernik'
+        WHEN `id` = 15 THEN 'regions.pleven'
+        WHEN `id` = 16 THEN 'regions.plovdiv'
+        WHEN `id` = 17 THEN 'regions.razgrad'
+        WHEN `id` = 18 THEN 'regions.ruse'
+        WHEN `id` = 19 THEN 'regions.silistra'
+        WHEN `id` = 20 THEN 'regions.sliven'
+        WHEN `id` = 21 THEN 'regions.smolyan'
+        WHEN `id` = 22 THEN 'regions.sofiaRegion'
+        WHEN `id` = 23 THEN 'regions.sofia'
+        WHEN `id` = 24 THEN 'regions.staraZagora'
+        WHEN `id` = 25 THEN 'regions.targovishte'
+        WHEN `id` = 26 THEN 'regions.haskovo'
+        WHEN `id` = 27 THEN 'regions.shumen'
+        WHEN `id` = 28 THEN 'regions.yambol'
+    END;
+
+
+UPDATE populated_assertion
+SET populated_assertion_name = CASE
+    WHEN id = 1 THEN 'populated_assertion.kind.hearted'
+    WHEN id = 2 THEN 'populated_assertion.cautious'
+    WHEN id = 3 THEN 'populated_assertion.attentive'
+    WHEN id = 4 THEN 'populated_assertion.communicative'
+END
+WHERE id IN (1, 2, 3, 4);
