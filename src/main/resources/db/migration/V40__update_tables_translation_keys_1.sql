@@ -1,26 +1,54 @@
-UPDATE `ground_categories` SET `ground_category_name` = 'ground_categories.first' WHERE `id` = 1;
-UPDATE `ground_categories` SET `ground_category_name` = 'ground_categories.second' WHERE `id` = 2;
-UPDATE `ground_categories` SET `ground_category_name` = 'ground_categories.third' WHERE `id` = 3;
-UPDATE `ground_categories` SET `ground_category_name` = 'ground_categories.fourth' WHERE `id` = 4;
-UPDATE `ground_categories` SET `ground_category_name` = 'ground_categories.fifth' WHERE `id` = 5;
-UPDATE `ground_categories` SET `ground_category_name` = 'ground_categories.sixth' WHERE `id` = 6;
-UPDATE `ground_categories` SET `ground_category_name` = 'ground_categories.seventh' WHERE `id` = 7;
-UPDATE `ground_categories` SET `ground_category_name` = 'ground_categories.eight' WHERE `id` = 8;
-UPDATE `ground_categories` SET `ground_category_name` = 'ground_categories.ninth' WHERE `id` = 9;
-UPDATE `ground_categories` SET `ground_category_name` = 'ground_categories.tenth' WHERE `id` = 10;
-UPDATE `ground_categories` SET `ground_category_name` = 'ground_categories.doNotKnow' WHERE `id` = 11;
+UPDATE ground_categories
+SET ground_category_name =
+    CASE
+        WHEN id = 1 THEN 'ground_categories.first'
+        WHEN id = 2 THEN 'ground_categories.second'
+        WHEN id = 3 THEN 'ground_categories.third'
+        WHEN id = 4 THEN 'ground_categories.fourth'
+        WHEN id = 5 THEN 'ground_categories.fifth'
+        WHEN id = 6 THEN 'ground_categories.sixth'
+        WHEN id = 7 THEN 'ground_categories.seventh'
+        WHEN id = 8 THEN 'ground_categories.eight'
+        WHEN id = 9 THEN 'ground_categories.ninth'
+        WHEN id = 10 THEN 'ground_categories.tenth'
+        WHEN id = 11 THEN 'ground_categories.doNotKnow'
+    END;
 
-UPDATE `living_conditions` SET `living_condition_name` = 'living_condition.first' WHERE `id` = 1;
-UPDATE `living_conditions` SET `living_condition_name` = 'living_condition.second' WHERE `id` = 2;
-UPDATE `living_conditions` SET `living_condition_name` = 'living_condition.third' WHERE `id` = 3;
-UPDATE `living_conditions` SET `living_condition_name` = 'living_condition.fourth' WHERE `id` = 4;
-UPDATE `living_conditions` SET `living_condition_name` = 'living_condition.fifth' WHERE `id` = 5;
-UPDATE `living_conditions` SET `living_condition_name` = 'living_condition.sixth' WHERE `id` = 6;
-UPDATE `living_conditions` SET `living_condition_name` = 'living_condition.seventh' WHERE `id` = 7;
-UPDATE `living_conditions` SET `living_condition_name` = 'living_condition.eight' WHERE `id` = 8;
-UPDATE `living_conditions` SET `living_condition_name` = 'living_condition.ninth' WHERE `id` = 9;
-UPDATE `living_conditions` SET `living_condition_name` = 'living_condition.tenth' WHERE `id` = 10;
-UPDATE `living_conditions` SET `living_condition_name` = 'living_condition.eleventh' WHERE `id` = 11;
-UPDATE `living_conditions` SET `living_condition_name` = 'living_condition.twelfth' WHERE `id` = 12;
-UPDATE `living_conditions` SET `living_condition_name` = 'living_condition.thirteenth' WHERE `id` = 13;
+UPDATE living_conditions
+SET living_condition_name =
+    CASE
+        WHEN id = 1 THEN 'living_condition.first'
+        WHEN id = 2 THEN 'living_condition.second'
+        WHEN id = 3 THEN 'living_condition.third'
+        WHEN id = 4 THEN 'living_condition.fourth'
+        WHEN id = 5 THEN 'living_condition.fifth'
+        WHEN id = 6 THEN 'living_condition.sixth'
+        WHEN id = 7 THEN 'living_condition.seventh'
+        WHEN id = 8 THEN 'living_condition.eight'
+        WHEN id = 9 THEN 'living_condition.ninth'
+        WHEN id = 10 THEN 'living_condition.tenth'
+        WHEN id = 11 THEN 'living_condition.eleventh'
+        WHEN id = 12 THEN 'living_condition.twelfth'
+        WHEN id = 13 THEN 'living_condition.thirteenth'
+    END;
+
+UPDATE objects
+SET type =
+    CASE
+        WHEN id = 1 THEN 'objects.first'
+        WHEN id = 2 THEN 'objects.second'
+        WHEN id = 3 THEN 'objects.third'
+        WHEN id = 4 THEN 'objects.fourth'
+        WHEN id = 5 THEN 'objects.fifth'
+        WHEN id = 6 THEN 'objects.sixth'
+        WHEN id = 7 THEN 'objects.seventh'
+        WHEN id = 8 THEN 'objects.eight'
+        WHEN id = 9 THEN 'objects.ninth'
+        WHEN id = 10 THEN 'objects.tenth'
+        WHEN id = 11 THEN 'objects.eleventh'
+        WHEN id = 12 THEN 'objects.twelfth'
+        WHEN id = 13 THEN 'objects.thirteenth'
+        WHEN id = 14 THEN 'objects.fourteenth'
+    END;
+
 
