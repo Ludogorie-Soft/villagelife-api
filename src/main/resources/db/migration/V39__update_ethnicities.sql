@@ -1,9 +1,13 @@
-UPDATE `ethnicities` SET `ethnicity_name` = 'ethnicities.roma' WHERE `id` = 1;
-UPDATE `ethnicities` SET `ethnicity_name` = 'ethnicities.turks' WHERE `id` = 2;
-UPDATE `ethnicities` SET `ethnicity_name` = 'ethnicities.vlasi' WHERE `id` = 3;
-UPDATE `ethnicities` SET `ethnicity_name` = 'ethnicities.armenian' WHERE `id` = 4;
-UPDATE `ethnicities` SET `ethnicity_name` = 'ethnicities.karakachani' WHERE `id` = 5;
-UPDATE `ethnicities` SET `ethnicity_name` = 'ethnicities.greeks' WHERE `id` = 6;
-UPDATE `ethnicities` SET `ethnicity_name` = 'ethnicities.tatars' WHERE `id` = 7;
-UPDATE `ethnicities` SET `ethnicity_name` = 'ethnicities.jews' WHERE `id` = 8;
-UPDATE `ethnicities` SET `ethnicity_name` = 'ethnicities.noEthnicities' WHERE `id` = 9;
+UPDATE `ethnicities`
+SET `ethnicity_name` =
+    CASE
+        WHEN `id` = 1 THEN 'ethnicities.roma'
+        WHEN `id` = 2 THEN 'ethnicities.turks'
+        WHEN `id` = 3 THEN 'ethnicities.vlasi'
+        WHEN `id` = 4 THEN 'ethnicities.armenian'
+        WHEN `id` = 5 THEN 'ethnicities.karakachani'
+        WHEN `id` = 6 THEN 'ethnicities.greeks'
+        WHEN `id` = 7 THEN 'ethnicities.tatars'
+        WHEN `id` = 8 THEN 'ethnicities.jews'
+        WHEN `id` = 9 THEN 'ethnicities.noEthnicities'
+    END;
