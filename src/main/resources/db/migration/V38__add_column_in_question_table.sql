@@ -1,5 +1,5 @@
 ALTER TABLE questions
-ADD COLUMN inform_message VARCHAR(255);
+ADD COLUMN if not exists inform_message VARCHAR(255);
 UPDATE questions
 SET inform_message =
     CASE
@@ -12,3 +12,5 @@ SET inform_message =
         WHEN id = 7 THEN 'Актуални събития, провеждащи се през годината:'
         WHEN id = 8 THEN 'Жители желаещи да помогнат на нови хора да се заселят в селото:'
     END;
+ALTER TABLE village_answer_question MODIFY COLUMN answer longtext;
+
