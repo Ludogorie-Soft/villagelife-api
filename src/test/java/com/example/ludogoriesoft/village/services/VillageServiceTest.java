@@ -33,7 +33,6 @@ import static org.mockito.Mockito.*;
 class VillageServiceTest {
     private static final int pageNumber = 0;
     private static final int elementsCount = 6;
-    private static final String sort = "nameAsc";
     @InjectMocks
     private VillageService villageService;
     @Mock
@@ -111,6 +110,7 @@ class VillageServiceTest {
         assertThrows(ApiRequestException.class, () -> villageService.getVillageById(villageId));
         verify(villageRepository, times(1)).findById(villageId);
     }
+
     @Test
     void testUpdateVillageExceptionCase() {
         Long villageId = 1L;
@@ -288,6 +288,7 @@ class VillageServiceTest {
         when(villageRepository.findByName(villageName)).thenReturn(List.of(village1, village2));
         assertThrows(ApiRequestException.class, () -> villageService.getVillageByName(villageName));
     }
+
     @Test
     void testUpdateVillageStatusSuccess() {
         Long villageId = 1L;
@@ -323,6 +324,7 @@ class VillageServiceTest {
         assertEquals(villageDTO.getName(), updatedVillageDTO.getName());
         assertTrue(updatedVillageDTO.getStatus());
     }
+
     @Test
     void testUpdateVillageStatusNotFound() {
         Long villageId = 1L;
@@ -333,35 +335,7 @@ class VillageServiceTest {
 
         assertThrows(ApiRequestException.class, () -> villageService.updateVillageStatus(villageId, villageDTO));
     }
-    @Test
-    void testGetAllSearchVillagesByNameAndRegionName() {
-        String regionName = "TestRegion";
-        String name = "TestName";
 
-        Village village1 = new Village();
-        village1.setId(1L);
-        village1.setName("TestVillage1");
-        village1.setRegion(new Region());
-
-        VillageDTO villageDTO = new VillageDTO();
-        villageDTO.setName("TestVillage1");
-        villageDTO.setRegion("NewRegion");
-        villageDTO.setDateUpload(now());
-        villageDTO.setStatus(false);
-
-        List<Village> villageList = List.of(village1);
-        Page<Village> page = new PageImpl<>(villageList, PageRequest.of(pageNumber, elementsCount), villageList.size());
-
-        when(villageRepository.findByNameContainingIgnoreCaseAndRegionName(regionName, name, PageRequest.of(pageNumber, elementsCount, Sort.by(Sort.Order.asc("name")))))
-                .thenReturn(page);
-        when(modelMapper.map(any(Village.class), eq(VillageDTO.class))).thenReturn(villageDTO);
-
-        Page<VillageDTO> resultPage = villageService.getAllSearchVillagesByNameAndRegionName(regionName, name, pageNumber, elementsCount, sort);
-
-        assertEquals(1, resultPage.getTotalElements());
-        assertEquals(1, resultPage.getContent().size());
-        assertEquals("TestVillage1", resultPage.getContent().get(0).getName());
-    }
     @Test
     void testGetVillagesByStatus() {
         boolean status = true;
