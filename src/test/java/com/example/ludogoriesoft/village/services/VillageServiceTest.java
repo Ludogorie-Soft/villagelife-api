@@ -365,4 +365,42 @@ class VillageServiceTest {
         assertEquals(1, resultPage.getContent().size());
         assertEquals("TestVillage1", resultPage.getContent().get(0).getName());
     }
+    @Test
+    void testGetVillageByNameAndRegionName_WhenVillageExists() {
+       Region region = new Region(1L,"RegionName");
+        String key = "VillageName, RegionName";
+
+        Village mockVillage = new Village();
+        mockVillage.setId(1L);
+        mockVillage.setName("VillageName");
+        mockVillage.setRegion(region);
+
+        VillageDTO villageDTO = new VillageDTO();
+        villageDTO.setId(1L);
+        villageDTO.setName("VillageName");
+        villageDTO.setRegion("RegionName");
+
+        when(villageRepository.findSingleVillageByNameAndRegionName_forUpload("VillageName", "RegionName"))
+                .thenReturn(List.of(mockVillage));
+        when(modelMapper.map(any(Village.class), eq(VillageDTO.class))).thenReturn(villageDTO);
+
+        VillageDTO result = villageService.getVillageByNameAndRegionName(key);
+
+        assertNotNull(result);
+        assertEquals(1L, result.getId());
+        assertEquals("VillageName", result.getName());
+        assertEquals("RegionName", result.getRegion());
+    }
+
+    @Test
+    void testGetVillageByNameAndRegionName_WhenVillageDoesNotExist() {
+        String key = "NonExistingVillage, NonExistingRegion";
+
+        when(villageRepository.findSingleVillageByNameAndRegionName_forUpload("NonExistingVillage", "NonExistingRegion"))
+                .thenReturn(new ArrayList<>());
+
+        VillageDTO result = villageService.getVillageByNameAndRegionName(key);
+
+        assertNull(result);
+    }
 }

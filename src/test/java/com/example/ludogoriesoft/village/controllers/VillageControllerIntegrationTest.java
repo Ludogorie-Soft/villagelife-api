@@ -183,5 +183,40 @@ class VillageControllerIntegrationTest {
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
     }
+    @Test
+    void testFindVillageByNameAndRegion_WhenVillageExists() throws Exception {
+        String key = "VillageName, RegionName";
+        VillageDTO villageDTO = new VillageDTO();
+        villageDTO.setId(2L);
+        villageDTO.setName("VillageName");
+
+        when(villageService.getVillageByNameAndRegionName("VillageName, RegionName"))
+                .thenReturn(villageDTO);
+
+        MvcResult mvcResult = mockMvc.perform(get("/api/v1/villages/name/{key}", key)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id").value(2L))
+                .andExpect(jsonPath("$.name").value("VillageName"))
+                .andReturn();
+
+        String response = mvcResult.getResponse().getContentAsString();
+        assertNotNull(response);
+    }
+
+    @Test
+    void testFindVillageByNameAndRegion_WhenVillageDoesNotExist() throws Exception {
+        String key = "NonExistingVillage, NonExistingRegion";
+
+        MvcResult mvcResult = mockMvc.perform(get("/api/v1/villages/name/{key}", key)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(""))
+                .andReturn();
+
+        String response = mvcResult.getResponse().getContentAsString();
+        assertNotNull(response);
+    }
 
 }
