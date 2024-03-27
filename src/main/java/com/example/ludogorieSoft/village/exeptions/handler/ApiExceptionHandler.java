@@ -55,11 +55,11 @@ public class ApiExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
     }
 
-//    @ExceptionHandler(DataIntegrityViolationException.class)
-//    public ResponseEntity<String> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
-//        String errorMessage = ex.getCause().getCause().getMessage();
-//        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorMessage);
-//    }
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<String> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+        String errorMessage = ex.getCause().getCause().getMessage();
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorMessage);
+    }
 
     @ExceptionHandler(UsernamePasswordException.class)
     public ResponseEntity<Object> handleUsernamePasswordException() {
