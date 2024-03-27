@@ -23,6 +23,7 @@ public class VillageAnswerQuestion {
     @ManyToOne
     @JoinColumn(name = "question_id")
     private Question question;
+    @Column(length = 65555)
     private String answer;
     private Boolean villageStatus;
     private LocalDateTime dateUpload;

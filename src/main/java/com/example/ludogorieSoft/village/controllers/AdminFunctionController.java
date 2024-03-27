@@ -28,7 +28,7 @@ public class AdminFunctionController {
     }
 
     @PostMapping("/approve/{villageId}")
-    public ResponseEntity<String> approveVillageResponse(@RequestParam("villageId") Long villageId,
+    public ResponseEntity<String> approveVillageResponse(@PathVariable("villageId") Long villageId,
                                                          @RequestParam("answerDate") String answerDate) {
         VillageDTO villageDTO = villageService.getVillageById(villageId);
         villageService.updateVillageStatus(villageId, villageDTO);
@@ -43,14 +43,14 @@ public class AdminFunctionController {
     }
 
     @PostMapping("/reject/{villageId}")
-    public ResponseEntity<String> rejectVillageResponse(@RequestParam("villageId") Long villageId,
+    public ResponseEntity<String> rejectVillageResponse(@PathVariable("villageId") Long villageId,
                                                         @RequestParam("answerDate") String answerDate) {
         adminVillageService.rejectVillageResponses(villageId, answerDate);
         return new ResponseEntity<>("Response of village with ID: " + villageId + " rejected successfully!!!", HttpStatus.OK);
     }
 
     @GetMapping("/info/{villageId}")
-    public ResponseEntity<VillageInfo> getVillageInfoById(@RequestParam("villageId") Long villageId,
+    public ResponseEntity<VillageInfo> getVillageInfoById(@PathVariable("villageId") Long villageId,
                                                           @RequestParam("answerDate") String answerDate, boolean status) {
         VillageInfo villageInfo = villageInfoService.getVillageInfoByVillageId(villageId, status, answerDate);
         return ResponseEntity.ok(villageInfo);

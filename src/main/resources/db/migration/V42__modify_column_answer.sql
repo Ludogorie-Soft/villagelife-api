@@ -1,0 +1,1 @@
+ALTER TABLE village_answer_question MODIFY COLUMN answer longtext;
