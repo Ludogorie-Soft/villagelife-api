@@ -26,3 +26,4 @@ SET inform_message =
         WHEN id = 7 THEN 'inform_message.seventh'
         WHEN id = 8 THEN 'inform_message.eighth'
     END;
+

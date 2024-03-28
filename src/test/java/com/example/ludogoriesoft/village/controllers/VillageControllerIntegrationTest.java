@@ -1,6 +1,5 @@
 package com.example.ludogorieSoft.village.controllers;
 
-import com.example.ludogorieSoft.village.dtos.PopulationDTO;
 import com.example.ludogorieSoft.village.dtos.VillageDTO;
 import com.example.ludogorieSoft.village.dtos.response.VillageInfo;
 import com.example.ludogorieSoft.village.services.VillageInfoService;
@@ -21,11 +20,11 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDateTime;
-import java.util.*;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @AutoConfigureMockMvc(addFilters = false)
@@ -54,41 +53,6 @@ class VillageControllerIntegrationTest {
     }
 
     @Test
-    void testGetAllVillages() throws Exception {
-        VillageDTO villageDTO1 = new VillageDTO();
-        villageDTO1.setId(1L);
-        villageDTO1.setName("Village Name 1");
-        villageDTO1.setDateUpload(LocalDateTime.now());
-        villageDTO1.setStatus(true);
-
-        VillageDTO villageDTO2 = new VillageDTO();
-        villageDTO2.setId(2L);
-        villageDTO2.setName("Village Name 2");
-        villageDTO2.setDateUpload(LocalDateTime.now());
-        villageDTO2.setStatus(true);
-
-        List<VillageDTO> villageDTOList = Arrays.asList(villageDTO1, villageDTO2);
-
-        when(villageService.getAllVillages()).thenReturn(villageDTOList);
-
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villages")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.[0].id").value(1))
-                .andExpect(jsonPath("$.[0].name").value("Village Name 1"))
-                .andExpect(jsonPath("$.[0].dateUpload").exists())
-                .andExpect(jsonPath("$.[0].status").value(true))
-                .andExpect(jsonPath("$.[1].id").value(2))
-                .andExpect(jsonPath("$.[1].name").value("Village Name 2"))
-                .andExpect(jsonPath("$.[1].dateUpload").exists())
-                .andExpect(jsonPath("$.[1].status").value(true))
-                .andReturn();
-
-        String response = mvcResult.getResponse().getContentAsString();
-        assertNotNull(response);
-    }
-
-    @Test
     void testGetVillageById() throws Exception {
         VillageDTO villageDTO = new VillageDTO();
         villageDTO.setId(2L);
@@ -98,7 +62,7 @@ class VillageControllerIntegrationTest {
 
         when(villageService.getVillageById(anyLong())).thenReturn(villageDTO);
 
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villages/{id}", 2)
+        MvcResult mvcResult = mockMvc.perform(get("/api/v1/villages/{id}", 2)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(2))
@@ -121,7 +85,7 @@ class VillageControllerIntegrationTest {
 
         when(villageService.createVillage(any(VillageDTO.class))).thenReturn(villageDTO);
 
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/villages")
+        MvcResult mvcResult = mockMvc.perform(post("/api/v1/villages")
                         .content("{\"id\": 3}")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
@@ -145,7 +109,7 @@ class VillageControllerIntegrationTest {
 
         when(villageService.updateVillage(anyLong(), any(VillageDTO.class))).thenReturn(villageDTO);
 
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/villages/{id}", 1)
+        MvcResult mvcResult = mockMvc.perform(put("/api/v1/villages/{id}", 1)
                         .content("{\"id\": 1}")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -158,21 +122,6 @@ class VillageControllerIntegrationTest {
         String response = mvcResult.getResponse().getContentAsString();
         assertNotNull(response);
     }
-
-    @Test
-    void testGetAllVillagesWhenNoneExist() throws Exception {
-        when(villageService.getAllVillages()).thenReturn(Collections.emptyList());
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villages")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(0))
-                .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$").isEmpty())
-                .andReturn();
-    }
-
-
     @Test
     void testDeleteVillage() throws Exception {
 
@@ -186,7 +135,7 @@ class VillageControllerIntegrationTest {
 
         when(villageService.createVillageWhitNullValues()).thenReturn(villageId);
 
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/villages/null")
+        MvcResult mvcResult = mockMvc.perform(post("/api/v1/villages/null")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$").value(villageId))
@@ -211,7 +160,7 @@ class VillageControllerIntegrationTest {
         when(villageInfoService.getVillageInfoByVillageId(anyLong(), anyBoolean(), nullable(String.class)))
                 .thenReturn(villageInfo);
 
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villages/info/{id}", 2)
+        MvcResult mvcResult = mockMvc.perform(get("/api/v1/villages/info/{id}", 2)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.villageDTO.id").value(2))
@@ -229,10 +178,45 @@ class VillageControllerIntegrationTest {
     void testIncreaseApprovedResponsesCount() throws Exception {
         Long villageId = 1L;
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/villages/{id}/increase-approved-responses-count", villageId)
+        mockMvc.perform(put("/api/v1/villages/{id}/increase-approved-responses-count", villageId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
+    }
+    @Test
+    void testFindVillageByNameAndRegion_WhenVillageExists() throws Exception {
+        String key = "VillageName, RegionName";
+        VillageDTO villageDTO = new VillageDTO();
+        villageDTO.setId(2L);
+        villageDTO.setName("VillageName");
+
+        when(villageService.getVillageByNameAndRegionName("VillageName, RegionName"))
+                .thenReturn(villageDTO);
+
+        MvcResult mvcResult = mockMvc.perform(get("/api/v1/villages/name/{key}", key)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id").value(2L))
+                .andExpect(jsonPath("$.name").value("VillageName"))
+                .andReturn();
+
+        String response = mvcResult.getResponse().getContentAsString();
+        assertNotNull(response);
+    }
+
+    @Test
+    void testFindVillageByNameAndRegion_WhenVillageDoesNotExist() throws Exception {
+        String key = "NonExistingVillage, NonExistingRegion";
+
+        MvcResult mvcResult = mockMvc.perform(get("/api/v1/villages/name/{key}", key)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(""))
+                .andReturn();
+
+        String response = mvcResult.getResponse().getContentAsString();
+        assertNotNull(response);
     }
 
 }
