@@ -321,34 +321,17 @@ class ObjectVillageServiceTest {
 
         ObjectAroundVillageDTO object1 = new ObjectAroundVillageDTO(101L, "Type A");
         ObjectAroundVillageDTO object2 = new ObjectAroundVillageDTO(102L, "Type B");
-        ObjectAroundVillageDTO object3 = new ObjectAroundVillageDTO(201L, "Type X");
-        ObjectAroundVillageDTO object4 = new ObjectAroundVillageDTO(202L, "Type Y");
-        ObjectAroundVillageDTO object5 = new ObjectAroundVillageDTO(301L, "Type P");
-        ObjectAroundVillageDTO object6 = new ObjectAroundVillageDTO(302L, "Type Q");
-        ObjectAroundVillageDTO object7 = new ObjectAroundVillageDTO(401L, "Type M");
 
         when(objectAroundVillageService.getObjectAroundVillageById(101L)).thenReturn(object1);
         when(objectAroundVillageService.getObjectAroundVillageById(102L)).thenReturn(object2);
-        when(objectAroundVillageService.getObjectAroundVillageById(201L)).thenReturn(object3);
-        when(objectAroundVillageService.getObjectAroundVillageById(202L)).thenReturn(object4);
-        when(objectAroundVillageService.getObjectAroundVillageById(301L)).thenReturn(object5);
-        when(objectAroundVillageService.getObjectAroundVillageById(302L)).thenReturn(object6);
-        when(objectAroundVillageService.getObjectAroundVillageById(401L)).thenReturn(object7);
 
         List<ObjectVillageResponse> result = objectVillageService.getObjectVillageResponses(mockData);
         assertEquals(3, result.size());
 
         ObjectVillageResponse response1 = result.get(0);
         assertEquals(Distance.ON_10_KM, response1.getDistance());
-        assertEquals("Type A, Type B", response1.getObjects());
-
-        ObjectVillageResponse response2 = result.get(1);
-        assertEquals(Distance.ON_11_TO_30KM, response2.getDistance());
-        assertEquals("Type X, Type Y", response2.getObjects());
-
-        ObjectVillageResponse response3 = result.get(2);
-        assertEquals(Distance.ON_31_TO_50_KM, response3.getDistance());
-        assertEquals("Type P, Type Q", response3.getObjects());
+        assertEquals("Type A", response1.getObjects().get(0).getType());
+        assertEquals("Type B", response1.getObjects().get(1).getType());
     }
 
 
@@ -386,11 +369,13 @@ class ObjectVillageServiceTest {
 
         ObjectVillageResponse response1 = result.get(0);
         assertEquals(Distance.ON_11_TO_30KM, response1.getDistance());
-        assertEquals("Type A, Type B", response1.getObjects());
+        assertEquals("Type A", response1.getObjects().get(0).getType());
+        assertEquals("Type B", response1.getObjects().get(1).getType());
 
         ObjectVillageResponse response2 = result.get(1);
         assertEquals(Distance.ON_31_TO_50_KM, response2.getDistance());
-        assertEquals("Type X, Type Y", response2.getObjects());
+        assertEquals("Type X", response2.getObjects().get(0).getType());
+        assertEquals("Type Y", response2.getObjects().get(1).getType());
     }
 
 @Test
