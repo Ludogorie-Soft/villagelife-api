@@ -260,10 +260,10 @@ class EthnicityVillageServiceTest {
         Long villageId = 1L;
         when(ethnicityVillageRepository.findAll()).thenReturn(new ArrayList<>());
 
-        String result = ethnicityVillageService.getUniqueEthnicityVillagesByVillageId(villageId, true, null);
+        List<String> result = ethnicityVillageService.getUniqueEthnicityVillagesByVillageId(villageId, true, null);
 
         verify(ethnicityVillageRepository, times(1)).findAll();
-        assertEquals("\u043D\u044F\u043C\u0430 \u043C\u0430\u043B\u0446\u0438\u043D\u0441\u0442\u0432\u0435\u043D\u0438 \u0433\u0440\u0443\u043F\u0438", result);
+        assertEquals("ethnicities.noEthnicities", result.get(0));
     }
 
     @Test

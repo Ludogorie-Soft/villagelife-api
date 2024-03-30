@@ -103,7 +103,7 @@ public class LivingConditionService {
     }
 
     public List<LivingConditionResponse> getLivingConditionResponses(Long villageId, boolean status, String date) {
-        List<String> names = new ArrayList<>(Arrays.asList("Инфраструктура", "Обществен транспорт", "Електрозахранване", "Водоснабдяване", "Мобилен обхват", "Интернет", "ТВ", "Чистота"));
+        List<String> names = new ArrayList<>(Arrays.asList("infrastructure", "public.transport", "power.supply", "water.supply", "mobile.range", "internet", "tv", "cleanliness"));
         List<Long> livingConditionIds = new ArrayList<>(Arrays.asList(1L, 3L, 4L, 5L, 6L, 7L, 8L, 9L));
         List<LivingConditionResponse> livingConditionResponses = new ArrayList<>();
 
@@ -125,7 +125,7 @@ public class LivingConditionService {
 
     public LivingConditionResponse getAccessibilityByVillageId(Long villageId, boolean status, String date) {
         LivingConditionResponse livingConditionResponse = new LivingConditionResponse();
-        livingConditionResponse.setLivingCondition("Достъпност");
+        livingConditionResponse.setLivingCondition("accessibility");
 
         double accessibleInWinterPercentage = getPercentage(villageId, 2L, status, date);
         double easilyAccessiblePercentage = getPercentage(villageId, 11L, status, date);
@@ -136,7 +136,7 @@ public class LivingConditionService {
 
     public LivingConditionResponse getCrimeByVillageId(Long villageId, boolean status, String date) {
         LivingConditionResponse livingConditionResponse = new LivingConditionResponse();
-        livingConditionResponse.setLivingCondition("Престъпност");
+        livingConditionResponse.setLivingCondition("crime");
 
         double crimePercentage = getPercentage(villageId, 10L, status, date);
         livingConditionResponse.setPercentage(Math.round((100 - crimePercentage) * 100.0) / 100.0);
@@ -208,7 +208,7 @@ public class LivingConditionService {
 
     public LivingConditionResponse getTotalLivingConditionsByVillageId(Long villageId, boolean status, String date) {
         LivingConditionResponse livingConditionResponse = new LivingConditionResponse();
-        livingConditionResponse.setLivingCondition("Битови условия");
+        livingConditionResponse.setLivingCondition("living.conditions.label");
         double percentage = (getLivingConditionsMainPercentage(villageId, status, date) + getLivingConditionsForumPercentage(villageId, status, date)) / 2;
         livingConditionResponse.setPercentage(Math.round((percentage) * 100.0) / 100.0);
         return livingConditionResponse;
@@ -216,7 +216,7 @@ public class LivingConditionService {
 
     public LivingConditionResponse getEcoFriendlinessByVillageId(Long villageId, boolean status, String date) {
         LivingConditionResponse livingConditionResponse = new LivingConditionResponse();
-        livingConditionResponse.setLivingCondition("Екосъобразност");
+        livingConditionResponse.setLivingCondition("environmental.friendliness");
 
         double natureReservePercentage = getPercentage(villageId, 12L, status, date);
         double environmentallyFriendlyLivingPercentage = getPercentage(villageId, 13L, status, date);
