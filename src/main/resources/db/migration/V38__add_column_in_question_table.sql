@@ -1,5 +1,5 @@
 ALTER TABLE questions
-ADD COLUMN if not exists inform_message VARCHAR(255);
+ADD COLUMN inform_message VARCHAR(255);
 
 UPDATE questions
 SET question_name =
