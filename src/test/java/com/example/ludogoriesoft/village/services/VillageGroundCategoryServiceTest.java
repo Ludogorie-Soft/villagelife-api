@@ -381,10 +381,10 @@ class VillageGroundCategoryServiceTest {
         Long villageId = 1L;
         when(villageGroundCategoryRepository.findAll()).thenReturn(new ArrayList<>());
 
-        String result = villageGroundCategoryService.getUniqueVillageGroundCategoriesByVillageId(villageId, true, null);
+        List<String> result = villageGroundCategoryService.getUniqueVillageGroundCategoriesByVillageId(villageId, true, null);
 
         verify(villageGroundCategoryRepository, times(1)).findAll();
-        assertEquals("не знам", result);
+        assertEquals("ground_categories.doNotKnow", result.get(0));
     }
 
     @Test
@@ -407,9 +407,9 @@ class VillageGroundCategoryServiceTest {
 
         when(villageGroundCategoryRepository.findAll()).thenReturn(villageGroundCategories);
 
-        String result = villageGroundCategoryService.getUniqueVillageGroundCategoriesByVillageId(villageId, status, date);
+        List<String> result = villageGroundCategoryService.getUniqueVillageGroundCategoriesByVillageId(villageId, status, date);
 
-        assertEquals("не знам", result);
+        assertEquals("ground_categories.doNotKnow", result.get(0));
     }
 
     @Test

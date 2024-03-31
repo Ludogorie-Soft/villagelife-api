@@ -1,6 +1,5 @@
 package com.example.ludogorieSoft.village.services;
 
-import com.example.ludogorieSoft.village.dtos.EthnicityDTO;
 import com.example.ludogorieSoft.village.dtos.EthnicityVillageDTO;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.*;
@@ -108,21 +107,17 @@ public class EthnicityVillageService {
         List<String> ethnicities = new ArrayList<>();
         for (EthnicityVillage ethnicityVillage : ethnicityVillages) {
 
-            if (ethnicityVillage.getVillage().getId().equals(villageId) && !ethnicityVillage.getEthnicity().getEthnicityName().equals("няма малцинствени групи") && (Boolean.TRUE.equals(ethnicityVillage.getVillageStatus()) && status ||
+            if (ethnicityVillage.getVillage().getId().equals(villageId) && !ethnicityVillage.getEthnicity().getEthnicityName().equals("ethnicities.noEthnicities") && (Boolean.TRUE.equals(ethnicityVillage.getVillageStatus()) && status ||
                     Boolean.FALSE.equals(ethnicityVillage.getVillageStatus()) && !status && ethnicityVillage.getDateUpload().equals(localDateTime))) {
                 filteredList.add(ethnicityVillageToEthnicityVillageDTO(ethnicityVillage));
             }
         }
-        /*StringBuilder ethnicityNames = new StringBuilder();*/
         if (filteredList.isEmpty()) {
             ethnicities.add("ethnicities.noEthnicities");
-            /*ethnicityNames.append("няма малцинствени групи");*/
         } else {
             for (int i = 0; i < filteredList.size(); i++) {
                 ethnicities.add(ethnicityService.getEthnicityById(filteredList.get(i).getEthnicityId()).getEthnicityName());
-                /*ethnicityNames.append(ethnicityService.getEthnicityById(filteredList.get(i).getEthnicityId()).getEthnicityName()).append(", ");*/
             }
-            /*ethnicityNames.append(ethnicityService.getEthnicityById(filteredList.get(filteredList.size() - 1).getEthnicityId()).getEthnicityName());*/
         }
         return ethnicities;
     }
