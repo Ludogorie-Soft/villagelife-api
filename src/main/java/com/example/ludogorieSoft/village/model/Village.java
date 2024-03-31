@@ -21,6 +21,9 @@ public class Village {
     @NotBlank
     @Column(nullable = false)
     private String name;
+    @NotBlank
+    @Column(nullable = false)
+    private String latinName;
     @ManyToOne
     @JoinColumn(name = "region_id")
     private Region region;

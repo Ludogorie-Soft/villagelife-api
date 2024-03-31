@@ -60,5 +60,13 @@ public class AdminFunctionController {
         List<VillageResponse> villageResponse = adminVillageService.getRejectedVillageResponsesWithSortedAnswers(false);
         return new ResponseEntity<>(villageResponse, HttpStatus.OK);
     }
-
+    @GetMapping("/toLatin")
+    public ResponseEntity<String> translateVillagesNamesToLatin(){
+        try {
+            villageService.translateVillagesNames();
+            return ResponseEntity.ok("Village names have been translated successfully");
+        } catch (Exception ex) {
+            return new ResponseEntity<>("Translation failed: " + ex.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
