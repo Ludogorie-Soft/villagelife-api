@@ -2,7 +2,6 @@ package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.ObjectAroundVillageDTO;
 import com.example.ludogorieSoft.village.dtos.ObjectVillageDTO;
-import com.example.ludogorieSoft.village.dtos.VillageDTO;
 import com.example.ludogorieSoft.village.dtos.response.ObjectVillageResponse;
 import com.example.ludogorieSoft.village.enums.Distance;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
@@ -20,7 +19,6 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor

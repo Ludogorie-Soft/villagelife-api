@@ -124,7 +124,7 @@ public class VillageLivingConditionService {
                     .toList();
         }
         for (VillageLivingConditions condition : villageLivingConditionsList) {
-            if (condition.getLivingCondition().getLivingConditionName().equals("в селото няма престъпност")) {
+            if (condition.getLivingCondition().getLivingConditionName().equals("living_condition.tenth")) {
                 return Math.abs(condition.getConsents().getValue() - 100);
             }
         }
@@ -181,5 +181,4 @@ public class VillageLivingConditionService {
             villageLivingConditionRepository.saveAll(villa);
         }
     }
-
 }

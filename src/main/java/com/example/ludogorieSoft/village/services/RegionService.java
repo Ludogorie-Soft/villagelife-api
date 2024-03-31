@@ -101,6 +101,4 @@ public class RegionService {
         Region region = regionRepository.findByRegionName(name);
         return region != null;
     }
-
-
 }

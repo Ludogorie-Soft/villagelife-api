@@ -78,8 +78,8 @@ public class AddVillageFormResultService {
 
     public void createVillageGroundCategoryFromAddVillageFormResult(Long villageId, AddVillageFormResult addVillageFormResult, LocalDateTime localDateTime) {
         List<Long> groundCategoryIds = addVillageFormResult.getGroundCategoryIds();
-        if (groundCategoryIds == null && !villageGroundCategoryService.existsByVillageIdAndGroundCategoryId(villageId, groundCategoryService.findGroundCategoryByName("не знам").getId())) {
-            villageGroundCategoryService.createVillageGroundCategoryDTO(new VillageGroundCategoryDTO(null, villageId, groundCategoryService.findGroundCategoryByName("не знам").getId(), false, localDateTime, null));
+        if (groundCategoryIds == null && !villageGroundCategoryService.existsByVillageIdAndGroundCategoryId(villageId, groundCategoryService.findGroundCategoryByName("ground_categories.doNotKnow").getId())) {
+            villageGroundCategoryService.createVillageGroundCategoryDTO(new VillageGroundCategoryDTO(null, villageId, groundCategoryService.findGroundCategoryByName("ground_categories.doNotKnow").getId(), false, localDateTime, null));
         } else if (groundCategoryIds != null) {
             for (Long id : groundCategoryIds) {
                 if (!villageGroundCategoryService.existsByVillageIdAndGroundCategoryId(villageId, id)) {
@@ -92,8 +92,8 @@ public class AddVillageFormResultService {
 
     public void createEthnicityVillagesFromAddVillageFormResult(Long villageId, AddVillageFormResult addVillageFormResult, LocalDateTime localDateTime) {
         List<Long> ethnicityDTOIds = addVillageFormResult.getEthnicityDTOIds();
-        if (ethnicityDTOIds == null && !ethnicityVillageService.existsByVillageIdAndEthnicityId(villageId, ethnicityService.findEthnicityByName("няма малцинствени групи").getId())) {
-            ethnicityVillageService.createEthnicityVillage(new EthnicityVillageDTO(null, villageId, ethnicityService.findEthnicityByName("няма малцинствени групи").getId(), false, localDateTime, null));
+        if (ethnicityDTOIds == null && !ethnicityVillageService.existsByVillageIdAndEthnicityId(villageId, ethnicityService.findEthnicityByName("ethnicities.noEthnicities").getId())) {
+            ethnicityVillageService.createEthnicityVillage(new EthnicityVillageDTO(null, villageId, ethnicityService.findEthnicityByName("ethnicities.noEthnicities").getId(), false, localDateTime, null));
         } else if (ethnicityDTOIds != null) {
             for (Long id : ethnicityDTOIds) {
                 if (!ethnicityVillageService.existsByVillageIdAndEthnicityId(villageId, id)) {
