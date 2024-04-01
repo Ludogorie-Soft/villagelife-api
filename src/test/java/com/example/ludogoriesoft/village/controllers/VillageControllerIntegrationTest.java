@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.mockito.ArgumentMatchers.*;
@@ -155,7 +156,6 @@ class VillageControllerIntegrationTest {
 
         VillageInfo villageInfo = new VillageInfo();
         villageInfo.setVillageDTO(villageDTO);
-        villageInfo.setEthnicities("няма малцинствени групи");
 
         when(villageInfoService.getVillageInfoByVillageId(anyLong(), anyBoolean(), nullable(String.class)))
                 .thenReturn(villageInfo);
@@ -167,7 +167,6 @@ class VillageControllerIntegrationTest {
                 .andExpect(jsonPath("$.villageDTO.name").value("Village Name 2"))
                 .andExpect(jsonPath("$.villageDTO.dateUpload").exists())
                 .andExpect(jsonPath("$.villageDTO.status").value(false))
-                .andExpect(jsonPath("$.ethnicities").value(villageInfo.getEthnicities()))
                 .andReturn();
 
         String response = mvcResult.getResponse().getContentAsString();

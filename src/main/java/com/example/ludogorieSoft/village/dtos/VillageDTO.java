@@ -19,6 +19,7 @@ public class VillageDTO {
 
     private Long id;
     private String name;
+    private String latinName;
     private String region;
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)

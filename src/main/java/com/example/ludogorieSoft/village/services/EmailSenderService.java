@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -19,6 +20,7 @@ import java.util.Properties;
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class EmailSenderService {
+    @Autowired
     private JavaMailSender mailSender;
     @Value("${spring.mail.username}")
     private String recipientEmail;
@@ -30,7 +32,7 @@ public class EmailSenderService {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
         try {
-            helper.setTo("nadezhda_todorova358@abv.bg");
+            helper.setTo("ntodor358@gmail.com");
             helper.setFrom(fromEmail);
             helper.setSubject(subject);
             helper.setText(body, true);

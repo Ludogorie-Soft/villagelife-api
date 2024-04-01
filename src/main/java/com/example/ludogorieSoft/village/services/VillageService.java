@@ -31,6 +31,7 @@ public class VillageService {
     private final AuthService authService;
     private static final String ERROR_MESSAGE1 = "Village with id ";
     private static final String ERROR_MESSAGE2 = " not found  ";
+    private final TranslatorService translatorService;
 
 
     public VillageDTO villageToVillageDTO(Village village) {
@@ -58,6 +59,7 @@ public class VillageService {
         if (village == null) {
             village = new Village();
             village.setName(villageDTO.getName().trim());
+            village.setLatinName(translatorService.translateToLatin(villageDTO.getName()));
             RegionDTO regionDTO = regionService.findRegionByName(villageDTO.getRegion());
             village.setRegion(regionService.checkRegion(regionDTO.getId()));
             village.setStatus(false);
@@ -177,5 +179,14 @@ public class VillageService {
             return villageToVillageDTO(village.get(0));
         }
         return null;
+    }
+    public void translateVillagesNames() {
+        List<Village> villagesList = villageRepository.findAll();
+
+        villagesList.forEach(village -> {
+                    String translatedName = translatorService.translateToLatin(village.getName());
+                    village.setLatinName(translatedName);
+                    villageRepository.save(village);
+                });
     }
 }

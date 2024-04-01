@@ -82,7 +82,4 @@ public class VillageLandscapeService {
         villageLandscapeRepository.save(foundVillageLandscape.get());
         return toDTO(foundVillageLandscape.get());
     }
-
-
-
 }

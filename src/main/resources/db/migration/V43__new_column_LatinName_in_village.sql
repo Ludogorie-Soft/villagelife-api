@@ -1,0 +1,2 @@
+ALTER TABLE villages
+ADD COLUMN latin_name VARCHAR(255);

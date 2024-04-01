@@ -5,7 +5,6 @@ import com.example.ludogorieSoft.village.dtos.response.AnswersQuestionResponse;
 import com.example.ludogorieSoft.village.model.Question;
 import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.model.VillageAnswerQuestion;
-import com.example.ludogorieSoft.village.repositories.QuestionRepository;
 import com.example.ludogorieSoft.village.repositories.VillageAnswerQuestionRepository;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.repositories.VillageRepository;
@@ -22,7 +21,6 @@ import java.util.*;
 public class VillageAnswerQuestionService {
     private final VillageAnswerQuestionRepository villageAnswerQuestionRepository;
     private final VillageRepository villageRepository;
-//    private final QuestionRepository questionRepository;
     private final ModelMapper modelMapper;
     private final VillageService villageService;
     private final QuestionService questionService;
