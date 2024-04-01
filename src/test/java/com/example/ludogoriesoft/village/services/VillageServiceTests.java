@@ -40,6 +40,8 @@ class VillageServiceTests {
     private RegionService regionService;
     @Mock
     private AuthService authService;
+    @Mock
+    private TranslatorService translatorService;
     @InjectMocks
     private VillageService villageService;
 
@@ -53,7 +55,8 @@ class VillageServiceTests {
                 villageRepository,
                 modelMapper,
                 regionService,
-                authService
+                authService,
+                translatorService
         );
     }
 
