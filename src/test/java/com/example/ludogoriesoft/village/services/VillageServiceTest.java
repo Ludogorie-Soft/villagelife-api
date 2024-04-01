@@ -43,6 +43,8 @@ class VillageServiceTest {
     private RegionService regionService;
     @Mock
     private AuthService authService;
+    @Mock
+    private TranslatorService translatorService;
 
     @BeforeEach
     public void setup() {
@@ -197,6 +199,7 @@ class VillageServiceTest {
     void testCreateNewVillage() {
         VillageDTO villageDTO = new VillageDTO();
         villageDTO.setName("NewVillage");
+        villageDTO.setLatinName("NewVillage");
         villageDTO.setRegion("NewRegion");
         villageDTO.setDateUpload(now());
         villageDTO.setStatus(false);
@@ -209,6 +212,7 @@ class VillageServiceTest {
 
         Village village = new Village();
         village.setName("NewVillage");
+        village.setLatinName("NewVillage");
         village.setRegion(new Region(1L, "NewRegion"));
         village.setStatus(false);
         Village savedVillage = new Village();
@@ -216,6 +220,7 @@ class VillageServiceTest {
         when(villageRepository.findSingleVillageByNameAndRegionName("NewVillage", "NewRegion")).thenReturn(null);
         when(villageRepository.save(any(Village.class))).thenReturn(savedVillage);
         when(modelMapper.map(savedVillage, VillageDTO.class)).thenReturn(villageDTO);
+        when(translatorService.translateToLatin("NewVillage")).thenReturn("NewVillage");
 
         VillageDTO result = villageService.createVillage(villageDTO);
 
