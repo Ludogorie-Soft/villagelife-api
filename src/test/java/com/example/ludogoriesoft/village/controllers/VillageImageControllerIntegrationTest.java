@@ -98,7 +98,7 @@ class VillageImageControllerIntegrationTest {
 
         Page<VillageDTO> villageDTOList = new PageImpl<>(List.of(villageDTO1,villageDTO2));
 
-        when(villageImageService.getApprovedVillageDTOsWithImages(1,1)).thenReturn(villageDTOList);
+        when(villageImageService.getApprovedVillageDTOsWithImage(1,1)).thenReturn(villageDTOList);
 
 
         mockMvc.perform(get("/api/v1/villageImages/approved/1/1")
@@ -117,7 +117,7 @@ class VillageImageControllerIntegrationTest {
 
     @Test
     void testGetAllVillageDTOsWithImagesWhenNotFound() throws Exception {
-        when(villageImageService.getApprovedVillageDTOsWithImages(1, 1)).thenReturn(new PageImpl<>(Collections.emptyList()));
+        when(villageImageService.getApprovedVillageDTOsWithImage(1, 1)).thenReturn(new PageImpl<>(Collections.emptyList()));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageImages/approved/1/1")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -354,7 +354,7 @@ class VillageImageControllerIntegrationTest {
         int elements = 10;
         int expectedPagesCount = 1;
 
-        when(villageImageService.getApprovedVillageDTOsWithImages(page, elements))
+        when(villageImageService.getApprovedVillageDTOsWithImage(page, elements))
                 .thenReturn(new PageImpl<>(Collections.emptyList(), PageRequest.of(page, elements), expectedPagesCount));
 
         mockMvc.perform(get("/api/v1/villageImages/approved/pagesCount/{page}/{elements}", page, elements)

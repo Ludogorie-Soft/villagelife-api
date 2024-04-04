@@ -78,22 +78,4 @@ public class ImageService {
         }
         return false;
     }
-
-    public List<String> getAllImageNamesFromSpace() {
-        List<String> imageNames = new ArrayList<>();
-        try {
-            Iterable<Result<Item>> results = minioClient.listObjects(
-                    ListObjectsArgs.builder().bucket(digitalOceanBucketName).recursive(true).build());
-            for (Result<Item> result : results) {
-                Item item = result.get();
-                String objectKey = item.objectName();
-                imageNames.add(objectKey);
-            }
-        } catch (MinioException e) {
-            logger.error(MINIO_ERROR + e.getMessage(), e);
-        } catch (Exception e) {
-            logger.error(UNEXPECTED_ERROR + e.getMessage(), e);
-        }
-        return imageNames;
-    }
 }

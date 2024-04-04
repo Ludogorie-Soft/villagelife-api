@@ -651,7 +651,7 @@ class VillageImageServiceTest {
     }
 
     @Test
-    void testGetApprovedVillageDTOsWithImages() {
+    void testGetApprovedVillageDTOsWithImage() {
         int pageNumber = 0;
         int elementsCount = 10;
 
@@ -667,7 +667,7 @@ class VillageImageServiceTest {
         when(villageImageRepository.findByVillageIdAndVillageStatusAndDateDeletedIsNull(VILLAGE_ID, true))
                 .thenReturn(Collections.emptyList());
 
-        Page<VillageDTO> resultPage = villageImageService.getApprovedVillageDTOsWithImages(pageNumber, elementsCount);
+        Page<VillageDTO> resultPage = villageImageService.getApprovedVillageDTOsWithImage(pageNumber, elementsCount);
 
         assertEquals(1, resultPage.getContent().size());
         VillageDTO resultVillageDTO = resultPage.getContent().get(0);

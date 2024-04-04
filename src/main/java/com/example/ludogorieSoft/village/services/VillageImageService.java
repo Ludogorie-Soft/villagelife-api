@@ -30,6 +30,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Stream;
 
+import static java.util.Arrays.asList;
 import static java.util.UUID.randomUUID;
 
 @Service
@@ -155,6 +156,21 @@ public class VillageImageService {
         }
         return base64Images;
     }
+    public String getSingleImageForVillageByStatusAndDate(Long villageId, boolean status, String date) {
+        String base64Images = null;
+        List<VillageImage> villageImages;
+        if (status) {
+            villageImages = villageImageRepository.findByVillageIdAndVillageStatusAndDateDeletedIsNull(villageId, true);
+        } else {
+            villageImages = villageImageRepository.findByVillageIdAndVillageStatusAndDateUpload(villageId, false, date);
+
+        }
+        if (!villageImages.isEmpty()) {
+            base64Images = imageService.getImageFromSpace(villageImages.get(0).getImageName());
+
+        }
+        return base64Images;
+    }
 
     public void addVillageImages(List<String> base64Images, List<VillageImage> villageImages) {
         for (VillageImage villageImage : villageImages) {
@@ -166,15 +182,15 @@ public class VillageImageService {
         }
     }
 
-    public Page<VillageDTO> getApprovedVillageDTOsWithImages(int pageNumber, int elementsCount) {
+    public Page<VillageDTO> getApprovedVillageDTOsWithImage(int pageNumber, int elementsCount) {
         Pageable page = PageRequest.of(pageNumber, elementsCount);
         Page<VillageDTO> allVillageDTOs = villageService.getVillagesByStatus(true, page);
 
         List<VillageDTO> villageDTOsWithImages = allVillageDTOs.getContent()
                 .stream()
                 .map(village -> {
-                    List<String> images = getAllImagesForVillageByStatusAndDate(village.getId(), true, null);
-                    village.setImages(images);
+                    String image = getSingleImageForVillageByStatusAndDate(village.getId(), true, null);
+                    village.setImages(asList(image));
                     return village;
                 })
                 .toList();
