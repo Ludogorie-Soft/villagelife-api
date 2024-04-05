@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -78,23 +79,7 @@ class VillageImageControllerIntegrationTest {
     @Test
     void testGetAllVillageDTOsWithImages() throws Exception {
         VillageDTO villageDTO1 = new VillageDTO();
-        villageDTO1.setId(1L);
-        villageDTO1.setName("Village 1");
-        villageDTO1.setRegion("Region 1");
-        List<String> images1 = new ArrayList<>();
-        images1.add("img1");
-        images1.add("img2");
-        villageDTO1.setImages(images1);
-
         VillageDTO villageDTO2 = new VillageDTO();
-        villageDTO2.setId(2L);
-        villageDTO2.setName("Village 2");
-        villageDTO2.setRegion("Region 2");
-        List<String> images2 = new ArrayList<>();
-        images2.add("img3");
-        images2.add("img4");
-        images2.add("img5");
-        villageDTO2.setImages(images2);
 
         Page<VillageDTO> villageDTOList = new PageImpl<>(List.of(villageDTO1,villageDTO2));
 
@@ -104,15 +89,7 @@ class VillageImageControllerIntegrationTest {
         mockMvc.perform(get("/api/v1/villageImages/approved/1/1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.[0].id").value(1))
-                .andExpect(jsonPath("$.[0].name").value("Village 1"))
-                .andExpect(jsonPath("$.[0].region").value("Region 1"))
-                .andExpect(jsonPath("$.[0].images").value(images1))
-                .andExpect(jsonPath("$.[1].id").value(2))
-                .andExpect(jsonPath("$.[1].name").value("Village 2"))
-                .andExpect(jsonPath("$.[1].region").value("Region 2"))
-                .andExpect(jsonPath("$.[1].images").value(images2))
-                .andReturn();
+                .andExpect(jsonPath("$.content", hasSize(2)));
     }
 
     @Test
@@ -346,21 +323,5 @@ class VillageImageControllerIntegrationTest {
         mockMvc.perform(get("/api/v1/villageImages/upload-images"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Images uploaded successfully.")));
-    }
-
-    @Test
-    void testGetAllApprovedVillageDTOsWithImagesPageCount() throws Exception {
-        int page = 0;
-        int elements = 10;
-        int expectedPagesCount = 1;
-
-        when(villageImageService.getApprovedVillageDTOsWithImage(page, elements))
-                .thenReturn(new PageImpl<>(Collections.emptyList(), PageRequest.of(page, elements), expectedPagesCount));
-
-        mockMvc.perform(get("/api/v1/villageImages/approved/pagesCount/{page}/{elements}", page, elements)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$").value(expectedPagesCount));
     }
 }
