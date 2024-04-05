@@ -4,6 +4,7 @@ import com.example.ludogorieSoft.village.dtos.VillageDTO;
 import com.example.ludogorieSoft.village.dtos.VillageImageDTO;
 import com.example.ludogorieSoft.village.services.VillageImageService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,21 +31,14 @@ public class VillageImageController {
     }
 
     @GetMapping("/approved/{page}/{elements}")
-    public ResponseEntity<List<VillageDTO>> getAllApprovedVillageDTOsWithImage(@PathVariable("page") int page, @PathVariable("elements") int elements) {
-        List<VillageDTO> villageDTOS = villageImageService.getApprovedVillageDTOsWithImage(page, elements).getContent();
+    public ResponseEntity<Page<VillageDTO>> getAllApprovedVillageDTOsWithImage(@PathVariable("page") int page, @PathVariable("elements") int elements) {
+        Page<VillageDTO> villageDTOS = villageImageService.getApprovedVillageDTOsWithImage(page, elements);
         if (!villageDTOS.isEmpty()) {
             return new ResponseEntity<>(villageDTOS, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
-    @GetMapping("/approved/pagesCount/{page}/{elements}")
-    public ResponseEntity<Integer> getAllApprovedVillageDTOsWithImagesPageCount(@PathVariable("page") int page, @PathVariable("elements") int elements) {
-        int pagesCount = villageImageService.getApprovedVillageDTOsWithImage(page, elements).getTotalPages();
-        return new ResponseEntity<>(Math.max(pagesCount, 0), HttpStatus.OK);
-    }
-
 
     @PostMapping("/admin-upload")
     public ResponseEntity<List<byte[]>> adminUploadImages(@RequestParam("villageId") Long villageId,
