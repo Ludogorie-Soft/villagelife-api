@@ -12,6 +12,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.*;
 
@@ -96,4 +99,56 @@ class MessageServiceTest {
         MessageDTO result = messageService.messageToMessageDTO(null);
         Assertions.assertNull(result);
     }
+
+    @Test
+    void testGetAllMessagesWithExistingMessages() {
+        Message message1 = new Message();
+        message1.setId(1L);
+        message1.setUserMessage("Message 1");
+
+        Message message2 = new Message();
+        message2.setId(2L);
+        message2.setUserMessage("Message 2");
+
+        MessageDTO messageDTO1 = new MessageDTO();
+        messageDTO1.setId(1L);
+        messageDTO1.setUserMessage("Message 1");
+
+        MessageDTO messageDTO2 = new MessageDTO();
+        messageDTO2.setId(2L);
+        messageDTO2.setUserMessage("Message 2");
+
+        List<Message> messages = new ArrayList<>();
+        messages.add(message1);
+        messages.add(message2);
+
+        List<MessageDTO> expectedMessages = new ArrayList<>();
+        expectedMessages.add(messageDTO1);
+        expectedMessages.add(messageDTO2);
+
+        when(messageRepository.findAll()).thenReturn(messages);
+        when(modelMapper.map(message1, MessageDTO.class)).thenReturn(messageDTO1);
+        when(modelMapper.map(message2, MessageDTO.class)).thenReturn(messageDTO2);
+
+        List<MessageDTO> result = messageService.getAllMessages();
+
+        verify(messageRepository, times(1)).findAll();
+        verify(modelMapper, times(1)).map(message1, MessageDTO.class);
+        verify(modelMapper, times(1)).map(message2, MessageDTO.class);
+        Assertions.assertEquals(expectedMessages, result);
+    }
+
+    @Test
+    void testGetAllMessagesWithNoMessages() {
+        List<Message> messages = new ArrayList<>();
+        List<MessageDTO> expectedMessages = new ArrayList<>();
+
+        when(messageRepository.findAll()).thenReturn(messages);
+        List<MessageDTO> result = messageService.getAllMessages();
+
+        verify(messageRepository, times(1)).findAll();
+        verify(modelMapper, never()).map(any(Message.class), eq(MessageDTO.class));
+        Assertions.assertEquals(expectedMessages, result);
+    }
+
 }

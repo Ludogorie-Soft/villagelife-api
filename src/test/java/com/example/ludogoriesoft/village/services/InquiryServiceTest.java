@@ -17,6 +17,10 @@ import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.*;
 
 import com.example.ludogorieSoft.village.repositories.InquiryRepository;
+import org.modelmapper.ModelMapper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 class InquiryServiceTest {
     @Mock
@@ -25,6 +29,8 @@ class InquiryServiceTest {
     InquiryRepository inquiryRepository;
     @Mock
     VillageService villageService;
+    @Mock
+    private ModelMapper modelMapper;
     @InjectMocks
     InquiryService inquiryService;
 
@@ -82,4 +88,56 @@ class InquiryServiceTest {
         verify(inquiryRepository).save(any(Inquiry.class));
         verify(emailSenderService, never()).sendEmail(anyString(), anyString(), anyString());
     }
+
+    @Test
+    void testGetAllInquiriesWithExistingInquiries() {
+        Inquiry inquiry1 = new Inquiry();
+        inquiry1.setId(1L);
+        inquiry1.setUserMessage("Inquiry 1");
+
+        Inquiry inquiry2 = new Inquiry();
+        inquiry2.setId(2L);
+        inquiry2.setUserMessage("Inquiry 2");
+
+        InquiryDTO inquiryDTO1 = new InquiryDTO();
+        inquiryDTO1.setId(1L);
+        inquiryDTO1.setUserMessage("Inquiry 1");
+
+        InquiryDTO inquiryDTO2 = new InquiryDTO();
+        inquiryDTO2.setId(2L);
+        inquiryDTO2.setUserMessage("Inquiry 2");
+
+        List<Inquiry> inquiries = new ArrayList<>();
+        inquiries.add(inquiry1);
+        inquiries.add(inquiry2);
+
+        List<InquiryDTO> expectedInquiries = new ArrayList<>();
+        expectedInquiries.add(inquiryDTO1);
+        expectedInquiries.add(inquiryDTO2);
+
+        when(inquiryRepository.findAll()).thenReturn(inquiries);
+        when(modelMapper.map(inquiry1, InquiryDTO.class)).thenReturn(inquiryDTO1);
+        when(modelMapper.map(inquiry2, InquiryDTO.class)).thenReturn(inquiryDTO2);
+
+        List<InquiryDTO> result = inquiryService.getAllInquiries();
+
+        verify(inquiryRepository, times(1)).findAll();
+        verify(modelMapper, times(1)).map(inquiry1, InquiryDTO.class);
+        verify(modelMapper, times(1)).map(inquiry2, InquiryDTO.class);
+        Assertions.assertEquals(expectedInquiries, result);
+    }
+
+    @Test
+    void testGetAllInquiriesWithNoInquiries() {
+        List<Inquiry> inquiries = new ArrayList<>();
+        List<InquiryDTO> expectedInquiries = new ArrayList<>();
+
+        when(inquiryRepository.findAll()).thenReturn(inquiries);
+        List<InquiryDTO> result = inquiryService.getAllInquiries();
+
+        verify(inquiryRepository, times(1)).findAll();
+        verify(modelMapper, never()).map(any(Inquiry.class), eq(InquiryDTO.class));
+        Assertions.assertEquals(expectedInquiries, result);
+    }
+
 }
