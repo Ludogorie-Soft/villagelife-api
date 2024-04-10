@@ -1,12 +1,17 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.InquiryDTO;
+import com.example.ludogorieSoft.village.dtos.MessageDTO;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.Inquiry;
+import com.example.ludogorieSoft.village.model.Message;
 import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.repositories.InquiryRepository;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -14,6 +19,10 @@ public class InquiryService {
     private final InquiryRepository inquiryRepository;
     private final EmailSenderService emailSenderService;
     private VillageService villageService;
+    private final ModelMapper modelMapper;
+    public InquiryDTO inquiryToInquiryDTO(Inquiry inquiry){
+        return modelMapper.map(inquiry, InquiryDTO.class);
+    }
 
     public InquiryDTO createInquiry(InquiryDTO inquiryDTO) {
         try {
@@ -37,5 +46,11 @@ public class InquiryService {
         emailSenderService.addTableRow(emailBody, "Запитване или заявка за село " + inquiry.getVillage().getName() + " (област " + inquiry.getVillage().getRegion().getRegionName() + ")", inquiry.getUserMessage());
         emailBody.append("</table></body></html>");
         return emailBody.toString();
+    }
+    public List<InquiryDTO> getAllInquiries() {
+        return inquiryRepository.findAll()
+                .stream()
+                .map(this::inquiryToInquiryDTO)
+                .toList();
     }
 }
