@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 public class ValidationUtils {
 
     public static boolean isValidName(String name) {
-        String regex = "^[а-яА-Я\\s\\-]+$";
+        String regex = "^[а-яА-Яa-zA-Z\\s\\-]+$";
         return name.matches(regex);
     }
 

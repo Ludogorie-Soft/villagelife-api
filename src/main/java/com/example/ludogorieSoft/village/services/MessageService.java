@@ -1,12 +1,16 @@
 package com.example.ludogorieSoft.village.services;
 
+import com.example.ludogorieSoft.village.dtos.LivingConditionDTO;
 import com.example.ludogorieSoft.village.dtos.MessageDTO;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
+import com.example.ludogorieSoft.village.model.LivingCondition;
 import com.example.ludogorieSoft.village.model.Message;
 import com.example.ludogorieSoft.village.repositories.MessageRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -37,5 +41,11 @@ public class MessageService {
         emailSenderService.addTableRow(emailBody, "Запитване или заявка", message.getUserMessage());
         emailBody.append("</table></body></html>");
         return emailBody.toString();
+    }
+    public List<MessageDTO> getAllMessages() {
+        return messageRepository.findAll()
+                .stream()
+                .map(this::messageToMessageDTO)
+                .toList();
     }
 }
