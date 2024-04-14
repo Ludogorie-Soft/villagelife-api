@@ -1,11 +1,10 @@
 package com.example.ludogorieSoft.village.services;
 
-import com.example.ludogorieSoft.village.dtos.LivingConditionDTO;
 import com.example.ludogorieSoft.village.dtos.MessageDTO;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
-import com.example.ludogorieSoft.village.model.LivingCondition;
 import com.example.ludogorieSoft.village.model.Message;
 import com.example.ludogorieSoft.village.repositories.MessageRepository;
+import com.example.ludogorieSoft.village.utils.TimestampUtils;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -23,7 +22,7 @@ public class MessageService {
     }
     public MessageDTO createMessage(MessageDTO messageDTO) {
         try {
-            Message message = new Message(null, messageDTO.getUserName().trim(), messageDTO.getEmail().trim(), messageDTO.getUserMessage().trim());
+            Message message = new Message(null, messageDTO.getUserName().trim(), messageDTO.getEmail().trim(), messageDTO.getUserMessage().trim(), TimestampUtils.getCurrentTimestamp());
             messageRepository.save(message);
             String emailBody = createMessageEmailBody(message);
             emailSenderService.sendEmail(messageDTO.getEmail(), emailBody, "VillageLife");

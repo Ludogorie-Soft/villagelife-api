@@ -1,12 +1,11 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.InquiryDTO;
-import com.example.ludogorieSoft.village.dtos.MessageDTO;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.Inquiry;
-import com.example.ludogorieSoft.village.model.Message;
 import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.repositories.InquiryRepository;
+import com.example.ludogorieSoft.village.utils.TimestampUtils;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -27,7 +26,7 @@ public class InquiryService {
     public InquiryDTO createInquiry(InquiryDTO inquiryDTO) {
         try {
             Village village = villageService.checkVillage(inquiryDTO.getVillageId());
-            Inquiry inquiry = new Inquiry(null, inquiryDTO.getUserName().trim(), inquiryDTO.getEmail().trim(), inquiryDTO.getUserMessage().trim(), inquiryDTO.getMobile().trim(), village, inquiryDTO.getInquiryType());
+            Inquiry inquiry = new Inquiry(null, inquiryDTO.getUserName().trim(), inquiryDTO.getEmail().trim(), inquiryDTO.getUserMessage().trim(), inquiryDTO.getMobile().trim(), village, inquiryDTO.getInquiryType(), TimestampUtils.getCurrentTimestamp());
             inquiryRepository.save(inquiry);
             String emailBody = createInquiryEmailBody(inquiry);
             emailSenderService.sendEmail(inquiry.getEmail(), emailBody, "VillageLife - " + inquiry.getInquiryType().getName());
