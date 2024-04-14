@@ -8,9 +8,11 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.InstanceOfAssertFactories.LOCAL_DATE_TIME;
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 
 class MessageTest {
@@ -41,7 +43,7 @@ class MessageTest {
         String email = "john@example.com";
         String userMessage = "Hello";
 
-        Message message = new Message(id, userName, email, userMessage);
+        Message message = new Message(id, userName, email, userMessage, null);
 
         Assertions.assertEquals(id, message.getId());
         Assertions.assertEquals(userName, message.getUserName());
@@ -54,7 +56,7 @@ class MessageTest {
         String userName = "John";
         String email = "john@example.com";
         String userMessage = "Hello";
-        Message message = new Message(null, userName, email, userMessage);
+        Message message = new Message(null, userName, email, userMessage, null);
         assertNotNull(message.getId() == null);
     }
 
@@ -77,7 +79,7 @@ class MessageTest {
         Class<?> messageClass = Message.class;
         boolean hasAllArgsConstructor;
         try {
-            messageClass.getDeclaredConstructor(Long.class, String.class, String.class, String.class);
+            messageClass.getDeclaredConstructor(Long.class, String.class, String.class, String.class, LocalDateTime.class);
             hasAllArgsConstructor = true;
         } catch (NoSuchMethodException e) {
             throw new RuntimeException(e);

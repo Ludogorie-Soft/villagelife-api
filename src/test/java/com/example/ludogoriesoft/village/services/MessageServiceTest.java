@@ -41,7 +41,7 @@ class MessageServiceTest {
         messageDTO.setEmail("johndoe@example.com");
         messageDTO.setUserMessage("Hello, this is a test message.");
 
-        Message message = new Message(null, messageDTO.getUserName(), messageDTO.getEmail(), messageDTO.getUserMessage());
+        Message message = new Message(null, messageDTO.getUserName(), messageDTO.getEmail(), messageDTO.getUserMessage(), null);
 
         when(messageRepository.save(any(Message.class))).thenReturn(message);
 

@@ -41,7 +41,7 @@ class InquiryServiceTest {
 
     @Test
     void testCreateInquiryWhenSuccessful() {
-        InquiryDTO inquiryDTO = new InquiryDTO(1L, "John Doe", "johndoe@example.com", "Hello, this is a test inquiry message.", "1234567890", 1L, InquiryType.JOB_OPPORTUNITIES);
+        InquiryDTO inquiryDTO = new InquiryDTO(1L, "John Doe", "johndoe@example.com", "Hello, this is a test inquiry message.", "1234567890", 1L, InquiryType.JOB_OPPORTUNITIES, null);
 
         Village village = new Village();
         village.setId(1L);
@@ -50,7 +50,7 @@ class InquiryServiceTest {
 
         when(villageService.checkVillage(1L)).thenReturn(village);
 
-        Inquiry inquiry = new Inquiry(null, inquiryDTO.getUserName(), inquiryDTO.getEmail(), inquiryDTO.getUserMessage(), inquiryDTO.getMobile(), village, inquiryDTO.getInquiryType());
+        Inquiry inquiry = new Inquiry(null, inquiryDTO.getUserName(), inquiryDTO.getEmail(), inquiryDTO.getUserMessage(), inquiryDTO.getMobile(), village, inquiryDTO.getInquiryType(), null);
         when(inquiryRepository.save(any(Inquiry.class))).thenReturn(inquiry);
 
         InquiryDTO result = inquiryService.createInquiry(inquiryDTO);
