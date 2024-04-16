@@ -176,4 +176,7 @@ public class VillageAnswerQuestionService {
             villageAnswerQuestionRepository.saveAll(villa);
         }
     }
+    public List<Object[]> findVillageNameAndAnswerByQuestionName(String questionName){
+        return villageAnswerQuestionRepository.findVillageNameAndAnswerByQuestionName(questionName);
+    }
 }

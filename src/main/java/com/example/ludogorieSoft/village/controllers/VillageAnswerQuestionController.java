@@ -51,5 +51,8 @@ public class VillageAnswerQuestionController {
             return ResponseEntity.notFound().build();
         }
     }
-
+    @GetMapping("/answers/{questionName}")
+    public ResponseEntity<List<Object[]>> findVillageNameAndAnswerByQuestionName(@PathVariable("questionName") String questionName){
+        return ResponseEntity.ok(villageAnswerQuestionService.findVillageNameAndAnswerByQuestionName(questionName));
+    }
 }

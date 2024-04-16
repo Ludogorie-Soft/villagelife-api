@@ -570,4 +570,21 @@ class VillageAnswerQuestionServiceTest {
         verify(villageAnswerQuestionRepository).saveAll(answerQuestionListCaptor.capture());
 
     }
+
+    @Test
+    void testFindVillageNameAndAnswerByQuestionName() {
+        List<Object[]> testData = new ArrayList<>();
+        testData.add(new Object[]{"Village A", "Answer A"});
+        testData.add(new Object[]{"Village B", "Answer B"});
+        when(villageAnswerQuestionRepository.findVillageNameAndAnswerByQuestionName("question_name.eighth"))
+                .thenReturn(testData);
+        List<Object[]> result = villageAnswerQuestionService.findVillageNameAndAnswerByQuestionName("question_name.eighth");
+        assertEquals(2, result.size());
+        Object[] firstResult = result.get(0);
+        assertEquals("Village A", firstResult[0]);
+        assertEquals("Answer A", firstResult[1]);
+        Object[] secondResult = result.get(1);
+        assertEquals("Village B", secondResult[0]);
+        assertEquals("Answer B", secondResult[1]);
+    }
 }

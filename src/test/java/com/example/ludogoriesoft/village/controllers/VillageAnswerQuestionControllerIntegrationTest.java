@@ -4,6 +4,7 @@ import com.example.ludogorieSoft.village.dtos.VillageAnswerQuestionDTO;
 import com.example.ludogorieSoft.village.services.VillageAnswerQuestionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -16,6 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -43,6 +45,8 @@ class VillageAnswerQuestionControllerIntegrationTest {
 
     @MockBean
     private VillageAnswerQuestionService villageAnswerQuestionService;
+    @InjectMocks
+    private VillageAnswerQuestionController villageAnswerQuestionController;
 
     @BeforeEach
     public void setup() {
@@ -238,5 +242,26 @@ class VillageAnswerQuestionControllerIntegrationTest {
                 .andReturn();
     }
 
+    @Test
+    void testFindVillageNameAndAnswerByQuestionName() throws Exception {
+        Object[] answer1 = {"Village A", "Answer A"};
+        Object[] answer2 = {"Village B", "Answer B"};
 
+        List<Object[]> answers = Arrays.asList(answer1, answer2);
+
+        when(villageAnswerQuestionService.findVillageNameAndAnswerByQuestionName("question_name.eighth"))
+                .thenReturn(answers);
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/villageAnswerQuestion/answers/{questionName}", "question_name.eighth")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0][0]").value("Village A"))
+                .andExpect(jsonPath("$[0][1]").value("Answer A"))
+                .andExpect(jsonPath("$[1][0]").value("Village B"))
+                .andExpect(jsonPath("$[1][1]").value("Answer B"))
+                .andReturn();
+
+        String response = mvcResult.getResponse().getContentAsString();
+        assertNotNull(response);
+    }
 }
