@@ -28,4 +28,11 @@ public class VillageVideoService {
                 .map(this::villageVideoToVillageVideoDTO)
                 .toList();
     }
+    public List<VillageVideoDTO> getAllApprovedVideosByVillageId(Long villageId) {
+        List<VillageVideo> videos = villageVideoRepository.findByVillageIdAndStatusTrue(villageId);
+        return videos
+                .stream()
+                .map(this::villageVideoToVillageVideoDTO)
+                .toList();
+    }
 }

@@ -20,4 +20,8 @@ public class VillageVideoController {
     public ResponseEntity<List<VillageVideoDTO>> getAllVideosByVillageId(@PathVariable("villageId") Long villageId) {
         return ResponseEntity.ok(villageVideoService.getAllVideosByVillageId(villageId));
     }
+    @GetMapping("/approved/village/{villageId}")
+    public ResponseEntity<List<VillageVideoDTO>> getAllApprovedVideosByVillageId(@PathVariable("villageId") Long villageId) {
+        return ResponseEntity.ok(villageVideoService.getAllApprovedVideosByVillageId(villageId));
+    }
 }
