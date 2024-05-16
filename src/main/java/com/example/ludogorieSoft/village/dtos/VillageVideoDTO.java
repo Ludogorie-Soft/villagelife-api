@@ -11,7 +11,7 @@ public class VillageVideoDTO {
         private Long id;
         private Long villageId;
         private String url;
-        private Boolean villageStatus;
+        private Boolean status;
         private LocalDateTime dateUpload;
         private LocalDateTime dateDeleted;
         private UserDTO userDTO;
