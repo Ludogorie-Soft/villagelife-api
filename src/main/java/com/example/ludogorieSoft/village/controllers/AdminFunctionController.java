@@ -1,6 +1,7 @@
 package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.dtos.VillageDTO;
+import com.example.ludogorieSoft.village.dtos.VillageVideoDTO;
 import com.example.ludogorieSoft.village.dtos.response.VillageInfo;
 import com.example.ludogorieSoft.village.dtos.response.VillageResponse;
 import com.example.ludogorieSoft.village.services.*;
@@ -19,6 +20,7 @@ public class AdminFunctionController {
     private final AdminVillageService adminVillageService;
     private final VillageInfoService villageInfoService;
     private final VillageImageService villageImageService;
+    private final VillageVideoService villageVideoService;
 
     @DeleteMapping("/village-delete/{villageId}")
     public ResponseEntity<String> deleteVillageById(@PathVariable("villageId") Long villageId) {
@@ -68,5 +70,12 @@ public class AdminFunctionController {
         } catch (Exception ex) {
             return new ResponseEntity<>("Translation failed: " + ex.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @PostMapping("/video")
+    public String saveVideos(@RequestBody List<VillageVideoDTO> villageVideoDTOS){
+
+        villageVideoService.createVideoPats(villageVideoDTOS);
+        return "Successfully saved";
     }
 }
