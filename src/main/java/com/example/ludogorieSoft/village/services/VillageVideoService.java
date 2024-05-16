@@ -4,6 +4,7 @@ import com.example.ludogorieSoft.village.dtos.VillageImageDTO;
 import com.example.ludogorieSoft.village.dtos.VillageVideoDTO;
 import com.example.ludogorieSoft.village.model.VillageImage;
 import com.example.ludogorieSoft.village.model.VillageVideo;
+import com.example.ludogorieSoft.village.repositories.VillageVideoRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class VillageVideoService {
     private final ModelMapper modelMapper;
+    private final VillageVideoRepository villageVideoRepository;
     public VillageVideo villageVideoDTOToVillageVideo(VillageVideoDTO villageVideoDTO) {
         return modelMapper.map(villageVideoDTO, VillageVideo.class);
     }
