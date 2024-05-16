@@ -23,7 +23,8 @@ public class VillageVideo {
         private Village village;
         @NotBlank
         private String url;
-        private Boolean villageStatus;
+        @Column(name="village_status")
+        private Boolean status;
         private LocalDateTime dateUpload;
         private LocalDateTime dateDeleted;
         @ManyToOne
