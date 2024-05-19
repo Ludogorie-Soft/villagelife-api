@@ -16,7 +16,7 @@ public interface VillageVideoRepository extends JpaRepository<VillageVideo, Long
 
     List<VillageVideo> findByVillageId(Long villageId);
 
-    List<VillageVideo> findByVillageIdAndStatusTrue(Long villageId);
+    List<VillageVideo> findByVillageIdAndStatusTrueAndDateDeletedIsNull(Long villageId);
 
     List<VillageVideo> findByVillageIdAndDateDeletedIsNull(long villageId);
 

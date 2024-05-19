@@ -38,7 +38,7 @@ public class VillageVideoService {
     }
 
     public List<VillageVideoDTO> getAllApprovedVideosByVillageId(Long villageId) {
-        List<VillageVideo> videos = villageVideoRepository.findByVillageIdAndStatusTrue(villageId);
+        List<VillageVideo> videos = villageVideoRepository.findByVillageIdAndStatusTrueAndDateDeletedIsNull(villageId);
         return videos
                 .stream()
                 .map(this::villageVideoToVillageVideoDTO)
