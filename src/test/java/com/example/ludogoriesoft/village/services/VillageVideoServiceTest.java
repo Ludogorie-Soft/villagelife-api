@@ -56,18 +56,18 @@ class VillageVideoServiceTest {
 
     @Test
     void testGetAllApprovedVideosByVillageId() {
-        VillageVideoDTO villageVideoDTO = getVillageVideoDTO();
-        villageVideoDTO.setStatus(true);
         VillageVideo villageVideo = getVillageVideo();
+        VillageVideoDTO villageVideoDTO = getVillageVideoDTO();
 
-        when(villageVideoRepository.findByVillageId(VILLAGE_ID)).thenReturn(List.of(villageVideo));
+        when(villageVideoRepository.findByVillageIdAndStatusTrueAndDateDeletedIsNull(VILLAGE_ID)).thenReturn(List.of(villageVideo));
         when(modelMapper.map(villageVideo, VillageVideoDTO.class)).thenReturn(villageVideoDTO);
 
-        List<VillageVideoDTO> villageVideoDTOS = villageVideoService.getAllVideosByVillageId(VILLAGE_ID);
+        List<VillageVideoDTO> result = villageVideoService.getAllApprovedVideosByVillageId(VILLAGE_ID);
 
-        verify(villageVideoRepository, times(1)).findByVillageId(VILLAGE_ID);
-        assertEquals(2L, villageVideoDTOS.get(0).getId());
-        assertEquals(true, villageVideoDTOS.get(0).getStatus());
+        verify(villageVideoRepository, times(1)).findByVillageIdAndStatusTrueAndDateDeletedIsNull(VILLAGE_ID);
+        verify(modelMapper, times(1)).map(villageVideo, VillageVideoDTO.class);
+        assertEquals(1, result.size());
+        assertEquals(villageVideoDTO, result.get(0));
     }
 
     @Test
