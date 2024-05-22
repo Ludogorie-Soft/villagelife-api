@@ -1,12 +1,10 @@
 package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.dtos.VillageDTO;
+import com.example.ludogorieSoft.village.dtos.VillageVideoDTO;
 import com.example.ludogorieSoft.village.dtos.response.VillageInfo;
 import com.example.ludogorieSoft.village.dtos.response.VillageResponse;
-import com.example.ludogorieSoft.village.services.AdminVillageService;
-import com.example.ludogorieSoft.village.services.VillageImageService;
-import com.example.ludogorieSoft.village.services.VillageInfoService;
-import com.example.ludogorieSoft.village.services.VillageService;
+import com.example.ludogorieSoft.village.services.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,12 +21,13 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(value = AdminFunctionController.class,
@@ -54,6 +53,8 @@ class AdminFunctionControllerTest {
     private VillageService villageService;
     @MockBean
     private VillageImageService villageImageService;
+    @MockBean
+    private VillageVideoService villageVideoService;
 
     @BeforeEach
     public void setup() {
@@ -108,6 +109,7 @@ class AdminFunctionControllerTest {
         verify(villageService).updateVillageStatus(villageId, villageDTO);
         verify(adminVillageService).updateVillageStatusAndVillageResponsesStatus(villageId, answerDate);
     }
+
     @Test
     void testFindUnapprovedVillageResponseByVillageId() throws Exception {
         List<VillageResponse> villageResponses = new ArrayList<>();
@@ -166,5 +168,94 @@ class AdminFunctionControllerTest {
                 .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(sampleResponses)));
 
         verify(adminVillageService).getRejectedVillageResponsesWithSortedAnswers(false);
+    }
+
+    @Test
+    void testSaveVideos() throws Exception {
+        Long villageId = 1L;
+        List<String> videoUrls = List.of("https://www.youtube.com/watch?v=VIDEO_ID");
+
+        mockMvc.perform(post("/api/v1/admins/functions/video")
+                        .param("villageId", String.valueOf(villageId))
+                        .param("videoUrl", videoUrls.toArray(new String[0]))
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .andExpect(status().isCreated())
+                .andExpect(content().string("Video successfully saved"))
+                .andDo(print());
+
+        verify(villageVideoService, times(1)).createVideoPats(villageId, videoUrls);
+    }
+
+    @Test
+    void testGetAllVideosByVillageId() throws Exception {
+        long villageId = 1;
+        List<VillageVideoDTO> videoDTOs = List.of(new VillageVideoDTO());
+
+        when(villageVideoService.findVideosByVillageIdAndDateDeletedIsNull(villageId)).thenReturn(videoDTOs);
+
+        mockMvc.perform(get("/api/v1/admins/functions/videos/{villageId}", villageId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$[0]").exists())
+                .andDo(print());
+
+        verify(villageVideoService, times(1)).findVideosByVillageIdAndDateDeletedIsNull(villageId);
+    }
+
+    @Test
+    void testGetAllDeletedVideosByVillageId() throws Exception {
+        Long villageId = 1L;
+        List<VillageVideoDTO> videoDTOs = Collections.singletonList(new VillageVideoDTO());
+
+        when(villageVideoService.findDeletedVideosByVillageIdAndDateDeletedIsNotNull(villageId)).thenReturn(videoDTOs);
+
+        mockMvc.perform(get("/api/v1/admins/functions/deleted-videos/{villageId}", villageId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$[0]").exists())
+                .andDo(print());
+
+        verify(villageVideoService, times(1)).findDeletedVideosByVillageIdAndDateDeletedIsNotNull(villageId);
+    }
+    @Test
+    void testDeleteVideoByVideoId() throws Exception {
+        Long videoId = 1L;
+
+        when(villageVideoService.deleteVideoById(videoId)).thenReturn("Video deleted");
+
+        mockMvc.perform(delete("/api/v1/admins/functions/video-delete/{videoId}", videoId))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Video deleted"))
+                .andDo(print());
+
+        verify(villageVideoService, times(1)).deleteVideoById(videoId);
+    }
+
+    @Test
+    void testResumeVideoByVideoId() throws Exception {
+        Long videoId = 1L;
+
+        when(villageVideoService.resumeVideoById(videoId)).thenReturn("Video resumed");
+
+        mockMvc.perform(put("/api/v1/admins/functions/resume-video/{videoId}", videoId))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Video resumed"))
+                .andDo(print());
+
+        verify(villageVideoService, times(1)).resumeVideoById(videoId);
+    }
+
+    @Test
+    void testRejectVideoByVideoId() throws Exception {
+        Long videoId = 1L;
+
+        when(villageVideoService.rejectVideoById(videoId)).thenReturn("Video rejected");
+
+        mockMvc.perform(put("/api/v1/admins/functions/reject-video/{videoId}", videoId))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Video rejected"))
+                .andDo(print());
+
+        verify(villageVideoService, times(1)).rejectVideoById(videoId);
     }
 }
