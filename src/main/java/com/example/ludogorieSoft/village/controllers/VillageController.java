@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/villages")
@@ -18,6 +19,7 @@ public class VillageController {
 
     private final VillageService villageService;
     private final VillageInfoService villageInfoService;
+
 
     @GetMapping("/{id}")
     public ResponseEntity<VillageDTO> getVillageById(@PathVariable("id") Long id) {
@@ -65,5 +67,9 @@ public class VillageController {
     @GetMapping("/name/{key}")
     public VillageDTO findVillageByNameAndRegion(@PathVariable String key) {
        return villageService.getVillageByNameAndRegionName(key);
+    }
+    @GetMapping("/status/{status}")
+    public List<Long> testSitemap(@PathVariable boolean status) {
+        return villageService.getAllApprovedVillagesByStatus(status);
     }
 }

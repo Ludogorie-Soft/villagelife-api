@@ -189,4 +189,7 @@ public class VillageService {
                     villageRepository.save(village);
                 });
     }
+    public List<Long> getAllApprovedVillagesByStatus(boolean status) {
+        return villageRepository.findAllApprovedVillageIdsByStatus(status);
+    }
 }
