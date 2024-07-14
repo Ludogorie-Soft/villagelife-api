@@ -49,5 +49,6 @@ public interface VillageRepository extends JpaRepository<Village, Long> {
     List<Village> findAllVillagesWithRejectedResponses();
 
     List<Village> findByName(String name);
-
+    @Query("SELECT v.id FROM Village v WHERE v.status = ?1")
+    List<Long> findAllApprovedVillageIdsByStatus(boolean status);
 }
