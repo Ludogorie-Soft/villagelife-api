@@ -1,0 +1,28 @@
+CREATE TABLE IF NOT EXISTS user_search_data (
+id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    village_id BIGINT,
+    property_type ENUM('PLOT', 'AGRICULTURAL_LAND', 'HOUSE', 'COTTAGE',
+     'FLOOR_OF_HOUSE', 'BUSINESS_PROPERTY', 'APARTMENT') NOT NULL,
+    property_transfer_type ENUM('SALE', 'RENT') NOT NULL,
+    min_built_up_area INT CHECK (min_built_up_area >= 0),
+    max_built_up_area INT CHECK (max_built_up_area >= 0),
+    min_yard_area INT CHECK (min_yard_area >= 0),
+    max_yard_area INT CHECK (max_yard_area >= 0),
+    min_rooms_count SMALLINT CHECK (min_rooms_count >= 0),
+    max_rooms_count SMALLINT CHECK (max_rooms_count >= 0),
+    min_bathrooms_count SMALLINT CHECK (min_bathrooms_count >= 0),
+    max_bathrooms_count SMALLINT CHECK (max_bathrooms_count >= 0),
+    heating VARCHAR(255),
+    construction_type ENUM('BRICK', 'PANEL', 'LARGE_AREA_FORMWORK') NOT NULL,
+    min_construction_year SMALLINT CHECK (min_construction_year >= 0),
+    max_construction_year SMALLINT CHECK (max_construction_year >= 0),
+    property_user_id BIGINT,
+    extras TEXT,
+    min_price INT CHECK (min_price >= 0),
+    max_price INT CHECK (max_price >= 0),
+    ownership_type ENUM('INDIVIDUAL', 'AGENCY', 'BUILDER', 'INVESTOR') NOT NULL,
+    deleted_at TIMESTAMP NULL,
+
+    FOREIGN KEY (village_id) REFERENCES villages(id),
+    FOREIGN KEY (property_user_id) REFERENCES property_users(id)
+);

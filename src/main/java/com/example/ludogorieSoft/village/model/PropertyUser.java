@@ -39,7 +39,8 @@ public class PropertyUser {
     @Column(unique = true)
     private String phoneNumber;
     //Todo add access code or link
-    //Todo add search data id
+    @OneToOne
+    private UserSearchData userSearchData;
     @NotBlank(message = "Password cannot be empty!")
     @Length(min = 8, message = "Password should be at least 8 characters long!")
     @Column(nullable = false)
