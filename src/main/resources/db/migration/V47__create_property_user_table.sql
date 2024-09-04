@@ -5,6 +5,6 @@ CREATE TABLE IF NOT EXISTS property_users  (
     email VARCHAR(255) NOT NULL UNIQUE,
     phone_number VARCHAR(25) NOT NULL,
     password VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     deleted_at TIMESTAMP NULL
 );
