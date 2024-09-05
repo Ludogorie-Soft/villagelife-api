@@ -6,10 +6,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum ConstructionType {
-
-    BRICK("тухла"),
-    PANEL("панрел"),
-    LARGE_AREA_FORMWORK("ЕПК");
-
+    BRICKS("Тухли"),
+    PANEL("Панел"),
+    WOOD("Дърво");
     private final String name;
 }

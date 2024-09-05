@@ -6,9 +6,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum PropertyTransferType {
-
-    SALE("продажба"),
-    RENT("наем");
-
+    SALE("Продажба"),
+    RENT("Наем");
     private final String name;
 }

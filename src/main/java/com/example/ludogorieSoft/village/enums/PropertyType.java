@@ -6,14 +6,14 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum PropertyType {
-
-    PLOT("парцел"),
-    AGRICULTURAL_LAND("земеделска земя"),
-    HOUSE("къща"),
-    COTTAGE("вила"),
-    FLOOR_OF_HOUSE("етаж от къща"),
-    BUSINESS_PROPERTY("бизнес имот"),
-    APARTMENT("апартамент");
-
+    PLOT("Парцел"),
+    AGRICULTURAL_LAND("Земеделска земя"),
+    HOUSE("Къща"),
+    VILLA("Вила"),
+    FLOOR_OF_A_HOUSE("Етаж от къща"),
+    BUSINESS_PROPERTY("Бизнес имот"),
+    APARTMENT("Апартамент");
     private final String name;
+
+
 }

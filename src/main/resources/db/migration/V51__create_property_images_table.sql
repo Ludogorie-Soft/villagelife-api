@@ -3,7 +3,5 @@ CREATE TABLE IF NOT EXISTS property_images (
     image_name VARCHAR(255) NOT NULL,
     property_id BIGINT,
     deleted_at TIMESTAMP NULL,
-    CONSTRAINT fk_property
-        FOREIGN KEY (property_id)
-        REFERENCES property(id)
+    FOREIGN KEY (property_id) REFERENCES properties(id)
 );
