@@ -31,23 +31,25 @@ public class UserSearchData {
     @ManyToOne
     private Village village;
 
+    @Column(name = "property_type",columnDefinition="enum('PLOT','AGRICULTURAL_LAND','HOUSE','VILLA','FLOOR_OF_A_HOUSE','BUSINESS_PROPERTY','APARTMENT')")
     @Enumerated(EnumType.STRING)
     private PropertyType propertyType;
 
+    @Column(name = "property_transfer_type",columnDefinition="enum('SALE','RENT')")
     @Enumerated(EnumType.STRING)
     private PropertyTransferType propertyTransferType;
 
     @Min(0)
-    private int minBuiltUpArea;
+    private Double minBuiltUpArea;
 
     @Min(0)
-    private int maxBuiltUpArea;
+    private Double maxBuiltUpArea;
 
     @Min(0)
-    private int minYardArea;
+    private Double minYardArea;
 
     @Min(0)
-    private int maxYardArea;
+    private Double maxYardArea;
 
     @Min(0)
     private short minRoomsCount;
@@ -63,6 +65,7 @@ public class UserSearchData {
 
     private String heating;
 
+    @Column(name = "construction_type",columnDefinition="enum('BRICKS','PANEL','WOOD')")
     @Enumerated(EnumType.STRING)
     private ConstructionType constructionType;
 
@@ -73,6 +76,7 @@ public class UserSearchData {
     @OneToOne
     private PropertyUser propertyUser;
 
+    @Column(name = "extras", columnDefinition = "TEXT")
     private String extras;
 
     @Min(0)
@@ -81,6 +85,7 @@ public class UserSearchData {
     @Min(0)
     private int maxPrice;
 
+    @Column(name = "ownership_type",columnDefinition="enum('INDIVIDUAL','AGENCY','BUILDER','INVESTOR')")
     @Enumerated(EnumType.STRING)
     private OwnershipType ownershipType;
 
