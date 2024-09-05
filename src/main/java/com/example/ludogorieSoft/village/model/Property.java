@@ -65,6 +65,7 @@ public class Property {
     @Enumerated(EnumType.STRING)
     private ConstructionType constructionType;
     private int constructionYear;
+    @Column(name = "extras", columnDefinition = "TEXT")
     private String extras;
     @OneToOne
     @JoinColumn(name = "stats_id")

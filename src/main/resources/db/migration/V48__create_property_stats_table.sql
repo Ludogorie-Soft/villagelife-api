@@ -1,4 +1,4 @@
-CREATE TABLE property_stats (
+CREATE TABLE IF NOT EXISTS property_stats (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     seen_in_results BIGINT,
     views INT NOT NULL,
