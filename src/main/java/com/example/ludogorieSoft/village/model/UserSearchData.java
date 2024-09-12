@@ -73,9 +73,6 @@ public class UserSearchData {
 
     private short maxConstructionYear;
 
-    @OneToOne
-    private PropertyUser propertyUser;
-
     @Column(name = "extras", columnDefinition = "TEXT")
     private String extras;
 

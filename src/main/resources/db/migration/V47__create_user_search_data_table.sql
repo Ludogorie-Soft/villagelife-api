@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS user_search_data (
-id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
     village_id BIGINT,
     property_type ENUM('PLOT', 'AGRICULTURAL_LAND', 'HOUSE', 'VILLA', 'FLOOR_OF_A_HOUSE', 'BUSINESS_PROPERTY', 'APARTMENT') NOT NULL,
     property_transfer_type ENUM('SALE', 'RENT') NOT NULL,
@@ -15,13 +15,10 @@ id BIGINT PRIMARY KEY AUTO_INCREMENT,
     construction_type ENUM('BRICKS', 'PANEL', 'WOOD') NOT NULL,
     min_construction_year SMALLINT CHECK (min_construction_year >= 0),
     max_construction_year SMALLINT CHECK (max_construction_year >= 0),
-    property_user_id BIGINT,
     extras TEXT,
     min_price INT CHECK (min_price >= 0),
     max_price INT CHECK (max_price >= 0),
     ownership_type ENUM('INDIVIDUAL', 'AGENCY', 'BUILDER', 'INVESTOR') NOT NULL,
     deleted_at TIMESTAMP NULL,
-
-    FOREIGN KEY (village_id) REFERENCES villages(id),
-    FOREIGN KEY (property_user_id) REFERENCES property_users(id)
+    FOREIGN KEY (village_id) REFERENCES villages(id)
 );
