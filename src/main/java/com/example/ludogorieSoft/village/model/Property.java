@@ -16,6 +16,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Data
@@ -66,7 +67,10 @@ public class Property {
     @NotNull
     private int bathroomsCount;
 
-    private String heating;
+    @ElementCollection
+    @CollectionTable(name = "property_heating", joinColumns = @JoinColumn(name = "property_id"))
+    @Column(name = "heating")
+    private List<String> heating;
 
     private String imageUrl;
 
@@ -110,9 +114,5 @@ public class Property {
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
     private LocalDateTime deletedAt;
-
-
-
-
 
 }

@@ -10,7 +10,6 @@ CREATE TABLE IF NOT EXISTS properties (
     yard_area DOUBLE NOT NULL CHECK (yard_area >= 0),
     rooms_count INT NOT NULL CHECK (rooms_count >= 0),
     bathrooms_count INT NOT NULL CHECK (bathrooms_count >= 0),
-    heating VARCHAR(255),
     image_url VARCHAR(255),
     construction_type ENUM('BRICKS', 'PANEL', 'WOOD') NOT NULL,
     construction_year INT,
@@ -25,4 +24,11 @@ CREATE TABLE IF NOT EXISTS properties (
     FOREIGN KEY (village_id) REFERENCES villages(id),
     FOREIGN KEY (user_id) REFERENCES property_users(id),
     FOREIGN KEY (stats_id) REFERENCES property_stats(id)
+);
+
+CREATE TABLE IF NOT EXISTS property_heating(
+    property_id BIGINT,
+    heating VARCHAR(255),
+    PRIMARY KEY (property_id, heating),
+    FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE
 );
