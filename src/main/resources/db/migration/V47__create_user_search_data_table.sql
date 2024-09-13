@@ -11,7 +11,6 @@ CREATE TABLE IF NOT EXISTS user_search_data (
     max_rooms_count SMALLINT CHECK (max_rooms_count >= 0),
     min_bathrooms_count SMALLINT CHECK (min_bathrooms_count >= 0),
     max_bathrooms_count SMALLINT CHECK (max_bathrooms_count >= 0),
-    heating VARCHAR(255),
     construction_type ENUM('BRICKS', 'PANEL', 'WOOD') NOT NULL,
     min_construction_year SMALLINT CHECK (min_construction_year >= 0),
     max_construction_year SMALLINT CHECK (max_construction_year >= 0),
@@ -21,4 +20,11 @@ CREATE TABLE IF NOT EXISTS user_search_data (
     ownership_type ENUM('INDIVIDUAL', 'AGENCY', 'BUILDER', 'INVESTOR') NOT NULL,
     deleted_at TIMESTAMP NULL,
     FOREIGN KEY (village_id) REFERENCES villages(id)
+);
+
+CREATE TABLE IF NOT EXISTS heating_options (
+    user_search_data_id BIGINT,
+    heating VARCHAR(255),
+    PRIMARY KEY (user_search_data_id, heating),
+    FOREIGN KEY (user_search_data_id) REFERENCES user_search_data(id) ON DELETE CASCADE
 );

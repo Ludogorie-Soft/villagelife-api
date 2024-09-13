@@ -17,6 +17,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Min;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Data
@@ -64,7 +65,10 @@ public class UserSearchData {
     @Min(0)
     private short maxBathroomsCount;
 
-    private String heating;
+    @ElementCollection
+    @CollectionTable(name = "heating_options", joinColumns = @JoinColumn(name = "user_search_data_id"))
+    @Column(name = "heating")
+    private List<String> heating;
 
     @Column(name = "construction_type",columnDefinition="enum('BRICKS','PANEL','WOOD')")
     @Enumerated(EnumType.STRING)
