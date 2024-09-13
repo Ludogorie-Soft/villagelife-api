@@ -205,6 +205,15 @@
 						</goals>
 					</execution>
 				</executions>
+				<configuration>
+					<excludes>
+						<exclude>**/model/**</exclude>
+						<exclude>**/dtos/**</exclude>
+						<exclude>**/repositories/**</exclude>
+						<exclude>**/enums/**</exclude>
+						<exclude>**/exeptions/**</exclude>
+					</excludes>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
