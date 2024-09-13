@@ -69,5 +69,7 @@ public class Village {
 
     private int approvedResponsesCount;
 
+    @OneToMany(mappedBy = "village", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserSearchData> userSearchDataList;
 
 }
