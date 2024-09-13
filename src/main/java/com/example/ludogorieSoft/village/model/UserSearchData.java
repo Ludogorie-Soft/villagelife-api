@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -77,10 +78,10 @@ public class UserSearchData {
     private String extras;
 
     @Min(0)
-    private int minPrice;
+    private BigDecimal minPrice;
 
     @Min(0)
-    private int maxPrice;
+    private BigDecimal maxPrice;
 
     @Column(name = "ownership_type",columnDefinition="enum('INDIVIDUAL','AGENCY','BUILDER','INVESTOR')")
     @Enumerated(EnumType.STRING)

@@ -18,8 +18,8 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "agencies")
-public class Agency {
+@Table(name = "business_cards")
+public class BusinessCard {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,9 +27,6 @@ public class Agency {
 
     @NotBlank(message = "Name is required")
     private String name;
-
-    @NotBlank(message = "Job title is required")
-    private String jobTitle;
 
     @Email(message = "Email should be valid")
     @NotBlank(message = "Email is required")
@@ -41,13 +38,11 @@ public class Agency {
 
     private String address;
 
-    private String websiteName;
-
     @Pattern(regexp = "^(http://|https://)?(www\\.)?[a-zA-Z0-9-]+(\\.[a-zA-Z]{2,})+(/.*)?$", message = "Website link is invalid")
     private String websiteLink;
 
-    @Min(value = 0, message = "The number of agents cannot be negative")
-    private int numberOfAgents;
+    @Min(value = 0, message = "The number of employees cannot be negative")
+    private int numberOfEmployees;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)

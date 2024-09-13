@@ -16,8 +16,8 @@ CREATE TABLE IF NOT EXISTS user_search_data (
     min_construction_year SMALLINT CHECK (min_construction_year >= 0),
     max_construction_year SMALLINT CHECK (max_construction_year >= 0),
     extras TEXT,
-    min_price INT CHECK (min_price >= 0),
-    max_price INT CHECK (max_price >= 0),
+    min_price DECIMAL(19, 2) CHECK (min_price >= 0),
+    max_price DECIMAL(19, 2) CHECK (max_price >= 0),
     ownership_type ENUM('INDIVIDUAL', 'AGENCY', 'BUILDER', 'INVESTOR') NOT NULL,
     deleted_at TIMESTAMP NULL,
     FOREIGN KEY (village_id) REFERENCES villages(id)
