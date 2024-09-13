@@ -32,7 +32,7 @@ public class EmailSenderService {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
         try {
-            helper.setTo("info@villagelife.bg");
+            helper.setTo("ntodor358@gmail.com");
             helper.setFrom(fromEmail);
             helper.setSubject(subject);
             helper.setText(body, true);
