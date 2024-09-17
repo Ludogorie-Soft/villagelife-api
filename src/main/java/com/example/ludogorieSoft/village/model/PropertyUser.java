@@ -10,17 +10,22 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name="property_users")
-public class PropertyUser {
+public class PropertyUser implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,15 +44,18 @@ public class PropertyUser {
     @Column(unique = true, nullable = false)
     private String email;
 
+    private boolean enabled = false; //new
+
     @Length(min = 10, message = "Phone number should be at least 10 numbers long!")
     @Column(unique = true)
     private String phoneNumber;
 
-    //Todo add access code or link
+    @OneToMany(mappedBy = "propertyUser", cascade = CascadeType.ALL)
+    private transient List<VerificationToken> verificationTokens; //new
 
     @OneToOne
     @JoinColumn(name = "user_search_data_id")
-    private UserSearchData userSearchData;
+    private transient UserSearchData userSearchData;
 
     @NotBlank(message = "Password cannot be empty!")
     @Length(min = 8, message = "Password should be at least 8 characters long!")
@@ -58,7 +66,7 @@ public class PropertyUser {
     private String jobTitle;
 
     @OneToOne
-    private BusinessCard businessCard;
+    private transient BusinessCard businessCard;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
@@ -70,4 +78,28 @@ public class PropertyUser {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
     private LocalDateTime deletedAt;
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(ownershipType.name()));
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
 }
