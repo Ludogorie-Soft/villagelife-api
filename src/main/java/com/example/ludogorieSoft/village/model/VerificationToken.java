@@ -37,7 +37,7 @@ public class VerificationToken {
     private LocalDateTime expiryDate;
 
     @ManyToOne
-    @JoinColumn(name = "property_user_id", nullable = false)
-    private PropertyUser propertyUser;
+    @JoinColumn(name = "alternative_user_id", nullable = false)
+    private AlternativeUser alternativeUser;
 
 }

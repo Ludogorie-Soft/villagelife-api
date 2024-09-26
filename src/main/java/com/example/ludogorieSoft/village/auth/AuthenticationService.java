@@ -4,9 +4,8 @@ import com.example.ludogorieSoft.village.authorization.JWTService;
 import com.example.ludogorieSoft.village.dtos.request.AuthenticationRequest;
 import com.example.ludogorieSoft.village.dtos.request.RegisterRequest;
 import com.example.ludogorieSoft.village.dtos.response.AuthenticationResponce;
-import com.example.ludogorieSoft.village.exeptions.AccessDeniedException;
 import com.example.ludogorieSoft.village.exeptions.UsernamePasswordException;
-import com.example.ludogorieSoft.village.model.Administrator;
+import com.example.ludogorieSoft.village.model.AlternativeUser;
 import com.example.ludogorieSoft.village.repositories.AdministratorRepository;
 import com.example.ludogorieSoft.village.utils.TimestampUtils;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +25,7 @@ public class AuthenticationService {
 
 
     public String register(RegisterRequest request) {
-        var user = Administrator.builder()
+        var user = AlternativeUser.builder()
                 .fullName(request.getFullName())
                 .createdAt(TimestampUtils.getCurrentTimestamp())
                 .email(request.getEmail())

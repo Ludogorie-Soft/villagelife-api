@@ -1,9 +1,9 @@
 package com.example.ludogorieSoft.village.services;
 
-import com.example.ludogorieSoft.village.dtos.AdministratorDTO;
+import com.example.ludogorieSoft.village.dtos.AlternativeUserDTO;
 import com.example.ludogorieSoft.village.dtos.request.AdministratorRequest;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
-import com.example.ludogorieSoft.village.model.Administrator;
+import com.example.ludogorieSoft.village.model.AlternativeUser;
 import com.example.ludogorieSoft.village.repositories.AdministratorRepository;
 import com.example.ludogorieSoft.village.repositories.VillageRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,28 +35,28 @@ class AdministratorServiceTest {
 
     @Test
     void testGetAllAdministrators() {
-        Administrator administrator1 = new Administrator();
-        administrator1.setId(1L);
-        Administrator administrator2 = new Administrator();
-        administrator2.setId(2L);
-        List<Administrator> administrators = new ArrayList<>();
-        administrators.add(administrator1);
-        administrators.add(administrator2);
+        AlternativeUser alternativeUser1 = new AlternativeUser();
+        alternativeUser1.setId(1L);
+        AlternativeUser alternativeUser2 = new AlternativeUser();
+        alternativeUser2.setId(2L);
+        List<AlternativeUser> alternativeUsers = new ArrayList<>();
+        alternativeUsers.add(alternativeUser1);
+        alternativeUsers.add(alternativeUser2);
 
-        AdministratorDTO administratorDTO1 = new AdministratorDTO();
-        administratorDTO1.setId(1L);
-        AdministratorDTO administratorDTO2 = new AdministratorDTO();
-        administratorDTO2.setId(2L);
-        List<AdministratorDTO> expectedDTOs = new ArrayList<>();
-        expectedDTOs.add(administratorDTO1);
-        expectedDTOs.add(administratorDTO2);
+        AlternativeUserDTO alternativeUserDTO1 = new AlternativeUserDTO();
+        alternativeUserDTO1.setId(1L);
+        AlternativeUserDTO alternativeUserDTO2 = new AlternativeUserDTO();
+        alternativeUserDTO2.setId(2L);
+        List<AlternativeUserDTO> expectedDTOs = new ArrayList<>();
+        expectedDTOs.add(alternativeUserDTO1);
+        expectedDTOs.add(alternativeUserDTO2);
 
-        when(administratorRepository.findAll()).thenReturn(administrators);
-        when(modelMapper.map(any(Administrator.class), eq(AdministratorDTO.class)))
-                .thenReturn(administratorDTO1)
-                .thenReturn(administratorDTO2);
+        when(administratorRepository.findAll()).thenReturn(alternativeUsers);
+        when(modelMapper.map(any(AlternativeUser.class), eq(AlternativeUserDTO.class)))
+                .thenReturn(alternativeUserDTO1)
+                .thenReturn(alternativeUserDTO2);
 
-        List<AdministratorDTO> resultDTOs = administratorService.getAllAdministrators();
+        List<AlternativeUserDTO> resultDTOs = administratorService.getAllAdministrators();
 
         assertEquals(expectedDTOs.size(), resultDTOs.size());
         assertEquals(expectedDTOs.get(0).getId(), resultDTOs.get(0).getId());
@@ -66,17 +66,17 @@ class AdministratorServiceTest {
     @Test
     void testFindAdminByUsername() {
         String username = "admin";
-        Administrator administrator = new Administrator();
-        administrator.setUsername(username);
+        AlternativeUser alternativeUser = new AlternativeUser();
+        alternativeUser.setUsername(username);
 
-        AdministratorDTO expectedAdminDTO = new AdministratorDTO();
+        AlternativeUserDTO expectedAdminDTO = new AlternativeUserDTO();
         expectedAdminDTO.setUsername(username);
 
         Mockito.when(administratorRepository.findByUsername(username))
-                .thenReturn(administrator);
-        Mockito.when(administratorService.administratorToAdministratorDTO(administrator)).thenReturn(expectedAdminDTO);
+                .thenReturn(alternativeUser);
+        Mockito.when(administratorService.administratorToAdministratorDTO(alternativeUser)).thenReturn(expectedAdminDTO);
 
-        AdministratorDTO actualAdminDTO = administratorService.findAdminByUsername(username);
+        AlternativeUserDTO actualAdminDTO = administratorService.findAdminByUsername(username);
 
         assertEquals(expectedAdminDTO.getUsername(), actualAdminDTO.getUsername());
 
@@ -86,16 +86,16 @@ class AdministratorServiceTest {
     @Test
     void testGetAdministratorByIdWhenAdministratorExists() {
         Long id = 1L;
-        Administrator administrator = new Administrator();
-        administrator.setId(id);
+        AlternativeUser alternativeUser = new AlternativeUser();
+        alternativeUser.setId(id);
 
-        AdministratorDTO expectedDTO = new AdministratorDTO();
+        AlternativeUserDTO expectedDTO = new AlternativeUserDTO();
         expectedDTO.setId(id);
 
-        when(administratorRepository.findById(id)).thenReturn(Optional.of(administrator));
-        when(modelMapper.map(administrator, AdministratorDTO.class)).thenReturn(expectedDTO);
+        when(administratorRepository.findById(id)).thenReturn(Optional.of(alternativeUser));
+        when(modelMapper.map(alternativeUser, AlternativeUserDTO.class)).thenReturn(expectedDTO);
 
-        AdministratorDTO resultDTO = administratorService.getAdministratorById(id);
+        AlternativeUserDTO resultDTO = administratorService.getAdministratorById(id);
 
         assertEquals(expectedDTO.getId(), resultDTO.getId());
     }
@@ -129,23 +129,23 @@ class AdministratorServiceTest {
         Long id = 1L;
         AdministratorRequest administratorRequest = new AdministratorRequest();
 
-        Administrator administrator = new Administrator();
-        administrator.setId(id);
+        AlternativeUser alternativeUser = new AlternativeUser();
+        alternativeUser.setId(id);
 
-        AdministratorDTO expectedDTO = new AdministratorDTO();
+        AlternativeUserDTO expectedDTO = new AlternativeUserDTO();
         expectedDTO.setId(id);
 
-        Optional<Administrator> foundAdministrator = Optional.of(administrator);
+        Optional<AlternativeUser> foundAdministrator = Optional.of(alternativeUser);
 
         when(administratorRepository.findById(id)).thenReturn(foundAdministrator);
-        when(administratorRepository.save(any(Administrator.class))).thenReturn(administrator);
-        when(modelMapper.map(administrator, AdministratorDTO.class)).thenReturn(expectedDTO);
+        when(administratorRepository.save(any(AlternativeUser.class))).thenReturn(alternativeUser);
+        when(modelMapper.map(alternativeUser, AlternativeUserDTO.class)).thenReturn(expectedDTO);
 
-        AdministratorDTO resultDTO = administratorService.updateAdministrator(id, administratorRequest);
+        AlternativeUserDTO resultDTO = administratorService.updateAdministrator(id, administratorRequest);
 
         verify(administratorRepository, times(1)).findById(id);
-        verify(administratorRepository, times(1)).save(any(Administrator.class));
-        verify(modelMapper, times(1)).map(administrator, AdministratorDTO.class);
+        verify(administratorRepository, times(1)).save(any(AlternativeUser.class));
+        verify(modelMapper, times(1)).map(alternativeUser, AlternativeUserDTO.class);
     }
 
     @Test
@@ -165,24 +165,24 @@ class AdministratorServiceTest {
         administratorRequest.setEmail("john.doe@example.com");
         administratorRequest.setUsername("johndoe");
 
-        Administrator administrator = new Administrator();
-        administrator.setId(id);
-        administrator.setPassword("oldPassword");
+        AlternativeUser alternativeUser = new AlternativeUser();
+        alternativeUser.setId(id);
+        alternativeUser.setPassword("oldPassword");
 
-        AdministratorDTO expectedDTO = new AdministratorDTO();
+        AlternativeUserDTO expectedDTO = new AlternativeUserDTO();
         expectedDTO.setId(id);
 
-        Optional<Administrator> foundAdministrator = Optional.of(administrator);
+        Optional<AlternativeUser> foundAdministrator = Optional.of(alternativeUser);
 
         when(administratorRepository.findById(id)).thenReturn(foundAdministrator);
-        when(administratorRepository.save(any(Administrator.class))).thenReturn(administrator);
-        when(modelMapper.map(administrator, AdministratorDTO.class)).thenReturn(expectedDTO);
+        when(administratorRepository.save(any(AlternativeUser.class))).thenReturn(alternativeUser);
+        when(modelMapper.map(alternativeUser, AlternativeUserDTO.class)).thenReturn(expectedDTO);
 
-        AdministratorDTO resultDTO = administratorService.updateAdministrator(id, administratorRequest);
+        AlternativeUserDTO resultDTO = administratorService.updateAdministrator(id, administratorRequest);
 
         verify(administratorRepository, times(1)).findById(id);
-        verify(administratorRepository, times(1)).save(any(Administrator.class));
-        verify(modelMapper, times(1)).map(administrator, AdministratorDTO.class);
+        verify(administratorRepository, times(1)).save(any(AlternativeUser.class));
+        verify(modelMapper, times(1)).map(alternativeUser, AlternativeUserDTO.class);
 
         assertEquals("oldPassword", foundAdministrator.get().getPassword());
     }
@@ -196,24 +196,24 @@ class AdministratorServiceTest {
         administratorRequest.setUsername("johndoe");
         administratorRequest.setPassword("newPassword");
 
-        Administrator administrator = new Administrator();
-        administrator.setId(id);
-        administrator.setPassword("oldPassword");
+        AlternativeUser alternativeUser = new AlternativeUser();
+        alternativeUser.setId(id);
+        alternativeUser.setPassword("oldPassword");
 
-        AdministratorDTO expectedDTO = new AdministratorDTO();
+        AlternativeUserDTO expectedDTO = new AlternativeUserDTO();
         expectedDTO.setId(id);
 
-        Optional<Administrator> foundAdministrator = Optional.of(administrator);
+        Optional<AlternativeUser> foundAdministrator = Optional.of(alternativeUser);
 
         when(administratorRepository.findById(id)).thenReturn(foundAdministrator);
-        when(administratorRepository.save(any(Administrator.class))).thenReturn(administrator);
-        when(modelMapper.map(administrator, AdministratorDTO.class)).thenReturn(expectedDTO);
+        when(administratorRepository.save(any(AlternativeUser.class))).thenReturn(alternativeUser);
+        when(modelMapper.map(alternativeUser, AlternativeUserDTO.class)).thenReturn(expectedDTO);
 
-        AdministratorDTO resultDTO = administratorService.updateAdministrator(id, administratorRequest);
+        AlternativeUserDTO resultDTO = administratorService.updateAdministrator(id, administratorRequest);
 
         verify(administratorRepository, times(1)).findById(id);
-        verify(administratorRepository, times(1)).save(any(Administrator.class));
-        verify(modelMapper, times(1)).map(administrator, AdministratorDTO.class);
+        verify(administratorRepository, times(1)).save(any(AlternativeUser.class));
+        verify(modelMapper, times(1)).map(alternativeUser, AlternativeUserDTO.class);
 
         assertNotEquals("oldPassword", foundAdministrator.get().getPassword());
     }

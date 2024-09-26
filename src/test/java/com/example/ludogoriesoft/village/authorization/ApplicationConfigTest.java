@@ -1,8 +1,7 @@
 package com.example.ludogorieSoft.village.authorization;
 
-import com.example.ludogorieSoft.village.model.Administrator;
+import com.example.ludogorieSoft.village.model.AlternativeUser;
 import com.example.ludogorieSoft.village.repositories.AdministratorRepository;
-import com.example.ludogorieSoft.village.services.AdministratorService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -34,7 +33,7 @@ import static org.mockito.Mockito.when;
         ApplicationConfig applicationConfig = new ApplicationConfig(administratorRepository);
 
         String username = "admin";
-        Administrator admin = new Administrator();
+        AlternativeUser admin = new AlternativeUser();
         when(administratorRepository.findByUsername(username)).thenReturn(admin);
 
         UserDetailsService userDetailsService = applicationConfig.userDetailsService();

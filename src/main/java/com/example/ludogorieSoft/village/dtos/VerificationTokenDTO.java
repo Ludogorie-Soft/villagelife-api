@@ -1,6 +1,6 @@
 package com.example.ludogorieSoft.village.dtos;
 
-import com.example.ludogorieSoft.village.enums.Role;
+import com.example.ludogorieSoft.village.model.AlternativeUser;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -12,20 +12,19 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+@NoArgsConstructor
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
-public class AdministratorDTO {
+public class VerificationTokenDTO {
+
     private Long id;
-    private String fullName;
-    private String email;
-    private String username;
-    private String mobile;
+
+    private String token;
+
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
-    private LocalDateTime createdAt;
-    private boolean enabled = true;
-    private Role role;
+    private LocalDateTime expiryDate;
 
+    private AlternativeUser alternativeUser;
 }

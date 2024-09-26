@@ -1,5 +1,6 @@
-package com.example.ludogorieSoft.village.model;
+package com.example.ludogorieSoft.village.dtos;
 
+import com.example.ludogorieSoft.village.enums.Role;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -9,29 +10,22 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "user_saved_properties")
-public class UserSavedProperty {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class AlternativeUserDTO {
     private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "alternative_user_id")
-    private AlternativeUser user;
-
-    @ManyToOne
-    @JoinColumn(name = "property_id")
-    private Property property;
-
+    private String fullName;
+    private String email;
+    private String username;
+    private String mobile;
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
-    private LocalDateTime deletedAt;
+    private LocalDateTime createdAt;
+    private boolean enabled = true;
+    private Role role;
+
 }

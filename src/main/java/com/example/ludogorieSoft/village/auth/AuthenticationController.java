@@ -1,6 +1,6 @@
 package com.example.ludogorieSoft.village.auth;
 
-import com.example.ludogorieSoft.village.dtos.AdministratorDTO;
+import com.example.ludogorieSoft.village.dtos.AlternativeUserDTO;
 import com.example.ludogorieSoft.village.dtos.request.AuthenticationRequest;
 import com.example.ludogorieSoft.village.dtos.request.RegisterRequest;
 import com.example.ludogorieSoft.village.dtos.response.AuthenticationResponce;
@@ -27,9 +27,9 @@ public class AuthenticationController {
         return ResponseEntity.ok(service.authenticate(request));
     }
     @GetMapping("/get-info")
-    public ResponseEntity<AdministratorDTO> getAdministratorInfo(){
-        AdministratorDTO administratorDTO = authService.getAdministratorInfo();
-        return new ResponseEntity<>(administratorDTO, HttpStatus.OK);
+    public ResponseEntity<AlternativeUserDTO> getAdministratorInfo(){
+        AlternativeUserDTO alternativeUserDTO = authService.getAdministratorInfo();
+        return new ResponseEntity<>(alternativeUserDTO, HttpStatus.OK);
     }
     @GetMapping("/check")
     public ResponseEntity<String> authorizeAdminToken(@RequestHeader("Authorization") String token) {

@@ -1,11 +1,11 @@
 package com.example.ludogorieSoft.village.auth;
 
-import com.example.ludogorieSoft.village.dtos.AdministratorDTO;
+import com.example.ludogorieSoft.village.dtos.AlternativeUserDTO;
 import com.example.ludogorieSoft.village.dtos.request.AuthenticationRequest;
 import com.example.ludogorieSoft.village.dtos.request.RegisterRequest;
 import com.example.ludogorieSoft.village.dtos.response.AuthenticationResponce;
 import com.example.ludogorieSoft.village.enums.Role;
-import com.example.ludogorieSoft.village.model.Administrator;
+import com.example.ludogorieSoft.village.model.AlternativeUser;
 import com.example.ludogorieSoft.village.repositories.AdministratorRepository;
 import com.example.ludogorieSoft.village.authorization.JWTService;
 import com.example.ludogorieSoft.village.services.AuthService;
@@ -77,12 +77,12 @@ class AuthenticationControllerTest {
         authenticationRequest.setUsername("username");
         authenticationRequest.setPassword("pass");
 
-        Administrator user = new Administrator();
+        AlternativeUser user = new AlternativeUser();
         user.setUsername("username");
         user.setPassword("pass");
         when(authenticationManager.authenticate(any())).thenReturn(null);
         when(administratorRepository.findByUsername(anyString())).thenReturn(user);
-        when(jwtService.generateToken(any(Administrator.class))).thenReturn("token");
+        when(jwtService.generateToken(any(AlternativeUser.class))).thenReturn("token");
 
         ResponseEntity<AuthenticationResponce> responseEntity = authenticationController.authenticate(authenticationRequest);
 
@@ -98,15 +98,15 @@ class AuthenticationControllerTest {
 
     @Test
     void testGetAdminInfo() {
-        AdministratorDTO expectedAdministratorDTO = new AdministratorDTO();
-        expectedAdministratorDTO.setId(1L);
-        expectedAdministratorDTO.setUsername("admin");
+        AlternativeUserDTO expectedAlternativeUserDTO = new AlternativeUserDTO();
+        expectedAlternativeUserDTO.setId(1L);
+        expectedAlternativeUserDTO.setUsername("admin");
 
-        when(authService.getAdministratorInfo()).thenReturn(expectedAdministratorDTO);
+        when(authService.getAdministratorInfo()).thenReturn(expectedAlternativeUserDTO);
 
-        ResponseEntity<AdministratorDTO> responseEntity = authenticationController.getAdministratorInfo();
+        ResponseEntity<AlternativeUserDTO> responseEntity = authenticationController.getAdministratorInfo();
 
-        assertEquals(expectedAdministratorDTO, responseEntity.getBody());
+        assertEquals(expectedAlternativeUserDTO, responseEntity.getBody());
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     }
 
