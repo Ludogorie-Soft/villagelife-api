@@ -7,7 +7,7 @@ import com.example.ludogorieSoft.village.dtos.response.AuthenticationResponce;
 import com.example.ludogorieSoft.village.enums.Role;
 import com.example.ludogorieSoft.village.exeptions.UsernamePasswordException;
 import com.example.ludogorieSoft.village.model.AlternativeUser;
-import com.example.ludogorieSoft.village.repositories.AdministratorRepository;
+import com.example.ludogorieSoft.village.repositories.AlternativeUserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -23,7 +23,7 @@ import static org.mockito.Mockito.*;
 
 class AuthenticationServiceTest {
     @Mock
-    private AdministratorRepository administratorRepository;
+    private AlternativeUserRepository alternativeUserRepository;
     @Mock
     private PasswordEncoder passwordEncoder;
     @Mock
@@ -52,10 +52,10 @@ class AuthenticationServiceTest {
                 .build();
 
 
-        when(administratorRepository.save(any(AlternativeUser.class))).thenReturn(savedAlternativeUser);
+        when(alternativeUserRepository.save(any(AlternativeUser.class))).thenReturn(savedAlternativeUser);
         String response = authenticationService.register(request);
         verify(passwordEncoder).encode(request.getPassword());
-        verify(administratorRepository).save(any(AlternativeUser.class));
+        verify(alternativeUserRepository).save(any(AlternativeUser.class));
         assertNotNull(response);
 
     }
@@ -67,14 +67,14 @@ class AuthenticationServiceTest {
         String jwtToken = "jwtToken";
 
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(null);
-        when(administratorRepository.findByUsername(request.getUsername())).thenReturn(authenticatedAlternativeUser);
+        when(alternativeUserRepository.findByUsername(request.getUsername())).thenReturn(authenticatedAlternativeUser);
         when(jwtService.generateToken(authenticatedAlternativeUser)).thenReturn(jwtToken);
 
         AuthenticationResponce response = authenticationService.authenticate(request);
 
         assertEquals(jwtToken, response.getToken());
         verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
-        verify(administratorRepository).findByUsername(request.getUsername());
+        verify(alternativeUserRepository).findByUsername(request.getUsername());
         verify(jwtService).generateToken(authenticatedAlternativeUser);
     }
     @Test

@@ -5,7 +5,7 @@ import com.example.ludogorieSoft.village.dtos.AlternativeUserDTO;
 import com.example.ludogorieSoft.village.dtos.request.AdministratorRequest;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.AlternativeUser;
-import com.example.ludogorieSoft.village.repositories.AdministratorRepository;
+import com.example.ludogorieSoft.village.repositories.AlternativeUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -15,7 +15,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class AdministratorService {
-    private final AdministratorRepository administratorRepository;
+    private final AlternativeUserRepository alternativeUserRepository;
     private final ModelMapper modelMapper;
 
     public AlternativeUserDTO administratorToAdministratorDTO(AlternativeUser alternativeUser) {
@@ -27,7 +27,7 @@ public class AdministratorService {
     }
 
     public List<AlternativeUserDTO> getAllAdministrators() {
-        List<AlternativeUser> alternativeUsers = administratorRepository.findAll();
+        List<AlternativeUser> alternativeUsers = alternativeUserRepository.findAll();
         return alternativeUsers
                 .stream()
                 .map(this::administratorToAdministratorDTO)
@@ -35,7 +35,7 @@ public class AdministratorService {
     }
 
     public AlternativeUserDTO getAdministratorById(Long id) {
-        Optional<AlternativeUser> administrator = administratorRepository.findById(id);
+        Optional<AlternativeUser> administrator = alternativeUserRepository.findById(id);
         if (administrator.isEmpty()) {
             throw new ApiRequestException("Administrator not found");
         }
@@ -43,15 +43,15 @@ public class AdministratorService {
     }
 
     public void deleteAdministratorById(Long id) {
-        if (administratorRepository.existsById(id)) {
-            administratorRepository.deleteById(id);
+        if (alternativeUserRepository.existsById(id)) {
+            alternativeUserRepository.deleteById(id);
         } else {
             throw new ApiRequestException("Administrator with id " + id + " not found");
         }
     }
 
     public AlternativeUserDTO updateAdministrator(Long id, AdministratorRequest administratorRequest) {
-        Optional<AlternativeUser> foundAdministrator = administratorRepository.findById(id);
+        Optional<AlternativeUser> foundAdministrator = alternativeUserRepository.findById(id);
 
         if (foundAdministrator.isEmpty()) {
             throw new ApiRequestException("Administrator not found");
@@ -70,12 +70,12 @@ public class AdministratorService {
         foundAdministrator.get().setCreatedAt(administratorRequest.getCreatedAt());
         foundAdministrator.get().setRole(administratorRequest.getRole());
 
-        administratorRepository.save(foundAdministrator.get());
+        alternativeUserRepository.save(foundAdministrator.get());
         return administratorToAdministratorDTO(foundAdministrator.get());
     }
 
     public AlternativeUserDTO findAdminByUsername(String username) {
-        AlternativeUser alternativeUser = administratorRepository.findByUsername(username);
+        AlternativeUser alternativeUser = alternativeUserRepository.findByUsername(username);
         return administratorToAdministratorDTO(alternativeUser);
     }
 

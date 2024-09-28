@@ -6,7 +6,7 @@ import com.example.ludogorieSoft.village.dtos.request.RegisterRequest;
 import com.example.ludogorieSoft.village.dtos.response.AuthenticationResponce;
 import com.example.ludogorieSoft.village.exeptions.UsernamePasswordException;
 import com.example.ludogorieSoft.village.model.AlternativeUser;
-import com.example.ludogorieSoft.village.repositories.AdministratorRepository;
+import com.example.ludogorieSoft.village.repositories.AlternativeUserRepository;
 import com.example.ludogorieSoft.village.utils.TimestampUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
-    private final AdministratorRepository administratorRepository;
+    private final AlternativeUserRepository alternativeUserRepository;
     private final PasswordEncoder passwordEncoder;
     private final JWTService jwtService;
     private final AuthenticationManager authenticationManager;
@@ -33,8 +33,13 @@ public class AuthenticationService {
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(request.getRole())
+                .verificationTokens(null)
+                .userSearchData(null)
+                .jobTitle(null)
+                .businessCard(null)
+                .deletedAt(null)
                 .build();
-        administratorRepository.save(user);
+        alternativeUserRepository.save(user);
         return "Administrator registered successfully!!!";
     }
 
@@ -47,7 +52,7 @@ public class AuthenticationService {
                             request.getPassword()
                     )
             );
-            var user = administratorRepository.findByUsername(request.getUsername());
+            var user = alternativeUserRepository.findByUsername(request.getUsername());
             var jwtToken = jwtService.generateToken(user);
 
             return AuthenticationResponce.builder()

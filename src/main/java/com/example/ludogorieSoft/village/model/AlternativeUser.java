@@ -63,7 +63,6 @@ public class AlternativeUser implements UserDetails {
     @JoinColumn(name = "user_search_data_id")
     private transient UserSearchData userSearchData;
 
-    @NotBlank(message = "Job title is required")
     private String jobTitle;
 
     @OneToOne

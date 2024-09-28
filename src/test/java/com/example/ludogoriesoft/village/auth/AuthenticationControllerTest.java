@@ -6,7 +6,7 @@ import com.example.ludogorieSoft.village.dtos.request.RegisterRequest;
 import com.example.ludogorieSoft.village.dtos.response.AuthenticationResponce;
 import com.example.ludogorieSoft.village.enums.Role;
 import com.example.ludogorieSoft.village.model.AlternativeUser;
-import com.example.ludogorieSoft.village.repositories.AdministratorRepository;
+import com.example.ludogorieSoft.village.repositories.AlternativeUserRepository;
 import com.example.ludogorieSoft.village.authorization.JWTService;
 import com.example.ludogorieSoft.village.services.AuthService;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,7 +24,7 @@ import static org.mockito.Mockito.*;
 
 class AuthenticationControllerTest {
     @Mock
-    private AdministratorRepository administratorRepository;
+    private AlternativeUserRepository alternativeUserRepository;
     @Mock
     private AuthenticationService authenticationService;
     @Mock
@@ -42,14 +42,14 @@ class AuthenticationControllerTest {
 
     @BeforeEach
     public void setUp() {
-        administratorRepository = Mockito.mock(AdministratorRepository.class);
+        alternativeUserRepository = Mockito.mock(AlternativeUserRepository.class);
         authenticationService = Mockito.mock(AuthenticationService.class);
         passwordEncoder = Mockito.mock(PasswordEncoder.class);
         jwtService = Mockito.mock(JWTService.class);
         authenticationManager = Mockito.mock(AuthenticationManager.class);
         authService = Mockito.mock(AuthService.class);
         authenticationController = new AuthenticationController(new AuthenticationService(
-                administratorRepository, passwordEncoder, jwtService, authenticationManager), authService);
+                alternativeUserRepository, passwordEncoder, jwtService, authenticationManager), authService);
     }
 
     @Test
@@ -81,7 +81,7 @@ class AuthenticationControllerTest {
         user.setUsername("username");
         user.setPassword("pass");
         when(authenticationManager.authenticate(any())).thenReturn(null);
-        when(administratorRepository.findByUsername(anyString())).thenReturn(user);
+        when(alternativeUserRepository.findByUsername(anyString())).thenReturn(user);
         when(jwtService.generateToken(any(AlternativeUser.class))).thenReturn("token");
 
         ResponseEntity<AuthenticationResponce> responseEntity = authenticationController.authenticate(authenticationRequest);

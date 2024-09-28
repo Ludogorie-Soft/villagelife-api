@@ -1,7 +1,7 @@
 package com.example.ludogorieSoft.village.authorization;
 
 import com.example.ludogorieSoft.village.model.AlternativeUser;
-import com.example.ludogorieSoft.village.repositories.AdministratorRepository;
+import com.example.ludogorieSoft.village.repositories.AlternativeUserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
  class ApplicationConfigTest {
 
     @Mock
-    private AdministratorRepository administratorRepository;
+    private AlternativeUserRepository alternativeUserRepository;
 
     @BeforeEach
     public void setup() {
@@ -30,11 +30,11 @@ import static org.mockito.Mockito.when;
 
     @Test
     void userDetailsService_shouldReturnUserDetailsService() {
-        ApplicationConfig applicationConfig = new ApplicationConfig(administratorRepository);
+        ApplicationConfig applicationConfig = new ApplicationConfig(alternativeUserRepository);
 
         String username = "admin";
         AlternativeUser admin = new AlternativeUser();
-        when(administratorRepository.findByUsername(username)).thenReturn(admin);
+        when(alternativeUserRepository.findByUsername(username)).thenReturn(admin);
 
         UserDetailsService userDetailsService = applicationConfig.userDetailsService();
 
@@ -45,7 +45,7 @@ import static org.mockito.Mockito.when;
 
     @Test
     void authenticationProvider_shouldReturnAuthenticationProvider() {
-        ApplicationConfig applicationConfig = new ApplicationConfig(administratorRepository);
+        ApplicationConfig applicationConfig = new ApplicationConfig(alternativeUserRepository);
         UserDetailsService userDetailsService = mock(UserDetailsService.class);
         PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
         DaoAuthenticationProvider expectedAuthProvider = new DaoAuthenticationProvider();
@@ -60,7 +60,7 @@ import static org.mockito.Mockito.when;
 
     @Test
     void authenticationManagerTest() throws Exception {
-        ApplicationConfig applicationConfig = new ApplicationConfig(administratorRepository);
+        ApplicationConfig applicationConfig = new ApplicationConfig(alternativeUserRepository);
         AuthenticationConfiguration authenticationConfiguration = mock(AuthenticationConfiguration.class);
         AuthenticationManager expectedAuthenticationManager = mock(AuthenticationManager.class);
         when(authenticationConfiguration.getAuthenticationManager()).thenReturn(expectedAuthenticationManager);
@@ -72,7 +72,7 @@ import static org.mockito.Mockito.when;
 
     @Test
     void passwordEncoderTest() {
-        ApplicationConfig applicationConfig = new ApplicationConfig(administratorRepository);
+        ApplicationConfig applicationConfig = new ApplicationConfig(alternativeUserRepository);
 
         PasswordEncoder passwordEncoder = applicationConfig.passwordEncoder();
 

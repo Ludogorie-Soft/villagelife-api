@@ -1,6 +1,6 @@
 package com.example.ludogorieSoft.village.authorization;
 
-import com.example.ludogorieSoft.village.repositories.AdministratorRepository;
+import com.example.ludogorieSoft.village.repositories.AlternativeUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,11 +16,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 @RequiredArgsConstructor
 public class ApplicationConfig {
-    private final AdministratorRepository administratorRepository;
+    private final AlternativeUserRepository alternativeUserRepository;
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> (UserDetails) administratorRepository.findByUsername(username);
+        return username -> (UserDetails) alternativeUserRepository.findByUsername(username);
     }
 
     @Bean
