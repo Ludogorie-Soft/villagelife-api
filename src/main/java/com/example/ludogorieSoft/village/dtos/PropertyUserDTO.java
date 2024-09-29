@@ -30,10 +30,10 @@ public class PropertyUserDTO {
     private String email;
     private String phoneNumber;
     //Todo add access code or link
-    private UserSearchData userSearchData;
+    private UserSearchDataDTO userSearchDataDTO;
     private String password;
     private String jobTitle;
-    private BusinessCard businessCard;
+    private BusinessCardDTO businessCardDTO;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
