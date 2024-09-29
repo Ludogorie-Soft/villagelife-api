@@ -27,7 +27,9 @@ public class EmailSenderService {
 
     @Value("${spring.mail.password}")
     private String recipientPassword;
+
     private static final Logger logger = LoggerFactory.getLogger(EmailSenderService.class);
+
     public void sendEmail(String fromEmail, String body, String subject) {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
@@ -39,6 +41,33 @@ public class EmailSenderService {
             mailSender.send(message);
         } catch (MessagingException e) {
             logger.error("An error occurred while sending an email", e);
+        }
+    }
+
+    public void sendVerificationToken(String token, String toEmail) {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message);
+        String subject = "VerificationToken";
+        String body = "<p>Your verification token is: <strong>" + token + "</strong></p>";
+
+        try {
+            // Set the recipient of the email
+            helper.setTo(toEmail);
+//
+//            // Set the sender email from the configured field
+//            helper.setFrom(senderEmail);
+
+            // Set the subject and the body (true means HTML content)
+            helper.setSubject(subject);
+            helper.setText(body, true);
+
+            // Send the email
+            mailSender.send(message);
+
+            // Log success message
+            logger.info("Verification email sent to " + toEmail);
+        } catch (MessagingException e) {
+            logger.error("An error occurred while sending a verification email", e);
         }
     }
 
