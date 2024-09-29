@@ -38,7 +38,7 @@ public class PropertyService {
     }
     public Page<PropertyDTO> getAllPropertiesAndMainImage(int pageNumber, int elementsCount) {
         Pageable page = PageRequest.of(pageNumber, elementsCount);
-        Page<Property> properties = propertyRepository.findAllByOrderByCreatedAtDesc(page);
+        Page<Property> properties = propertyRepository.findByDeletedAtIsNullOrderByCreatedAtDesc(page);
 
         List<PropertyDTO> propertyDTOS = properties.stream().map(property -> {
             PropertyDTO propertyDTO = propertyToPropertyDTO2(property);
