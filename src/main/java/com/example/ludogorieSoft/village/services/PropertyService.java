@@ -39,8 +39,17 @@ public class PropertyService {
     public Page<PropertyDTO> getAllPropertiesAndMainImage(int pageNumber, int elementsCount) {
         Pageable page = PageRequest.of(pageNumber, elementsCount);
         Page<Property> properties = propertyRepository.findByDeletedAtIsNullOrderByCreatedAtDesc(page);
+        List<PropertyDTO> propertyDTOS = addMainImageToPropertyDTOList(properties.stream().toList());
+        return new PageImpl<>(propertyDTOS, page, properties.getTotalElements());
+    }
 
-        List<PropertyDTO> propertyDTOS = properties.stream().map(property -> {
+    public List<PropertyDTO> getAllPropertiesByVillageIdAndMainImage(Long villageId) {
+        List<Property> properties = propertyRepository.findByVillageIdAndDeletedAtIsNullOrderByCreatedAtDesc(villageId);
+        List<PropertyDTO> propertyDTOS =  addMainImageToPropertyDTOList(properties);
+        return propertyDTOS;
+    }
+    private List<PropertyDTO> addMainImageToPropertyDTOList(List<Property> properties){
+        return properties.stream().map(property -> {
             PropertyDTO propertyDTO = propertyToPropertyDTO2(property);
             String imagePath = property.getImageUrl();
             if (imagePath != null && !imagePath.equals("")) {
@@ -49,7 +58,5 @@ public class PropertyService {
             }
             return propertyDTO;
         }).toList();
-
-        return new PageImpl<>(propertyDTOS, page, properties.getTotalElements());
     }
 }

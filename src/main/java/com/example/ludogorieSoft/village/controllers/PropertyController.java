@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/v1/properties")
 @AllArgsConstructor
@@ -18,5 +20,10 @@ public class PropertyController {
     @GetMapping("/{page}/{elements}")
     public ResponseEntity<Page<PropertyDTO>> getAllProperties(@PathVariable("page") int page, @PathVariable("elements") int elements) {
         return ResponseEntity.ok(propertyService.getAllPropertiesAndMainImage(page, elements));
+    }
+
+    @GetMapping("/village/{villageId}")
+    public ResponseEntity<List<PropertyDTO>> getPropertiesByVillageId(@PathVariable("villageId") Long villageId) {
+        return ResponseEntity.ok(propertyService.getAllPropertiesByVillageIdAndMainImage(villageId));
     }
 }
