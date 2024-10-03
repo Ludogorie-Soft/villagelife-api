@@ -31,4 +31,5 @@ public class PropertyService {
       Property savedProperty = propertyRepository.save(property);
       return modelMapper.map(savedProperty, PropertyDTO.class);
     }
+
 }

@@ -180,6 +180,14 @@ public class VillageService {
         }
         return null;
     }
+    public VillageDTO getVillageByNameAndRegionNameForProperty(String villageName,String region) {
+
+        Village village = villageRepository.findSingleVillageByNameAndRegionName(villageName,region);
+        if (village != null) {
+            return villageToVillageDTO(village);
+        }
+        return null;
+    }
     public void translateVillagesNames() {
         List<Village> villagesList = villageRepository.findAll();
 

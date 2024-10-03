@@ -48,7 +48,6 @@ public class Property {
     private BigDecimal price;
 
     @Length(min = 10, message = "Phone number should be at least 10 numbers long!")
-    @Column(unique = true)
     private String phoneNumber;
 
     @Min(0)

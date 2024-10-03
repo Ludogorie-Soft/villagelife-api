@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS properties (
     property_type ENUM('PLOT', 'AGRICULTURAL_LAND', 'HOUSE', 'VILLA', 'FLOOR_OF_A_HOUSE', 'BUSINESS_PROPERTY', 'APARTMENT') NOT NULL,
     property_transfer_type ENUM('SALE', 'RENT') NOT NULL,
     price DECIMAL(19, 2) CHECK (price >= 0),
-    phone_number VARCHAR(255) UNIQUE NOT NULL,
+    phone_number VARCHAR(255) NOT NULL,
     build_up_area DOUBLE NOT NULL CHECK (build_up_area >= 0),
     yard_area DOUBLE NOT NULL CHECK (yard_area >= 0),
     rooms_count INT NOT NULL CHECK (rooms_count >= 0),
