@@ -1,8 +1,6 @@
 package com.example.ludogorieSoft.village.dtos;
 
 import com.example.ludogorieSoft.village.enums.OwnershipType;
-import com.example.ludogorieSoft.village.model.BusinessCard;
-import com.example.ludogorieSoft.village.model.UserSearchData;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -12,11 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.validator.constraints.Length;
 
-import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 @Getter

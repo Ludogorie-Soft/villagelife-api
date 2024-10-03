@@ -8,7 +8,6 @@ import com.example.ludogorieSoft.village.model.VillageLivingConditions;
 import com.example.ludogorieSoft.village.repositories.VillageLivingConditionRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
