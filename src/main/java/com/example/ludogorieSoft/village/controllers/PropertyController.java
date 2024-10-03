@@ -23,7 +23,12 @@ public class PropertyController {
     }
 
     @GetMapping("/village/{villageId}")
-    public ResponseEntity<List<PropertyDTO>> getPropertiesByVillageId(@PathVariable("villageId") Long villageId) {
+    public ResponseEntity<List<PropertyDTO>> getAllPropertiesByVillageId(@PathVariable("villageId") Long villageId) {
         return ResponseEntity.ok(propertyService.getAllPropertiesByVillageIdAndMainImage(villageId));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PropertyDTO> getPropertyWithMainImageById(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(propertyService.getPropertyWithMainImageById(id));
     }
 }
