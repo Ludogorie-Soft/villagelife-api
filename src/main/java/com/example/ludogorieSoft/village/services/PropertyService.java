@@ -24,14 +24,6 @@ public class PropertyService {
     private final ModelMapper modelMapper;
     private VillageService villageService;
     private ImageService imageService;
-
-    public PropertyDTO propertyToPropertyDTO2(Property property) {
-        return modelMapper.map(property, PropertyDTO.class);
-    }
-
-    public Property propertyDTOtoProperty(PropertyDTO propertyDTO) {
-        return modelMapper.map(propertyDTO, Property.class);
-    }
     private PropertyDTO propertyToPropertyDTO(Property property) {
         PropertyDTO propertyDTO = modelMapper.map(property, PropertyDTO.class);
         propertyDTO.setVillageDTO(villageService.villageToVillageDTO(property.getVillage()));
@@ -65,7 +57,7 @@ public class PropertyService {
         }).toList();
     }
 
-    private void addMainImageToPropertyDTO(PropertyDTO propertyDTO){
+    public void addMainImageToPropertyDTO(PropertyDTO propertyDTO){
         String imagePath = propertyDTO.getImageUrl();
         if (imagePath != null && !imagePath.equals("")) {
             String base64Image = imageService.getImageFromSpace(imagePath);
