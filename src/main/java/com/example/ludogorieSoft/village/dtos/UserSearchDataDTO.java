@@ -28,7 +28,7 @@ import java.util.List;
 public class UserSearchDataDTO {
 
     private Long id;
-    private Village village;
+    private VillageDTO villageDTO;
     private PropertyType propertyType;
     private PropertyTransferType propertyTransferType;
     private Double minBuiltUpArea;
