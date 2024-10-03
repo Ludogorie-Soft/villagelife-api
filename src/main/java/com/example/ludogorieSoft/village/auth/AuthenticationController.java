@@ -3,6 +3,7 @@ package com.example.ludogorieSoft.village.auth;
 import com.example.ludogorieSoft.village.dtos.AlternativeUserDTO;
 import com.example.ludogorieSoft.village.dtos.request.AuthenticationRequest;
 import com.example.ludogorieSoft.village.dtos.request.RegisterRequest;
+import com.example.ludogorieSoft.village.dtos.request.VerificationRequest;
 import com.example.ludogorieSoft.village.dtos.response.AuthenticationResponce;
 import com.example.ludogorieSoft.village.services.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -35,5 +36,9 @@ public class AuthenticationController {
     public ResponseEntity<String> authorizeAdminToken(@RequestHeader("Authorization") String token) {
 
         return ResponseEntity.ok("Authorized");
+    }
+    @PostMapping("/verify-verification-token")
+    public ResponseEntity<String> verifyVerificationToken(@RequestBody VerificationRequest verificationRequest) {
+        return ResponseEntity.ok(service.verifyVerificationToken(verificationRequest));
     }
 }

@@ -57,16 +57,17 @@ public class AlternativeUser implements UserDetails {
     private String mobile;
 
     @OneToMany(mappedBy = "alternativeUser", cascade = CascadeType.ALL)
-    private transient List<VerificationToken> verificationTokens;
+    private List<VerificationToken> verificationTokens;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_search_data_id")
     private transient UserSearchData userSearchData;
 
     private String jobTitle;
 
-    @OneToOne
-    private transient BusinessCard businessCard;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "business_card_id", referencedColumnName = "id")
+    private BusinessCard businessCard;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
@@ -106,7 +107,7 @@ public class AlternativeUser implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
 
 }

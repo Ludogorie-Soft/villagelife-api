@@ -3,7 +3,6 @@ package com.example.ludogorieSoft.village.services;
 import com.example.ludogorieSoft.village.dtos.VerificationTokenDTO;
 import com.example.ludogorieSoft.village.model.AlternativeUser;
 import com.example.ludogorieSoft.village.model.VerificationToken;
-import com.example.ludogorieSoft.village.repositories.VerificationTokenRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -16,7 +15,6 @@ import java.util.Random;
 @AllArgsConstructor
 public class VerificationTokenService {
     private final ModelMapper modelMapper;
-    private final VerificationTokenRepository verificationTokenRepository;
 
     public VerificationTokenDTO verificationTokenToVerificationTokenDTO(VerificationToken token) {
         return modelMapper.map(token, VerificationTokenDTO.class);
@@ -51,10 +49,5 @@ public class VerificationTokenService {
 
     public boolean isTokenExpired(VerificationToken token) {
         return token.getExpiryDate().isBefore(LocalDateTime.now());
-    }
-
-    public String saveVerificationToken(VerificationTokenDTO token) {
-        verificationTokenRepository.save(verificationTokenDTOToVerificationToken(token));
-        return "Token saved successfully!";
     }
 }
