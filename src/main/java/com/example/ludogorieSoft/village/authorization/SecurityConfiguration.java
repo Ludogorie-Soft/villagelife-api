@@ -33,7 +33,7 @@ public class SecurityConfiguration {
                 .cors().disable()
                 .authorizeHttpRequests()
                 .antMatchers("/api/v1/admins/**", "/api/v1/villageImages/resume/{id}", "/api/v1/villageImages/reject/{id}", "/api/v1/villageImages/deleted/with-base64/village/{villageId}", "/api/v1/villageImages/with-base64/village/{villageId}", "/api/v1/villageImages/admin-upload")
-                .authenticated()
+                .hasAuthority("ADMIN")
                 .and()
                 .authorizeHttpRequests()
                 .anyRequest()
