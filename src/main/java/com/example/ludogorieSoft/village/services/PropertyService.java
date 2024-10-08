@@ -24,7 +24,7 @@ public class PropertyService {
     private final ModelMapper modelMapper;
     private VillageService villageService;
     private ImageService imageService;
-    private PropertyDTO propertyToPropertyDTO(Property property) {
+    public PropertyDTO propertyToPropertyDTO(Property property) {
         PropertyDTO propertyDTO = modelMapper.map(property, PropertyDTO.class);
         propertyDTO.setVillageDTO(villageService.villageToVillageDTO(property.getVillage()));
         PropertyUserDTO propertyUserDTO = modelMapper.map(property.getPropertyUser(), PropertyUserDTO.class);
@@ -49,7 +49,7 @@ public class PropertyService {
         List<Property> properties = propertyRepository.findByVillageIdAndDeletedAtIsNullOrderByCreatedAtDesc(villageId);
         return addMainImageToPropertyDTOList(properties);
     }
-    private List<PropertyDTO> addMainImageToPropertyDTOList(List<Property> properties){
+    public List<PropertyDTO> addMainImageToPropertyDTOList(List<Property> properties){
         return properties.stream().map(property -> {
             PropertyDTO propertyDTO = propertyToPropertyDTO(property);
             addMainImageToPropertyDTO(propertyDTO);
