@@ -56,32 +56,32 @@ class PropertyServiceTest {
 
     @Test
     void whenImageUrlIsNullThenDoesNotCallImageService() {
-        PropertyDTO propertyDTO = new PropertyDTO();
-        propertyDTO.setImageUrl(null);
-        propertyService.addMainImageToPropertyDTO(propertyDTO);
+        PropertyDTO testPropertyDTO = new PropertyDTO();
+        testPropertyDTO.setImageUrl(null);
+        propertyService.addMainImageToPropertyDTO(testPropertyDTO);
         verify(imageService, never()).getImageFromSpace(anyString());
-        assertNull(propertyDTO.getImageUrl());
+        assertNull(testPropertyDTO.getImageUrl());
     }
 
     @Test
     void whenImageUrlIsEmptyThenDoesNotCallImageService() {
-        PropertyDTO propertyDTO = new PropertyDTO();
-        propertyDTO.setImageUrl("");
-        propertyService.addMainImageToPropertyDTO(propertyDTO);
+        PropertyDTO testPropertyDTO = new PropertyDTO();
+        testPropertyDTO.setImageUrl("");
+        propertyService.addMainImageToPropertyDTO(testPropertyDTO);
         verify(imageService, never()).getImageFromSpace(anyString());
-        assertEquals("", propertyDTO.getImageUrl());
+        assertEquals("", testPropertyDTO.getImageUrl());
     }
 
     @Test
     void whenImageUrlIsValidThenCallsImageServiceAndSetsImageUrl() {
-        PropertyDTO propertyDTO = new PropertyDTO();
+        PropertyDTO testPropertyDTO = new PropertyDTO();
         String imageUrl = "some-image-path";
-        propertyDTO.setImageUrl(imageUrl);
+        testPropertyDTO.setImageUrl(imageUrl);
         String base64Image = "base64EncodedImage";
         when(imageService.getImageFromSpace(imageUrl)).thenReturn(base64Image);
-        propertyService.addMainImageToPropertyDTO(propertyDTO);
+        propertyService.addMainImageToPropertyDTO(testPropertyDTO);
         verify(imageService, times(1)).getImageFromSpace(imageUrl);
-        assertEquals(base64Image, propertyDTO.getImageUrl());
+        assertEquals(base64Image, testPropertyDTO.getImageUrl());
     }
 
     @Test
