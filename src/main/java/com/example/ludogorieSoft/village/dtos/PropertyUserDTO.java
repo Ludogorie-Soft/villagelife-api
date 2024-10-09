@@ -23,7 +23,6 @@ public class PropertyUserDTO {
     private String name;
     private String email;
     private String phoneNumber;
-    //Todo add access code or link
     private UserSearchDataDTO userSearchDataDTO;
     private String password;
     private String jobTitle;

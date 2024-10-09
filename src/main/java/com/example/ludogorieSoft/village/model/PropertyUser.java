@@ -43,8 +43,6 @@ public class PropertyUser {
     @Column(unique = true)
     private String phoneNumber;
 
-    //Todo add access code or link
-
     @OneToOne
     @JoinColumn(name = "user_search_data_id")
     private UserSearchData userSearchData;
