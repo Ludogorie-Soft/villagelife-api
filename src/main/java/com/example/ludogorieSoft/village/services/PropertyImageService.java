@@ -20,10 +20,6 @@ public class PropertyImageService {
         return modelMapper.map(propertyImage, PropertyImageDTO.class);
     }
 
-    public PropertyImage propertyImageDTOtoPropertyImage(PropertyImageDTO propertyImageDTO) {
-        return modelMapper.map(propertyImageDTO, PropertyImage.class);
-    }
-
     public List<PropertyImageDTO> getPropertyImagesByPropertyId(Long propertyId) {
         return propertyImageRepository.findByProperty_VillageIdAndDeletedAtIsNull(propertyId)
                 .stream()
