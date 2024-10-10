@@ -38,7 +38,6 @@ public class BusinessCard {
 
     private String address;
 
-    @Pattern(regexp = "^(http://|https://)?(www\\.)?[a-zA-Z0-9-]+(\\.[a-zA-Z]{2,})+(/.*)?$", message = "Website link is invalid")
     private String websiteLink;
 
     @Min(value = 0, message = "The number of employees cannot be negative")

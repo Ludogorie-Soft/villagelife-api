@@ -4,7 +4,6 @@ import com.example.ludogorieSoft.village.enums.ConstructionType;
 import com.example.ludogorieSoft.village.enums.OwnershipType;
 import com.example.ludogorieSoft.village.enums.PropertyTransferType;
 import com.example.ludogorieSoft.village.enums.PropertyType;
-import com.example.ludogorieSoft.village.model.Village;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -15,8 +14,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
-import javax.validation.constraints.Min;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,7 +25,7 @@ import java.util.List;
 public class UserSearchDataDTO {
 
     private Long id;
-    private Village village;
+    private VillageDTO villageDTO;
     private PropertyType propertyType;
     private PropertyTransferType propertyTransferType;
     private Double minBuiltUpArea;

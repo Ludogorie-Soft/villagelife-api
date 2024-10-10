@@ -1,6 +1,5 @@
 package com.example.ludogorieSoft.village.dtos;
 
-import com.example.ludogorieSoft.village.model.Property;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
