@@ -11,6 +11,7 @@ import com.example.ludogorieSoft.village.model.*;
 import com.example.ludogorieSoft.village.repositories.VillageRepository;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import lombok.AllArgsConstructor;
+import nonapi.io.github.classgraph.json.JSONUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -174,17 +175,8 @@ public class VillageService {
 
         String[] villageNameAndRegionName = key.split(", ");
         List<Village> village = villageRepository.findSingleVillageByNameAndRegionName_forUpload(villageNameAndRegionName[0], villageNameAndRegionName[1]);
-
         if (!village.isEmpty()) {
             return villageToVillageDTO(village.get(0));
-        }
-        return null;
-    }
-    public VillageDTO getVillageByNameAndRegionNameForProperty(String villageName,String region) {
-
-        Village village = villageRepository.findSingleVillageByNameAndRegionName(villageName,region);
-        if (village != null) {
-            return villageToVillageDTO(village);
         }
         return null;
     }

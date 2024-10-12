@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS properties (
     yard_area DOUBLE NOT NULL CHECK (yard_area >= 0),
     rooms_count INT NOT NULL CHECK (rooms_count >= 0),
     bathrooms_count INT NOT NULL CHECK (bathrooms_count >= 0),
+
     image_url VARCHAR(255),
     construction_type ENUM('BRICKS', 'PANEL', 'WOOD') NOT NULL,
     construction_year INT,

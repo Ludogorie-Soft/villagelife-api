@@ -18,6 +18,7 @@ public class PropertyImageDTO {
     private Long id;
     private String imageName;
     private PropertyDTO propertyDTO;
+    private byte[] imageData;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)

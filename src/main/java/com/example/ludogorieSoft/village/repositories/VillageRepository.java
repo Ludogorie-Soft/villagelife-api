@@ -17,9 +17,8 @@ public interface VillageRepository extends JpaRepository<Village, Long> {
     Page<Village> findByStatus(Boolean status, Pageable page);
     @Query("SELECT v FROM Village v JOIN v.region r WHERE v.name = :villageName AND r.regionName = :regionName")
     Village findSingleVillageByNameAndRegionName(@Param("villageName") String villageName, @Param("regionName") String regionName);
-    @Query("SELECT v FROM Village v JOIN v.region r WHERE v.name = :villageName AND r.regionName = :regionName")
+    @Query("SELECT v FROM Village v JOIN v.region r WHERE v.name = :villageName AND r.name = :regionName")
     List<Village> findSingleVillageByNameAndRegionName_forUpload(@Param("villageName") String villageName, @Param("regionName") String regionName);
-
     @Query(value = "SELECT DISTINCT v FROM Village v " +
             "LEFT JOIN v.objectVillages ov " +
             "LEFT JOIN ov.object o " +

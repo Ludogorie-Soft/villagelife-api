@@ -13,15 +13,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/property-images")
 @AllArgsConstructor
 public class PropertyImageController {
     private final PropertyImageService propertyImageService;
-    @PostMapping
-    public ResponseEntity<PropertyImageDTO> createPropertyImage(@Valid @RequestBody PropertyImageDTO propertyImageDTO) {
-        PropertyImageDTO createdPropertyImage = propertyImageService.createPropertyImage(propertyImageDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdPropertyImage);
-    }
+//    @PostMapping
+//    public ResponseEntity<List<PropertyImageDTO>> createPropertyImage(@Valid @RequestBody List<PropertyImageDTO> propertyImageDTOs) {
+//        List<PropertyImageDTO> createdPropertyImages = propertyImageService.createPropertyImage(propertyImageDTOs);
+//        return ResponseEntity.status(HttpStatus.CREATED).body(createdPropertyImages);
+//    }
 }

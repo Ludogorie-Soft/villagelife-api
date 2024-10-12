@@ -1,0 +1,31 @@
+ALTER TABLE regions
+ADD COLUMN name VARCHAR(255) UNIQUE;
+
+UPDATE regions SET name='Благоевград' WHERE id = 1;
+UPDATE regions SET name='Бургас' WHERE id = 2;
+UPDATE regions SET name='Варна' WHERE id = 3;
+UPDATE regions SET name='Велико Търново' WHERE id = 4;
+UPDATE regions SET name='Видин' WHERE id = 5;
+UPDATE regions SET name='Враца' WHERE id = 6;
+UPDATE regions SET name='Габрово' WHERE id = 7;
+UPDATE regions SET name='Добрич' WHERE id = 8;
+UPDATE regions SET name='Кърджали' WHERE id = 9;
+UPDATE regions SET name='Кюстендил' WHERE id = 10;
+UPDATE regions SET name='Ловеч' WHERE id = 11;
+UPDATE regions SET name='Монтана' WHERE id = 12;
+UPDATE regions SET name='Пазарджик' WHERE id = 13;
+UPDATE regions SET name='Перник' WHERE id = 14;
+UPDATE regions SET name='Плевен' WHERE id = 15;
+UPDATE regions SET name='Пловдив' WHERE id = 16;
+UPDATE regions SET name='Разград' WHERE id = 17;
+UPDATE regions SET name='Русе' WHERE id = 18;
+UPDATE regions SET name='Силистра' WHERE id = 19;
+UPDATE regions SET name='Сливен' WHERE id = 20;
+UPDATE regions SET name='Смолян' WHERE id = 21;
+UPDATE regions SET name='Софийска област' WHERE id = 22;
+UPDATE regions SET name='София' WHERE id = 23;
+UPDATE regions SET name='Стара Загора' WHERE id = 24;
+UPDATE regions SET name='Търговище' WHERE id = 25;
+UPDATE regions SET name='Хасково' WHERE id = 26;
+UPDATE regions SET name='Шумен' WHERE id = 27;
+UPDATE regions SET name='Ямбол' WHERE id = 28;

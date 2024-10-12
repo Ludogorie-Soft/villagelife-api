@@ -2,7 +2,9 @@ package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.PropertyDTO;
 import com.example.ludogorieSoft.village.model.Property;
+import com.example.ludogorieSoft.village.model.PropertyStats;
 import com.example.ludogorieSoft.village.repositories.PropertyRepository;
+import com.example.ludogorieSoft.village.repositories.PropertyStatsRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -20,6 +22,7 @@ public class PropertyService {
     private final ModelMapper modelMapper;
     private VillageService villageService;
     private ImageService imageService;
+    private PropertyStatsRepository propertyStatsRepository;
 
     public PropertyDTO propertyToPropertyDTO(Property property) {
 
@@ -67,5 +70,34 @@ public class PropertyService {
       Property savedProperty = propertyRepository.save(property);
       return modelMapper.map(savedProperty, PropertyDTO.class);
     }
+//    public void initializeStats(Property property) {
+//        if (property.getPropertyStats() == null) {
+//            PropertyStats stats = new PropertyStats();
+//            stats.setSeenInResults(0L);
+//            stats.setViews(0);
+//            stats.setShares(0);
+//            stats.setSaves(0);
+//            property.setPropertyStats(stats);
+//            propertyStatsRepository.save(stats);
+//        }
+//    }
+//    public void incrementViews(Property property) {
+//        initializeStats(property);
+//        PropertyStats stats = property.getPropertyStats();
+//        stats.setViews(stats.getViews() + 1);
+//        propertyStatsRepository.save(stats);
+//    }
+//    public void incrementShares(Property property) {
+//        initializeStats(property);
+//        PropertyStats stats = property.getPropertyStats();
+//        stats.setShares(stats.getShares() + 1);
+//        propertyStatsRepository.save(stats);
+//    }
+//    public void incrementSaves(Property property) {
+//        initializeStats(property);
+//        PropertyStats stats = property.getPropertyStats();
+//        stats.setSaves(stats.getSaves() + 1);
+//        propertyStatsRepository.save(stats);
+//    }
 
 }

@@ -24,11 +24,10 @@ public class PropertyController {
     private final PropertyService propertyService;
     @PostMapping
     public ResponseEntity<PropertyDTO> createProperty(@Valid @RequestBody PropertyDTO propertyDTO) {
-       PropertyDTO createdProperty = propertyService.createProperty(propertyDTO);
+        PropertyDTO createdProperty = propertyService.createProperty(propertyDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdProperty);
     }
 
-    private PropertyService propertyService;
     @GetMapping("/{page}/{elements}")
     public ResponseEntity<Page<PropertyDTO>> getAllProperties(@PathVariable("page") int page, @PathVariable("elements") int elements) {
         return ResponseEntity.ok(propertyService.getAllPropertiesAndMainImage(page, elements));

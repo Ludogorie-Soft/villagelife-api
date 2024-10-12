@@ -72,15 +72,5 @@ public class VillageController {
     public List<Long> testSitemap(@PathVariable boolean status) {
         return villageService.getAllApprovedVillagesByStatus(status);
     }
-    @GetMapping("/findByNameAndRegionForProperty")
-    public ResponseEntity<VillageDTO> getVillageByNameAndRegionForProperty(
-            @RequestParam String villageName,
-            @RequestParam String region) {
-        VillageDTO villageDTO = villageService.getVillageByNameAndRegionNameForProperty(villageName, region);
-        if (villageDTO != null) {
-            return ResponseEntity.ok(villageDTO);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
+
 }

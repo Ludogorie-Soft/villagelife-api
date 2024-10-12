@@ -29,6 +29,7 @@ public class PropertyDTO {
     private int roomsCount;
     private int bathroomsCount;
     private List<String> heating;
+    //private List<PropertyImageDTO> images;
     private String imageUrl;
     private ConstructionType constructionType;
     private int constructionYear;
@@ -36,6 +37,7 @@ public class PropertyDTO {
     private PropertyStatsDTO propertyStatsDTO;
     private OwnershipType ownershipType;
     private PropertyCondition propertyCondition;
+    //private List<byte[]> imageBytes;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)

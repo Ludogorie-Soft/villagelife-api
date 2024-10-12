@@ -71,6 +71,9 @@ public class Property {
     @Column(name = "heating")
     private List<String> heating;
 
+//    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<PropertyImage> propertyImages;
+
     private String imageUrl;
 
     @Column(name = "construction_type",columnDefinition="enum('BRICKS','PANEL','WOOD')")
