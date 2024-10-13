@@ -24,6 +24,7 @@ public class PropertyService {
     private final ModelMapper modelMapper;
     private VillageService villageService;
     private ImageService imageService;
+    private PropertyImageService propertyImageService;
     private PropertyStatsRepository propertyStatsRepository;
 
     public PropertyDTO propertyToPropertyDTO(Property property) {
@@ -73,6 +74,10 @@ public class PropertyService {
       String imageName = imageService.uploadImage(propertyDTO.getMainImageBytes(),imageUUID);
       property.setImageUrl(imageName);
       Property savedProperty = propertyRepository.save(property);
+      propertyImageService.createPropertyImage(propertyDTO.getImages());
+      for (int i = 0; i < propertyDTO.getImages().size() ; i++) {
+          System.out.println(propertyDTO.getImages().get(i).getPropertyImageBytes());
+      }
       return modelMapper.map(savedProperty, PropertyDTO.class);
     }
 //    public void initializeStats(Property property) {

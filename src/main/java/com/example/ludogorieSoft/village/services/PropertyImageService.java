@@ -32,21 +32,21 @@ public class PropertyImageService {
 
         return modelMapper.map(propertyImageDTO, PropertyImage.class);
     }
-//    public List<PropertyImageDTO> createPropertyImage(List<PropertyImageDTO> propertyImageDTOs){
-//        List<PropertyImage> savedPropertyImages = new ArrayList<>();
-//        for (int i = 0; i < propertyImageDTOs.size(); i++) {
-//            PropertyImage propertyImage = propertyImageDTOToPropertyImage(propertyImageDTOs.get(i));
-//            byte[] imageData = propertyImageDTOs.get(i).getPropertyDTO().getImageBytes().get(i);
-//            String randomUuid = UUID.randomUUID().toString();
-//            propertyImage.setImageName(randomUuid);
-//            savedPropertyImages.add(propertyImage);
-//            imageService.uploadImage(imageData, propertyImage.getImageName());
-//            propertyImageRepository.save(propertyImage);
-//        }
-//
-//        return savedPropertyImages.stream()
-//                .map(this::propertyImageToPropertyImageDTO)
-//                .toList();
-//   }
+    public List<PropertyImageDTO> createPropertyImage(List<PropertyImageDTO> propertyImageDTOs){
+        List<PropertyImage> savedPropertyImages = new ArrayList<>();
+        for (int i = 0; i < propertyImageDTOs.size(); i++) {
+            PropertyImage propertyImage = propertyImageDTOToPropertyImage(propertyImageDTOs.get(i));
+            byte[] imageData = propertyImageDTOs.get(i).getPropertyImageBytes();
+            String randomUuid = UUID.randomUUID().toString();
+            propertyImage.setImageName(randomUuid);
+            savedPropertyImages.add(propertyImage);
+            imageService.uploadImage(imageData, propertyImage.getImageName());
+            propertyImageRepository.save(propertyImage);
+        }
+
+        return savedPropertyImages.stream()
+                .map(this::propertyImageToPropertyImageDTO)
+                .toList();
+   }
 
 }
