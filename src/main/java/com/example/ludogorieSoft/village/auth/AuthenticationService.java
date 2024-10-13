@@ -21,9 +21,7 @@ import com.example.ludogorieSoft.village.repositories.VerificationTokenRepositor
 import com.example.ludogorieSoft.village.services.EmailSenderService;
 import com.example.ludogorieSoft.village.services.VerificationTokenService;
 import com.example.ludogorieSoft.village.utils.TimestampUtils;
-import com.slack.api.scim.model.User;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -127,25 +125,35 @@ public class AuthenticationService {
 
     private void checkRegistrationValidations(RegisterRequest request) {
         if (request.getFullName().isBlank()) throw new ApiRequestException("Full name is required!");
-        if (request.getFullName().length() < 2) throw new ApiRequestException("Full name must be more than 2 characters!");
+        if (request.getFullName().length() < 2)
+            throw new ApiRequestException("Full name must be more than 2 characters!");
         if (request.getEmail().isBlank()) throw new ApiRequestException("Email is required!");
-        if (!request.getEmail().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) throw new ApiRequestException("Invalid email!");
+        if (!request.getEmail().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$"))
+            throw new ApiRequestException("Invalid email!");
         if (request.getUsername().isBlank()) throw new ApiRequestException("Username is required!");
-        if (request.getUsername().length() > 10) throw new ApiRequestException("Username can not be more 10 characters!");
+        if (request.getUsername().length() > 10)
+            throw new ApiRequestException("Username can not be more 10 characters!");
         if (request.getPassword().isBlank()) throw new ApiRequestException("Password is required!");
-        if (request.getPassword().length() < 8) throw new ApiRequestException("Password must be at least 8 characters long!");
+        if (request.getPassword().length() < 8)
+            throw new ApiRequestException("Password must be at least 8 characters long!");
         if (request.getMobile().isBlank() || request.getMobile().length() < 10)
             throw new ApiRequestException("Phone number can not be less than 10 characters!");
-        if (!(request.getRole().equals(Role.ADMIN) || request.getRole().equals(Role.USER))) {
-            if (request.getJobTitle().isBlank()) throw new ApiRequestException("Job title is required!");
-            BusinessCardDTO card = request.getBusinessCardDTO();
-            if (card.getName().isBlank()) throw new ApiRequestException("Business card name is required!");
-            if (card.getEmail().isBlank()) throw new ApiRequestException("Business card email is required!");
-            if (!card.getEmail().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$"))
-                throw new ApiRequestException("Invalid business card email!");
-            if (!card.getPhoneNumber().matches("\\+?[0-9. ()-]{7,25}"))
-                throw new ApiRequestException("Invalid business card phone number!");
-            if (card.getNumberOfEmployees() < 0) throw new ApiRequestException("The number of employees cannot be negative!");
-        }
+        if (!(request.getRole().equals(Role.ADMIN) || request.getRole().equals(Role.USER)))
+            checkRegistrationValidationsForBusinesses(request);
+    }
+
+    private void checkRegistrationValidationsForBusinesses(RegisterRequest request) {
+        if (request.getJobTitle().isBlank()) throw new ApiRequestException("Job title is required!");
+        BusinessCardDTO card = request.getBusinessCardDTO();
+        if (card.getName().isBlank()) throw new ApiRequestException("Business card name is required!");
+        if (card.getEmail().isBlank()) throw new ApiRequestException("Business card email is required!");
+        if (!card.getEmail().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$"))
+            throw new ApiRequestException("Invalid business card email!");
+        if (businessCardRepository.existsByEmail(card.getEmail())) throw new ApiRequestException("Email already used!");
+        if (!card.getPhoneNumber().matches("\\+?[0-9. ()-]{7,25}"))
+            throw new ApiRequestException("Invalid business card phone number!");
+        if (card.getNumberOfEmployees() < 0)
+            throw new ApiRequestException("The number of employees cannot be negative!");
+
     }
 }

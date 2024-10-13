@@ -3,112 +3,112 @@ package com.example.ludogorieSoft.village.auth;
 import com.example.ludogorieSoft.village.dtos.AlternativeUserDTO;
 import com.example.ludogorieSoft.village.dtos.request.AuthenticationRequest;
 import com.example.ludogorieSoft.village.dtos.request.RegisterRequest;
+import com.example.ludogorieSoft.village.dtos.request.VerificationRequest;
 import com.example.ludogorieSoft.village.dtos.response.AuthenticationResponce;
 import com.example.ludogorieSoft.village.enums.Role;
-import com.example.ludogorieSoft.village.model.AlternativeUser;
-import com.example.ludogorieSoft.village.repositories.AlternativeUserRepository;
-import com.example.ludogorieSoft.village.authorization.JWTService;
 import com.example.ludogorieSoft.village.services.AuthService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-class AuthenticationControllerTest {
-    @Mock
-    private AlternativeUserRepository alternativeUserRepository;
-    @Mock
-    private AuthenticationService authenticationService;
-    @Mock
-    private PasswordEncoder passwordEncoder;
-    @Mock
-    private JWTService jwtService;
-    @Mock
-    private AuthenticationManager authenticationManager;
-    @Mock
-    private AuthService authService;
-    @Mock
-    private UserDetailsService userDetailsService;
+ class AuthenticationControllerTest {
+
     @InjectMocks
     private AuthenticationController authenticationController;
 
+    @Mock
+    private AuthenticationService authenticationService;
+
+    @Mock
+    private AuthService authService;
+
     @BeforeEach
     public void setUp() {
-        alternativeUserRepository = Mockito.mock(AlternativeUserRepository.class);
-        authenticationService = Mockito.mock(AuthenticationService.class);
-        passwordEncoder = Mockito.mock(PasswordEncoder.class);
-        jwtService = Mockito.mock(JWTService.class);
-        authenticationManager = Mockito.mock(AuthenticationManager.class);
-        authService = Mockito.mock(AuthService.class);
-        authenticationController = new AuthenticationController(new AuthenticationService(
-                alternativeUserRepository, passwordEncoder, jwtService, authenticationManager), authService);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
     void testRegister() {
-        RegisterRequest registerRequest = new RegisterRequest();
-        registerRequest.setFullName("name");
-        registerRequest.setEmail("email@");
-        registerRequest.setMobile("mobile");
-        registerRequest.setRole(Role.ADMIN);
-        registerRequest.setUsername("username");
-        registerRequest.setPassword("pass");
+        RegisterRequest request = new RegisterRequest();
+        // Populate request with valid data
+        request.setFullName("John Doe");
+        request.setEmail("john.doe@example.com");
+        request.setMobile("1234567890");
+        request.setUsername("johndoe");
+        request.setPassword("password");
+        request.setRole(Role.USER);
 
-        String authenticationResponse ="Administrator registered successfully!!!";
+        when(authenticationService.register(any(RegisterRequest.class))).thenReturn("Registration successful");
 
-       ResponseEntity<String> message = authenticationController.register(registerRequest);
+        ResponseEntity<String> response = authenticationController.register(request);
 
-        when(authenticationService.register(registerRequest)).thenReturn(authenticationResponse);
-
-        assertEquals("Administrator registered successfully!!!", message.getBody());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("Registration successful", response.getBody());
+        verify(authenticationService, times(1)).register(request);
     }
 
     @Test
     void testAuthenticate() {
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setUsername("username");
-        authenticationRequest.setPassword("pass");
+        AuthenticationRequest request = new AuthenticationRequest();
+        request.setUsername("johndoe");
+        request.setPassword("password");
 
-        AlternativeUser user = new AlternativeUser();
-        user.setUsername("username");
-        user.setPassword("pass");
-        when(authenticationManager.authenticate(any())).thenReturn(null);
-        when(alternativeUserRepository.findByUsername(anyString())).thenReturn(user);
-        when(jwtService.generateToken(any(AlternativeUser.class))).thenReturn("token");
+        AuthenticationResponce authResponse = new AuthenticationResponce();
+        authResponse.setToken("jwt-token");
 
-        ResponseEntity<AuthenticationResponce> responseEntity = authenticationController.authenticate(authenticationRequest);
+        when(authenticationService.authenticate(any(AuthenticationRequest.class))).thenReturn(authResponse);
 
-        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        AuthenticationResponce authenticationResponse = responseEntity.getBody();
-        assert authenticationResponse != null;
-        assertEquals("token", authenticationResponse.getToken());
+        ResponseEntity<AuthenticationResponce> response = authenticationController.authenticate(request);
 
-        verify(authenticationManager).authenticate(any());
-
-        verify(jwtService).generateToken(user);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("jwt-token", response.getBody().getToken());
+        verify(authenticationService, times(1)).authenticate(request);
     }
 
     @Test
-    void testGetAdminInfo() {
-        AlternativeUserDTO expectedAlternativeUserDTO = new AlternativeUserDTO();
-        expectedAlternativeUserDTO.setId(1L);
-        expectedAlternativeUserDTO.setUsername("admin");
+    void testGetAdministratorInfo() {
+        AlternativeUserDTO alternativeUserDTO = new AlternativeUserDTO();
+        alternativeUserDTO.setFullName("Admin User");
 
-        when(authService.getAdministratorInfo()).thenReturn(expectedAlternativeUserDTO);
+        when(authService.getAdministratorInfo()).thenReturn(alternativeUserDTO);
 
-        ResponseEntity<AlternativeUserDTO> responseEntity = authenticationController.getAdministratorInfo();
+        ResponseEntity<AlternativeUserDTO> response = authenticationController.getAdministratorInfo();
 
-        assertEquals(expectedAlternativeUserDTO, responseEntity.getBody());
-        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(alternativeUserDTO, response.getBody());
+        verify(authService, times(1)).getAdministratorInfo();
     }
 
-}
+    @Test
+    void testAuthorizeAdminToken() {
+        String token = "Bearer some-token";
 
+        ResponseEntity<String> response = authenticationController.authorizeAdminToken(token);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("Authorized", response.getBody());
+    }
+
+    @Test
+    void testVerifyVerificationToken() {
+        VerificationRequest verificationRequest = new VerificationRequest();
+        verificationRequest.setToken("verification-token");
+        verificationRequest.setEmail("john.doe@example.com");
+
+        when(authenticationService.verifyVerificationToken(any(VerificationRequest.class))).thenReturn("Your account is verified!");
+
+        ResponseEntity<String> response = authenticationController.verifyVerificationToken(verificationRequest);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("Your account is verified!", response.getBody());
+        verify(authenticationService, times(1)).verifyVerificationToken(verificationRequest);
+    }
+}
