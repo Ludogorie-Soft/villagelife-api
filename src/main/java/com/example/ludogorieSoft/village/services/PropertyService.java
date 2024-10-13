@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static java.util.UUID.randomUUID;
+
 @Service
 @AllArgsConstructor
 public class PropertyService {
@@ -67,6 +69,9 @@ public class PropertyService {
 
     public PropertyDTO createProperty(PropertyDTO propertyDTO){
       Property property = propertyDTOToProperty(propertyDTO);
+      String imageUUID = randomUUID().toString();
+      String imageName = imageService.uploadImage(propertyDTO.getMainImageBytes(),imageUUID);
+      property.setImageUrl(imageName);
       Property savedProperty = propertyRepository.save(property);
       return modelMapper.map(savedProperty, PropertyDTO.class);
     }
