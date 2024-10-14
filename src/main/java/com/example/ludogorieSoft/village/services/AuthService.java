@@ -1,7 +1,7 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.authorization.JWTService;
-import com.example.ludogorieSoft.village.dtos.AdministratorDTO;
+import com.example.ludogorieSoft.village.dtos.AlternativeUserDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +14,7 @@ public class AuthService {
     private final HttpServletRequest request;
     private final JWTService jwtService;
 
-    public AdministratorDTO getAdministratorInfo(){
+    public AlternativeUserDTO getAdministratorInfo(){
         String authHeather = request.getHeader("Authorization");
         String jwt;
         String username;

@@ -1,5 +1,6 @@
 package com.example.ludogorieSoft.village.dtos.request;
 
+import com.example.ludogorieSoft.village.dtos.BusinessCardDTO;
 import com.example.ludogorieSoft.village.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,4 +18,6 @@ public class RegisterRequest {
     private String password;
     private String mobile;
     private Role role;
+    private String jobTitle;
+    private BusinessCardDTO businessCardDTO;
 }

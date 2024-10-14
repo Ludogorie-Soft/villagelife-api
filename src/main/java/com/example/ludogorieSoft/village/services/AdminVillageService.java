@@ -1,6 +1,6 @@
 package com.example.ludogorieSoft.village.services;
 
-import com.example.ludogorieSoft.village.dtos.AdministratorDTO;
+import com.example.ludogorieSoft.village.dtos.AlternativeUserDTO;
 import com.example.ludogorieSoft.village.dtos.VillageDTO;
 import com.example.ludogorieSoft.village.dtos.response.VillageResponse;
 import com.example.ludogorieSoft.village.model.*;
@@ -99,7 +99,7 @@ public class AdminVillageService {
         villageResponse.setDateUpload(village.getDateUpload());
 
         if (village.getAdmin() != null) {
-            villageResponse.setAdmin(modelMapper.map(village.getAdmin(), AdministratorDTO.class));
+            villageResponse.setAdmin(modelMapper.map(village.getAdmin(), AlternativeUserDTO.class));
             villageResponse.setDateApproved(village.getDateApproved());
         }
         List<Population> answers = new ArrayList<>();

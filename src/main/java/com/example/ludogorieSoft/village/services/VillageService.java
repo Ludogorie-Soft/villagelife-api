@@ -89,9 +89,9 @@ public class VillageService {
             RegionDTO regionDTO = regionService.findRegionByName(villageDTO.getRegion());
             village.setRegion(regionService.checkRegion(regionDTO.getId()));
 
-            AdministratorDTO administratorDTO = authService.getAdministratorInfo();
+            AlternativeUserDTO alternativeUserDTO = authService.getAdministratorInfo();
 
-            village.setAdmin(modelMapper.map(administratorDTO, Administrator.class));
+            village.setAdmin(modelMapper.map(alternativeUserDTO, AlternativeUser.class));
             village.setStatus(true);
             village.setDateApproved(now());
 

@@ -33,8 +33,8 @@ public class Property {
     private Village village;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private PropertyUser propertyUser;
+    @JoinColumn(name = "alternative_user_id")
+    private AlternativeUser alternativeUser;
 
     @Column(name = "property_type",columnDefinition="enum('PLOT','AGRICULTURAL_LAND','HOUSE','VILLA','FLOOR_OF_A_HOUSE','BUSINESS_PROPERTY','APARTMENT')")
     @Enumerated(EnumType.STRING)
