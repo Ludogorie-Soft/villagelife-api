@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.UUID.randomUUID;
@@ -67,47 +68,25 @@ public class PropertyService {
             return propertyDTO;
         }).toList();
     }
-
     public PropertyDTO createProperty(PropertyDTO propertyDTO){
       Property property = propertyDTOToProperty(propertyDTO);
       String imageUUID = randomUUID().toString();
       String imageName = imageService.uploadImage(propertyDTO.getMainImageBytes(),imageUUID);
       property.setImageUrl(imageName);
+      property.setHeating(splitHeatingText(propertyDTO.getHeatingText()));
       Property savedProperty = propertyRepository.save(property);
-      propertyImageService.createPropertyImage(propertyDTO.getImages());
-      for (int i = 0; i < propertyDTO.getImages().size() ; i++) {
-          System.out.println(propertyDTO.getImages().get(i).getPropertyImageBytes());
-      }
+      propertyImageService.createPropertyImage(propertyDTO.getImages(), savedProperty);
       return modelMapper.map(savedProperty, PropertyDTO.class);
     }
-//    public void initializeStats(Property property) {
-//        if (property.getPropertyStats() == null) {
-//            PropertyStats stats = new PropertyStats();
-//            stats.setSeenInResults(0L);
-//            stats.setViews(0);
-//            stats.setShares(0);
-//            stats.setSaves(0);
-//            property.setPropertyStats(stats);
-//            propertyStatsRepository.save(stats);
-//        }
-//    }
-//    public void incrementViews(Property property) {
-//        initializeStats(property);
-//        PropertyStats stats = property.getPropertyStats();
-//        stats.setViews(stats.getViews() + 1);
-//        propertyStatsRepository.save(stats);
-//    }
-//    public void incrementShares(Property property) {
-//        initializeStats(property);
-//        PropertyStats stats = property.getPropertyStats();
-//        stats.setShares(stats.getShares() + 1);
-//        propertyStatsRepository.save(stats);
-//    }
-//    public void incrementSaves(Property property) {
-//        initializeStats(property);
-//        PropertyStats stats = property.getPropertyStats();
-//        stats.setSaves(stats.getSaves() + 1);
-//        propertyStatsRepository.save(stats);
-//    }
+
+    private List<String> splitHeatingText(String heatingText){
+
+        List<String> heatingTypes = List.of(heatingText.split("\\s*[;,]\\s*"));
+        List<String> heatingTypesWithoutSpace = new ArrayList<>();
+        for (String heatingType : heatingTypes) {
+            heatingTypesWithoutSpace.add(heatingType.trim());
+        }
+        return heatingTypesWithoutSpace;
+    }
 
 }
