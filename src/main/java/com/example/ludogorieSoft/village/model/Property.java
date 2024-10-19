@@ -14,6 +14,7 @@ import org.hibernate.validator.constraints.Length;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -44,26 +45,27 @@ public class Property {
     @Enumerated(EnumType.STRING)
     private PropertyTransferType propertyTransferType;
 
-    @Min(0)
+    @NotNull(message = "This field is required")
+    @Min(value = 0, message = "Must be greater than or equal to 0")
     private BigDecimal price;
 
-    @Length(min = 10, message = "Phone number should be at least 10 numbers long!")
+    @Size(min = 10, message = "Phone number should be at least 10 characters long!")
     private String phoneNumber;
 
-    @Min(0)
-    @NotNull
+    @NotNull(message = "This field is required")
+    @Min(value = 0, message = "Must be greater than or equal to 0")
     private Double buildUpArea;
 
-    @Min(0)
-    @NotNull
+    @NotNull(message = "This field is required")
+    @Min(value = 0, message = "Must be greater than or equal to 0")
     private Double yardArea;
 
-    @Min(0)
-    @NotNull
+    @NotNull(message = "This field is required")
+    @Min(value = 0, message = "Must be greater than or equal to 0")
     private int roomsCount;
 
-    @Min(0)
-    @NotNull
+    @NotNull(message = "This field is required")
+    @Min(value = 0, message = "Must be greater than or equal to 0")
     private int bathroomsCount;
 
     @ElementCollection
