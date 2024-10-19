@@ -26,7 +26,6 @@ public class PropertyService {
     private VillageService villageService;
     private ImageService imageService;
     private PropertyImageService propertyImageService;
-    private PropertyStatsRepository propertyStatsRepository;
 
     public PropertyDTO propertyToPropertyDTO(Property property) {
 
@@ -80,7 +79,6 @@ public class PropertyService {
     }
 
     private List<String> splitHeatingText(String heatingText){
-
         List<String> heatingTypes = List.of(heatingText.split("\\s*[;,]\\s*"));
         List<String> heatingTypesWithoutSpace = new ArrayList<>();
         for (String heatingType : heatingTypes) {

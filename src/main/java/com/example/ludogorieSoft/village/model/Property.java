@@ -84,6 +84,10 @@ public class Property {
 
     @Column(name = "extras", columnDefinition = "TEXT")
     private String extras;
+    @Column(name = "description", columnDefinition = "TEXT")
+    private String description;
+
+    private String address;
 
     @OneToOne
     @JoinColumn(name = "stats_id")
