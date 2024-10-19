@@ -34,6 +34,7 @@ public class PropertyDTO {
     private int constructionYear;
     private String extras;
     private String description;
+    private String location;
     private PropertyStatsDTO propertyStatsDTO;
     private OwnershipType ownershipType;
     private PropertyCondition propertyCondition;

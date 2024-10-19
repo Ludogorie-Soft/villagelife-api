@@ -30,22 +30,22 @@ public class Property {
 
     @ManyToOne
     @JoinColumn(name = "village_id")
-    private Village village;
+    private Village village; //
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private PropertyUser propertyUser;
+    private PropertyUser propertyUser; //
 
     @Column(name = "property_type",columnDefinition="enum('PLOT','AGRICULTURAL_LAND','HOUSE','VILLA','FLOOR_OF_A_HOUSE','BUSINESS_PROPERTY','APARTMENT')")
     @Enumerated(EnumType.STRING)
-    private PropertyType propertyType;
+    private PropertyType propertyType; //
 
     @Column(name = "property_transfer_type",columnDefinition="enum('SALE','RENT')")
     @Enumerated(EnumType.STRING)
-    private PropertyTransferType propertyTransferType;
+    private PropertyTransferType propertyTransferType; //
 
     @Min(0)
-    private BigDecimal price;
+    private BigDecimal price; //
 
     @Length(min = 10, message = "Phone number should be at least 10 numbers long!")
     @Column(unique = true)
@@ -53,42 +53,44 @@ public class Property {
 
     @Min(0)
     @NotNull
-    private Double buildUpArea;
+    private Double buildUpArea; //
 
     @Min(0)
     @NotNull
-    private Double yardArea;
+    private Double yardArea; //
 
     @Min(0)
     @NotNull
-    private int roomsCount;
+    private int roomsCount; //
 
     @Min(0)
     @NotNull
-    private int bathroomsCount;
+    private int bathroomsCount; //
 
     @ElementCollection
     @CollectionTable(name = "property_heating", joinColumns = @JoinColumn(name = "property_id"))
     @Column(name = "heating")
-    private List<String> heating;
+    private List<String> heating; //
 
-    private String imageUrl;
+    private String imageUrl; //
 
     @Column(name = "construction_type",columnDefinition="enum('BRICKS','PANEL','WOOD')")
     @Enumerated(EnumType.STRING)
-    private ConstructionType constructionType;
+    private ConstructionType constructionType; //
 
-    private int constructionYear;
+    private int constructionYear; //
 
     @Column(name = "extras", columnDefinition = "TEXT")
-    private String extras;
+    private String extras; //
 
     @Column(name = "description", columnDefinition = "TEXT")
-    private String description;
+    private String description; //
+
+    private String location; //
 
     @OneToOne
     @JoinColumn(name = "stats_id")
-    private PropertyStats propertyStats;
+    private PropertyStats propertyStats; //
 
     @Column(name = "ownership_type",columnDefinition="enum('INDIVIDUAL','AGENCY','BUILDER','INVESTOR')")
     @Enumerated(EnumType.STRING)
@@ -119,3 +121,20 @@ public class Property {
     private LocalDateTime deletedAt;
 
 }
+
+/*
+    Местоположение и цена
+            village
+            location
+            price
+    Размери
+            buildUpArea
+            yardArea
+            roomsCount
+            bathroomsCount
+    Строителство и състояние
+            constructionType
+            constructionYear
+            heating
+            propertyCondition
+*/
