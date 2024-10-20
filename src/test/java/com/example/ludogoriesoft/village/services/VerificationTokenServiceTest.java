@@ -3,7 +3,6 @@ package com.example.ludogorieSoft.village.services;
 import com.example.ludogorieSoft.village.dtos.VerificationTokenDTO;
 import com.example.ludogorieSoft.village.model.AlternativeUser;
 import com.example.ludogorieSoft.village.model.VerificationToken;
-import com.example.ludogorieSoft.village.services.VerificationTokenService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,7 +33,7 @@ class VerificationTokenServiceTest {
 
     @BeforeEach
     public void setUp() {
-        alternativeUser = new AlternativeUser(); // Initialize as needed
+        alternativeUser = new AlternativeUser();
         verificationToken = new VerificationToken();
         verificationToken.setId(1L);
         verificationToken.setToken("ABCD1234");
@@ -45,8 +44,7 @@ class VerificationTokenServiceTest {
         verificationTokenDTO.setId(1L);
         verificationTokenDTO.setToken("ABCD1234");
         verificationTokenDTO.setExpiryDate(verificationToken.getExpiryDate());
-        // Assuming AlternativeUserDTO is properly initialized here
-        verificationTokenDTO.setAlternativeUserDTO(null); // Replace with actual DTO
+        verificationTokenDTO.setAlternativeUserDTO(null);
     }
 
     @Test
@@ -73,20 +71,16 @@ class VerificationTokenServiceTest {
 
     @Test
     void testCreateVerificationToken() {
-        // Given
         VerificationToken verificationToken1 = new VerificationToken();
-        verificationToken1.setToken("generatedToken"); // This will be generated in the method
+        verificationToken1.setToken("generatedToken");
         verificationToken1.setExpiryDate(LocalDateTime.now().plusMinutes(15));
         verificationToken1.setAlternativeUser(alternativeUser);
 
-        // Stub the map method to return the expected DTO
         when(modelMapper.map(any(VerificationToken.class), eq(VerificationTokenDTO.class)))
                 .thenReturn(verificationTokenDTO);
 
-        // Act
         VerificationTokenDTO result = verificationTokenService.createVerificationToken(alternativeUser);
 
-        // Assert
         assertNotNull(result);
         assertNotNull(result.getToken());
         assertNotNull(result.getExpiryDate());

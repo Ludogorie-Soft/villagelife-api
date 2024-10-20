@@ -76,29 +76,22 @@ class AuthenticationServiceTest {
 
     @Test
     void registerShouldFailToRegisterAdminIfNotAuthenticatedAsAdmin() {
-        // Step 1: Mock the Authentication and SecurityContext
         Authentication authentication = mock(Authentication.class);
         SecurityContext securityContext = mock(SecurityContext.class);
 
-        // Step 2: Set up SecurityContext to return the mocked Authentication
         when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
 
-        // Step 3: Mock the user returned from Authentication
         when(authentication.getName()).thenReturn("someNonAdminUser");
 
-        // Step 4: Mock the repository to return a non-admin user
         AlternativeUser nonAdminUser = new AlternativeUser();
         nonAdminUser.setRole(Role.USER);
         when(alternativeUserRepository.findByUsername("someNonAdminUser")).thenReturn(nonAdminUser);
 
-        // Step 5: Prepare the RegisterRequest as an ADMIN role
         RegisterRequest request = new RegisterRequest("John Doe", "john@example.com", "username", "password", "1234567890", Role.ADMIN, null, null);
 
-        // Step 6: Execute and assert exception
         Exception exception = assertThrows(AccessDeniedException.class, () -> authenticationService.register(request));
 
-        // Step 7: Verify the exception message
         assertEquals("You can not register new admin!!!", exception.getMessage());
     }
 
@@ -117,7 +110,7 @@ class AuthenticationServiceTest {
 
         verify(alternativeUserRepository).save(any(AlternativeUser.class));
         verify(businessCardRepository, times(1)).existsByEmail(anyString());
-        verify(emailSenderService).sendVerificationToken(eq("mockToken123"), eq(request.getEmail())); // <-- Ensure correct token is sent
+        verify(emailSenderService).sendVerificationToken("mockToken123", request.getEmail());
     }
 
     @Test

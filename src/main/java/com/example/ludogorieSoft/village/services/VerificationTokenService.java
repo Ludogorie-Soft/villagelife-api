@@ -7,9 +7,9 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Random;
 
 @Service
 @AllArgsConstructor
@@ -37,7 +37,7 @@ public class VerificationTokenService {
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         int length = 8;
         StringBuilder code = new StringBuilder();
-        Random random = new Random();
+        SecureRandom random = new SecureRandom();
 
         for (int i = 0; i < length; i++) {
             int index = random.nextInt(characters.length());

@@ -46,7 +46,7 @@ public class BusinessCard implements Serializable {
     private int numberOfEmployees;
 
     @OneToOne(mappedBy = "businessCard")
-    private transient AlternativeUser alternativeUser;//to be transient or not to be transient
+    private transient AlternativeUser alternativeUser;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)

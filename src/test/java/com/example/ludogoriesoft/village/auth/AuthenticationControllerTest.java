@@ -38,7 +38,6 @@ import static org.mockito.Mockito.*;
     @Test
     void testRegister() {
         RegisterRequest request = new RegisterRequest();
-        // Populate request with valid data
         request.setFullName("John Doe");
         request.setEmail("john.doe@example.com");
         request.setMobile("1234567890");

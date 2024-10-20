@@ -126,7 +126,7 @@ public class AuthenticationService {
     private void checkRegistrationValidations(RegisterRequest request) {
         if (request.getFullName().isBlank()) throw new ApiRequestException("Full name is required!");
         if (request.getFullName().length() < 2)
-            throw new ApiRequestException("Full name must be more than 2 characters!");
+            throw new ApiRequestException("Full name must be at least 2 characters!");
         if (request.getEmail().isBlank()) throw new ApiRequestException("Email is required!");
         if (!request.getEmail().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$"))
             throw new ApiRequestException("Invalid email!");
@@ -138,12 +138,11 @@ public class AuthenticationService {
             throw new ApiRequestException("Password must be at least 8 characters long!");
         if (request.getMobile().isBlank() || request.getMobile().length() < 10)
             throw new ApiRequestException("Phone number can not be less than 10 characters!");
-        if (!(request.getRole().equals(Role.ADMIN) || request.getRole().equals(Role.USER)))
+        if (request.getRole().equals(Role.BUILDER) || request.getRole().equals(Role.INVESTOR) || request.getRole().equals(Role.AGENCY))
             checkRegistrationValidationsForBusinesses(request);
     }
 
     private void checkRegistrationValidationsForBusinesses(RegisterRequest request) {
-        if (request.getJobTitle().isBlank()) throw new ApiRequestException("Job title is required!");
         BusinessCardDTO card = request.getBusinessCardDTO();
         if (card.getName().isBlank()) throw new ApiRequestException("Business card name is required!");
         if (card.getEmail().isBlank()) throw new ApiRequestException("Business card email is required!");
@@ -154,6 +153,5 @@ public class AuthenticationService {
             throw new ApiRequestException("Invalid business card phone number!");
         if (card.getNumberOfEmployees() < 0)
             throw new ApiRequestException("The number of employees cannot be negative!");
-
     }
 }
