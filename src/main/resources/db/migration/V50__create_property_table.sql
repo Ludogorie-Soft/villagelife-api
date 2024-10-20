@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS properties (
     construction_year INT,
     extras TEXT,
     description TEXT,
-    location VARCHAR(255),
+    address VARCHAR(255),
     stats_id BIGINT,
     ownership_type ENUM('INDIVIDUAL', 'AGENCY', 'BUILDER', 'INVESTOR') NOT NULL,
     property_condition ENUM('NEW', 'EXCELLENT', 'GOOD', 'FAIR', 'POOR', 'UNDER_CONSTRUCTION', 'DAMAGED', 'RENOVATION_REQUIRED') NOT NULL,
