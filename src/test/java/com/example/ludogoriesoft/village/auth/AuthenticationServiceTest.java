@@ -95,22 +95,25 @@ class AuthenticationServiceTest {
         assertEquals("You can not register new admin!!!", exception.getMessage());
     }
 
-    @Test
     void registerShouldRegisterAgencyUserWithBusinessCard() {
         BusinessCardDTO businessCardDTO = new BusinessCardDTO(1L, "Company Name", "company@example.com", "1234567890", "Some Address", "http://website.com", 50, null);
         RegisterRequest request = new RegisterRequest("John Doe", "john@example.com", "username", "password", "1234567890", Role.AGENCY, "Job Title", businessCardDTO);
+
         when(passwordEncoder.encode(request.getPassword())).thenReturn("encodedPassword");
         when(businessCardRepository.existsByEmail(businessCardDTO.getEmail())).thenReturn(false);
+
         VerificationTokenDTO verificationTokenDTO = mock(VerificationTokenDTO.class);
         when(verificationTokenDTO.getId()).thenReturn(1L);
         when(verificationTokenDTO.getToken()).thenReturn("mockToken123");
         when(verificationTokenService.createVerificationToken(any(AlternativeUser.class))).thenReturn(verificationTokenDTO);
-        String result = authenticationService.register(request);
-        assertEquals("Verification token send!!!", result);
 
+        String result = authenticationService.register(request);
+
+        assertEquals("Verification token send!!!", result);
         verify(alternativeUserRepository).save(any(AlternativeUser.class));
         verify(businessCardRepository, times(1)).existsByEmail(anyString());
-        verify(emailSenderService).sendVerificationToken("mockToken123", request.getEmail());
+        verify(emailSenderService).sendVerificationToken(verificationTokenDTO, any(AlternativeUser.class));
+        verify(verificationTokenRepository).save(any());
     }
 
     @Test

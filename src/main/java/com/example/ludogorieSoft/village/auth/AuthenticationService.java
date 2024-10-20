@@ -80,7 +80,7 @@ public class AuthenticationService {
         VerificationTokenDTO verificationTokenDTO = verificationTokenService.createVerificationToken(user);
         verificationTokenRepository.save(new VerificationToken(verificationTokenDTO.getId(), verificationTokenDTO.getToken(),
                 verificationTokenDTO.getExpiryDate(), user));
-        emailSenderService.sendVerificationToken(verificationTokenDTO.getToken(), user.getEmail());
+        emailSenderService.sendVerificationToken(verificationTokenDTO, user);
         return "Verification token send!!!";
     }
 
