@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS properties (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     village_id BIGINT,
-    user_id BIGINT,
+    alternative_user_id BIGINT,
     property_type ENUM('PLOT', 'AGRICULTURAL_LAND', 'HOUSE', 'VILLA', 'FLOOR_OF_A_HOUSE', 'BUSINESS_PROPERTY', 'APARTMENT') NOT NULL,
     property_transfer_type ENUM('SALE', 'RENT') NOT NULL,
     price DECIMAL(19, 2) CHECK (price >= 0),
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS properties (
     deactivated_at TIMESTAMP NULL,
     deleted_at TIMESTAMP NULL,
     FOREIGN KEY (village_id) REFERENCES villages(id),
-    FOREIGN KEY (user_id) REFERENCES property_users(id),
+    FOREIGN KEY (alternative_user_id) REFERENCES alternative_users(id),
     FOREIGN KEY (stats_id) REFERENCES property_stats(id)
 );
 

@@ -1,11 +1,11 @@
 package com.example.ludogorieSoft.village.services;
 
 
-import com.example.ludogorieSoft.village.dtos.AdministratorDTO;
+import com.example.ludogorieSoft.village.dtos.AlternativeUserDTO;
 import com.example.ludogorieSoft.village.dtos.request.AdministratorRequest;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
-import com.example.ludogorieSoft.village.model.Administrator;
-import com.example.ludogorieSoft.village.repositories.AdministratorRepository;
+import com.example.ludogorieSoft.village.model.AlternativeUser;
+import com.example.ludogorieSoft.village.repositories.AlternativeUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -15,27 +15,27 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class AdministratorService {
-    private final AdministratorRepository administratorRepository;
+    private final AlternativeUserRepository alternativeUserRepository;
     private final ModelMapper modelMapper;
 
-    public AdministratorDTO administratorToAdministratorDTO(Administrator administrator) {
-        return modelMapper.map(administrator, AdministratorDTO.class);
+    public AlternativeUserDTO administratorToAdministratorDTO(AlternativeUser alternativeUser) {
+        return modelMapper.map(alternativeUser, AlternativeUserDTO.class);
     }
 
-    public Administrator administratorRequestToAdministrator(AdministratorRequest administratorRequest) {
-        return modelMapper.map(administratorRequest, Administrator.class);
+    public AlternativeUser administratorRequestToAdministrator(AdministratorRequest administratorRequest) {
+        return modelMapper.map(administratorRequest, AlternativeUser.class);
     }
 
-    public List<AdministratorDTO> getAllAdministrators() {
-        List<Administrator> administrators = administratorRepository.findAll();
-        return administrators
+    public List<AlternativeUserDTO> getAllAdministrators() {
+        List<AlternativeUser> alternativeUsers = alternativeUserRepository.findAll();
+        return alternativeUsers
                 .stream()
                 .map(this::administratorToAdministratorDTO)
                 .toList();
     }
 
-    public AdministratorDTO getAdministratorById(Long id) {
-        Optional<Administrator> administrator = administratorRepository.findById(id);
+    public AlternativeUserDTO getAdministratorById(Long id) {
+        Optional<AlternativeUser> administrator = alternativeUserRepository.findById(id);
         if (administrator.isEmpty()) {
             throw new ApiRequestException("Administrator not found");
         }
@@ -43,15 +43,15 @@ public class AdministratorService {
     }
 
     public void deleteAdministratorById(Long id) {
-        if (administratorRepository.existsById(id)) {
-            administratorRepository.deleteById(id);
+        if (alternativeUserRepository.existsById(id)) {
+            alternativeUserRepository.deleteById(id);
         } else {
             throw new ApiRequestException("Administrator with id " + id + " not found");
         }
     }
 
-    public AdministratorDTO updateAdministrator(Long id, AdministratorRequest administratorRequest) {
-        Optional<Administrator> foundAdministrator = administratorRepository.findById(id);
+    public AlternativeUserDTO updateAdministrator(Long id, AdministratorRequest administratorRequest) {
+        Optional<AlternativeUser> foundAdministrator = alternativeUserRepository.findById(id);
 
         if (foundAdministrator.isEmpty()) {
             throw new ApiRequestException("Administrator not found");
@@ -70,13 +70,13 @@ public class AdministratorService {
         foundAdministrator.get().setCreatedAt(administratorRequest.getCreatedAt());
         foundAdministrator.get().setRole(administratorRequest.getRole());
 
-        administratorRepository.save(foundAdministrator.get());
+        alternativeUserRepository.save(foundAdministrator.get());
         return administratorToAdministratorDTO(foundAdministrator.get());
     }
 
-    public AdministratorDTO findAdminByUsername(String username) {
-        Administrator administrator = administratorRepository.findByUsername(username);
-        return administratorToAdministratorDTO(administrator);
+    public AlternativeUserDTO findAdminByUsername(String username) {
+        AlternativeUser alternativeUser = alternativeUserRepository.findByUsername(username);
+        return administratorToAdministratorDTO(alternativeUser);
     }
 
 }
