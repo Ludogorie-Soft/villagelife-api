@@ -33,7 +33,7 @@ public class AlternativeUser implements UserDetails {
     private Long id;
 
     @NotBlank(message = "Full name cannot be empty!")
-    @Length(min = 2, message = "Full name should be at least than 2 characters long!")
+    @Length(min = 2, message = "Full name should be at least 2 characters long!")
     @Column(nullable = false)
     private String fullName;
 

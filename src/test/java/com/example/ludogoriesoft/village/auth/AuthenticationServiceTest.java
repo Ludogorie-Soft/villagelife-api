@@ -95,6 +95,7 @@ class AuthenticationServiceTest {
         assertEquals("You can not register new admin!!!", exception.getMessage());
     }
 
+    @Test
     void registerShouldRegisterAgencyUserWithBusinessCard() {
         BusinessCardDTO businessCardDTO = new BusinessCardDTO(1L, "Company Name", "company@example.com", "1234567890", "Some Address", "http://website.com", 50, null);
         RegisterRequest request = new RegisterRequest("John Doe", "john@example.com", "username", "password", "1234567890", Role.AGENCY, "Job Title", businessCardDTO);
@@ -112,7 +113,7 @@ class AuthenticationServiceTest {
         assertEquals("Verification token send!!!", result);
         verify(alternativeUserRepository).save(any(AlternativeUser.class));
         verify(businessCardRepository, times(1)).existsByEmail(anyString());
-        verify(emailSenderService).sendVerificationToken(verificationTokenDTO, any(AlternativeUser.class));
+        verify(emailSenderService).sendVerificationToken(eq(verificationTokenDTO), any(AlternativeUser.class));
         verify(verificationTokenRepository).save(any());
     }
 
