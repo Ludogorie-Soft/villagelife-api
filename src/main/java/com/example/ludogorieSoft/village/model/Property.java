@@ -13,6 +13,7 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
@@ -46,26 +47,26 @@ public class Property {
     private PropertyTransferType propertyTransferType;
 
     @NotNull(message = "This field is required")
-    @Min(value = 0, message = "Must be greater than or equal to 0")
+    @Min(value = 0, message = "The price ust be greater than or equal to 0")
     private BigDecimal price;
 
     @Size(min = 10, message = "Phone number should be at least 10 characters long!")
     private String phoneNumber;
 
     @NotNull(message = "This field is required")
-    @Min(value = 0, message = "Must be greater than or equal to 0")
+    @Min(value = 0, message = "The build up area must be greater than or equal to 0")
     private Double buildUpArea;
 
     @NotNull(message = "This field is required")
-    @Min(value = 0, message = "Must be greater than or equal to 0")
+    @Min(value = 0, message = "The yard area must be greater than or equal to 0")
     private Double yardArea;
 
     @NotNull(message = "This field is required")
-    @Min(value = 0, message = "Must be greater than or equal to 0")
+    @Min(value = 0, message = "The number of the rooms must be greater than or equal to 0")
     private int roomsCount;
 
     @NotNull(message = "This field is required")
-    @Min(value = 0, message = "Must be greater than or equal to 0")
+    @Min(value = 0, message = "The number of the bathrooms must be greater than or equal to 0")
     private int bathroomsCount;
 
     @ElementCollection
