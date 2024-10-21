@@ -12,14 +12,16 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Table(name = "business_cards")
-public class BusinessCard {
+public class BusinessCard implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,6 +44,9 @@ public class BusinessCard {
 
     @Min(value = 0, message = "The number of employees cannot be negative")
     private int numberOfEmployees;
+
+    @OneToOne(mappedBy = "businessCard")
+    private transient AlternativeUser alternativeUser;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)

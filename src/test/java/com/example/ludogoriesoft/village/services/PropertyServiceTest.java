@@ -2,7 +2,7 @@ package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.PropertyDTO;
 import com.example.ludogorieSoft.village.dtos.PropertyStatsDTO;
-import com.example.ludogorieSoft.village.dtos.PropertyUserDTO;
+import com.example.ludogorieSoft.village.dtos.AlternativeUserDTO;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.Property;
 import com.example.ludogorieSoft.village.repositories.PropertyRepository;
@@ -88,7 +88,7 @@ class PropertyServiceTest {
     void testPropertyToPropertyDTO() {
         when(modelMapper.map(property, PropertyDTO.class)).thenReturn(propertyDTO);
         when(villageService.villageToVillageDTO(property.getVillage())).thenReturn(propertyDTO.getVillageDTO());
-        when(modelMapper.map(property.getPropertyUser(), PropertyUserDTO.class)).thenReturn(new PropertyUserDTO());
+        when(modelMapper.map(property.getAlternativeUser(), AlternativeUserDTO.class)).thenReturn(new AlternativeUserDTO());
         when(modelMapper.map(property.getPropertyStats(), PropertyStatsDTO.class)).thenReturn(new PropertyStatsDTO());
 
         PropertyDTO result = propertyService.propertyToPropertyDTO(property);

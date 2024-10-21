@@ -16,7 +16,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 
 import java.util.ArrayList;
 
@@ -312,15 +311,15 @@ class VillageServiceTest {
         RegionDTO updatedRegionDTO = new RegionDTO();
         updatedRegionDTO.setId(1L);
 
-        AdministratorDTO administratorDTO = new AdministratorDTO();
-        administratorDTO.setId(1L);
+        AlternativeUserDTO alternativeUserDTO = new AlternativeUserDTO();
+        alternativeUserDTO.setId(1L);
 
         when(villageRepository.findById(villageId)).thenReturn(Optional.of(existingVillage));
         when(regionService.findRegionByName(villageDTO.getRegion())).thenReturn(updatedRegionDTO);
-        when(authService.getAdministratorInfo()).thenReturn(administratorDTO);
+        when(authService.getAdministratorInfo()).thenReturn(alternativeUserDTO);
         when(villageRepository.save(any(Village.class))).thenReturn(existingVillage);
         when(modelMapper.map(any(Village.class), eq(VillageDTO.class))).thenReturn(villageDTO);
-        when(modelMapper.map(any(Administrator.class), eq(AdministratorDTO.class))).thenReturn(new AdministratorDTO());
+        when(modelMapper.map(any(AlternativeUser.class), eq(AlternativeUserDTO.class))).thenReturn(new AlternativeUserDTO());
 
         VillageDTO updatedVillageDTO = villageService.updateVillageStatus(villageId, villageDTO);
 

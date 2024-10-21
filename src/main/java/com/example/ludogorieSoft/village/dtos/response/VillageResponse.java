@@ -38,7 +38,7 @@ public class VillageResponse {
 
     private Boolean status;
 
-    private AdministratorDTO admin;
+    private AlternativeUserDTO admin;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)

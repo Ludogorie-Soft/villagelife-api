@@ -11,21 +11,42 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AdministratorDTO {
+public class AlternativeUserDTO {
     private Long id;
+
     private String fullName;
+
     private String email;
+
     private String username;
+
+    private String password;
+
     private String mobile;
+
+    private List<VerificationTokenDTO> verificationTokenDTOs;
+
+    private UserSearchDataDTO userSearchDataDTOs;
+
+    private String jobTitle;
+
+    private  BusinessCardDTO businessCardDTOs;
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
     private LocalDateTime createdAt;
-    private boolean enabled = true;
-    private Role role;
 
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
+    private LocalDateTime deletedAt;
+
+    private boolean enabled = true;
+
+    private Role role;
 }

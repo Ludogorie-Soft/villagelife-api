@@ -25,15 +25,15 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "admins")
-public class Administrator implements UserDetails {
+@Table(name = "alternative_users")
+public class AlternativeUser implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank(message = "Full name cannot be empty!")
-    @Length(min = 2, message = "Full name should be at least than 2 characters long!")
+    @Length(min = 2, message = "Full name should be at least 2 characters long!")
     @Column(nullable = false)
     private String fullName;
 
@@ -55,12 +55,31 @@ public class Administrator implements UserDetails {
     @Length(min = 10, message = "Phone number should be at least 10 numbers long!")
     @Column(unique = true)
     private String mobile;
+
+    @OneToMany(mappedBy = "alternativeUser", cascade = CascadeType.ALL)
+    private List<VerificationToken> verificationTokens;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_search_data_id")
+    private transient UserSearchData userSearchData;
+
+    private String jobTitle;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "business_card_id", referencedColumnName = "id")
+    private BusinessCard businessCard;
+
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
     private LocalDateTime createdAt;
 
-    private static final  boolean ENABLED = true;
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
+    private LocalDateTime deletedAt;
+
+    private boolean enabled = true; //new
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -88,7 +107,7 @@ public class Administrator implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
 
 }
