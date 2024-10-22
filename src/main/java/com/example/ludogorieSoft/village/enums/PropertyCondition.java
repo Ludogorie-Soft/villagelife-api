@@ -6,14 +6,31 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum PropertyCondition {
+/*
+Bulgarian: ново, след цялостен ремонт, добро състояние, за ремонт, за цялостен ремонт, за събаряне
+
+    English:
+    new
+    after complete renovation
+    good
+    needs repair
+    needs complete renovation
+    for demolition
+
+    German:
+    neu
+    nach vollständiger Renovierung
+    guter Zustand
+    reparaturbedürftig
+    vollständig renovierungsbedürftig
+    zum Abriss
+    */
     NEW("property.condition.new"),
-    EXCELLENT("property.condition.excellent"),
+    AFTER_COMPLETE_RENOVATION("after.complete.renovation"),
     GOOD("property.condition.good"),
-    FAIR("property.condition.fair"),
-    POOR("property.condition.poor"),
-    UNDER_CONSTRUCTION("property.condition.under.construction"),
-    DAMAGED("property.condition.damaged"),
-    RENOVATION_REQUIRED("property.condition.renovation.required");
+    NEEDS_REPAIR("needs.repair"),
+    NEEDS_COMPLETE_RENOVATION("needs.complete.renovation"),
+    FOR_DEMOLITION("for.demolition");
 
     private final String key;
 }

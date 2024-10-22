@@ -70,7 +70,7 @@ public class UserSearchData {
     @Column(name = "heating")
     private List<String> heating;
 
-    @Column(name = "construction_type",columnDefinition="enum('BRICKS','PANEL','WOOD')")
+    @Column(name = "construction_type",columnDefinition="enum('BRICKS', 'PANEL', 'WOOD', 'TIMBER_FRAMED', 'ADOBE', 'STONE', 'CLAY')")
     @Enumerated(EnumType.STRING)
     private ConstructionType constructionType;
 
