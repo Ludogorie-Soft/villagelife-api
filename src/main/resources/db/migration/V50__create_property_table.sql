@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS properties (
     bathrooms_count INT NOT NULL,
     image_url VARCHAR(255),
     construction_type ENUM('BRICKS', 'PANEL', 'WOOD') NOT NULL,
-    construction_year INT,
+    construction_year VARCHAR(4),
     extras TEXT,
     stats_id BIGINT,
     ownership_type ENUM('INDIVIDUAL', 'AGENCY', 'BUILDER', 'INVESTOR') NOT NULL,

@@ -34,7 +34,7 @@ public class PropertyDTO {
     private List<PropertyImageDTO> images;
     private String imageUrl;
     private ConstructionType constructionType;
-    private int constructionYear;
+    private String constructionYear;
     private String extras;
     private String description;
     private String address;

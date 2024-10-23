@@ -40,6 +40,7 @@ public class Property {
 
     @Column(name = "property_type",columnDefinition="enum('PLOT','AGRICULTURAL_LAND','HOUSE','VILLA','FLOOR_OF_A_HOUSE','BUSINESS_PROPERTY','APARTMENT')")
     @Enumerated(EnumType.STRING)
+    @NotNull(message = "Property type is required.")
     private PropertyType propertyType;
 
     @Column(name = "property_transfer_type",columnDefinition="enum('SALE','RENT')")
@@ -53,20 +54,20 @@ public class Property {
     @Size(min = 10, message = "Phone number should be at least 10 characters long!")
     private String phoneNumber;
 
-    @NotNull(message = "This field is required")
-    @Min(value = 0, message = "The build up area must be greater than or equal to 0")
+//    @NotNull(message = "This field is required")
+//    @Min(value = 0, message = "The build up area must be greater than or equal to 0")
     private Double buildUpArea;
 
     @NotNull(message = "This field is required")
     @Min(value = 0, message = "The yard area must be greater than or equal to 0")
     private Double yardArea;
 
-    @NotNull(message = "This field is required")
-    @Min(value = 0, message = "The number of the rooms must be greater than or equal to 0")
+//    @NotNull(message = "This field is required")
+//    @Min(value = 0, message = "The number of the rooms must be greater than or equal to 0")
     private int roomsCount;
 
-    @NotNull(message = "This field is required")
-    @Min(value = 0, message = "The number of the bathrooms must be greater than or equal to 0")
+//    @NotNull(message = "This field is required")
+//    @Min(value = 0, message = "The number of the bathrooms must be greater than or equal to 0")
     private int bathroomsCount;
 
     @ElementCollection
@@ -83,13 +84,15 @@ public class Property {
     @Enumerated(EnumType.STRING)
     private ConstructionType constructionType;
 
-    private int constructionYear;
+    private String constructionYear;
 
     @Column(name = "extras", columnDefinition = "TEXT")
     private String extras;
     @Column(name = "description", columnDefinition = "TEXT")
+    @NotBlank(message = "Description is required and cannot be blank.")
+    @Size(min = 10, max = 500, message = "Description must be between 10 and 500 characters long.")
     private String description;
-
+    @NotBlank(message = "Address is required and cannot be blank.")
     private String address;
 
     @OneToOne
@@ -98,10 +101,12 @@ public class Property {
 
     @Column(name = "ownership_type",columnDefinition="enum('INDIVIDUAL','AGENCY','BUILDER','INVESTOR')")
     @Enumerated(EnumType.STRING)
+    @NotNull(message = "Ownership type is required.")
     private OwnershipType ownershipType;
 
     @Column(name = "property_condition",columnDefinition="enum('NEW','EXCELLENT','GOOD','FAIR', 'POOR', 'UNDER_CONSTRUCTION', 'DAMAGED', 'RENOVATION_REQUIRED')")
     @Enumerated(EnumType.STRING)
+    @NotNull(message = "Property condition is required.")
     private PropertyCondition propertyCondition;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
