@@ -96,7 +96,15 @@ public class PropertyService {
       String imageUUID = randomUUID().toString();
       String imageName = imageService.uploadImage(propertyDTO.getMainImageBytes(),imageUUID);
       property.setImageUrl(imageName);
-      property.setHeating(splitHeatingText(propertyDTO.getHeatingText()));
+        List<String> heatingTypes = new ArrayList<>();
+        if (propertyDTO.getHeating() != null) {
+            heatingTypes.addAll(propertyDTO.getHeating());
+        }
+        if (propertyDTO.getHeatingText() != null && !propertyDTO.getHeatingText().isEmpty()) {
+            List<String> additionalHeating = splitHeatingText(propertyDTO.getHeatingText());
+            heatingTypes.addAll(additionalHeating);
+        }
+        property.setHeating(heatingTypes);
       Property savedProperty = propertyRepository.save(property);
       propertyImageService.createPropertyImage(propertyDTO.getImages(), savedProperty);
       return modelMapper.map(savedProperty, PropertyDTO.class);
