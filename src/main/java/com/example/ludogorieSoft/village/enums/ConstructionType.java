@@ -15,5 +15,5 @@ public enum ConstructionType {
     STONE("construction.type.stone"),
     CLAY("construction.type.clay");
 
-    private final String name;
+    private final String key;
 }
