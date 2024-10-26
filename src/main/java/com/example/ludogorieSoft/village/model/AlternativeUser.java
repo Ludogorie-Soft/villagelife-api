@@ -43,7 +43,7 @@ public class AlternativeUser implements UserDetails {
     private String email;
 
     @NotBlank(message = "Username cannot be empty!")
-    @Length(max = 10, message = "Username should be less than 10 characters long!")
+    @Length(max = 25, message = "Username can not be more than 25 characters long!")
     @Column(unique = true, nullable = false)
     private String username;
 

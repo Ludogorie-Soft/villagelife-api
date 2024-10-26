@@ -131,8 +131,8 @@ public class AuthenticationService {
         if (!request.getEmail().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$"))
             throw new ApiRequestException("Invalid email!");
         if (request.getUsername().isBlank()) throw new ApiRequestException("Username is required!");
-        if (request.getUsername().length() > 10)
-            throw new ApiRequestException("Username can not be more 10 characters!");
+        if (request.getUsername().length() > 25)
+            throw new ApiRequestException("Username can not be more than 25 characters!");
         if (request.getPassword().isBlank()) throw new ApiRequestException("Password is required!");
         if (request.getPassword().length() < 8)
             throw new ApiRequestException("Password must be at least 8 characters long!");
