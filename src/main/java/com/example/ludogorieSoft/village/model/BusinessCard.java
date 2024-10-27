@@ -30,6 +30,10 @@ public class BusinessCard implements Serializable {
     @NotBlank(message = "Name is required")
     private String name;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "business_card_logo_id",  referencedColumnName = "id")
+    private BusinessCardLogo logo;
+
     @Email(message = "Email should be valid")
     @NotBlank(message = "Email is required")
     @Column(unique = true)
