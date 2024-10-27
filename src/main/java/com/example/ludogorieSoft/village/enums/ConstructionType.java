@@ -6,8 +6,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum ConstructionType {
-    BRICKS("Тухли"),
-    PANEL("Панел"),
-    WOOD("Дърво");
-    private final String name;
+    BRICKS("construction.type.bricks"),
+    PANEL("construction.type.panel"),
+    WOOD("construction.type.wood");
+    private final String key;
 }
