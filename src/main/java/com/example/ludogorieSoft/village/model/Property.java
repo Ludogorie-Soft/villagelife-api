@@ -80,7 +80,7 @@ public class Property {
 
     private String imageUrl;
 
-    @Column(name = "construction_type",columnDefinition="enum('BRICKS','PANEL','WOOD')")
+    @Column(name = "construction_type",columnDefinition="enum('BRICKS', 'PANEL', 'WOOD', 'TIMBER_FRAMED', 'ADOBE', 'STONE', 'CLAY')")
     @Enumerated(EnumType.STRING)
     private ConstructionType constructionType;
 
@@ -104,7 +104,7 @@ public class Property {
     @NotNull(message = "Ownership type is required.")
     private OwnershipType ownershipType;
 
-    @Column(name = "property_condition",columnDefinition="enum('NEW','EXCELLENT','GOOD','FAIR', 'POOR', 'UNDER_CONSTRUCTION', 'DAMAGED', 'RENOVATION_REQUIRED')")
+    @Column(name = "property_condition",columnDefinition="enum('NEW','AFTER_COMPLETE_RENOVATION', 'GOOD', 'NEEDS_REPAIR', 'NEEDS_COMPLETE_RENOVATION', 'FOR_DEMOLITION')")
     @Enumerated(EnumType.STRING)
     @NotNull(message = "Property condition is required.")
     private PropertyCondition propertyCondition;

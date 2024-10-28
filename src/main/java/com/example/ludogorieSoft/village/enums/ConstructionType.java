@@ -8,6 +8,12 @@ import lombok.Getter;
 public enum ConstructionType {
     BRICKS("construction.type.bricks"),
     PANEL("construction.type.panel"),
-    WOOD("construction.type.wood");
+    WOOD("construction.type.wood"),
+    TIMBER_FRAMED("construction.type.timber.framed"),
+    ADOBE("construction.type.adobe"),
+    REINFORCED_CONCRETE("construction.type.reinforced.concrete"),
+    STONE("construction.type.stone"),
+    CLAY("construction.type.clay");
+
     private final String key;
 }
