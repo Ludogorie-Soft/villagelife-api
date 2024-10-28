@@ -19,6 +19,7 @@ import com.example.ludogorieSoft.village.repositories.AlternativeUserRepository;
 import com.example.ludogorieSoft.village.repositories.BusinessCardRepository;
 import com.example.ludogorieSoft.village.repositories.VerificationTokenRepository;
 import com.example.ludogorieSoft.village.services.EmailSenderService;
+import com.example.ludogorieSoft.village.services.ImageService;
 import com.example.ludogorieSoft.village.services.VerificationTokenService;
 import com.example.ludogorieSoft.village.utils.TimestampUtils;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+import static java.util.UUID.randomUUID;
+
 
 @Service
 @RequiredArgsConstructor
@@ -44,6 +47,7 @@ public class AuthenticationService {
     private final VerificationTokenRepository verificationTokenRepository;
     private final EmailSenderService emailSenderService;
     private final BusinessCardRepository businessCardRepository;
+    private final ImageService imageService;
 
     public String register(RegisterRequest request) {
         checkRegistrationValidations(request);
@@ -65,6 +69,8 @@ public class AuthenticationService {
             return "Administrator registered successfully!!!";
         } else if (request.getRole().equals(Role.AGENCY) || request.getRole().equals(Role.BUILDER) || request.getRole().equals(Role.INVESTOR)) {
             user.setJobTitle(request.getJobTitle());
+            String imageUUID = randomUUID().toString();
+            String imageName = imageService.uploadImage(request.getBusinessCardDTO().getImageBytes(), imageUUID);
             BusinessCard businessCard = BusinessCard.builder()
                     .name(request.getBusinessCardDTO().getName())
                     .email(request.getBusinessCardDTO().getEmail())
@@ -72,6 +78,7 @@ public class AuthenticationService {
                     .address(request.getBusinessCardDTO().getAddress())
                     .websiteLink(request.getBusinessCardDTO().getWebsiteLink())
                     .numberOfEmployees(request.getBusinessCardDTO().getNumberOfEmployees())
+                    .imageName(imageName)
                     .build();
             user.setBusinessCard(businessCard);
         }

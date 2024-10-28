@@ -13,6 +13,7 @@ public class AuthService {
     private final AdministratorService administratorService;
     private final HttpServletRequest request;
     private final JWTService jwtService;
+    private final ImageService imageService;
 
     public AlternativeUserDTO getAdministratorInfo(){
         String authHeather = request.getHeader("Authorization");
@@ -20,6 +21,8 @@ public class AuthService {
         String username;
         jwt = authHeather.substring(7);
         username = jwtService.extractUsername(jwt);
-        return administratorService.findAdminByUsername(username);
+        AlternativeUserDTO alternativeUserDTO = administratorService.findAdminByUsername(username);
+        alternativeUserDTO.getBusinessCardDTO().setImageName(imageService.getImageFromSpace(alternativeUserDTO.getBusinessCardDTO().getImageName()));
+        return alternativeUserDTO;
     }
 }

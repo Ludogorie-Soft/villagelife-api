@@ -2,6 +2,7 @@ package com.example.ludogorieSoft.village.services;
 
 
 import com.example.ludogorieSoft.village.dtos.AlternativeUserDTO;
+import com.example.ludogorieSoft.village.dtos.BusinessCardDTO;
 import com.example.ludogorieSoft.village.dtos.request.AdministratorRequest;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.AlternativeUser;
@@ -19,7 +20,9 @@ public class AdministratorService {
     private final ModelMapper modelMapper;
 
     public AlternativeUserDTO administratorToAdministratorDTO(AlternativeUser alternativeUser) {
-        return modelMapper.map(alternativeUser, AlternativeUserDTO.class);
+        AlternativeUserDTO alternativeUserDTO = modelMapper.map(alternativeUser, AlternativeUserDTO.class);
+        alternativeUserDTO.setBusinessCardDTO(modelMapper.map(alternativeUser.getBusinessCard(), BusinessCardDTO.class));
+        return alternativeUserDTO;
     }
 
     public AlternativeUser administratorRequestToAdministrator(AdministratorRequest administratorRequest) {
