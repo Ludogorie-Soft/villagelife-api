@@ -1,14 +1,17 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.AlternativeUserDTO;
+import com.example.ludogorieSoft.village.dtos.BusinessCardDTO;
 import com.example.ludogorieSoft.village.dtos.request.AdministratorRequest;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.AlternativeUser;
+import com.example.ludogorieSoft.village.model.BusinessCard;
 import com.example.ludogorieSoft.village.repositories.AlternativeUserRepository;
 import com.example.ludogorieSoft.village.repositories.VillageRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.modelmapper.ModelMapper;
 
 import java.util.ArrayList;
@@ -21,8 +24,11 @@ import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.times;
 
 class AdministratorServiceTest {
+    @InjectMocks
     private AdministratorService administratorService;
+    @Mock
     private AlternativeUserRepository alternativeUserRepository;
+    @Mock
     private ModelMapper modelMapper;
 
     @BeforeEach
@@ -68,19 +74,20 @@ class AdministratorServiceTest {
         String username = "admin";
         AlternativeUser alternativeUser = new AlternativeUser();
         alternativeUser.setUsername(username);
+        alternativeUser.setBusinessCard(new BusinessCard());
 
         AlternativeUserDTO expectedAdminDTO = new AlternativeUserDTO();
         expectedAdminDTO.setUsername(username);
+        expectedAdminDTO.setBusinessCardDTO(new BusinessCardDTO());
 
-        Mockito.when(alternativeUserRepository.findByUsername(username))
-                .thenReturn(alternativeUser);
-        Mockito.when(administratorService.administratorToAdministratorDTO(alternativeUser)).thenReturn(expectedAdminDTO);
+        when(alternativeUserRepository.findByUsername(username)).thenReturn(alternativeUser);
+        when(modelMapper.map(alternativeUser, AlternativeUserDTO.class)).thenReturn(expectedAdminDTO);
+        when(modelMapper.map(any(BusinessCard.class), eq(BusinessCardDTO.class))).thenReturn(new BusinessCardDTO());
 
         AlternativeUserDTO actualAdminDTO = administratorService.findAdminByUsername(username);
 
         assertEquals(expectedAdminDTO.getUsername(), actualAdminDTO.getUsername());
-
-        Mockito.verify(alternativeUserRepository, Mockito.times(1)).findByUsername(username);
+        verify(alternativeUserRepository, times(1)).findByUsername(username);
     }
 
     @Test

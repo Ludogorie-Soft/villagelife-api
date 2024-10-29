@@ -15,6 +15,7 @@ import com.example.ludogorieSoft.village.repositories.AlternativeUserRepository;
 import com.example.ludogorieSoft.village.repositories.BusinessCardRepository;
 import com.example.ludogorieSoft.village.repositories.VerificationTokenRepository;
 import com.example.ludogorieSoft.village.services.EmailSenderService;
+import com.example.ludogorieSoft.village.services.ImageService;
 import com.example.ludogorieSoft.village.services.VerificationTokenService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -50,6 +51,8 @@ class AuthenticationServiceTest {
     private EmailSenderService emailSenderService;
     @Mock
     private BusinessCardRepository businessCardRepository;
+    @Mock
+    private ImageService imageService;
     @InjectMocks
     private AuthenticationService authenticationService;
 
@@ -97,7 +100,7 @@ class AuthenticationServiceTest {
 
     @Test
     void registerShouldRegisterAgencyUserWithBusinessCard() {
-        BusinessCardDTO businessCardDTO = new BusinessCardDTO(1L, "Company Name", "company@example.com", "1234567890", "Some Address", "http://website.com", 50, null);
+        BusinessCardDTO businessCardDTO = new BusinessCardDTO(1L, "Company Name",null, null, "company@example.com", "1234567890", "Some Address", "http://website.com", 50, null);
         RegisterRequest request = new RegisterRequest("John Doe", "john@example.com", "username", "password", "1234567890", Role.AGENCY, "Job Title", businessCardDTO);
 
         when(passwordEncoder.encode(request.getPassword())).thenReturn("encodedPassword");
@@ -119,7 +122,7 @@ class AuthenticationServiceTest {
 
     @Test
     void registerShouldThrowApiRequestExceptionForInvalidBusinessCardEmail() {
-        BusinessCardDTO businessCardDTO = new BusinessCardDTO(1l, "Company Name", "invalid-email", "1234567890", "Some Address", "http://website.com", 50, null);
+        BusinessCardDTO businessCardDTO = new BusinessCardDTO(1l, "Company Name", null, null, "invalid-email", "1234567890", "Some Address", "http://website.com", 50, null);
         RegisterRequest request = new RegisterRequest("John Doe", "john@example.com", "username", "password", "1234567890", Role.AGENCY, "Job Title", businessCardDTO);
 
         ApiRequestException exception = assertThrows(ApiRequestException.class, () -> authenticationService.register(request));
