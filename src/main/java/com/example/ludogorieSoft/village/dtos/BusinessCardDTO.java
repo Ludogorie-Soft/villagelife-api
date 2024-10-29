@@ -24,6 +24,10 @@ public class BusinessCardDTO {
 
     private String name;
 
+    private String imageName;
+
+    private byte[] imageBytes;
+
     private String email;
 
     private String phoneNumber;
