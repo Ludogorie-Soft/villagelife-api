@@ -1,6 +1,7 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.AlternativeUserDTO;
+import com.example.ludogorieSoft.village.dtos.BusinessCardDTO;
 import com.example.ludogorieSoft.village.dtos.PropertyDTO;
 import com.example.ludogorieSoft.village.dtos.PropertyStatsDTO;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
@@ -28,7 +29,9 @@ public class PropertyService {
         PropertyDTO propertyDTO = modelMapper.map(property, PropertyDTO.class);
         propertyDTO.setVillageDTO(villageService.villageToVillageDTO(property.getVillage()));
         AlternativeUserDTO alternativeUserDTO = modelMapper.map(property.getAlternativeUser(), AlternativeUserDTO.class);
+        BusinessCardDTO businessCardDTO = modelMapper.map(property.getAlternativeUser().getBusinessCard(), BusinessCardDTO.class);
         propertyDTO.setAlternativeUserDTO(alternativeUserDTO);
+        propertyDTO.getAlternativeUserDTO().setBusinessCardDTO(businessCardDTO);
         propertyDTO.setImageUrl(property.getImageUrl());
         PropertyStatsDTO propertyStatsDTO = modelMapper.map(property.getPropertyStats(), PropertyStatsDTO.class);
         propertyDTO.setPropertyStatsDTO(propertyStatsDTO);

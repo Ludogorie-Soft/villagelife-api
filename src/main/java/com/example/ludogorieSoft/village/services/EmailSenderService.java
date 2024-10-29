@@ -85,6 +85,7 @@ public class EmailSenderService {
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
         helper.setTo(email);
+        helper.setFrom(recipientEmail);
         helper.setSubject("Активационен код");
         helper.setText(body, true);
 

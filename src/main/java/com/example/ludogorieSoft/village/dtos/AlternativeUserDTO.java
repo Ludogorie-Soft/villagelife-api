@@ -35,7 +35,7 @@ public class AlternativeUserDTO {
 
     private String jobTitle;
 
-    private  BusinessCardDTO businessCardDTOs;
+    private  BusinessCardDTO businessCardDTO;
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
