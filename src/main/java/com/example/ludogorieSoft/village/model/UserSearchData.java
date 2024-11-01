@@ -41,7 +41,7 @@ public class UserSearchData {
     @CollectionTable(name = "user_search_property_types", joinColumns = @JoinColumn(name = "user_search_data_id"))
     @Enumerated(EnumType.STRING)
     @Column(name = "property_type", columnDefinition = "enum('PLOT','AGRICULTURAL_LAND','HOUSE','VILLA','FLOOR_OF_A_HOUSE','BUSINESS_PROPERTY','APARTMENT')")
-    private List<PropertyType> propertyType;
+    private List<PropertyType> propertyTypes;
 
     @Column(name = "property_transfer_type",columnDefinition="enum('SALE','RENT')")
     @Enumerated(EnumType.STRING)
@@ -80,14 +80,11 @@ public class UserSearchData {
     @CollectionTable(name = "user_search_construction_types", joinColumns = @JoinColumn(name = "user_search_data_id"))
     @Enumerated(EnumType.STRING)
     @Column(name = "construction_type", columnDefinition = "enum('BRICKS','PANEL','WOOD')")
-    private List<ConstructionType> constructionType;
+    private List<ConstructionType> constructionTypes;
 
     private short minConstructionYear;
 
     private short maxConstructionYear;
-
-    @Column(name = "extras", columnDefinition = "TEXT")
-    private String extras;
 
     @Min(0)
     private BigDecimal minPrice;
@@ -99,7 +96,7 @@ public class UserSearchData {
     @CollectionTable(name = "user_search_ownership_types", joinColumns = @JoinColumn(name = "user_search_data_id"))
     @Enumerated(EnumType.STRING)
     @Column(name = "ownership_type", columnDefinition = "enum('INDIVIDUAL','AGENCY','BUILDER','INVESTOR')")
-    private List<OwnershipType> ownershipType;
+    private List<OwnershipType> ownershipTypes;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)

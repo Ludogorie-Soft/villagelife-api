@@ -11,6 +11,9 @@ ALTER TABLE user_search_data
 ALTER TABLE user_search_data
     DROP COLUMN property_type;
 
+ALTER TABLE user_search_data
+    DROP COLUMN extras;
+
 CREATE TABLE user_search_property_types (
     user_search_data_id BIGINT NOT NULL,
     property_type ENUM('PLOT','AGRICULTURAL_LAND','HOUSE','VILLA','FLOOR_OF_A_HOUSE','BUSINESS_PROPERTY','APARTMENT') NOT NULL,

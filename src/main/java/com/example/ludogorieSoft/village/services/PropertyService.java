@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -73,5 +74,17 @@ public class PropertyService {
         PropertyDTO propertyDTO = propertyToPropertyDTO(optionalProperty.get());
         addMainImageToPropertyDTO(propertyDTO);
         return propertyDTO;
+    }
+
+    public Page<PropertyDTO> getSearchProperties(List<String> propertyTypes, String propertyTransferType, Double minBuiltUpArea,
+                                                 Double maxBuiltUpArea, Double minYardArea, Double maxYardArea,
+                                                 Short minRoomsCount, Short maxRoomsCount, Short minBathroomsCount,
+                                                 Short maxBathroomsCount, List<String> heating, List<String> constructionTypes,
+                                                 Short minConstructionYear, Short maxConstructionYear, BigDecimal minPrice,
+                                                 BigDecimal maxPrice, List<String> ownershipTypes, Pageable pageable) {
+        Page<Property> properties = propertyRepository.searchProperties(propertyTypes, propertyTransferType, minBuiltUpArea,
+                maxBuiltUpArea, minYardArea, maxYardArea, minRoomsCount, maxRoomsCount, minBathroomsCount, maxBathroomsCount,
+                heating, constructionTypes, minConstructionYear, maxConstructionYear, minPrice, maxPrice, ownershipTypes, pageable);
+        return properties.map(this::propertyToPropertyDTO);
     }
 }
