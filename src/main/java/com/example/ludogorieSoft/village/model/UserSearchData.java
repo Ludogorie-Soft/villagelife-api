@@ -60,16 +60,16 @@ public class UserSearchData {
     private Double maxYardArea;
 
     @Min(0)
-    private short minRoomsCount;
+    private Short minRoomsCount;
 
     @Min(0)
-    private short maxRoomsCount;
+    private Short maxRoomsCount;
 
     @Min(0)
-    private short minBathroomsCount;
+    private Short minBathroomsCount;
 
     @Min(0)
-    private short maxBathroomsCount;
+    private Short maxBathroomsCount;
 
     @ElementCollection
     @CollectionTable(name = "heating_options", joinColumns = @JoinColumn(name = "user_search_data_id"))
@@ -82,9 +82,9 @@ public class UserSearchData {
     @Column(name = "construction_type", columnDefinition = "enum('BRICKS','PANEL','WOOD')")
     private List<ConstructionType> constructionTypes;
 
-    private short minConstructionYear;
+    private Short minConstructionYear;
 
-    private short maxConstructionYear;
+    private Short maxConstructionYear;
 
     @Min(0)
     private BigDecimal minPrice;

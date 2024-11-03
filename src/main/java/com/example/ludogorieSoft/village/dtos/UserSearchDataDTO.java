@@ -9,10 +9,17 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@NoArgsConstructor
+@Data
+@AllArgsConstructor
 public class UserSearchDataDTO {
     private Long id;
 
@@ -32,21 +39,21 @@ public class UserSearchDataDTO {
 
     private Double maxYardArea;
 
-    private short minRoomsCount;
+    private Short minRoomsCount;
 
-    private short maxRoomsCount;
+    private Short maxRoomsCount;
 
-    private short minBathroomsCount;
+    private Short minBathroomsCount;
 
-    private short maxBathroomsCount;
+    private Short maxBathroomsCount;
 
     private List<String> heating;
 
     private List<ConstructionType> constructionTypes;
 
-    private short minConstructionYear;
+    private Short minConstructionYear;
 
-    private short maxConstructionYear;
+    private Short maxConstructionYear;
 
     private BigDecimal minPrice;
 
