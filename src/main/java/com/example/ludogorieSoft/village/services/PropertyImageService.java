@@ -3,20 +3,14 @@ package com.example.ludogorieSoft.village.services;
 import com.example.ludogorieSoft.village.dtos.*;
 import com.example.ludogorieSoft.village.model.Property;
 import com.example.ludogorieSoft.village.model.PropertyImage;
-import com.example.ludogorieSoft.village.model.PropertyUser;
-import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.repositories.PropertyImageRepository;
-import com.example.ludogorieSoft.village.repositories.PropertyUserRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
-import static java.util.UUID.randomUUID;
 
 @Service
 @AllArgsConstructor
@@ -51,4 +45,12 @@ public class PropertyImageService {
                 .toList();
    }
 
+    public List<PropertyImageDTO> getPropertyImagesByPropertyId(Long propertyId) {
+        return propertyImageRepository.findByProperty_VillageIdAndDeletedAtIsNull(propertyId)
+                .stream()
+                .map(propertyImage -> {
+                    propertyImage.setImageName(imageService.getImageFromSpace(propertyImage.getImageName()));
+                    return propertyImageToPropertyImageDTO(propertyImage);
+                }).toList();
+    }
 }

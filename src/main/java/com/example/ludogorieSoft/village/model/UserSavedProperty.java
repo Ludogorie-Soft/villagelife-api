@@ -23,8 +23,8 @@ public class UserSavedProperty {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private PropertyUser user;
+    @JoinColumn(name = "alternative_user_id")
+    private AlternativeUser user;
 
     @ManyToOne
     @JoinColumn(name = "property_id")

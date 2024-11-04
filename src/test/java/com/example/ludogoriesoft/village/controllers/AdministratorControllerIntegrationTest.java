@@ -1,6 +1,6 @@
 package com.example.ludogorieSoft.village.controllers;
 
-import com.example.ludogorieSoft.village.dtos.AdministratorDTO;
+import com.example.ludogorieSoft.village.dtos.AlternativeUserDTO;
 import com.example.ludogorieSoft.village.dtos.request.AdministratorRequest;
 import com.example.ludogorieSoft.village.services.AdministratorService;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,16 +48,16 @@ class AdministratorControllerIntegrationTest {
 
     @Test
     void getAllAdministrators_shouldReturnListOfAdministrators() throws Exception {
-        AdministratorDTO administratorDTO1 = new AdministratorDTO();
-        administratorDTO1.setId(1L);
-        administratorDTO1.setUsername("username1");
-        AdministratorDTO administratorDTO2 = new AdministratorDTO();
-        administratorDTO2.setId(2L);
-        administratorDTO2.setUsername("username2");
+        AlternativeUserDTO alternativeUserDTO1 = new AlternativeUserDTO();
+        alternativeUserDTO1.setId(1L);
+        alternativeUserDTO1.setUsername("username1");
+        AlternativeUserDTO alternativeUserDTO2 = new AlternativeUserDTO();
+        alternativeUserDTO2.setId(2L);
+        alternativeUserDTO2.setUsername("username2");
 
-        List<AdministratorDTO> administratorDTOList = Arrays.asList(administratorDTO1, administratorDTO2);
+        List<AlternativeUserDTO> alternativeUserDTOList = Arrays.asList(alternativeUserDTO1, alternativeUserDTO2);
 
-        when(administratorService.getAllAdministrators()).thenReturn(administratorDTOList);
+        when(administratorService.getAllAdministrators()).thenReturn(alternativeUserDTOList);
 
         mockMvc.perform(get("/api/v1/admins")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -72,11 +72,11 @@ class AdministratorControllerIntegrationTest {
 
     @Test
     void getAdministratorById_shouldReturnAdministrator() throws Exception {
-        AdministratorDTO administratorDTO1 = new AdministratorDTO();
-        administratorDTO1.setId(1L);
-        administratorDTO1.setUsername("username1");
+        AlternativeUserDTO alternativeUserDTO1 = new AlternativeUserDTO();
+        alternativeUserDTO1.setId(1L);
+        alternativeUserDTO1.setUsername("username1");
 
-        when(administratorService.getAdministratorById(1L)).thenReturn(administratorDTO1);
+        when(administratorService.getAdministratorById(1L)).thenReturn(alternativeUserDTO1);
         mockMvc.perform(get("/api/v1/admins/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -92,10 +92,10 @@ class AdministratorControllerIntegrationTest {
         AdministratorRequest request = new AdministratorRequest();
         request.setId(1L);
         request.setUsername("username");
-        AdministratorDTO administratorDTO = new AdministratorDTO();
-        administratorDTO.setId(1L);
-        administratorDTO.setUsername("username");
-        when(administratorService.updateAdministrator(1L, request)).thenReturn(administratorDTO);
+        AlternativeUserDTO alternativeUserDTO = new AlternativeUserDTO();
+        alternativeUserDTO.setId(1L);
+        alternativeUserDTO.setUsername("username");
+        when(administratorService.updateAdministrator(1L, request)).thenReturn(alternativeUserDTO);
 
         mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/admins/update/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)

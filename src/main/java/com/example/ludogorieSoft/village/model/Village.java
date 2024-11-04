@@ -31,7 +31,7 @@ public class Village {
     private Boolean status;
     @ManyToOne
     @JoinColumn(name = "admin_id")
-    private Administrator admin;
+    private AlternativeUser admin;
     private LocalDateTime dateApproved;
 
     @OneToMany(mappedBy = "village", cascade = CascadeType.ALL, orphanRemoval = true)

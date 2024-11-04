@@ -12,14 +12,16 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Table(name = "business_cards")
-public class BusinessCard {
+public class BusinessCard implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,6 +29,8 @@ public class BusinessCard {
 
     @NotBlank(message = "Name is required")
     private String name;
+
+    private String imageName;
 
     @Email(message = "Email should be valid")
     @NotBlank(message = "Email is required")
@@ -38,11 +42,13 @@ public class BusinessCard {
 
     private String address;
 
-    @Pattern(regexp = "^(http://|https://)?(www\\.)?[a-zA-Z0-9-]+(\\.[a-zA-Z]{2,})+(/.*)?$", message = "Website link is invalid")
     private String websiteLink;
 
     @Min(value = 0, message = "The number of employees cannot be negative")
     private int numberOfEmployees;
+
+    @OneToOne(mappedBy = "businessCard")
+    private transient AlternativeUser alternativeUser;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
