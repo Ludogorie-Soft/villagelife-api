@@ -212,7 +212,7 @@ class VillageServiceTest {
         Village village = new Village();
         village.setName("NewVillage");
         village.setLatinName("NewVillage");
-        village.setRegion(new Region(1L, "NewRegion"));
+        village.setRegion(new Region(1L, "NewRegion",""));
         village.setStatus(false);
         Village savedVillage = new Village();
         savedVillage.setId(1L);
@@ -240,7 +240,7 @@ class VillageServiceTest {
 
         Village existingVillage = new Village();
         existingVillage.setName("ExistingVillage");
-        existingVillage.setRegion(new Region(1L, "ExistingRegion"));
+        existingVillage.setRegion(new Region(1L, "ExistingRegion",""));
         existingVillage.setStatus(true);
         when(villageRepository.findSingleVillageByNameAndRegionName("ExistingVillage", "ExistingRegion")).thenReturn(existingVillage);
         when(villageRepository.save(any(Village.class))).thenReturn(existingVillage);
@@ -371,7 +371,7 @@ class VillageServiceTest {
     }
     @Test
     void testGetVillageByNameAndRegionName_WhenVillageExists() {
-       Region region = new Region(1L,"RegionName");
+       Region region = new Region(1L,"RegionName","");
         String key = "VillageName, RegionName";
 
         Village mockVillage = new Village();
