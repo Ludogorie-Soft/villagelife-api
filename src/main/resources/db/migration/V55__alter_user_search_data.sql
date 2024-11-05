@@ -5,6 +5,9 @@ ALTER TABLE alternative_users
     DROP COLUMN user_search_data_id;
 
 ALTER TABLE user_search_data
+    ADD COLUMN search_name VARCHAR(50) NOT NULL;
+
+ALTER TABLE user_search_data
     ADD COLUMN alternative_user_id BIGINT,
     ADD CONSTRAINT fk_alternative_user_id FOREIGN KEY (alternative_user_id) REFERENCES alternative_users(id);
 

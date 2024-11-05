@@ -15,6 +15,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -33,6 +35,10 @@ public class UserSearchData {
     @ManyToOne
     @JoinColumn(name = "alternative_user_id", nullable = false)
     private AlternativeUser alternativeUser;
+
+    @NotBlank
+    @Size(max = 50)
+    private String searchName;
 
     @ManyToOne
     private Village village;

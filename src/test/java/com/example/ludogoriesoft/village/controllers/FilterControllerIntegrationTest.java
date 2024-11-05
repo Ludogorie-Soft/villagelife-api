@@ -1,8 +1,12 @@
 package com.example.ludogorieSoft.village.controllers;
 
+import com.example.ludogorieSoft.village.dtos.PropertyDTO;
 import com.example.ludogorieSoft.village.dtos.VillageDTO;
 import com.example.ludogorieSoft.village.enums.Children;
+import com.example.ludogorieSoft.village.enums.PropertyTransferType;
+import com.example.ludogorieSoft.village.enums.PropertyType;
 import com.example.ludogorieSoft.village.exeptions.handler.ApiExceptionHandler;
+import com.example.ludogorieSoft.village.services.PropertyService;
 import com.example.ludogorieSoft.village.services.VillageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.MockitoAnnotations;
@@ -18,6 +22,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -29,6 +34,7 @@ import org.junit.jupiter.api.Test;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.mockito.Mockito.when;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
@@ -56,6 +62,9 @@ class FilterControllerIntegrationTest {
 
     @MockBean
     private VillageService villageSearchService;
+
+    @MockBean
+    private PropertyService propertyService;
 
     @BeforeEach
     public void setup() {
@@ -98,4 +107,123 @@ class FilterControllerIntegrationTest {
 
     }
 
+    @Test
+    void testSearchPropertiesByCriteria_withValidParams() throws Exception {
+        VillageDTO villageDTO = new VillageDTO();
+        villageDTO.setId(1L);
+        villageDTO.setName("Village Name");
+
+        PropertyDTO property1 = new PropertyDTO();
+        property1.setId(1L);
+        property1.setVillageDTO(villageDTO);
+        property1.setPropertyType(PropertyType.HOUSE);
+        property1.setPropertyTransferType(PropertyTransferType.SALE);
+        property1.setPrice(BigDecimal.valueOf(50000));
+        property1.setBuildUpArea(120.5);
+        property1.setRoomsCount(3);
+        property1.setHeating(Arrays.asList("Electric", "Wood"));
+        property1.setCreatedAt(LocalDateTime.now());
+
+        PropertyDTO property2 = new PropertyDTO();
+        property2.setId(2L);
+        property2.setVillageDTO(villageDTO);
+        property2.setPropertyType(PropertyType.APARTMENT);
+        property2.setPropertyTransferType(PropertyTransferType.RENT);
+        property2.setPrice(BigDecimal.valueOf(75000));
+        property2.setBuildUpArea(85.0);
+        property2.setRoomsCount(2);
+        property2.setHeating(Collections.singletonList("Gas"));
+        property2.setCreatedAt(LocalDateTime.now());
+
+        List<PropertyDTO> properties = Arrays.asList(property1, property2);
+        Page<PropertyDTO> mockPage = new PageImpl<>(properties, PageRequest.of(0, 2), 2);
+
+        given(propertyService.getSearchProperties(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(),
+                any(), any(), any(), any(), any(), any(), any(), any(), any(), any())).willReturn(mockPage);
+
+        mockMvc.perform(get("/api/v1/filter/searchProperties")
+                        .param("propertyTypes", "House", "Apartment")
+                        .param("propertyTransferType", "Sale")
+                        .param("minBuiltUpArea", "50")
+                        .param("maxBuiltUpArea", "150")
+                        .param("minRoomsCount", "2")
+                        .param("maxRoomsCount", "4")
+                        .param("minPrice", "40000")
+                        .param("maxPrice", "100000")
+                        .param("page", "0")
+                        .param("size", "2")
+                        .param("sort", "price,asc")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.content", hasSize(2)))
+                .andExpect(jsonPath("$.content[0].id").value(1L))
+                .andExpect(jsonPath("$.content[0].villageDTO.name").value("Village Name"))
+                .andExpect(jsonPath("$.content[0].propertyType").value("HOUSE"))
+                .andExpect(jsonPath("$.content[0].price").value(50000))
+                .andExpect(jsonPath("$.content[0].buildUpArea").value(120.5))
+                .andExpect(jsonPath("$.content[0].roomsCount").value(3))
+                .andExpect(jsonPath("$.content[0].heating", hasItem("Electric")))
+                .andExpect(jsonPath("$.content[1].id").value(2L))
+                .andExpect(jsonPath("$.content[1].villageDTO.name").value("Village Name"))
+                .andExpect(jsonPath("$.content[1].propertyType").value("APARTMENT"))
+                .andExpect(jsonPath("$.content[1].price").value(75000))
+                .andExpect(jsonPath("$.content[1].buildUpArea").value(85.0))
+                .andExpect(jsonPath("$.content[1].roomsCount").value(2))
+                .andExpect(jsonPath("$.content[1].heating", hasItem("Gas")));
+    }
+
+    @Test
+    void testSearchPropertiesByCriteria_withNoResults() throws Exception {
+        Page<PropertyDTO> emptyPage = new PageImpl<>(Collections.emptyList(), PageRequest.of(0, 2), 0);
+
+        given(propertyService.getSearchProperties(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(),
+                any(), any(), any(), any(), any(), any(), any(), any(), any(), any())).willReturn(emptyPage);
+
+        mockMvc.perform(get("/api/v1/filter/searchProperties")
+                        .param("propertyTypes", "House")
+                        .param("minPrice", "1000000") // High price to ensure no results
+                        .param("page", "0")
+                        .param("size", "2")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content", hasSize(0)))
+                .andExpect(jsonPath("$.totalElements").value(0));
+    }
+
+    @Test
+    void testSearchPropertiesByCriteria_withOnlyRequiredParams() throws Exception {
+        PropertyDTO property = new PropertyDTO();
+        property.setId(1L);
+        property.setPropertyType(PropertyType.HOUSE);
+        property.setPrice(BigDecimal.valueOf(50000));
+        property.setRoomsCount(3);
+        property.setBuildUpArea(120.5);
+        property.setCreatedAt(LocalDateTime.now());
+
+        Page<PropertyDTO> mockPage = new PageImpl<>(List.of(property), PageRequest.of(0, 1), 1);
+
+        given(propertyService.getSearchProperties(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(),
+                any(), any(), any(), any(), any(), any(), any(), any(), any(), any())).willReturn(mockPage);
+
+        mockMvc.perform(get("/api/v1/filter/searchProperties")
+                        .param("page", "0")
+                        .param("size", "1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content", hasSize(1)))
+                .andExpect(jsonPath("$.content[0].id").value(1L))
+                .andExpect(jsonPath("$.content[0].propertyType").value("HOUSE"))
+                .andExpect(jsonPath("$.content[0].price").value(50000))
+                .andExpect(jsonPath("$.content[0].roomsCount").value(3))
+                .andExpect(jsonPath("$.content[0].buildUpArea").value(120.5));
+    }
+
+    @Test
+    void testSearchPropertiesByCriteria_withInvalidParams() throws Exception {
+        mockMvc.perform(get("/api/v1/filter/searchProperties")
+                        .param("minPrice", "notANumber") // Invalid parameter
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
 }

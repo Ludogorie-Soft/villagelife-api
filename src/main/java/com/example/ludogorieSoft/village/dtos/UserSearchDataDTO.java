@@ -25,6 +25,8 @@ public class UserSearchDataDTO {
 
     private AlternativeUserDTO alternativeUserDTO;
 
+    private String searchName;
+
     private VillageDTO villageDTO;
 
     private List<PropertyType> propertyTypes;
