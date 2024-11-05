@@ -17,6 +17,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -148,5 +149,127 @@ class PropertyServiceTest {
 
         assertEquals("Property with id: 1 Not Found", exception.getMessage());
         verify(propertyRepository, times(1)).findById(1L);
+    }
+
+    @Test
+    void testGetSearchProperties_withValidParams() {
+        // Setup input parameters
+        List<String> propertyTypes = List.of("HOUSE");
+        String propertyTransferType = "SALE";
+        Double minBuiltUpArea = 100.0;
+        Double maxBuiltUpArea = 200.0;
+        Double minYardArea = 50.0;
+        Double maxYardArea = 150.0;
+        Short minRoomsCount = 2;
+        Short maxRoomsCount = 4;
+        Short minBathroomsCount = 1;
+        Short maxBathroomsCount = 2;
+        List<String> heating = List.of("Electric");
+        List<String> constructionTypes = List.of("WOOD");
+        Short minConstructionYear = 1990;
+        Short maxConstructionYear = 2020;
+        BigDecimal minPrice = BigDecimal.valueOf(50000);
+        BigDecimal maxPrice = BigDecimal.valueOf(100000);
+        List<String> ownershipTypes = List.of("AGENCY");
+        String villageName = "Sample Village";
+        String regionName = "Sample Region";
+        Pageable pageable = PageRequest.of(0, 2);
+
+        // Mock repository and mapping behavior
+        Page<Property> propertyPage = new PageImpl<>(List.of(property), pageable, 1);
+        when(propertyRepository.searchProperties(
+                any(), any(), any(), any(), any(), any(),
+                any(), any(), any(), any(), any(), any(),
+                any(), any(), any(), any(), any(), any(),
+                any(), any()
+        )).thenReturn(propertyPage);
+
+        when(modelMapper.map(property, PropertyDTO.class)).thenReturn(propertyDTO);
+
+        // Execute the service method
+        Page<PropertyDTO> result = propertyService.getSearchProperties(
+                propertyTypes, propertyTransferType, minBuiltUpArea, maxBuiltUpArea,
+                minYardArea, maxYardArea, minRoomsCount, maxRoomsCount,
+                minBathroomsCount, maxBathroomsCount, heating, constructionTypes,
+                minConstructionYear, maxConstructionYear, minPrice, maxPrice,
+                ownershipTypes, villageName, regionName, pageable
+        );
+
+        // Verify interactions and assert results
+        verify(propertyRepository, times(1)).searchProperties(
+                any(), any(), eq(minBuiltUpArea), eq(maxBuiltUpArea),
+                eq(minYardArea), eq(maxYardArea), eq(minRoomsCount), eq(maxRoomsCount),
+                eq(minBathroomsCount), eq(maxBathroomsCount), eq(heating), any(),
+                eq(minConstructionYear), eq(maxConstructionYear), eq(minPrice), eq(maxPrice),
+                any(), eq(villageName), eq(regionName), eq(pageable)
+        );
+        assertEquals(1, result.getTotalElements());
+        assertEquals(propertyDTO, result.getContent().get(0));
+    }
+
+    @Test
+    void testGetSearchProperties_withEmptyResults() {
+        // Setup input parameters with values expected to return no results
+        List<String> propertyTypes = List.of("APARTMENT");
+        BigDecimal minPrice = BigDecimal.valueOf(1000000); // High price to ensure no results
+        Pageable pageable = PageRequest.of(0, 2);
+
+        // Mock repository behavior
+        when(propertyRepository.searchProperties(
+                any(), any(), any(), any(), any(), any(),
+                any(), any(), any(), any(), any(), any(),
+                any(), any(), any(), any(), any(), any(),
+                any(), any()
+        )).thenReturn(Page.empty(pageable));
+
+        // Execute the service method
+        Page<PropertyDTO> result = propertyService.getSearchProperties(
+                propertyTypes, null, null, null, null, null,
+                null, null, null, null, null, null, null,
+                null, minPrice, null, null, null, null, pageable
+        );
+
+        // Verify interactions and assert results
+        verify(propertyRepository, times(1)).searchProperties(
+                any(), any(), any(), any(), any(), any(),
+                any(), any(), any(), any(), any(), any(),
+                any(), any(), eq(minPrice), any(), any(), any(),
+                any(), eq(pageable)
+        );
+        assertEquals(0, result.getTotalElements());
+    }
+
+    @Test
+    void testGetSearchProperties_withNullParams() {
+        // Test with mostly null params to ensure null handling is correct
+        Pageable pageable = PageRequest.of(0, 2);
+
+        // Mock repository and mapping behavior
+        Page<Property> propertyPage = new PageImpl<>(List.of(property), pageable, 1);
+        when(propertyRepository.searchProperties(
+                any(), any(), any(), any(), any(), any(),
+                any(), any(), any(), any(), any(), any(),
+                any(), any(), any(), any(), any(), any(),
+                any(), any()
+        )).thenReturn(propertyPage);
+
+        when(modelMapper.map(property, PropertyDTO.class)).thenReturn(propertyDTO);
+
+        // Execute the service method
+        Page<PropertyDTO> result = propertyService.getSearchProperties(
+                null, null, null, null, null, null, null, null,
+                null, null, null, null, null, null, null, null,
+                null, null, null, pageable
+        );
+
+        // Verify interactions and assert results
+        verify(propertyRepository, times(1)).searchProperties(
+                any(), any(), any(), any(), any(), any(),
+                any(), any(), any(), any(), any(), any(),
+                any(), any(), any(), any(), any(), any(),
+                any(), eq(pageable)
+        );
+        assertEquals(1, result.getTotalElements());
+        assertEquals(propertyDTO, result.getContent().get(0));
     }
 }
