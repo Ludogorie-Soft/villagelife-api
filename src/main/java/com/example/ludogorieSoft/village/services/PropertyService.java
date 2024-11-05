@@ -26,6 +26,10 @@ public class PropertyService {
     private final ModelMapper modelMapper;
     private VillageService villageService;
     private ImageService imageService;
+
+    public Property propertyDTOToProperty(PropertyDTO propertyDTO) {
+        return modelMapper.map(propertyDTO, Property.class);
+    }
     public PropertyDTO propertyToPropertyDTO(Property property) {
         PropertyDTO propertyDTO = modelMapper.map(property, PropertyDTO.class);
         propertyDTO.setVillageDTO(villageService.villageToVillageDTO(property.getVillage()));
@@ -73,12 +77,15 @@ public class PropertyService {
     }
 
     public PropertyDTO getPropertyWithMainImageById(Long id){
+        PropertyDTO propertyDTO = propertyToPropertyDTO(getPropertyById(id));
+        addMainImageToPropertyDTO(propertyDTO);
+        return propertyDTO;
+    }
+    public Property getPropertyById(Long id){
         Optional<Property> optionalProperty = propertyRepository.findById(id);
         if (optionalProperty.isEmpty()) {
             throw new ApiRequestException("Property with id: " + id + " Not Found");
         }
-        PropertyDTO propertyDTO = propertyToPropertyDTO(optionalProperty.get());
-        addMainImageToPropertyDTO(propertyDTO);
-        return propertyDTO;
+        return optionalProperty.get();
     }
 }
