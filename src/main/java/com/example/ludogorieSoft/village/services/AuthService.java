@@ -2,6 +2,7 @@ package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.authorization.JWTService;
 import com.example.ludogorieSoft.village.dtos.AlternativeUserDTO;
+import com.example.ludogorieSoft.village.enums.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +23,9 @@ public class AuthService {
         jwt = authHeather.substring(7);
         username = jwtService.extractUsername(jwt);
         AlternativeUserDTO alternativeUserDTO = administratorService.findAdminByUsername(username);
-        alternativeUserDTO.getBusinessCardDTO().setImageName(imageService.getImageFromSpace(alternativeUserDTO.getBusinessCardDTO().getImageName()));
+        if(alternativeUserDTO.getRole() != Role.USER && alternativeUserDTO.getRole() != Role.ADMIN) {
+            alternativeUserDTO.getBusinessCardDTO().setImageName(imageService.getImageFromSpace(alternativeUserDTO.getBusinessCardDTO().getImageName()));
+        }
         return alternativeUserDTO;
     }
 }
