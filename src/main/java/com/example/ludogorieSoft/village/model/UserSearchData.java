@@ -40,8 +40,9 @@ public class UserSearchData {
     @Size(max = 50)
     private String searchName;
 
-    @ManyToOne
-    private Village village;
+    private String villageName;
+
+    private String regionName;
 
     @ElementCollection(targetClass = PropertyType.class)
     @CollectionTable(name = "user_search_property_types", joinColumns = @JoinColumn(name = "user_search_data_id"))
@@ -88,8 +89,10 @@ public class UserSearchData {
     @Column(name = "construction_type", columnDefinition = "enum('BRICKS','PANEL','WOOD')")
     private List<ConstructionType> constructionTypes;
 
+    @Min(0)
     private Short minConstructionYear;
 
+    @Min(0)
     private Short maxConstructionYear;
 
     @Min(0)

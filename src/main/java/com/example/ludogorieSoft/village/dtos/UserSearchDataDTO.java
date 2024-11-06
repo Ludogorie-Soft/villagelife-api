@@ -27,7 +27,9 @@ public class UserSearchDataDTO {
 
     private String searchName;
 
-    private VillageDTO villageDTO;
+    private String villageName;
+
+    private String regionName;
 
     private List<PropertyType> propertyTypes;
 
