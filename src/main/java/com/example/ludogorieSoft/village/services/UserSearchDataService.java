@@ -14,6 +14,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +39,14 @@ public class UserSearchDataService {
         checkUserSearchDataValidations(userSearchDataDTO);
         UserSearchData userSearchData = userSearchDataRepository.save(userSearchDataDTOToUserSearchData(userSearchDataDTO));
         return userSearchDataToUserSearchDataDTO(userSearchData);
+    }
+
+    public List<UserSearchDataDTO> getAllUserSearchDataDTOsForUser(Long id) {
+        List<UserSearchData> userSearchDataList = userSearchDataRepository.findAllByAlternativeUserId(id);
+        return userSearchDataList
+                .stream()
+                .map(this::userSearchDataToUserSearchDataDTO)
+                .toList();
     }
 
     private void checkUserSearchDataValidations(UserSearchDataDTO userSearchDataDTO) {
