@@ -58,7 +58,9 @@ public class UserSearchDataService {
     }
 
     private void checkUserSearchDataValidations(UserSearchDataDTO userSearchDataDTO) {
-        if (userSearchDataDTO.getSearchName().isBlank()) throw new ApiRequestException("Search name is required!");
+        if (userSearchDataDTO.getSearchName() == null || userSearchDataDTO.getSearchName().isBlank()) {
+            throw new ApiRequestException("Search name cannot be null or blank!");
+        }
         if (userSearchDataDTO.getSearchName().length() > 50)
             throw new ApiRequestException("Search name can not be more than 50 signs long!");
         checkSearchNameForAlternativeUser(userSearchDataDTO);
