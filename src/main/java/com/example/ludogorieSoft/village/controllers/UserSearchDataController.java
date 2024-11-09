@@ -28,10 +28,8 @@ public class UserSearchDataController {
     }
 
     @GetMapping("/get-all-for-user")
-    public ResponseEntity<List<UserSearchDataDTO>> getAllUserSearchDataDTOsForUser(@RequestParam("alternativeUserId") Long id) {
+    public ResponseEntity<List<UserSearchDataDTO>> getAllUserSearchDataDTOsForUser(@RequestParam(value = "alternativeUserId", required = false) Long id) {
         List<UserSearchDataDTO> userSearchDataDTOList = userSearchDataService.getAllUserSearchDataDTOsForUser(id);
         return ResponseEntity.ok(userSearchDataDTOList);
     }
-
-
 }
