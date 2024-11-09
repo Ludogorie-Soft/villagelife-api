@@ -34,8 +34,8 @@ public class PropertyService {
         PropertyDTO propertyDTO = modelMapper.map(property, PropertyDTO.class);
         propertyDTO.setVillageDTO(villageService.villageToVillageDTO(property.getVillage()));
         AlternativeUserDTO alternativeUserDTO = modelMapper.map(property.getAlternativeUser(), AlternativeUserDTO.class);
+        propertyDTO.setAlternativeUserDTO(alternativeUserDTO);
         if(alternativeUserDTO.getRole() != Role.USER && alternativeUserDTO.getRole() != Role.ADMIN){
-            propertyDTO.setAlternativeUserDTO(alternativeUserDTO);
             BusinessCardDTO businessCardDTO = modelMapper.map(property.getAlternativeUser().getBusinessCard(), BusinessCardDTO.class);
             propertyDTO.getAlternativeUserDTO().setBusinessCardDTO(businessCardDTO);
         }
