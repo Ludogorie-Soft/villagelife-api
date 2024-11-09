@@ -1,11 +1,8 @@
-package com.example.ludogoriesoft.village.services;
+package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.UserSavedPropertyDTO;
 import com.example.ludogorieSoft.village.model.UserSavedProperty;
 import com.example.ludogorieSoft.village.repositories.UserSavedPropertyRepository;
-import com.example.ludogorieSoft.village.services.AdministratorService;
-import com.example.ludogorieSoft.village.services.PropertyService;
-import com.example.ludogorieSoft.village.services.UserSavedPropertyService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
