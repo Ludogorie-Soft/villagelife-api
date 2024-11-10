@@ -289,7 +289,6 @@ class UserSearchDataServiceTest {
         assertEquals("Minimal price can not be more than maximal price!", exception.getMessage());
     }
 
-    // Test for invalid Region (non-existent)
     @Test
     void testCreateUserSearchData_invalidRegion() {
         UserSearchDataDTO userSearchDataDTO = new UserSearchDataDTO();
@@ -329,7 +328,6 @@ class UserSearchDataServiceTest {
         verify(userSearchDataRepository, times(1)).softDeleteById(id);
     }
 
-    // Test case where the UserSearchData does not exist (should throw an ApiRequestException)
     @Test
     void testSoftDeleteUserSearchDataById_dataNotFound() {
         Long id = 1L;
@@ -342,18 +340,17 @@ class UserSearchDataServiceTest {
         verify(userSearchDataRepository, never()).softDeleteById(id);
     }
 
-    // Test case where the UserSearchData exists, but the user does not have permission to delete it
     @Test
     void testSoftDeleteUserSearchDataById_noPermission() {
         Long id = 1L;
         AlternativeUserDTO alternativeUserDTO = new AlternativeUserDTO();
-        alternativeUserDTO.setId(2L); // Different user ID
+        alternativeUserDTO.setId(2L);
         alternativeUserDTO.setRole(Role.USER);
 
         UserSearchData userSearchData = new UserSearchData();
         userSearchData.setId(id);
         userSearchData.setAlternativeUser(new AlternativeUser());
-        userSearchData.getAlternativeUser().setId(1L); // ID of the original creator
+        userSearchData.getAlternativeUser().setId(1L);
 
         when(userSearchDataRepository.findByIdAndDeletedAtIsNull(id)).thenReturn(Optional.of(userSearchData));
         when(authService.getAdministratorInfo()).thenReturn(alternativeUserDTO);
@@ -365,18 +362,17 @@ class UserSearchDataServiceTest {
         verify(userSearchDataRepository, never()).softDeleteById(id);
     }
 
-    // Test case where the UserSearchData exists and the user is an Admin, so they have permission to delete it
     @Test
     void testSoftDeleteUserSearchDataById_adminPermission() {
         Long id = 1L;
         AlternativeUserDTO alternativeUserDTO = new AlternativeUserDTO();
-        alternativeUserDTO.setId(2L); // Different user ID
-        alternativeUserDTO.setRole(Role.ADMIN); // Admin role
+        alternativeUserDTO.setId(2L);
+        alternativeUserDTO.setRole(Role.ADMIN);
 
         UserSearchData userSearchData = new UserSearchData();
         userSearchData.setId(id);
         userSearchData.setAlternativeUser(new AlternativeUser());
-        userSearchData.getAlternativeUser().setId(1L); // ID of the original creator
+        userSearchData.getAlternativeUser().setId(1L);
 
         when(userSearchDataRepository.findByIdAndDeletedAtIsNull(id)).thenReturn(Optional.of(userSearchData));
         when(authService.getAdministratorInfo()).thenReturn(alternativeUserDTO);
