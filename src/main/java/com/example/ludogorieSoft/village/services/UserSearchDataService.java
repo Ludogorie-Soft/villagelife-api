@@ -3,6 +3,7 @@ package com.example.ludogorieSoft.village.services;
 import com.example.ludogorieSoft.village.dtos.AlternativeUserDTO;
 import com.example.ludogorieSoft.village.dtos.UserSearchDataDTO;
 import com.example.ludogorieSoft.village.enums.Role;
+import com.example.ludogorieSoft.village.exeptions.AccessDeniedException;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.Region;
 import com.example.ludogorieSoft.village.model.UserSearchData;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -46,15 +48,26 @@ public class UserSearchDataService {
         List<UserSearchData> userSearchDataList;
         AlternativeUserDTO alternativeUserDTO = authService.getAdministratorInfo();
         if (id == null)
-            userSearchDataList = userSearchDataRepository.findAllByAlternativeUserId(alternativeUserDTO.getId());
+            userSearchDataList = userSearchDataRepository.findAllByAlternativeUserIdAndDeletedAtIsNull(alternativeUserDTO.getId());
         else if (alternativeUserDTO.getRole().equals(Role.ADMIN) || alternativeUserDTO.getId() == id)
-            userSearchDataList = userSearchDataRepository.findAllByAlternativeUserId(id);
+            userSearchDataList = userSearchDataRepository.findAllByAlternativeUserIdAndDeletedAtIsNull(id);
         else
-            throw new ApiRequestException("You can not access others search info!");
+            throw new AccessDeniedException("You can not access others search info!");
         return userSearchDataList
                 .stream()
                 .map(this::userSearchDataToUserSearchDataDTO)
                 .toList();
+    }
+
+    public String softDeleteUserSearchDataById(Long id) {
+        Optional<UserSearchData> optionalUserSearchData = userSearchDataRepository.findByIdAndDeletedAtIsNull(id);
+        if (optionalUserSearchData.isEmpty()) throw new ApiRequestException("No user search data found for id " + id + "!");
+        UserSearchData userSearchData = optionalUserSearchData.get();
+        AlternativeUserDTO alternativeUserDTO = authService.getAdministratorInfo();
+        if (userSearchData.getAlternativeUser().getId() == alternativeUserDTO.getId() || alternativeUserDTO.getRole().equals(Role.ADMIN))
+            userSearchDataRepository.softDeleteById(optionalUserSearchData.get().getId());
+        else throw new AccessDeniedException("You can not delete others search info!");
+        return "User search data deleted successfully!";
     }
 
     private void checkUserSearchDataValidations(UserSearchDataDTO userSearchDataDTO) {
@@ -75,7 +88,7 @@ public class UserSearchDataService {
     }
 
     private void checkSearchNameForAlternativeUser(UserSearchDataDTO userSearchDataDTO) {
-        UserSearchData userSearchData = userSearchDataRepository.findBySearchNameAndAlternativeUserId(userSearchDataDTO.getSearchName(),
+        UserSearchData userSearchData = userSearchDataRepository.findBySearchNameAndAlternativeUserIdAndDeletedAtIsNull(userSearchDataDTO.getSearchName(),
                 userSearchDataDTO.getAlternativeUserDTO().getId());
         if (userSearchData != null)
             throw new ApiRequestException("User search data with the same search name and user already exists!");

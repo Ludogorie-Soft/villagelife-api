@@ -3,7 +3,9 @@ package com.example.ludogorieSoft.village.services;
 import com.example.ludogorieSoft.village.dtos.AlternativeUserDTO;
 import com.example.ludogorieSoft.village.dtos.UserSearchDataDTO;
 import com.example.ludogorieSoft.village.enums.Role;
+import com.example.ludogorieSoft.village.exeptions.AccessDeniedException;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
+import com.example.ludogorieSoft.village.model.AlternativeUser;
 import com.example.ludogorieSoft.village.model.UserSearchData;
 import com.example.ludogorieSoft.village.repositories.RegionRepository;
 import com.example.ludogorieSoft.village.repositories.UserSearchDataRepository;
@@ -16,10 +18,10 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 
-import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -100,11 +102,11 @@ class UserSearchDataServiceTest {
         alternativeUserDTO.setRole(Role.ADMIN);
 
         when(authService.getAdministratorInfo()).thenReturn(alternativeUserDTO);
-        when(userSearchDataRepository.findAllByAlternativeUserId(userId)).thenReturn(new ArrayList<>());
+        when(userSearchDataRepository.findAllByAlternativeUserIdAndDeletedAtIsNull(userId)).thenReturn(new ArrayList<>());
 
         List<UserSearchDataDTO> result = userSearchDataService.getAllUserSearchDataDTOsForUser(userId);
         assertNotNull(result);
-        verify(userSearchDataRepository, times(1)).findAllByAlternativeUserId(userId);
+        verify(userSearchDataRepository, times(1)).findAllByAlternativeUserIdAndDeletedAtIsNull(userId);
     }
 
     @Test
@@ -116,11 +118,11 @@ class UserSearchDataServiceTest {
         alternativeUserDTO.setRole(Role.ADMIN);
 
         when(authService.getAdministratorInfo()).thenReturn(alternativeUserDTO);
-        when(userSearchDataRepository.findAllByAlternativeUserId(userId)).thenReturn(new ArrayList<>());
+        when(userSearchDataRepository.findAllByAlternativeUserIdAndDeletedAtIsNull(userId)).thenReturn(new ArrayList<>());
 
         List<UserSearchDataDTO> result = userSearchDataService.getAllUserSearchDataDTOsForUser(id);
         assertNotNull(result);
-        verify(userSearchDataRepository, times(1)).findAllByAlternativeUserId(id);
+        verify(userSearchDataRepository, times(1)).findAllByAlternativeUserIdAndDeletedAtIsNull(id);
     }
 
     @Test
@@ -131,10 +133,10 @@ class UserSearchDataServiceTest {
         alternativeUserDTO.setId(userId);
         alternativeUserDTO.setRole(Role.USER);
         when(authService.getAdministratorInfo()).thenReturn(alternativeUserDTO);
-        when(userSearchDataRepository.findAllByAlternativeUserId(userId)).thenReturn(new ArrayList<>());
+        when(userSearchDataRepository.findAllByAlternativeUserIdAndDeletedAtIsNull(userId)).thenReturn(new ArrayList<>());
         List<UserSearchDataDTO> result = userSearchDataService.getAllUserSearchDataDTOsForUser(id);
         assertNotNull(result);
-        verify(userSearchDataRepository, times(1)).findAllByAlternativeUserId(userId);
+        verify(userSearchDataRepository, times(1)).findAllByAlternativeUserIdAndDeletedAtIsNull(userId);
     }
 
     @Test
@@ -146,11 +148,11 @@ class UserSearchDataServiceTest {
         alternativeUserDTO.setRole(Role.USER);
         when(authService.getAdministratorInfo()).thenReturn(alternativeUserDTO);
 
-        when(userSearchDataRepository.findAllByAlternativeUserId(userId)).thenReturn(new ArrayList<>());
-        ApiRequestException exception = assertThrows(ApiRequestException.class,
+        when(userSearchDataRepository.findAllByAlternativeUserIdAndDeletedAtIsNull(userId)).thenReturn(new ArrayList<>());
+        AccessDeniedException exception = assertThrows(AccessDeniedException.class,
                 () -> userSearchDataService.getAllUserSearchDataDTOsForUser(id));
         assertEquals("You can not access others search info!", exception.getMessage());
-        verify(userSearchDataRepository, never()).findAllByAlternativeUserId(userId);
+        verify(userSearchDataRepository, never()).findAllByAlternativeUserIdAndDeletedAtIsNull(userId);
     }
 
     @Test
@@ -304,5 +306,84 @@ class UserSearchDataServiceTest {
                 () -> userSearchDataService.createUserSearchData(userSearchDataDTO));
 
         assertEquals("Region not found!", exception.getMessage());
+    }
+
+    @Test
+    void testSoftDeleteUserSearchDataById_withPermission() {
+        Long id = 1L;
+        AlternativeUserDTO alternativeUserDTO = new AlternativeUserDTO();
+        alternativeUserDTO.setId(1L);
+        alternativeUserDTO.setRole(Role.USER);
+
+        UserSearchData userSearchData = new UserSearchData();
+        userSearchData.setId(id);
+        userSearchData.setAlternativeUser(new AlternativeUser());
+        userSearchData.getAlternativeUser().setId(1L);
+
+        when(userSearchDataRepository.findByIdAndDeletedAtIsNull(id)).thenReturn(Optional.of(userSearchData));
+        when(authService.getAdministratorInfo()).thenReturn(alternativeUserDTO);
+
+        String result = userSearchDataService.softDeleteUserSearchDataById(id);
+
+        assertEquals("User search data deleted successfully!", result);
+        verify(userSearchDataRepository, times(1)).softDeleteById(id);
+    }
+
+    // Test case where the UserSearchData does not exist (should throw an ApiRequestException)
+    @Test
+    void testSoftDeleteUserSearchDataById_dataNotFound() {
+        Long id = 1L;
+        when(userSearchDataRepository.findByIdAndDeletedAtIsNull(id)).thenReturn(Optional.empty());
+
+        ApiRequestException exception = assertThrows(ApiRequestException.class,
+                () -> userSearchDataService.softDeleteUserSearchDataById(id));
+
+        assertEquals("No user search data found for id " + id + "!", exception.getMessage());
+        verify(userSearchDataRepository, never()).softDeleteById(id);
+    }
+
+    // Test case where the UserSearchData exists, but the user does not have permission to delete it
+    @Test
+    void testSoftDeleteUserSearchDataById_noPermission() {
+        Long id = 1L;
+        AlternativeUserDTO alternativeUserDTO = new AlternativeUserDTO();
+        alternativeUserDTO.setId(2L); // Different user ID
+        alternativeUserDTO.setRole(Role.USER);
+
+        UserSearchData userSearchData = new UserSearchData();
+        userSearchData.setId(id);
+        userSearchData.setAlternativeUser(new AlternativeUser());
+        userSearchData.getAlternativeUser().setId(1L); // ID of the original creator
+
+        when(userSearchDataRepository.findByIdAndDeletedAtIsNull(id)).thenReturn(Optional.of(userSearchData));
+        when(authService.getAdministratorInfo()).thenReturn(alternativeUserDTO);
+
+        AccessDeniedException exception = assertThrows(AccessDeniedException.class,
+                () -> userSearchDataService.softDeleteUserSearchDataById(id));
+
+        assertEquals("You can not delete others search info!", exception.getMessage());
+        verify(userSearchDataRepository, never()).softDeleteById(id);
+    }
+
+    // Test case where the UserSearchData exists and the user is an Admin, so they have permission to delete it
+    @Test
+    void testSoftDeleteUserSearchDataById_adminPermission() {
+        Long id = 1L;
+        AlternativeUserDTO alternativeUserDTO = new AlternativeUserDTO();
+        alternativeUserDTO.setId(2L); // Different user ID
+        alternativeUserDTO.setRole(Role.ADMIN); // Admin role
+
+        UserSearchData userSearchData = new UserSearchData();
+        userSearchData.setId(id);
+        userSearchData.setAlternativeUser(new AlternativeUser());
+        userSearchData.getAlternativeUser().setId(1L); // ID of the original creator
+
+        when(userSearchDataRepository.findByIdAndDeletedAtIsNull(id)).thenReturn(Optional.of(userSearchData));
+        when(authService.getAdministratorInfo()).thenReturn(alternativeUserDTO);
+
+        String result = userSearchDataService.softDeleteUserSearchDataById(id);
+
+        assertEquals("User search data deleted successfully!", result);
+        verify(userSearchDataRepository, times(1)).softDeleteById(id);
     }
 }
