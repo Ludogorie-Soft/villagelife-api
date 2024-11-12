@@ -15,7 +15,6 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class UserSavedPropertyService {
-    private final ModelMapper modelMapper;
     private final UserSavedPropertyRepository userSavedPropertyRepository;
     private final AdministratorService administratorService;
     private final PropertyService propertyService;
