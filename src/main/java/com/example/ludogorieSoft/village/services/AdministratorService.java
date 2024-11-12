@@ -19,6 +19,9 @@ public class AdministratorService {
     private final AlternativeUserRepository alternativeUserRepository;
     private final ModelMapper modelMapper;
 
+    public AlternativeUser administratorDTOToAdministrator(AlternativeUserDTO alternativeUserDTO) {
+        return modelMapper.map(alternativeUserDTO, AlternativeUser.class);
+    }
     public AlternativeUserDTO administratorToAdministratorDTO(AlternativeUser alternativeUser) {
         AlternativeUserDTO alternativeUserDTO = modelMapper.map(alternativeUser, AlternativeUserDTO.class);
         alternativeUserDTO.setBusinessCardDTO(modelMapper.map(alternativeUser.getBusinessCard(), BusinessCardDTO.class));

@@ -1,8 +1,10 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.AlternativeUserDTO;
+import com.example.ludogorieSoft.village.dtos.BusinessCardDTO;
 import com.example.ludogorieSoft.village.dtos.PropertyDTO;
 import com.example.ludogorieSoft.village.dtos.PropertyStatsDTO;
+import com.example.ludogorieSoft.village.enums.Role;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.Property;
 import com.example.ludogorieSoft.village.repositories.PropertyRepository;
@@ -24,14 +26,23 @@ public class PropertyService {
     private final ModelMapper modelMapper;
     private VillageService villageService;
     private ImageService imageService;
+
+    public Property propertyDTOToProperty(PropertyDTO propertyDTO) {
+        return modelMapper.map(propertyDTO, Property.class);
+    }
     public PropertyDTO propertyToPropertyDTO(Property property) {
         PropertyDTO propertyDTO = modelMapper.map(property, PropertyDTO.class);
         propertyDTO.setVillageDTO(villageService.villageToVillageDTO(property.getVillage()));
         AlternativeUserDTO alternativeUserDTO = modelMapper.map(property.getAlternativeUser(), AlternativeUserDTO.class);
         propertyDTO.setAlternativeUserDTO(alternativeUserDTO);
+        if(alternativeUserDTO.getRole() != Role.USER && alternativeUserDTO.getRole() != Role.ADMIN){
+            BusinessCardDTO businessCardDTO = modelMapper.map(property.getAlternativeUser().getBusinessCard(), BusinessCardDTO.class);
+            propertyDTO.getAlternativeUserDTO().setBusinessCardDTO(businessCardDTO);
+        }
         propertyDTO.setImageUrl(property.getImageUrl());
         PropertyStatsDTO propertyStatsDTO = modelMapper.map(property.getPropertyStats(), PropertyStatsDTO.class);
         propertyDTO.setPropertyStatsDTO(propertyStatsDTO);
+
         return  propertyDTO;
     }
     public Page<PropertyDTO> getAllPropertiesAndMainImage(int pageNumber, int elementsCount) {
@@ -66,12 +77,15 @@ public class PropertyService {
     }
 
     public PropertyDTO getPropertyWithMainImageById(Long id){
+        PropertyDTO propertyDTO = propertyToPropertyDTO(getPropertyById(id));
+        addMainImageToPropertyDTO(propertyDTO);
+        return propertyDTO;
+    }
+    public Property getPropertyById(Long id){
         Optional<Property> optionalProperty = propertyRepository.findById(id);
         if (optionalProperty.isEmpty()) {
             throw new ApiRequestException("Property with id: " + id + " Not Found");
         }
-        PropertyDTO propertyDTO = propertyToPropertyDTO(optionalProperty.get());
-        addMainImageToPropertyDTO(propertyDTO);
-        return propertyDTO;
+        return optionalProperty.get();
     }
 }
