@@ -117,7 +117,7 @@ public class PropertyService {
                     }
                 })
                 .filter(Objects::nonNull)
-                .toList();//
+                .toList();
     }
 
     private PropertyTransferType mapToPropertyTransferType(String propertyTransferType) {
@@ -140,7 +140,7 @@ public class PropertyService {
                     }
                 })
                 .filter(Objects::nonNull)
-                .toList();//
+                .toList();
     }
 
     private List<OwnershipType> mapToOwnershipTypeList(List<String> ownershipTypes) {
@@ -154,7 +154,7 @@ public class PropertyService {
                     }
                 })
                 .filter(Objects::nonNull)
-                .toList();//
+                .toList();
     }
 }
 
