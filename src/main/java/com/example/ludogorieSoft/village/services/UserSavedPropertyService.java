@@ -7,7 +7,6 @@ import com.example.ludogorieSoft.village.model.UserSavedProperty;
 import com.example.ludogorieSoft.village.repositories.UserSavedPropertyRepository;
 import com.example.ludogorieSoft.village.utils.TimestampUtils;
 import lombok.AllArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
