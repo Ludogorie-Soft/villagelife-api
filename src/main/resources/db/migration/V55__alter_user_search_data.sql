@@ -38,6 +38,12 @@ CREATE TABLE user_search_ownership_types (
     FOREIGN KEY (user_search_data_id) REFERENCES user_search_data(id)
 );
 
+CREATE TABLE user_search_property_condition (
+    user_search_data_id BIGINT NOT NULL,
+    property_condition ENUM('NEW', 'AFTER_COMPLETE_RENOVATION', 'GOOD', 'NEEDS_REPAIR', 'NEEDS_COMPLETE_RENOVATION', 'FOR_DEMOLITION'),
+    FOREIGN KEY (user_search_data_id) REFERENCES user_search_data(id)
+);
+
 ALTER TABLE user_search_data
     DROP CONSTRAINT user_search_data_ibfk_1,
     DROP COLUMN village_id,

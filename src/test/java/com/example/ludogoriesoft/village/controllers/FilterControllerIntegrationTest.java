@@ -138,7 +138,7 @@ class FilterControllerIntegrationTest {
         List<PropertyDTO> properties = Arrays.asList(property1, property2);
         Page<PropertyDTO> mockPage = new PageImpl<>(properties, PageRequest.of(0, 2), 2);
 
-        given(propertyService.getSearchProperties(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(),
+        given(propertyService.getSearchProperties(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(),
                 any(), any(), any(), any(), any(), any(), any(), any(), any(), any())).willReturn(mockPage);
 
         mockMvc.perform(get("/api/v1/filter/searchProperties")
@@ -177,7 +177,7 @@ class FilterControllerIntegrationTest {
     void testSearchPropertiesByCriteria_withNoResults() throws Exception {
         Page<PropertyDTO> emptyPage = new PageImpl<>(Collections.emptyList(), PageRequest.of(0, 2), 0);
 
-        given(propertyService.getSearchProperties(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(),
+        given(propertyService.getSearchProperties(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(),
                 any(), any(), any(), any(), any(), any(), any(), any(), any(), any())).willReturn(emptyPage);
 
         mockMvc.perform(get("/api/v1/filter/searchProperties")
@@ -203,7 +203,7 @@ class FilterControllerIntegrationTest {
 
         Page<PropertyDTO> mockPage = new PageImpl<>(List.of(property), PageRequest.of(0, 1), 1);
 
-        given(propertyService.getSearchProperties(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(),
+        given(propertyService.getSearchProperties(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(),
                 any(), any(), any(), any(), any(), any(), any(), any(), any(), any())).willReturn(mockPage);
 
         mockMvc.perform(get("/api/v1/filter/searchProperties")

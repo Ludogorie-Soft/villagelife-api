@@ -211,6 +211,7 @@ class PropertyServiceTest {
         Short maxBathroomsCount = 2;
         List<String> heating = List.of("Electric");
         List<String> constructionTypes = List.of("WOOD");
+        List<String> propertyConditions = List.of("NEW");
         Short minConstructionYear = 1990;
         Short maxConstructionYear = 2020;
         BigDecimal minPrice = BigDecimal.valueOf(50000);
@@ -228,7 +229,7 @@ class PropertyServiceTest {
         property.setAlternativeUser(alternativeUser);
         Page<Property> propertyPage = new PageImpl<>(List.of(property), pageable, 1);
         when(propertyRepository.searchProperties(
-                any(), any(), any(), any(), any(), any(),
+                any(), any(), any(), any(), any(), any(), any(),
                 any(), any(), any(), any(), any(), any(),
                 any(), any(), any(), any(), any(), any(),
                 any(), any()
@@ -239,7 +240,7 @@ class PropertyServiceTest {
         Page<PropertyDTO> result = propertyService.getSearchProperties(
                 propertyTypes, propertyTransferType, minBuiltUpArea, maxBuiltUpArea,
                 minYardArea, maxYardArea, minRoomsCount, maxRoomsCount,
-                minBathroomsCount, maxBathroomsCount, heating, constructionTypes,
+                minBathroomsCount, maxBathroomsCount, heating, constructionTypes, propertyConditions,
                 minConstructionYear, maxConstructionYear, minPrice, maxPrice,
                 ownershipTypes, villageName, regionName, pageable
         );
@@ -247,7 +248,7 @@ class PropertyServiceTest {
         verify(propertyRepository, times(1)).searchProperties(
                 any(), any(), eq(minBuiltUpArea), eq(maxBuiltUpArea),
                 eq(minYardArea), eq(maxYardArea), eq(minRoomsCount), eq(maxRoomsCount),
-                eq(minBathroomsCount), eq(maxBathroomsCount), eq(heating), any(),
+                eq(minBathroomsCount), eq(maxBathroomsCount), eq(heating), any(), any(),
                 eq(minConstructionYear), eq(maxConstructionYear), eq(minPrice), eq(maxPrice),
                 any(), eq(villageName), eq(regionName), eq(pageable)
         );
@@ -262,7 +263,7 @@ class PropertyServiceTest {
         Pageable pageable = PageRequest.of(0, 2);
 
         when(propertyRepository.searchProperties(
-                any(), any(), any(), any(), any(), any(),
+                any(), any(), any(), any(), any(), any(), any(),
                 any(), any(), any(), any(), any(), any(),
                 any(), any(), any(), any(), any(), any(),
                 any(), any()
@@ -271,12 +272,12 @@ class PropertyServiceTest {
         Page<PropertyDTO> result = propertyService.getSearchProperties(
                 propertyTypes, null, null, null, null, null,
                 null, null, null, null, null, null, null,
-                null, minPrice, null, null, null, null, pageable
+                null, null, minPrice,  null, null, null, null, pageable
         );
 
         verify(propertyRepository, times(1)).searchProperties(
                 any(), any(), any(), any(), any(), any(),
-                any(), any(), any(), any(), any(), any(),
+                any(), any(), any(), any(), any(), any(), any(),
                 any(), any(), eq(minPrice), any(), any(), any(),
                 any(), eq(pageable)
         );
@@ -294,7 +295,7 @@ class PropertyServiceTest {
         Page<Property> propertyPage = new PageImpl<>(List.of(property), pageable, 1);
         when(propertyRepository.searchProperties(
                 any(), any(), any(), any(), any(), any(),
-                any(), any(), any(), any(), any(), any(),
+                any(), any(), any(), any(), any(), any(), any(),
                 any(), any(), any(), any(), any(), any(),
                 any(), any()
         )).thenReturn(propertyPage);
@@ -304,11 +305,11 @@ class PropertyServiceTest {
         Page<PropertyDTO> result = propertyService.getSearchProperties(
                 null, null, null, null, null, null, null, null,
                 null, null, null, null, null, null, null, null,
-                null, null, null, pageable
+                null, null, null, null, pageable
         );
 
         verify(propertyRepository, times(1)).searchProperties(
-                any(), any(), any(), any(), any(), any(),
+                any(), any(), any(), any(), any(), any(), any(),
                 any(), any(), any(), any(), any(), any(),
                 any(), any(), any(), any(), any(), any(),
                 any(), eq(pageable)
