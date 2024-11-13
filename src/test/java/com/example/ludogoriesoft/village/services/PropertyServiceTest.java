@@ -175,7 +175,7 @@ class PropertyServiceTest {
         when(property.getAlternativeUser()).thenReturn(alternativeUser);
         when(property.getPropertyStats()).thenReturn(new PropertyStats());
         when(modelMapper.map(property, PropertyDTO.class)).thenReturn(propertyDTO);
-        when(modelMapper.map(alternativeUser, AlternativeUserDTO.class)).thenReturn(alternativeUserDTO); // Mock the mapping
+        when(modelMapper.map(alternativeUser, AlternativeUserDTO.class)).thenReturn(alternativeUserDTO);
 
         PropertyDTO result = propertyService.getPropertyWithMainImageById(1L);
 
@@ -199,7 +199,6 @@ class PropertyServiceTest {
 
     @Test
     void testGetSearchProperties_withValidParams() {
-        // Setup input parameters
         List<String> propertyTypes = List.of("HOUSE");
         String propertyTransferType = "SALE";
         Double minBuiltUpArea = 100.0;
@@ -221,7 +220,12 @@ class PropertyServiceTest {
         String regionName = "Sample Region";
         Pageable pageable = PageRequest.of(0, 2);
 
-        // Mock repository and mapping behavior
+        AlternativeUser alternativeUser = new AlternativeUser();
+        alternativeUser.setRole(Role.USER);
+        AlternativeUserDTO alternativeUserDTO = new AlternativeUserDTO();
+        alternativeUserDTO.setRole(Role.USER);
+        when(modelMapper.map(alternativeUser, AlternativeUserDTO.class)).thenReturn(alternativeUserDTO);
+        property.setAlternativeUser(alternativeUser);
         Page<Property> propertyPage = new PageImpl<>(List.of(property), pageable, 1);
         when(propertyRepository.searchProperties(
                 any(), any(), any(), any(), any(), any(),
@@ -232,7 +236,6 @@ class PropertyServiceTest {
 
         when(modelMapper.map(property, PropertyDTO.class)).thenReturn(propertyDTO);
 
-        // Execute the service method
         Page<PropertyDTO> result = propertyService.getSearchProperties(
                 propertyTypes, propertyTransferType, minBuiltUpArea, maxBuiltUpArea,
                 minYardArea, maxYardArea, minRoomsCount, maxRoomsCount,
@@ -241,7 +244,6 @@ class PropertyServiceTest {
                 ownershipTypes, villageName, regionName, pageable
         );
 
-        // Verify interactions and assert results
         verify(propertyRepository, times(1)).searchProperties(
                 any(), any(), eq(minBuiltUpArea), eq(maxBuiltUpArea),
                 eq(minYardArea), eq(maxYardArea), eq(minRoomsCount), eq(maxRoomsCount),
@@ -255,12 +257,10 @@ class PropertyServiceTest {
 
     @Test
     void testGetSearchProperties_withEmptyResults() {
-        // Setup input parameters with values expected to return no results
         List<String> propertyTypes = List.of("APARTMENT");
-        BigDecimal minPrice = BigDecimal.valueOf(1000000); // High price to ensure no results
+        BigDecimal minPrice = BigDecimal.valueOf(1000000);
         Pageable pageable = PageRequest.of(0, 2);
 
-        // Mock repository behavior
         when(propertyRepository.searchProperties(
                 any(), any(), any(), any(), any(), any(),
                 any(), any(), any(), any(), any(), any(),
@@ -268,14 +268,12 @@ class PropertyServiceTest {
                 any(), any()
         )).thenReturn(Page.empty(pageable));
 
-        // Execute the service method
         Page<PropertyDTO> result = propertyService.getSearchProperties(
                 propertyTypes, null, null, null, null, null,
                 null, null, null, null, null, null, null,
                 null, minPrice, null, null, null, null, pageable
         );
 
-        // Verify interactions and assert results
         verify(propertyRepository, times(1)).searchProperties(
                 any(), any(), any(), any(), any(), any(),
                 any(), any(), any(), any(), any(), any(),
@@ -287,10 +285,12 @@ class PropertyServiceTest {
 
     @Test
     void testGetSearchProperties_withNullParams() {
-        // Test with mostly null params to ensure null handling is correct
         Pageable pageable = PageRequest.of(0, 2);
-
-        // Mock repository and mapping behavior
+        AlternativeUser alternativeUser = new AlternativeUser();
+        alternativeUser.setRole(Role.USER);
+        AlternativeUserDTO alternativeUserDTO = new AlternativeUserDTO();
+        alternativeUserDTO.setRole(Role.USER);
+        property.setAlternativeUser(alternativeUser);
         Page<Property> propertyPage = new PageImpl<>(List.of(property), pageable, 1);
         when(propertyRepository.searchProperties(
                 any(), any(), any(), any(), any(), any(),
@@ -298,17 +298,15 @@ class PropertyServiceTest {
                 any(), any(), any(), any(), any(), any(),
                 any(), any()
         )).thenReturn(propertyPage);
-
+        when(modelMapper.map(alternativeUser, AlternativeUserDTO.class)).thenReturn(alternativeUserDTO);
         when(modelMapper.map(property, PropertyDTO.class)).thenReturn(propertyDTO);
 
-        // Execute the service method
         Page<PropertyDTO> result = propertyService.getSearchProperties(
                 null, null, null, null, null, null, null, null,
                 null, null, null, null, null, null, null, null,
                 null, null, null, pageable
         );
 
-        // Verify interactions and assert results
         verify(propertyRepository, times(1)).searchProperties(
                 any(), any(), any(), any(), any(), any(),
                 any(), any(), any(), any(), any(), any(),

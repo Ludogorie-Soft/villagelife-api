@@ -473,7 +473,7 @@ class VillageAnswerQuestionServiceTest {
     }
 
     @Test
-    void testGroupAnswersByQuestion() {//------------------
+    void testGroupAnswersByQuestion() {
         Village village1 = new Village();
         village1.setId(1L);
         VillageAnswerQuestion answerQuestion1 = new VillageAnswerQuestion(1L, village1, new Question(1L, "Question 1", "Question 1"), "Answer 1", true, LocalDateTime.now(),null);
