@@ -4,6 +4,7 @@ package com.example.ludogorieSoft.village.services;
 import com.example.ludogorieSoft.village.dtos.AlternativeUserDTO;
 import com.example.ludogorieSoft.village.dtos.BusinessCardDTO;
 import com.example.ludogorieSoft.village.dtos.request.AdministratorRequest;
+import com.example.ludogorieSoft.village.enums.Role;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.AlternativeUser;
 import com.example.ludogorieSoft.village.repositories.AlternativeUserRepository;
@@ -24,7 +25,9 @@ public class AdministratorService {
     }
     public AlternativeUserDTO administratorToAdministratorDTO(AlternativeUser alternativeUser) {
         AlternativeUserDTO alternativeUserDTO = modelMapper.map(alternativeUser, AlternativeUserDTO.class);
-        alternativeUserDTO.setBusinessCardDTO(modelMapper.map(alternativeUser.getBusinessCard(), BusinessCardDTO.class));
+        if(alternativeUserDTO.getRole() != Role.USER && alternativeUserDTO.getRole() != Role.ADMIN) {
+            alternativeUserDTO.setBusinessCardDTO(modelMapper.map(alternativeUser.getBusinessCard(), BusinessCardDTO.class));
+        }
         return alternativeUserDTO;
     }
 

@@ -15,6 +15,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,11 +33,22 @@ public class UserSearchData {
     private Long id;
 
     @ManyToOne
-    private Village village;
+    @JoinColumn(name = "alternative_user_id", nullable = false)
+    private AlternativeUser alternativeUser;
 
-    @Column(name = "property_type",columnDefinition="enum('PLOT','AGRICULTURAL_LAND','HOUSE','VILLA','FLOOR_OF_A_HOUSE','BUSINESS_PROPERTY','APARTMENT')")
+    @NotBlank
+    @Size(max = 50)
+    private String searchName;
+
+    private String villageName;
+
+    private String regionName;
+
+    @ElementCollection(targetClass = PropertyType.class)
+    @CollectionTable(name = "user_search_property_types", joinColumns = @JoinColumn(name = "user_search_data_id"))
     @Enumerated(EnumType.STRING)
-    private PropertyType propertyType;
+    @Column(name = "property_type", columnDefinition = "enum('PLOT','AGRICULTURAL_LAND','HOUSE','VILLA','FLOOR_OF_A_HOUSE','BUSINESS_PROPERTY','APARTMENT')")
+    private List<PropertyType> propertyTypes;
 
     @Column(name = "property_transfer_type",columnDefinition="enum('SALE','RENT')")
     @Enumerated(EnumType.STRING)
@@ -54,32 +67,33 @@ public class UserSearchData {
     private Double maxYardArea;
 
     @Min(0)
-    private short minRoomsCount;
+    private Short minRoomsCount;
 
     @Min(0)
-    private short maxRoomsCount;
+    private Short maxRoomsCount;
 
     @Min(0)
-    private short minBathroomsCount;
+    private Short minBathroomsCount;
 
     @Min(0)
-    private short maxBathroomsCount;
+    private Short maxBathroomsCount;
 
     @ElementCollection
     @CollectionTable(name = "heating_options", joinColumns = @JoinColumn(name = "user_search_data_id"))
     @Column(name = "heating")
     private List<String> heating;
 
+    @ElementCollection(targetClass = ConstructionType.class)
+    @CollectionTable(name = "user_search_construction_types", joinColumns = @JoinColumn(name = "user_search_data_id"))
     @Column(name = "construction_type",columnDefinition="enum('BRICKS', 'PANEL', 'WOOD', 'TIMBER_FRAMED', 'ADOBE', 'STONE', 'CLAY')")
     @Enumerated(EnumType.STRING)
-    private ConstructionType constructionType;
+    private List<ConstructionType> constructionTypes;
 
-    private short minConstructionYear;
+    @Min(0)
+    private Short minConstructionYear;
 
-    private short maxConstructionYear;
-
-    @Column(name = "extras", columnDefinition = "TEXT")
-    private String extras;
+    @Min(0)
+    private Short maxConstructionYear;
 
     @Min(0)
     private BigDecimal minPrice;
@@ -87,15 +101,16 @@ public class UserSearchData {
     @Min(0)
     private BigDecimal maxPrice;
 
-    @Column(name = "ownership_type",columnDefinition="enum('INDIVIDUAL','AGENCY','BUILDER','INVESTOR')")
+    @ElementCollection(targetClass = OwnershipType.class)
+    @CollectionTable(name = "user_search_ownership_types", joinColumns = @JoinColumn(name = "user_search_data_id"))
     @Enumerated(EnumType.STRING)
-    private OwnershipType ownershipType;
+    @Column(name = "ownership_type", columnDefinition = "enum('INDIVIDUAL','AGENCY','BUILDER','INVESTOR')")
+    private List<OwnershipType> ownershipTypes;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
     private LocalDateTime deletedAt;
-
 }
 
 
