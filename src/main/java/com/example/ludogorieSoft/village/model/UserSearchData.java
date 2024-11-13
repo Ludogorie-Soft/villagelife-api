@@ -85,8 +85,8 @@ public class UserSearchData {
 
     @ElementCollection(targetClass = ConstructionType.class)
     @CollectionTable(name = "user_search_construction_types", joinColumns = @JoinColumn(name = "user_search_data_id"))
+    @Column(name = "construction_type",columnDefinition="enum('BRICKS', 'PANEL', 'WOOD', 'TIMBER_FRAMED', 'ADOBE', 'STONE', 'CLAY')")
     @Enumerated(EnumType.STRING)
-    @Column(name = "construction_type", columnDefinition = "enum('BRICKS','PANEL','WOOD')")
     private List<ConstructionType> constructionTypes;
 
     @Min(0)

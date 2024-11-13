@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS user_search_data (
     max_rooms_count SMALLINT CHECK (max_rooms_count >= 0),
     min_bathrooms_count SMALLINT CHECK (min_bathrooms_count >= 0),
     max_bathrooms_count SMALLINT CHECK (max_bathrooms_count >= 0),
-    construction_type ENUM('BRICKS', 'PANEL', 'WOOD') NOT NULL,
+    construction_type ENUM('BRICKS', 'PANEL', 'WOOD', 'TIMBER_FRAMED', 'ADOBE', 'STONE', 'CLAY') NOT NULL,
     min_construction_year SMALLINT CHECK (min_construction_year >= 0),
     max_construction_year SMALLINT CHECK (max_construction_year >= 0),
     extras TEXT,
