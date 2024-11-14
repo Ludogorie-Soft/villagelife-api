@@ -49,3 +49,8 @@ ALTER TABLE user_search_data
     DROP COLUMN village_id,
     ADD COLUMN village_name VARCHAR(255),
     ADD COLUMN region_name VARCHAR(255);
+
+ALTER TABLE properties
+    MODIFY COLUMN rooms_count SMALLINT,
+    MODIFY COLUMN bathrooms_count SMALLINT,
+    MODIFY COLUMN construction_year SMALLINT;

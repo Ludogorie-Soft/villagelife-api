@@ -26,12 +26,12 @@ public class PropertyDTO {
     private String phoneNumber;
     private Double buildUpArea;
     private Double yardArea;
-    private int roomsCount;
-    private int bathroomsCount;
+    private Short roomsCount;
+    private Short bathroomsCount;
     private List<String> heating;
     private String imageUrl;
     private ConstructionType constructionType;
-    private int constructionYear;
+    private Short constructionYear;
     private String extras;
     private String description;
     private String address;

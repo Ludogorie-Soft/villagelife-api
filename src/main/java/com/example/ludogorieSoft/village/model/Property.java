@@ -61,11 +61,11 @@ public class Property {
 
     @Min(0)
     @NotNull
-    private int roomsCount;
+    private Short roomsCount;
 
     @Min(0)
     @NotNull
-    private int bathroomsCount;
+    private Short bathroomsCount;
 
     @ElementCollection
     @CollectionTable(name = "property_heating", joinColumns = @JoinColumn(name = "property_id"))
@@ -78,7 +78,7 @@ public class Property {
     @Enumerated(EnumType.STRING)
     private ConstructionType constructionType;
 
-    private int constructionYear;
+    private Short constructionYear;
 
     @Column(name = "extras", columnDefinition = "TEXT")
     private String extras;
