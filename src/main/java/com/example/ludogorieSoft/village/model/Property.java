@@ -54,29 +54,21 @@ public class Property {
     @Size(min = 10, message = "Phone number should be at least 10 characters long!")
     private String phoneNumber;
 
-//    @NotNull(message = "This field is required")
-//    @Min(value = 0, message = "The build up area must be greater than or equal to 0")
+    @NotNull(message = "This field is required")
+    @Min(value = 0, message = "The build up area must be greater than or equal to 0")
     private Double buildUpArea;
 
     @NotNull(message = "This field is required")
     @Min(value = 0, message = "The yard area must be greater than or equal to 0")
+
     private Double yardArea;
-
-//    @NotNull(message = "This field is required")
-//    @Min(value = 0, message = "The number of the rooms must be greater than or equal to 0")
     private int roomsCount;
-
-//    @NotNull(message = "This field is required")
-//    @Min(value = 0, message = "The number of the bathrooms must be greater than or equal to 0")
     private int bathroomsCount;
 
     @ElementCollection
     @CollectionTable(name = "property_heating", joinColumns = @JoinColumn(name = "property_id"))
     @Column(name = "heating")
     private List<String> heating;
-
-//    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<PropertyImage> propertyImages;
 
     private String imageUrl;
 

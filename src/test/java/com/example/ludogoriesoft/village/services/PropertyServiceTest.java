@@ -84,20 +84,6 @@ class PropertyServiceTest {
         assertEquals(base64Image, testPropertyDTO.getImageUrl());
     }
 
-//    @Test
-//    void testPropertyToPropertyDTO() {
-//        when(modelMapper.map(property, PropertyDTO.class)).thenReturn(propertyDTO);
-//        when(villageService.villageToVillageDTO(property.getVillage())).thenReturn(propertyDTO.getVillageDTO());
-//        when(modelMapper.map(property.getAlternativeUser(), AlternativeUserDTO.class)).thenReturn(new AlternativeUserDTO());
-//        when(modelMapper.map(property.getPropertyStats(), PropertyStatsDTO.class)).thenReturn(new PropertyStatsDTO());
-//
-//        PropertyDTO result = propertyService.propertyToPropertyDTO(property);
-//
-//        assertEquals(propertyDTO, result);
-//        verify(modelMapper, times(1)).map(property, PropertyDTO.class);
-//        verify(villageService, times(1)).villageToVillageDTO(property.getVillage());
-//    }
-
     @Test
     void testGetAllPropertiesAndMainImage() {
         Pageable pageable = PageRequest.of(0, 5);

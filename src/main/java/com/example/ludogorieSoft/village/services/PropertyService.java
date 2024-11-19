@@ -36,27 +36,6 @@ public class PropertyService {
 
         return modelMapper.map(propertyDTO, Property.class);
     }
-//    private void checkPropertyValidations(PropertyDTO propertyDTO) {
-//        if (propertyDTO.getPrice() == null) throw new ApiRequestException("Price is required!");
-//        if (propertyDTO.getPrice().compareTo(BigDecimal.ZERO) < 0)
-//            throw new ApiRequestException("The price ust be greater than or equal to 0!");
-//        if (propertyDTO.getPhoneNumber() == null) throw new ApiRequestException("Phone number is required!");
-//        if (propertyDTO.getPhoneNumber().trim().length() < 10)
-//            throw new ApiRequestException("Phone number should be at least 10 characters long!");
-//        if (propertyDTO.getBuildUpArea() == 0) throw new ApiRequestException("Build up area is required!");
-//        if (propertyDTO.getBuildUpArea() < 0)
-//            throw new ApiRequestException("The build up area must be greater than or equal to 0!");
-//        if (propertyDTO.getYardArea() == 0) throw new ApiRequestException("Yard area is required!");
-//        if (propertyDTO.getYardArea() < 0)
-//            throw new ApiRequestException("The yard area must be greater than or equal to 0!");
-//        if (propertyDTO.getRoomsCount() == 0) throw new ApiRequestException("Rooms count is required!");
-//        if (propertyDTO.getRoomsCount() < 0)
-//            throw new ApiRequestException("The number of the rooms must be greater than or equal to 0!");
-//        if (propertyDTO.getBathroomsCount() == 0) throw new ApiRequestException("Bathrooms count is required!");
-//        if (propertyDTO.getBathroomsCount() < 0)
-//            throw new ApiRequestException("The number of the bathrooms must be greater than or equal to 0!");
-//    }
-
 
     public Page<PropertyDTO> getAllPropertiesAndMainImage(int pageNumber, int elementsCount) {
         Pageable page = PageRequest.of(pageNumber, elementsCount);
@@ -99,7 +78,6 @@ public class PropertyService {
         return propertyDTO;
     }
     public PropertyDTO createProperty(PropertyDTO propertyDTO){
-//        checkPropertyValidations(propertyDTO);
       Property property = propertyDTOToProperty(propertyDTO);
       String imageUUID = randomUUID().toString();
       String imageName = imageService.uploadImage(propertyDTO.getMainImageBytes(),imageUUID);

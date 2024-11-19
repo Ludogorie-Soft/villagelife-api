@@ -14,8 +14,8 @@ public class SwaggerConfig {
     public OpenAPI openAPI() {
         return new OpenAPI().addSecurityItem(new SecurityRequirement().addList("Bearer Authentication"))
                 .components(new Components().addSecuritySchemes("Bearer Authentication", createAPIKeyScheme()))
-                .info(new Info().title("Football Simulator")
-                        .description("REST API for football simulator."));
+                .info(new Info().title("Village API")
+                        .description("REST API for Village Life."));
     }
 
     private SecurityScheme createAPIKeyScheme() {
