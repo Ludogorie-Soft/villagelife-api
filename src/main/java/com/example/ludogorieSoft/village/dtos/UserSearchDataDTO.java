@@ -4,7 +4,6 @@ import com.example.ludogorieSoft.village.enums.ConstructionType;
 import com.example.ludogorieSoft.village.enums.OwnershipType;
 import com.example.ludogorieSoft.village.enums.PropertyTransferType;
 import com.example.ludogorieSoft.village.enums.PropertyType;
-import com.example.ludogorieSoft.village.model.Village;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;

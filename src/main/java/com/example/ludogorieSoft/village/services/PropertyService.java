@@ -97,7 +97,7 @@ public class PropertyService {
     }
 
     private List<String> splitHeatingText(String heatingText){
-        List<String> heatingTypes = List.of(heatingText.split("\\s*[;,]\\s*"));
+        List<String> heatingTypes = List.of(heatingText.split("\\s*[;,]\\s*+"));
         List<String> heatingTypesWithoutSpace = new ArrayList<>();
         for (String heatingType : heatingTypes) {
             heatingTypesWithoutSpace.add(heatingType.trim());
