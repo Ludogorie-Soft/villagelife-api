@@ -2,7 +2,6 @@ package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.PropertyDTO;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
-import com.example.ludogorieSoft.village.dtos.PropertyStatsDTO;
 import com.example.ludogorieSoft.village.model.Property;
 import com.example.ludogorieSoft.village.repositories.PropertyRepository;
 import lombok.AllArgsConstructor;
@@ -97,12 +96,18 @@ public class PropertyService {
       return modelMapper.map(savedProperty, PropertyDTO.class);
     }
 
-    private List<String> splitHeatingText(String heatingText){
-        Pattern pattern = Pattern.compile("\\s*+[;,]\\s*+");
-        List<String> heatingTypes = List.of(pattern.split(heatingText));
+    private List<String> splitHeatingText(String heatingText) {
+        if (heatingText == null || heatingText.isBlank()) {
+            return List.of();
+        }
+        String cleanedHeatingText = heatingText.trim().replaceAll("\\s+", " ");
+        Pattern pattern = Pattern.compile("\\s*[;,]\\s*");
+        List<String> heatingTypes = List.of(pattern.split(cleanedHeatingText));
         List<String> heatingTypesWithoutSpace = new ArrayList<>();
         for (String heatingType : heatingTypes) {
-            heatingTypesWithoutSpace.add(heatingType.trim());
+            if (!heatingType.isBlank()) {
+                heatingTypesWithoutSpace.add(heatingType.trim());
+            }
         }
         return heatingTypesWithoutSpace;
     }
