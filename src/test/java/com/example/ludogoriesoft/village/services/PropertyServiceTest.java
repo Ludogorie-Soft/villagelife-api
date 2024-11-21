@@ -1,6 +1,7 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.PropertyDTO;
+import com.example.ludogorieSoft.village.dtos.PropertyImageDTO;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.Property;
 import com.example.ludogorieSoft.village.repositories.PropertyRepository;
@@ -15,9 +16,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -29,6 +28,9 @@ class PropertyServiceTest {
 
     @Mock
     private VillageService villageService;
+
+    @Mock
+    private PropertyImageService propertyImageService;
 
     @Mock
     private ImageService imageService;
@@ -50,6 +52,15 @@ class PropertyServiceTest {
 
         propertyDTO = new PropertyDTO();
         propertyDTO.setImageUrl("image1.jpg");
+
+        propertyDTO.setMainImageBytes(new byte[]{1, 2, 3});
+        propertyDTO.setHeating(Arrays.asList("Heating1", "Heating2"));
+        propertyDTO.setHeatingText("ExtraHeating1,ExtraHeating2");
+        PropertyImageDTO propertyImageDTO = new PropertyImageDTO();
+        propertyImageDTO.setImageName("image1.jpg");
+        propertyDTO.setImages(Collections.singletonList(propertyImageDTO));
+        when(modelMapper.map(any(PropertyDTO.class), eq(Property.class))).thenReturn(property);
+        when(modelMapper.map(any(Property.class), eq(PropertyDTO.class))).thenReturn(propertyDTO);
     }
 
     @Test
@@ -133,4 +144,167 @@ class PropertyServiceTest {
         assertEquals("Property with id: 1 Not Found", exception.getMessage());
         verify(propertyRepository, times(1)).findById(1L);
     }
+    @Test
+    void splitHeatingText_ShouldReturnListOfHeatingTypes() {
+
+        String heatingText = "Wood, Gas, Electric, Oil";
+
+        List<String> result = propertyService.splitHeatingText(heatingText);
+
+        assertNotNull(result);
+        assertEquals(4, result.size());
+        assertTrue(result.contains("Wood"));
+        assertTrue(result.contains("Gas"));
+        assertTrue(result.contains("Electric"));
+        assertTrue(result.contains("Oil"));
+    }
+
+    @Test
+    void splitHeatingText_ShouldTrimExtraSpaces() {
+        String heatingText = " Wood ;  Gas  , Electric   ;   Oil ";
+
+        List<String> result = propertyService.splitHeatingText(heatingText);
+
+        assertNotNull(result);
+        assertEquals(4, result.size());
+        assertTrue(result.contains("Wood"));
+        assertTrue(result.contains("Gas"));
+        assertTrue(result.contains("Electric"));
+        assertTrue(result.contains("Oil"));
+    }
+    @Test
+    void splitHeatingText_ShouldReturnEmptyList_WhenInputIsEmpty() {
+        String heatingText = "";
+
+        List<String> result = propertyService.splitHeatingText(heatingText);
+
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+    }
+    @Test
+    void splitHeatingText_ShouldReturnEmptyList_WhenInputIsNull() {
+        String heatingText = null;
+
+        List<String> result = propertyService.splitHeatingText(heatingText);
+
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+    }
+    @Test
+    void createProperty_success() {
+        Property property = new Property();
+        property.setImageUrl("mockedImageName.jpg");
+        property.setHeating(Arrays.asList("Heating1", "Heating2", "ExtraHeating1", "ExtraHeating2"));
+
+        PropertyDTO propertyDTO = new PropertyDTO();
+        propertyDTO.setMainImageBytes(new byte[]{1, 2, 3});
+        propertyDTO.setHeating(Arrays.asList("Heating1", "Heating2"));
+        propertyDTO.setHeatingText("ExtraHeating1,ExtraHeating2");
+
+        when(imageService.uploadImage(any(byte[].class), any(String.class))).thenReturn("mockedImageName.jpg");
+        when(propertyRepository.save(any(Property.class))).thenReturn(property);
+        when(modelMapper.map(any(Property.class), eq(PropertyDTO.class))).thenAnswer(invocation -> {
+            Property sourceProperty = invocation.getArgument(0);
+            PropertyDTO mappedPropertyDTO = new PropertyDTO();
+            mappedPropertyDTO.setImageUrl(sourceProperty.getImageUrl());
+            mappedPropertyDTO.setHeating(sourceProperty.getHeating());
+            return mappedPropertyDTO;
+        });
+
+        PropertyDTO result = propertyService.createProperty(propertyDTO);
+
+        assertNotNull(result);
+        assertEquals("mockedImageName.jpg", result.getImageUrl());
+        assertEquals(Arrays.asList("Heating1", "Heating2", "ExtraHeating1", "ExtraHeating2"), result.getHeating());
+        verify(propertyRepository, times(1)).save(any(Property.class));
+        verify(imageService, times(1)).uploadImage(any(byte[].class), any(String.class));
+    }
+    @Test
+    void createProperty_ShouldHandleNoHeatingText() {
+        Property property = new Property();
+        property.setImageUrl("mockedImageName.jpg");
+        property.setHeating(Arrays.asList("Heating1", "Heating2"));
+
+        PropertyDTO propertyDTO = new PropertyDTO();
+        propertyDTO.setMainImageBytes(new byte[]{1, 2, 3});
+        propertyDTO.setHeating(Arrays.asList("Heating1", "Heating2"));
+        propertyDTO.setHeatingText("");
+
+        when(imageService.uploadImage(any(byte[].class), any(String.class))).thenReturn("mockedImageName.jpg");
+        when(propertyRepository.save(any(Property.class))).thenReturn(property);
+        when(modelMapper.map(any(Property.class), eq(PropertyDTO.class))).thenAnswer(invocation -> {
+            Property sourceProperty = invocation.getArgument(0);
+            PropertyDTO mappedPropertyDTO = new PropertyDTO();
+            mappedPropertyDTO.setImageUrl(sourceProperty.getImageUrl());
+            mappedPropertyDTO.setHeating(sourceProperty.getHeating());
+            return mappedPropertyDTO;
+        });
+
+        PropertyDTO result = propertyService.createProperty(propertyDTO);
+
+        assertNotNull(result);
+        assertEquals("mockedImageName.jpg", result.getImageUrl());
+        assertEquals(Arrays.asList("Heating1", "Heating2"), result.getHeating());
+        verify(propertyRepository, times(1)).save(any(Property.class));
+        verify(imageService, times(1)).uploadImage(any(byte[].class), any(String.class));
+    }
+    @Test
+    void createProperty_ShouldHandleSpecialCharactersInHeatingText() {
+        Property property = new Property();
+        property.setImageUrl("mockedImageName.jpg");
+        property.setHeating(Arrays.asList("Heating1", "Heating2", "ExtraHeating1", "ExtraHeating2"));
+
+        PropertyDTO propertyDTO = new PropertyDTO();
+        propertyDTO.setMainImageBytes(new byte[]{1, 2, 3});
+        propertyDTO.setHeating(Arrays.asList("Heating1", "Heating2"));
+        propertyDTO.setHeatingText("ExtraHeating1@#,$^%&ExtraHeating2");
+
+        when(imageService.uploadImage(any(byte[].class), any(String.class))).thenReturn("mockedImageName.jpg");
+        when(propertyRepository.save(any(Property.class))).thenReturn(property);
+        when(modelMapper.map(any(Property.class), eq(PropertyDTO.class))).thenAnswer(invocation -> {
+            Property sourceProperty = invocation.getArgument(0);
+            PropertyDTO mappedPropertyDTO = new PropertyDTO();
+            mappedPropertyDTO.setImageUrl(sourceProperty.getImageUrl());
+            mappedPropertyDTO.setHeating(sourceProperty.getHeating());
+            return mappedPropertyDTO;
+        });
+
+        PropertyDTO result = propertyService.createProperty(propertyDTO);
+
+        assertNotNull(result);
+        assertEquals("mockedImageName.jpg", result.getImageUrl());
+        assertEquals(Arrays.asList("Heating1", "Heating2", "ExtraHeating1", "ExtraHeating2"), result.getHeating());
+        verify(propertyRepository, times(1)).save(any(Property.class));
+        verify(imageService, times(1)).uploadImage(any(byte[].class), any(String.class));
+    }
+    @Test
+    void createProperty_ShouldHandleNullHeatingList() {
+        Property property = new Property();
+        property.setImageUrl("mockedImageName.jpg");
+        property.setHeating(Arrays.asList("Heating1", "Heating2", "ExtraHeating1", "ExtraHeating2"));
+
+        PropertyDTO propertyDTO = new PropertyDTO();
+        propertyDTO.setMainImageBytes(new byte[]{1, 2, 3});
+        propertyDTO.setHeating(null);
+        propertyDTO.setHeatingText("ExtraHeating1,ExtraHeating2");
+
+        when(imageService.uploadImage(any(byte[].class), any(String.class))).thenReturn("mockedImageName.jpg");
+        when(propertyRepository.save(any(Property.class))).thenReturn(property);
+        when(modelMapper.map(any(Property.class), eq(PropertyDTO.class))).thenAnswer(invocation -> {
+            Property sourceProperty = invocation.getArgument(0);
+            PropertyDTO mappedPropertyDTO = new PropertyDTO();
+            mappedPropertyDTO.setImageUrl(sourceProperty.getImageUrl());
+            mappedPropertyDTO.setHeating(sourceProperty.getHeating());
+            return mappedPropertyDTO;
+        });
+
+        PropertyDTO result = propertyService.createProperty(propertyDTO);
+
+        assertNotNull(result);
+        assertEquals("mockedImageName.jpg", result.getImageUrl());
+        assertEquals(Arrays.asList("Heating1", "Heating2", "ExtraHeating1", "ExtraHeating2"), result.getHeating());
+        verify(propertyRepository, times(1)).save(any(Property.class));
+        verify(imageService, times(1)).uploadImage(any(byte[].class), any(String.class));
+    }
+
 }

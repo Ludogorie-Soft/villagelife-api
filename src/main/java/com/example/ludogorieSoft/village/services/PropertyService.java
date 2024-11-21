@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 import static java.util.UUID.randomUUID;
 
@@ -32,6 +31,7 @@ public class PropertyService {
 
         return modelMapper.map(property, PropertyDTO.class);
     }
+
     public Property propertyDTOToProperty(PropertyDTO propertyDTO) {
 
         return modelMapper.map(propertyDTO, Property.class);
@@ -52,7 +52,8 @@ public class PropertyService {
         List<Property> properties = propertyRepository.findByVillageIdAndDeletedAtIsNullOrderByCreatedAtDesc(villageId);
         return addMainImageToPropertyDTOList(properties);
     }
-    public List<PropertyDTO> addMainImageToPropertyDTOList(List<Property> properties){
+
+    public List<PropertyDTO> addMainImageToPropertyDTOList(List<Property> properties) {
         return properties.stream().map(property -> {
             PropertyDTO propertyDTO = propertyToPropertyDTO(property);
             addMainImageToPropertyDTO(propertyDTO);
@@ -60,7 +61,7 @@ public class PropertyService {
         }).toList();
     }
 
-    public void addMainImageToPropertyDTO(PropertyDTO propertyDTO){
+    public void addMainImageToPropertyDTO(PropertyDTO propertyDTO) {
         String imagePath = propertyDTO.getImageUrl();
         if (imagePath != null && !imagePath.equals("")) {
             String base64Image = imageService.getImageFromSpace(imagePath);
@@ -68,7 +69,7 @@ public class PropertyService {
         }
     }
 
-    public PropertyDTO getPropertyWithMainImageById(Long id){
+    public PropertyDTO getPropertyWithMainImageById(Long id) {
         Optional<Property> optionalProperty = propertyRepository.findById(id);
         if (optionalProperty.isEmpty()) {
             throw new ApiRequestException("Property with id: " + id + " Not Found");
@@ -77,39 +78,38 @@ public class PropertyService {
         addMainImageToPropertyDTO(propertyDTO);
         return propertyDTO;
     }
-    public PropertyDTO createProperty(PropertyDTO propertyDTO){
-      Property property = propertyDTOToProperty(propertyDTO);
-      String imageUUID = randomUUID().toString();
-      String imageName = imageService.uploadImage(propertyDTO.getMainImageBytes(),imageUUID);
-      property.setImageUrl(imageName);
+
+    public PropertyDTO createProperty(PropertyDTO propertyDTO) {
+        Property property = propertyDTOToProperty(propertyDTO);
+        String imageUUID = randomUUID().toString();
+        String imageName = imageService.uploadImage(propertyDTO.getMainImageBytes(), imageUUID);
+        property.setImageUrl(imageName);
         List<String> heatingTypes = new ArrayList<>();
         if (propertyDTO.getHeating() != null) {
             heatingTypes.addAll(propertyDTO.getHeating());
         }
-        if (propertyDTO.getHeatingText() != null && !propertyDTO.getHeatingText().isEmpty()) {
+        if (propertyDTO.getHeatingText() != null && !propertyDTO.getHeatingText().trim().isEmpty()) {
             List<String> additionalHeating = splitHeatingText(propertyDTO.getHeatingText());
             heatingTypes.addAll(additionalHeating);
         }
         property.setHeating(heatingTypes);
-      Property savedProperty = propertyRepository.save(property);
-      propertyImageService.createPropertyImage(propertyDTO.getImages(), savedProperty);
-      return modelMapper.map(savedProperty, PropertyDTO.class);
+        Property savedProperty = propertyRepository.save(property);
+        propertyImageService.createPropertyImage(propertyDTO.getImages(), savedProperty);
+        return modelMapper.map(savedProperty, PropertyDTO.class);
     }
 
-    private List<String> splitHeatingText(String heatingText) {
-        if (heatingText == null || heatingText.isBlank()) {
-            return List.of();
+    protected List<String> splitHeatingText(String heatingText) {
+        if (heatingText == null || heatingText.trim().isEmpty()) {
+            return new ArrayList<>();
         }
-        String cleanedHeatingText = heatingText.trim().replaceAll("\\s+", " ");
-        Pattern pattern = Pattern.compile("\\s*[;,]\\s*");
-        List<String> heatingTypes = List.of(pattern.split(cleanedHeatingText));
+        List<String> heatingTypes = List.of(heatingText.split("\\s*[;,]\\s*"));
         List<String> heatingTypesWithoutSpace = new ArrayList<>();
         for (String heatingType : heatingTypes) {
-            if (!heatingType.isBlank()) {
-                heatingTypesWithoutSpace.add(heatingType.trim());
-            }
+            heatingTypesWithoutSpace.add(heatingType.trim());
         }
         return heatingTypesWithoutSpace;
     }
 
 }
+
+
