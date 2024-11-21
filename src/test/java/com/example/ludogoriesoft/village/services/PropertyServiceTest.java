@@ -191,6 +191,30 @@ class PropertyServiceTest {
         assertTrue(result.isEmpty());
     }
     @Test
+    void splitHeatingText_ShouldReturnListWithOneHeatingType_WhenOnlyOneTypeIsProvided() {
+        String heatingText = "Gas";
+
+        List<String> result = propertyService.splitHeatingText(heatingText);
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertTrue(result.contains("Gas"));
+    }
+    @Test
+    void splitHeatingText_ShouldIgnoreExtraSpacesBetweenHeatingTypes() {
+        String heatingText = " Wood   ,   Gas , Electric  ,    Oil ";
+
+        List<String> result = propertyService.splitHeatingText(heatingText);
+
+        assertNotNull(result);
+        assertEquals(4, result.size());
+        assertTrue(result.contains("Wood"));
+        assertTrue(result.contains("Gas"));
+        assertTrue(result.contains("Electric"));
+        assertTrue(result.contains("Oil"));
+    }
+
+    @Test
     void createProperty_success() {
         Property property = new Property();
         property.setImageUrl("mockedImageName.jpg");
