@@ -15,8 +15,7 @@ import org.modelmapper.ModelMapper;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class PropertyImageServiceTest {
@@ -42,6 +41,30 @@ class PropertyImageServiceTest {
 
         when(modelMapper.map(any(PropertyImageDTO.class), eq(PropertyImage.class))).thenReturn(propertyImage);
         when(modelMapper.map(any(PropertyImage.class), eq(PropertyImageDTO.class))).thenReturn(propertyImageDTO);
+    }
+    @Test
+    void propertyImageDTOToPropertyImage_ShouldMapPropertyImageDTOToEntity() {
+        PropertyImageDTO propertyImageDTO = new PropertyImageDTO();
+        propertyImageDTO.setImageName("image1.jpg");
+        PropertyImage propertyImage = new PropertyImage();
+        propertyImage.setImageName("image1.jpg");
+
+        when(modelMapper.map(propertyImageDTO, PropertyImage.class)).thenReturn(propertyImage);
+
+        PropertyImage result = propertyImageService.propertyImageDTOToPropertyImage(propertyImageDTO);
+
+        assertEquals(propertyImage, result);
+        verify(modelMapper, times(1)).map(propertyImageDTO, PropertyImage.class);
+    }
+    @Test
+    void propertyImageDTOToPropertyImage_ShouldReturnNullIfInputIsNull() {
+        PropertyImage result = propertyImageService.propertyImageDTOToPropertyImage(null);
+        assertNull(result);
+    }
+    @Test
+    void propertyImageToPropertyImageDTO_ShouldReturnNullIfInputIsNull() {
+        PropertyImageDTO result = propertyImageService.propertyImageToPropertyImageDTO(null);
+        assertNull(result);
     }
 
 

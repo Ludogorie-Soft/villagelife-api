@@ -4,6 +4,7 @@ import com.example.ludogorieSoft.village.dtos.PropertyDTO;
 import com.example.ludogorieSoft.village.dtos.PropertyImageDTO;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.Property;
+import com.example.ludogorieSoft.village.model.PropertyImage;
 import com.example.ludogorieSoft.village.repositories.PropertyRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -62,6 +64,46 @@ class PropertyServiceTest {
         when(modelMapper.map(any(PropertyDTO.class), eq(Property.class))).thenReturn(property);
         when(modelMapper.map(any(Property.class), eq(PropertyDTO.class))).thenReturn(propertyDTO);
     }
+    @Test
+    void propertyDTOToProperty_ShouldMapPropertyDTOToEntity() {
+        PropertyDTO propertyDTO = new PropertyDTO();
+        propertyDTO.setPrice(BigDecimal.valueOf(100));
+        Property property = new Property();
+        property.setPrice(BigDecimal.valueOf(100));
+
+        when(modelMapper.map(propertyDTO, Property.class)).thenReturn(property);
+
+        Property result = propertyService.propertyDTOToProperty(propertyDTO);
+
+        assertEquals(property, result);
+        verify(modelMapper, times(1)).map(propertyDTO, Property.class);
+
+    }
+    @Test
+    void testPropertyToPropertyDTO() {
+        Property property = new Property();
+        property.setPrice(BigDecimal.valueOf(100));
+        PropertyDTO propertyDTO = new PropertyDTO();
+        propertyDTO.setPrice(BigDecimal.valueOf(100));
+
+        when(modelMapper.map(property, PropertyDTO.class)).thenReturn(propertyDTO);
+
+        PropertyDTO result = propertyService.propertyToPropertyDTO(property);
+
+        assertEquals(propertyDTO, result);
+        verify(modelMapper, times(1)).map(property, PropertyDTO.class);
+    }
+    @Test
+    void propertyDTOToProperty_ShouldReturnNullIfInputIsNull() {
+        Property result = propertyService.propertyDTOToProperty(null);
+        assertNull(result);
+    }
+    @Test
+    void propertyToPropertyDTO_ShouldReturnNullIfInputIsNull() {
+        PropertyDTO result = propertyService.propertyToPropertyDTO(null);
+        assertNull(result);
+    }
+
 
     @Test
     void whenImageUrlIsNullThenDoesNotCallImageService() {
