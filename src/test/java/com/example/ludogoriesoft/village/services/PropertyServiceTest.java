@@ -383,5 +383,62 @@ class PropertyServiceTest {
         verify(propertyRepository, times(1)).save(any(Property.class));
         verify(imageService, times(1)).uploadImage(any(byte[].class), any(String.class));
     }
+    @Test
+    void createProperty_ShouldHandleNullHeatingText() {
+        Property property = new Property();
+        property.setImageUrl("mockedImageName.jpg");
+        property.setHeating(Arrays.asList("Heating1", "Heating2"));
 
+        PropertyDTO propertyDTO = new PropertyDTO();
+        propertyDTO.setMainImageBytes(new byte[]{1, 2, 3});
+        propertyDTO.setHeating(Arrays.asList("Heating1", "Heating2"));
+        propertyDTO.setHeatingText(null);
+
+        when(imageService.uploadImage(any(byte[].class), any(String.class))).thenReturn("mockedImageName.jpg");
+        when(propertyRepository.save(any(Property.class))).thenReturn(property);
+        when(modelMapper.map(any(Property.class), eq(PropertyDTO.class))).thenAnswer(invocation -> {
+            Property sourceProperty = invocation.getArgument(0);
+            PropertyDTO mappedPropertyDTO = new PropertyDTO();
+            mappedPropertyDTO.setImageUrl(sourceProperty.getImageUrl());
+            mappedPropertyDTO.setHeating(sourceProperty.getHeating());
+            return mappedPropertyDTO;
+        });
+
+        PropertyDTO result = propertyService.createProperty(propertyDTO);
+
+        assertNotNull(result);
+        assertEquals("mockedImageName.jpg", result.getImageUrl());
+        assertEquals(Arrays.asList("Heating1", "Heating2"), result.getHeating());
+        verify(propertyRepository, times(1)).save(any(Property.class));
+        verify(imageService, times(1)).uploadImage(any(byte[].class), any(String.class));
+    }
+    @Test
+    void createProperty_ShouldHandleWhitespaceOnlyHeatingText() {
+        Property property = new Property();
+        property.setImageUrl("mockedImageName.jpg");
+        property.setHeating(Arrays.asList("Heating1", "Heating2"));
+
+        PropertyDTO propertyDTO = new PropertyDTO();
+        propertyDTO.setMainImageBytes(new byte[]{1, 2, 3});
+        propertyDTO.setHeating(Arrays.asList("Heating1", "Heating2"));
+        propertyDTO.setHeatingText("   "); // Heating text with only whitespace
+
+        when(imageService.uploadImage(any(byte[].class), any(String.class))).thenReturn("mockedImageName.jpg");
+        when(propertyRepository.save(any(Property.class))).thenReturn(property);
+        when(modelMapper.map(any(Property.class), eq(PropertyDTO.class))).thenAnswer(invocation -> {
+            Property sourceProperty = invocation.getArgument(0);
+            PropertyDTO mappedPropertyDTO = new PropertyDTO();
+            mappedPropertyDTO.setImageUrl(sourceProperty.getImageUrl());
+            mappedPropertyDTO.setHeating(sourceProperty.getHeating());
+            return mappedPropertyDTO;
+        });
+
+        PropertyDTO result = propertyService.createProperty(propertyDTO);
+
+        assertNotNull(result);
+        assertEquals("mockedImageName.jpg", result.getImageUrl());
+        assertEquals(Arrays.asList("Heating1", "Heating2"), result.getHeating());
+        verify(propertyRepository, times(1)).save(any(Property.class));
+        verify(imageService, times(1)).uploadImage(any(byte[].class), any(String.class));
+    }
 }
