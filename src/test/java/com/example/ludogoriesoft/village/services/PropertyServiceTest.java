@@ -20,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import java.math.BigDecimal;
 import java.util.*;
 
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -187,75 +188,85 @@ class PropertyServiceTest {
         verify(propertyRepository, times(1)).findById(1L);
     }
     @Test
-    void splitHeatingText_ShouldReturnListOfHeatingTypes() {
-
-        String heatingText = "Wood, Gas, Electric, Oil";
-
-        List<String> result = propertyService.splitHeatingText(heatingText);
-
-        assertNotNull(result);
-        assertEquals(4, result.size());
-        assertTrue(result.contains("Wood"));
-        assertTrue(result.contains("Gas"));
-        assertTrue(result.contains("Electric"));
-        assertTrue(result.contains("Oil"));
-    }
-
-    @Test
-    void splitHeatingText_ShouldTrimExtraSpaces() {
-        String heatingText = " Wood ;  Gas  , Electric   ;   Oil ";
-
-        List<String> result = propertyService.splitHeatingText(heatingText);
-
-        assertNotNull(result);
-        assertEquals(4, result.size());
-        assertTrue(result.contains("Wood"));
-        assertTrue(result.contains("Gas"));
-        assertTrue(result.contains("Electric"));
-        assertTrue(result.contains("Oil"));
-    }
-    @Test
-    void splitHeatingText_ShouldReturnEmptyList_WhenInputIsEmpty() {
-        String heatingText = "";
-
-        List<String> result = propertyService.splitHeatingText(heatingText);
-
-        assertNotNull(result);
-        assertTrue(result.isEmpty());
-    }
-    @Test
-    void splitHeatingText_ShouldReturnEmptyList_WhenInputIsNull() {
+    void shouldReturnEmptyListWhenHeatingTextIsNull() {
         String heatingText = null;
 
         List<String> result = propertyService.splitHeatingText(heatingText);
 
-        assertNotNull(result);
-        assertTrue(result.isEmpty());
+        assertThat(result).isEmpty();
     }
+
     @Test
-    void splitHeatingText_ShouldReturnListWithOneHeatingType_WhenOnlyOneTypeIsProvided() {
+    void shouldReturnEmptyListWhenHeatingTextIsEmpty() {
+        String heatingText = "   ";
+
+        List<String> result = propertyService.splitHeatingText(heatingText);
+
+        assertThat(result).isEmpty();
+    }
+
+    @Test
+    void shouldReturnSingleElementWhenHeatingTextContainsOneWord() {
         String heatingText = "Gas";
 
         List<String> result = propertyService.splitHeatingText(heatingText);
 
-        assertNotNull(result);
-        assertEquals(1, result.size());
-        assertTrue(result.contains("Gas"));
+        assertThat(result).containsExactly("Gas");
     }
+
     @Test
-    void splitHeatingText_ShouldIgnoreExtraSpacesBetweenHeatingTypes() {
-        String heatingText = " Wood   ,   Gas , Electric  ,    Oil ";
+    void shouldSplitHeatingTextBySemicolon() {
+        String heatingText = "Gas;Oil";
 
         List<String> result = propertyService.splitHeatingText(heatingText);
 
-        assertNotNull(result);
-        assertEquals(4, result.size());
-        assertTrue(result.contains("Wood"));
-        assertTrue(result.contains("Gas"));
-        assertTrue(result.contains("Electric"));
-        assertTrue(result.contains("Oil"));
+        assertThat(result).containsExactly("Gas", "Oil");
     }
 
+    @Test
+    void shouldSplitHeatingTextByComma() {
+        String heatingText = "Gas,Oil";
+
+        List<String> result = propertyService.splitHeatingText(heatingText);
+
+        assertThat(result).containsExactly("Gas", "Oil");
+    }
+
+    @Test
+    void shouldSplitHeatingTextByWhitespace() {
+        String heatingText = "Gas Oil";
+
+        List<String> result = propertyService.splitHeatingText(heatingText);
+
+        assertThat(result).containsExactly("Gas", "Oil");
+    }
+
+    @Test
+    void shouldTrimWhitespaceAroundHeatingText() {
+        String heatingText = "  Gas ;  Oil ";
+
+        List<String> result = propertyService.splitHeatingText(heatingText);
+
+        assertThat(result).containsExactly("Gas", "Oil");
+    }
+
+    @Test
+    void shouldHandleMultipleDelimitersInHeatingText() {
+        String heatingText = "Gas; Oil,Electric Heating";
+
+        List<String> result = propertyService.splitHeatingText(heatingText);
+
+        assertThat(result).containsExactly("Gas", "Oil", "Electric", "Heating");
+    }
+
+    @Test
+    void shouldIgnoreExtraDelimiters() {
+        String heatingText = "Gas;;; Oil, , ,Electric";
+
+        List<String> result = propertyService.splitHeatingText(heatingText);
+
+        assertThat(result).containsExactly("Gas", "Oil", "Electric");
+    }
     @Test
     void createProperty_success() {
         Property property = new Property();
