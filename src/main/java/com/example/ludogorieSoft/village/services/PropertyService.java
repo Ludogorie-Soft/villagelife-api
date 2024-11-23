@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static java.util.UUID.randomUUID;
 
@@ -102,13 +104,16 @@ public class PropertyService {
         if (heatingText == null || heatingText.trim().isEmpty()) {
             return new ArrayList<>();
         }
-        List<String> heatingTypes = List.of(heatingText.split("\\s*[;,]\\s*"));
-        List<String> heatingTypesWithoutSpace = new ArrayList<>();
-        for (String heatingType : heatingTypes) {
-            heatingTypesWithoutSpace.add(heatingType.trim());
+        Pattern pattern = Pattern.compile("[^;,\\s]{1,100}");
+        Matcher matcher = pattern.matcher(heatingText);
+
+        List<String> heatingTypes = new ArrayList<>();
+        while (matcher.find()) {
+            heatingTypes.add(matcher.group().trim());
         }
-        return heatingTypesWithoutSpace;
+        return heatingTypes;
     }
+
 
 }
 
