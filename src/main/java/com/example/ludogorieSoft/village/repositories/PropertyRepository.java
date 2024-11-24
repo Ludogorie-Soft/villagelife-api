@@ -5,18 +5,27 @@ import com.example.ludogorieSoft.village.enums.OwnershipType;
 import com.example.ludogorieSoft.village.enums.PropertyTransferType;
 import com.example.ludogorieSoft.village.enums.PropertyType;
 import com.example.ludogorieSoft.village.model.Property;
+import com.example.ludogorieSoft.village.model.UserSearchData;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 public interface PropertyRepository extends JpaRepository<Property, Long> {
     Page<Property> findByDeletedAtIsNullOrderByCreatedAtDesc(Pageable pageable);
     List<Property> findByVillageIdAndDeletedAtIsNullOrderByCreatedAtDesc(Long id);
+    Optional<Property> findByIdAndDeletedAtIsNull(@Param("id") Long id);
+    @Transactional
+    @Modifying
+    @Query("UPDATE Property e SET e.deletedAt = CURRENT_TIMESTAMP WHERE e.id = :id")
+    void softDeleteById(Long id);
 
     @Query(value = "SELECT DISTINCT p FROM Property p " +
             "LEFT JOIN p.heating h " +

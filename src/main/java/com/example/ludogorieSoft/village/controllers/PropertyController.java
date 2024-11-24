@@ -5,10 +5,7 @@ import com.example.ludogorieSoft.village.services.PropertyService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,5 +27,10 @@ public class PropertyController {
     @GetMapping("/{id}")
     public ResponseEntity<PropertyDTO> getPropertyWithMainImageById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(propertyService.getPropertyWithMainImageById(id));
+    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> softDeletePropertyById(@PathVariable("id") Long id) {
+        String result = propertyService.softDeletePropertyById(id);
+        return ResponseEntity.ok(result);
     }
 }

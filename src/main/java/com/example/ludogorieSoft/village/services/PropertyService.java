@@ -9,8 +9,10 @@ import com.example.ludogorieSoft.village.enums.ConstructionType;
 import com.example.ludogorieSoft.village.enums.OwnershipType;
 import com.example.ludogorieSoft.village.enums.PropertyTransferType;
 import com.example.ludogorieSoft.village.enums.PropertyType;
+import com.example.ludogorieSoft.village.exeptions.AccessDeniedException;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.Property;
+import com.example.ludogorieSoft.village.model.UserSearchData;
 import com.example.ludogorieSoft.village.repositories.PropertyRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -32,6 +34,7 @@ public class PropertyService {
     private final ModelMapper modelMapper;
     private VillageService villageService;
     private ImageService imageService;
+    private AuthService authService;
 
 
     public Property propertyDTOToProperty(PropertyDTO propertyDTO) {
@@ -168,5 +171,15 @@ public class PropertyService {
                 })
                 .filter(Objects::nonNull)
                 .toList();
+    }
+    public String softDeletePropertyById(Long id){
+        Optional<Property> optionalProperty = propertyRepository.findByIdAndDeletedAtIsNull(id);
+        if (optionalProperty.isEmpty()) throw new ApiRequestException("No property found for id " + id + "!");
+        Property property = optionalProperty.get();
+        AlternativeUserDTO alternativeUserDTO = authService.getAdministratorInfo();
+        if (property.getAlternativeUser().getId() == alternativeUserDTO.getId() || alternativeUserDTO.getRole().equals(Role.ADMIN))
+            propertyRepository.softDeleteById(optionalProperty.get().getId());
+        else throw new AccessDeniedException("You can not delete others property!");
+        return "Property deleted successfully!";
     }
 }
