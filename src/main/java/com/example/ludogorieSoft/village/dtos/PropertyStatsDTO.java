@@ -17,9 +17,9 @@ import java.time.LocalDateTime;
 public class PropertyStatsDTO {
     private Long id;
     private Long seenInResults;
-    private int views;
-    private int shares;
-    private int saves;
+    private Long views;
+    private Long shares;
+    private Long saves;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)

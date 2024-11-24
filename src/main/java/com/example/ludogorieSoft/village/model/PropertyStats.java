@@ -13,6 +13,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
@@ -23,10 +25,18 @@ public class PropertyStats {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotNull
+    @Min(value = 0, message = "Seen in results cannot be less than 0!")
     private Long seenInResults;
-    private int views;
-    private int shares;
-    private int saves;
+    @NotNull
+    @Min(value = 0, message = "Views cannot be less than 0!")
+    private Long views;
+    @NotNull
+    @Min(value = 0, message = "Shares cannot be less than 0!")
+    private Long shares;
+    @NotNull
+    @Min(value = 0, message = "Saves cannot be less than 0!")
+    private Long saves;
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)

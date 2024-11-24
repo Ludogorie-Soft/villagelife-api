@@ -85,7 +85,8 @@ public class PropertyService {
     }
 
     public PropertyDTO getPropertyWithMainImageById(Long id) {
-        PropertyDTO propertyDTO = propertyToPropertyDTO(getPropertyById(id));
+        Property property = getPropertyById(id);
+        PropertyDTO propertyDTO = propertyToPropertyDTO(property);
         addMainImageToPropertyDTO(propertyDTO);
         return propertyDTO;
     }
