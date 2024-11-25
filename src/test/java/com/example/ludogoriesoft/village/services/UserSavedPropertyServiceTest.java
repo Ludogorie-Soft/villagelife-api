@@ -1,6 +1,7 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.UserSavedPropertyDTO;
+import com.example.ludogorieSoft.village.model.Property;
 import com.example.ludogorieSoft.village.model.UserSavedProperty;
 import com.example.ludogorieSoft.village.repositories.UserSavedPropertyRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,6 +27,8 @@ class UserSavedPropertyServiceTest {
 
     @Mock
     private PropertyService propertyService;
+    @Mock
+    private PropertyStatsService propertyStatsService;
 
     private UserSavedProperty userSavedProperty;
     private UserSavedPropertyDTO userSavedPropertyDTO;
@@ -90,9 +93,12 @@ class UserSavedPropertyServiceTest {
         Long propertyId = 1L;
         Long userId = 1L;
 
+        Property property = new Property();
+        property.setId(propertyId);
+
         when(userSavedPropertyRepository.findByPropertyIdAndUserId(propertyId, userId)).thenReturn(null);
         when(administratorService.administratorDTOToAdministrator(any())).thenReturn(userSavedProperty.getUser());
-        when(propertyService.getPropertyById(propertyId)).thenReturn(userSavedProperty.getProperty());
+        when(propertyService.getPropertyById(propertyId)).thenReturn(property);
         when(userSavedPropertyRepository.save(any())).thenReturn(userSavedProperty);
 
         UserSavedPropertyDTO result = userSavedPropertyService.toggleUserSavedProperty(propertyId, userId);
@@ -107,6 +113,10 @@ class UserSavedPropertyServiceTest {
         Long userId = 1L;
         userSavedProperty.setDeletedAt(null);
 
+        Property property = new Property();
+        property.setId(propertyId);
+
+        when(propertyService.getPropertyById(propertyId)).thenReturn(property);
         when(userSavedPropertyRepository.findByPropertyIdAndUserId(propertyId, userId)).thenReturn(userSavedProperty);
         when(userSavedPropertyRepository.save(any())).thenReturn(userSavedProperty);
 
