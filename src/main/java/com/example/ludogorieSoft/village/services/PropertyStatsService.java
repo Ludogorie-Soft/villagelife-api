@@ -33,7 +33,7 @@ public class PropertyStatsService {
         return propertyStatsToPropertyStatsDTO(propertyStats);
     }
 
-    private void checkPropertyStatsValidations(PropertyStatsDTO propertyStatsDTO) {
+    protected void checkPropertyStatsValidations(PropertyStatsDTO propertyStatsDTO) {
         if(propertyStatsDTO.getSeenInResults() < 0){
             throw new ApiRequestException("Seen in results cannot be less than 0!");
         }
