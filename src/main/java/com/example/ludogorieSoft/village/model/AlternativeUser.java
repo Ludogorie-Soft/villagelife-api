@@ -59,9 +59,8 @@ public class AlternativeUser implements UserDetails {
     @OneToMany(mappedBy = "alternativeUser", cascade = CascadeType.ALL)
     private List<VerificationToken> verificationTokens;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_search_data_id")
-    private transient UserSearchData userSearchData;
+    @OneToMany(mappedBy = "alternativeUser", cascade = CascadeType.ALL)
+    private transient List<UserSearchData> userSearchDataList;
 
     private String jobTitle;
 

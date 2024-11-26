@@ -86,6 +86,11 @@ public class Property {
     @NotBlank(message = "Address is required and cannot be blank.")
     private String address;
 
+    @Column(name = "description", columnDefinition = "TEXT")
+    private String description;
+
+    private String address;
+
     @OneToOne
     @JoinColumn(name = "stats_id")
     private PropertyStats propertyStats;
