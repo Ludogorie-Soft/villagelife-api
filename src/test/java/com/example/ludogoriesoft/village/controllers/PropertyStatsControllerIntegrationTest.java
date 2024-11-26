@@ -20,8 +20,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(value = PropertyStatsController.class,
@@ -69,13 +68,13 @@ class PropertyStatsControllerIntegrationTest {
     @Test
     void testIncrementPropertyViewsWhenPropertyNotFound() throws Exception {
         Long propertyId = 999L;
+        String expectedErrorMessage = "Property not found";
 
-        when(propertyStatsService.incrementViewsByPropertyId(propertyId)).thenThrow(new ApiRequestException("Property not found"));
+        when(propertyStatsService.incrementViewsByPropertyId(propertyId)).thenThrow(new ApiRequestException(expectedErrorMessage));
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/property-stats/{propertyId}/increment-views", propertyId)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(result -> System.out.println(result.getResponse().getContentAsString()));
-
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/property-stats/{propertyId}/increment-views", propertyId))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(expectedErrorMessage));
     }
 
 }
