@@ -1,11 +1,8 @@
-package com.example.ludogoriesoft.village.controllers;
+package com.example.ludogorieSoft.village.controllers;
 
-import com.example.ludogorieSoft.village.controllers.PropertyImageController;
-import com.example.ludogorieSoft.village.controllers.PropertyStatsController;
 import com.example.ludogorieSoft.village.dtos.PropertyStatsDTO;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.exeptions.handler.ApiExceptionHandler;
-import com.example.ludogorieSoft.village.services.PropertyImageService;
 import com.example.ludogorieSoft.village.services.PropertyStatsService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
