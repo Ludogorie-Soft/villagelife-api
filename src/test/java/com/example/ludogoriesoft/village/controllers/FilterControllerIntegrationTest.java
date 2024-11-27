@@ -120,7 +120,7 @@ class FilterControllerIntegrationTest {
         property1.setPropertyTransferType(PropertyTransferType.SALE);
         property1.setPrice(BigDecimal.valueOf(50000));
         property1.setBuildUpArea(120.5);
-        property1.setRoomsCount(3);
+        property1.setRoomsCount((short) 3);
         property1.setHeating(Arrays.asList("Electric", "Wood"));
         property1.setCreatedAt(LocalDateTime.now());
 
@@ -131,7 +131,7 @@ class FilterControllerIntegrationTest {
         property2.setPropertyTransferType(PropertyTransferType.RENT);
         property2.setPrice(BigDecimal.valueOf(75000));
         property2.setBuildUpArea(85.0);
-        property2.setRoomsCount(2);
+        property2.setRoomsCount((short) 2);
         property2.setHeating(Collections.singletonList("Gas"));
         property2.setCreatedAt(LocalDateTime.now());
 
@@ -197,7 +197,7 @@ class FilterControllerIntegrationTest {
         property.setId(1L);
         property.setPropertyType(PropertyType.HOUSE);
         property.setPrice(BigDecimal.valueOf(50000));
-        property.setRoomsCount(3);
+        property.setRoomsCount((short) 3);
         property.setBuildUpArea(120.5);
         property.setCreatedAt(LocalDateTime.now());
 
