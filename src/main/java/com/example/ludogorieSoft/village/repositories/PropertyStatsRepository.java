@@ -8,9 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
-public interface PropertyStatsRepository extends JpaRepository<PropertyStats, Long> {
+public interface PropertyStatsRepository extends JpaRepository<PropertyStats,Long> {
     @Transactional
     @Modifying
     @Query("UPDATE PropertyStats ps SET ps.views = ps.views + 1 " +
