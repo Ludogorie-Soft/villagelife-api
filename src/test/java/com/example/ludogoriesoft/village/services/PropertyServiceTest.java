@@ -93,11 +93,9 @@ class PropertyServiceTest {
         assertNull(result);
     }
     @Test
-    void propertyToPropertyDTO_ShouldReturnNullIfInputIsNull() {
-        PropertyDTO result = propertyService.propertyToPropertyDTO(null);
-        assertNull(result);
+    void propertyToPropertyDTO_ShouldThrowExceptionIfInputIsNull() {
+        assertThrows(IllegalArgumentException.class, () -> propertyService.propertyToPropertyDTO(null));
     }
-
 
     @Test
     void whenImageUrlIsNullThenDoesNotCallImageService() {
@@ -130,26 +128,32 @@ class PropertyServiceTest {
     }
 
     @Test
-    void testPropertyToPropertyDTO() {
+    void testPropertyToPropertyDTO_WithNullVillage() {
         Property property = mock(Property.class);
         AlternativeUser alternativeUser = mock(AlternativeUser.class);
         BusinessCard businessCard = mock(BusinessCard.class);
 
+        // Mocking Property behavior
         when(property.getAlternativeUser()).thenReturn(alternativeUser);
+        when(property.getVillage()).thenReturn(null); // Simulate null Village
+        when(property.getPropertyStats()).thenReturn(mock(PropertyStats.class));
         when(alternativeUser.getBusinessCard()).thenReturn(businessCard);
 
+        // Mocking ModelMapper behavior
         when(modelMapper.map(property, PropertyDTO.class)).thenReturn(propertyDTO);
-        when(villageService.villageToVillageDTO(property.getVillage())).thenReturn(propertyDTO.getVillageDTO());
         when(modelMapper.map(alternativeUser, AlternativeUserDTO.class)).thenReturn(new AlternativeUserDTO());
         when(modelMapper.map(property.getPropertyStats(), PropertyStatsDTO.class)).thenReturn(new PropertyStatsDTO());
         when(modelMapper.map(businessCard, BusinessCardDTO.class)).thenReturn(new BusinessCardDTO());
 
+        // Call the method under test
         PropertyDTO result = propertyService.propertyToPropertyDTO(property);
 
+        // Assertions
         assertEquals(propertyDTO, result);
         verify(modelMapper, times(1)).map(property, PropertyDTO.class);
-        verify(villageService, times(1)).villageToVillageDTO(property.getVillage());
+        verify(villageService, never()).villageToVillageDTO(any()); // Ensure no call happens
     }
+
 
 
     @Test
