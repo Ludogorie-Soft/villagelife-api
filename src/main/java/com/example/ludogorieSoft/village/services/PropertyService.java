@@ -45,28 +45,47 @@ public class PropertyService {
     }
 
     public PropertyDTO propertyToPropertyDTO(Property property) {
-        PropertyDTO propertyDTO = modelMapper.map(property, PropertyDTO.class);
-        propertyDTO.setVillageDTO(villageService.villageToVillageDTO(property.getVillage()));
-        AlternativeUserDTO alternativeUserDTO = modelMapper.map(property.getAlternativeUser(), AlternativeUserDTO.class);
-        propertyDTO.setAlternativeUserDTO(alternativeUserDTO);
-        if(alternativeUserDTO.getRole() != Role.USER && alternativeUserDTO.getRole() != Role.ADMIN){
-            BusinessCardDTO businessCardDTO = modelMapper.map(property.getAlternativeUser().getBusinessCard(), BusinessCardDTO.class);
-            propertyDTO.getAlternativeUserDTO().setBusinessCardDTO(businessCardDTO);
+        PropertyDTO propertyDTO;
+        if (property == null) {
+            throw new IllegalArgumentException("Property cannot be null");
+        }
+        propertyDTO = modelMapper.map(property, PropertyDTO.class);
+        if (property.getVillage() != null) {
+            propertyDTO.setVillageDTO(villageService.villageToVillageDTO(property.getVillage()));
+        }
+        if (property.getAlternativeUser() != null) {
+            AlternativeUserDTO alternativeUserDTO = modelMapper.map(property.getAlternativeUser(), AlternativeUserDTO.class);
+            propertyDTO.setAlternativeUserDTO(alternativeUserDTO);
+
+            if (alternativeUserDTO.getRole() != Role.USER && alternativeUserDTO.getRole() != Role.ADMIN &&
+                    property.getAlternativeUser().getBusinessCard() != null) {
+                BusinessCardDTO businessCardDTO = modelMapper.map(
+                        property.getAlternativeUser().getBusinessCard(),
+                        BusinessCardDTO.class
+                );
+                propertyDTO.getAlternativeUserDTO().setBusinessCardDTO(businessCardDTO);
+            }
         }
         propertyDTO.setImageUrl(property.getImageUrl());
-        PropertyStatsDTO propertyStatsDTO = modelMapper.map(property.getPropertyStats(), PropertyStatsDTO.class);
-        propertyDTO.setPropertyStatsDTO(propertyStatsDTO);
+        if (property.getPropertyStats() != null) {
+            PropertyStatsDTO propertyStatsDTO = modelMapper.map(property.getPropertyStats(), PropertyStatsDTO.class);
+            propertyDTO.setPropertyStatsDTO(propertyStatsDTO);
+        }
+
         return propertyDTO;
     }
 
     public Page<PropertyDTO> getAllPropertiesAndMainImage(int pageNumber, int elementsCount) {
         Pageable page = PageRequest.of(pageNumber, elementsCount);
         Page<Property> properties = propertyRepository.findByDeletedAtIsNullOrderByCreatedAtDesc(page);
-        List<PropertyDTO> propertyDTOS = properties.stream().map(property -> {
-            PropertyDTO propertyDTO = propertyToPropertyDTO(property);
-            addMainImageToPropertyDTO(propertyDTO);
-            return propertyDTO;
-        }).toList();
+        List<PropertyDTO> propertyDTOS = properties.stream()
+                .filter(Objects::nonNull) // Ensure property is not null
+                .map(property -> {
+                    PropertyDTO propertyDTO = propertyToPropertyDTO(property);
+                    addMainImageToPropertyDTO(propertyDTO);
+                    return propertyDTO;
+                })
+                .toList();
         return new PageImpl<>(propertyDTOS, page, properties.getTotalElements());
     }
 
