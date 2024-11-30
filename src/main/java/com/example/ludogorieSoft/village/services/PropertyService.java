@@ -21,10 +21,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static java.util.UUID.randomUUID;
 
 @Service
 @AllArgsConstructor
@@ -33,34 +38,55 @@ public class PropertyService {
     private final ModelMapper modelMapper;
     private VillageService villageService;
     private ImageService imageService;
+    private PropertyImageService propertyImageService;
 
 
     public Property propertyDTOToProperty(PropertyDTO propertyDTO) {
         return modelMapper.map(propertyDTO, Property.class);
     }
+
     public PropertyDTO propertyToPropertyDTO(Property property) {
-        PropertyDTO propertyDTO = modelMapper.map(property, PropertyDTO.class);
-        propertyDTO.setVillageDTO(villageService.villageToVillageDTO(property.getVillage()));
-        AlternativeUserDTO alternativeUserDTO = modelMapper.map(property.getAlternativeUser(), AlternativeUserDTO.class);
-        propertyDTO.setAlternativeUserDTO(alternativeUserDTO);
-        if(alternativeUserDTO.getRole() != Role.USER && alternativeUserDTO.getRole() != Role.ADMIN){
-            BusinessCardDTO businessCardDTO = modelMapper.map(property.getAlternativeUser().getBusinessCard(), BusinessCardDTO.class);
-            propertyDTO.getAlternativeUserDTO().setBusinessCardDTO(businessCardDTO);
+        PropertyDTO propertyDTO;
+        if (property == null) {
+            throw new IllegalArgumentException("Property cannot be null");
+        }
+        propertyDTO = modelMapper.map(property, PropertyDTO.class);
+        if (property.getVillage() != null) {
+            propertyDTO.setVillageDTO(villageService.villageToVillageDTO(property.getVillage()));
+        }
+        if (property.getAlternativeUser() != null) {
+            AlternativeUserDTO alternativeUserDTO = modelMapper.map(property.getAlternativeUser(), AlternativeUserDTO.class);
+            propertyDTO.setAlternativeUserDTO(alternativeUserDTO);
+
+            if (alternativeUserDTO.getRole() != Role.USER && alternativeUserDTO.getRole() != Role.ADMIN &&
+                    property.getAlternativeUser().getBusinessCard() != null) {
+                BusinessCardDTO businessCardDTO = modelMapper.map(
+                        property.getAlternativeUser().getBusinessCard(),
+                        BusinessCardDTO.class
+                );
+                propertyDTO.getAlternativeUserDTO().setBusinessCardDTO(businessCardDTO);
+            }
         }
         propertyDTO.setImageUrl(property.getImageUrl());
-        PropertyStatsDTO propertyStatsDTO = modelMapper.map(property.getPropertyStats(), PropertyStatsDTO.class);
-        propertyDTO.setPropertyStatsDTO(propertyStatsDTO);
+        if (property.getPropertyStats() != null) {
+            PropertyStatsDTO propertyStatsDTO = modelMapper.map(property.getPropertyStats(), PropertyStatsDTO.class);
+            propertyDTO.setPropertyStatsDTO(propertyStatsDTO);
+        }
+
         return propertyDTO;
     }
 
     public Page<PropertyDTO> getAllPropertiesAndMainImage(int pageNumber, int elementsCount) {
         Pageable page = PageRequest.of(pageNumber, elementsCount);
         Page<Property> properties = propertyRepository.findByDeletedAtIsNullOrderByCreatedAtDesc(page);
-        List<PropertyDTO> propertyDTOS = properties.stream().map(property -> {
-            PropertyDTO propertyDTO = propertyToPropertyDTO(property);
-            addMainImageToPropertyDTO(propertyDTO);
-            return propertyDTO;
-        }).toList();
+        List<PropertyDTO> propertyDTOS = properties.stream()
+                .filter(Objects::nonNull) // Ensure property is not null
+                .map(property -> {
+                    PropertyDTO propertyDTO = propertyToPropertyDTO(property);
+                    addMainImageToPropertyDTO(propertyDTO);
+                    return propertyDTO;
+                })
+                .toList();
         return new PageImpl<>(propertyDTOS, page, properties.getTotalElements());
     }
 
@@ -173,17 +199,55 @@ public class PropertyService {
                 .toList();
     }
 
-    private List<OwnershipType> mapToOwnershipTypeList(List<String> ownershipTypes) {
-        if (ownershipTypes == null) return null;
-        return ownershipTypes.stream()
-                .map(type -> {
-                    try {
-                        return OwnershipType.valueOf(type);
-                    } catch (IllegalArgumentException e) {
-                        return null;
-                    }
-                })
-                .filter(Objects::nonNull)
-                .toList();
+        private List<OwnershipType> mapToOwnershipTypeList (List < String > ownershipTypes) {
+            if (ownershipTypes == null) return null;
+            return ownershipTypes.stream()
+                    .map(type -> {
+                        try {
+                            return OwnershipType.valueOf(type);
+                        } catch (IllegalArgumentException e) {
+                            return null;
+                        }
+                    })
+                    .filter(Objects::nonNull)
+                    .toList();
+        }
+
+        public PropertyDTO createProperty (PropertyDTO propertyDTO){
+            Property property = propertyDTOToProperty(propertyDTO);
+            String imageUUID = randomUUID().toString();
+            String imageName = imageService.uploadImage(propertyDTO.getMainImageBytes(), imageUUID);
+            property.setImageUrl(imageName);
+            List<String> heatingTypes = new ArrayList<>();
+            if (propertyDTO.getHeating() != null) {
+                heatingTypes.addAll(propertyDTO.getHeating());
+            }
+            if (propertyDTO.getHeatingText() != null && !propertyDTO.getHeatingText().trim().isEmpty()) {
+                List<String> additionalHeating = splitHeatingText(propertyDTO.getHeatingText());
+                heatingTypes.addAll(additionalHeating);
+            }
+            property.setHeating(heatingTypes);
+            Property savedProperty = propertyRepository.save(property);
+            propertyImageService.createPropertyImage(propertyDTO.getImages(), savedProperty);
+            return modelMapper.map(savedProperty, PropertyDTO.class);
+        }
+
+        protected List<String> splitHeatingText (String heatingText){
+            if (heatingText == null || heatingText.trim().isEmpty()) {
+                return new ArrayList<>();
+            }
+            Pattern pattern = Pattern.compile("[^;,\\s]{1,100}");
+            Matcher matcher = pattern.matcher(heatingText);
+
+            List<String> heatingTypes = new ArrayList<>();
+            while (matcher.find()) {
+                heatingTypes.add(matcher.group().trim());
+            }
+            return heatingTypes;
+        }
+
+
     }
-}
+
+
+

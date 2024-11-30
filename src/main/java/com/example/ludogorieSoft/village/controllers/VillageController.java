@@ -72,4 +72,5 @@ public class VillageController {
     public List<Long> testSitemap(@PathVariable boolean status) {
         return villageService.getAllApprovedVillagesByStatus(status);
     }
+
 }

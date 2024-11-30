@@ -46,7 +46,7 @@ class InquiryServiceTest {
         Village village = new Village();
         village.setId(1L);
         village.setName("Test Village");
-        village.setRegion(new Region(1L, "Test Region"));
+        village.setRegion(new Region(1L, "Test Region", ""));
 
         when(villageService.checkVillage(1L)).thenReturn(village);
 

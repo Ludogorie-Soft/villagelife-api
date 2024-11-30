@@ -6,9 +6,9 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum OwnershipType {
-    INDIVIDUAL("Частно лице"),
-    AGENCY("Агенция"),
-    BUILDER("Строител"),
-    INVESTOR("Инвеститор");
-    private final String name;
+    INDIVIDUAL("ownership.type.individual"),
+    AGENCY("ownership.type.agency"),
+    BUILDER("ownership.type.builder"),
+    INVESTOR("ownership.type.investor");
+    private final String key;
 }

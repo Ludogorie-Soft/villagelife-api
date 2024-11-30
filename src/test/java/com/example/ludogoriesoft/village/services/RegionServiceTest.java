@@ -41,7 +41,7 @@ class RegionServiceTest {
     @Test
     void testCheckRegionValidIdReturnsRegion() {
         Long validId = 1L;
-        Region expectedRegion = new Region(validId, "Region Name");
+        Region expectedRegion = new Region(validId, "Region Name", "");
         when(regionRepository.findById(validId)).thenReturn(Optional.of(expectedRegion));
 
         Region result = regionService.checkRegion(validId);

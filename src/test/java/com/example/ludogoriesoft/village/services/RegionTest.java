@@ -39,13 +39,16 @@ class RegionTest {
         Class<?> regionClass = Region.class;
         boolean hasAllArgsConstructor = false;
         try {
-            regionClass.getDeclaredConstructor(Long.class, String.class);
+            // Adjusted to match the new constructor with three parameters
+            regionClass.getDeclaredConstructor(Long.class, String.class, String.class);
             hasAllArgsConstructor = true;
         } catch (NoSuchMethodException e) {
+            // Constructor does not exist
         }
 
         Assertions.assertTrue(hasAllArgsConstructor);
     }
+
 
     @Test
     void hasNoArgsConstructor() {
