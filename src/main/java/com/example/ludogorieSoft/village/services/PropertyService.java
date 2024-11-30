@@ -116,7 +116,8 @@ public class PropertyService {
         Page<Property> properties = propertyRepository.searchProperties(
                 propertyTypesValues, propertyTransferTypeValue, minBuiltUpArea, maxBuiltUpArea, minYardArea, maxYardArea,
                 minRoomsCount, maxRoomsCount, minBathroomsCount, maxBathroomsCount, heating, constructionTypesValues, propertyConditionsValues,
-                minConstructionYear, maxConstructionYear, minPrice, maxPrice, ownershipTypesValues, villageName, regionName, pageable);
+                minConstructionYear != null ? minConstructionYear.toString() : null,
+                maxConstructionYear != null ? maxConstructionYear.toString() : null, minPrice, maxPrice, ownershipTypesValues, villageName, regionName, pageable);
 
         return properties.map(this::propertyToPropertyDTO);
     }

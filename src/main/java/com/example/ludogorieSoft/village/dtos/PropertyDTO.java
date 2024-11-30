@@ -31,7 +31,7 @@ public class PropertyDTO {
     private List<String> heating;
     private String imageUrl;
     private ConstructionType constructionType;
-    private Short constructionYear;
+    private String constructionYear;
     private String extras;
     private String description;
     private String address;

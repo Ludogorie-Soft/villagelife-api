@@ -249,7 +249,7 @@ class PropertyServiceTest {
                 any(), any(), eq(minBuiltUpArea), eq(maxBuiltUpArea),
                 eq(minYardArea), eq(maxYardArea), eq(minRoomsCount), eq(maxRoomsCount),
                 eq(minBathroomsCount), eq(maxBathroomsCount), eq(heating), any(), any(),
-                eq(minConstructionYear), eq(maxConstructionYear), eq(minPrice), eq(maxPrice),
+                eq(minConstructionYear.toString()), eq(maxConstructionYear.toString()), eq(minPrice), eq(maxPrice),
                 any(), eq(villageName), eq(regionName), eq(pageable)
         );
         assertEquals(1, result.getTotalElements());

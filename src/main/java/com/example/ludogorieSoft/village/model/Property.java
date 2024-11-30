@@ -78,7 +78,7 @@ public class Property {
     @Enumerated(EnumType.STRING)
     private ConstructionType constructionType;
 
-    private Short constructionYear;
+    private String constructionYear;
 
     @Column(name = "extras", columnDefinition = "TEXT")
     private String extras;
