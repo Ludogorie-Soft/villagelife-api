@@ -138,8 +138,8 @@ class PropertyControllerIntegrationTest {
         propertyDTO.setPhoneNumber("1234567890");
         propertyDTO.setBuildUpArea(120.0);
         propertyDTO.setYardArea(50.0);
-        propertyDTO.setRoomsCount(3);
-        propertyDTO.setBathroomsCount(2);
+        propertyDTO.setRoomsCount((short)3);
+        propertyDTO.setBathroomsCount((short)2);
         propertyDTO.setHeating(Arrays.asList("Gas", "Electric"));
         propertyDTO.setDescription("A beautiful house in the village.");
         propertyDTO.setAddress("123 Village St.");
@@ -151,8 +151,8 @@ class PropertyControllerIntegrationTest {
         createdPropertyDTO.setPhoneNumber("1234567890");
         createdPropertyDTO.setBuildUpArea(120.0);
         createdPropertyDTO.setYardArea(50.0);
-        createdPropertyDTO.setRoomsCount(3);
-        createdPropertyDTO.setBathroomsCount(2);
+        createdPropertyDTO.setRoomsCount((short)3);
+        createdPropertyDTO.setBathroomsCount((short)2);
         createdPropertyDTO.setHeating(Arrays.asList("Gas", "Electric"));
         createdPropertyDTO.setDescription("A beautiful house in the village.");
         createdPropertyDTO.setAddress("123 Village St.");
