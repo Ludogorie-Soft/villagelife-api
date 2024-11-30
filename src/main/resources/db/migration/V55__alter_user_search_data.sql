@@ -52,5 +52,4 @@ ALTER TABLE user_search_data
 
 ALTER TABLE properties
     MODIFY COLUMN rooms_count SMALLINT,
-    MODIFY COLUMN bathrooms_count SMALLINT,
-    MODIFY COLUMN construction_year SMALLINT;
+    MODIFY COLUMN bathrooms_count SMALLINT;
