@@ -2,6 +2,7 @@ package com.example.ludogorieSoft.village.dtos;
 
 import com.example.ludogorieSoft.village.enums.ConstructionType;
 import com.example.ludogorieSoft.village.enums.OwnershipType;
+import com.example.ludogorieSoft.village.enums.PropertyCondition;
 import com.example.ludogorieSoft.village.enums.PropertyTransferType;
 import com.example.ludogorieSoft.village.enums.PropertyType;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -54,6 +55,8 @@ public class UserSearchDataDTO {
     private List<String> heating;
 
     private List<ConstructionType> constructionTypes;
+
+    private List<PropertyCondition> propertyConditions;
 
     private Short minConstructionYear;
 

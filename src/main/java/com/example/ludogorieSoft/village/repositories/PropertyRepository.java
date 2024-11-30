@@ -2,6 +2,7 @@ package com.example.ludogorieSoft.village.repositories;
 
 import com.example.ludogorieSoft.village.enums.ConstructionType;
 import com.example.ludogorieSoft.village.enums.OwnershipType;
+import com.example.ludogorieSoft.village.enums.PropertyCondition;
 import com.example.ludogorieSoft.village.enums.PropertyTransferType;
 import com.example.ludogorieSoft.village.enums.PropertyType;
 import com.example.ludogorieSoft.village.model.Property;
@@ -34,6 +35,7 @@ public interface PropertyRepository extends JpaRepository<Property, Long> {
             "AND (:maxBathroomsCount IS NULL OR p.bathroomsCount <= :maxBathroomsCount) " +
             "AND (COALESCE(:heating) IS NULL OR h IN :heating) " +
             "AND (COALESCE(:constructionTypes) IS NULL OR p.constructionType IN :constructionTypes) " +
+            "AND (COALESCE(:propertyConditions) IS NULL OR p.propertyCondition IN :propertyConditions)" +
             "AND (:minConstructionYear IS NULL OR p.constructionYear >= :minConstructionYear) " +
             "AND (:maxConstructionYear IS NULL OR p.constructionYear <= :maxConstructionYear) " +
             "AND (:minPrice IS NULL OR p.price >= :minPrice) " +
@@ -56,8 +58,9 @@ public interface PropertyRepository extends JpaRepository<Property, Long> {
                                     @Param("maxBathroomsCount") Short maxBathroomsCount,
                                     @Param("heating") List<String> heating,
                                     @Param("constructionTypes") List<ConstructionType> constructionTypes,
-                                    @Param("minConstructionYear") Short minConstructionYear,
-                                    @Param("maxConstructionYear") Short maxConstructionYear,
+                                    @Param("propertyConditions") List<PropertyCondition> propertyConditions,
+                                    @Param("minConstructionYear") String minConstructionYear,
+                                    @Param("maxConstructionYear") String maxConstructionYear,
                                     @Param("minPrice") BigDecimal minPrice,
                                     @Param("maxPrice") BigDecimal maxPrice,
                                     @Param("ownershipTypes") List<OwnershipType> ownershipTypes,

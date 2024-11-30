@@ -4,6 +4,7 @@ import com.example.ludogorieSoft.village.dtos.AlternativeUserDTO;
 import com.example.ludogorieSoft.village.dtos.BusinessCardDTO;
 import com.example.ludogorieSoft.village.dtos.PropertyDTO;
 import com.example.ludogorieSoft.village.dtos.PropertyStatsDTO;
+import com.example.ludogorieSoft.village.enums.PropertyCondition;
 import com.example.ludogorieSoft.village.enums.Role;
 import com.example.ludogorieSoft.village.enums.ConstructionType;
 import com.example.ludogorieSoft.village.enums.OwnershipType;
@@ -123,64 +124,80 @@ public class PropertyService {
         return optionalProperty.get();
     }
 
-        public Page<PropertyDTO> getSearchProperties (List < String > propertyTypes, String propertyTransferType,
-                Double minBuiltUpArea, Double maxBuiltUpArea, Double minYardArea,
-                Double maxYardArea, Short minRoomsCount, Short maxRoomsCount,
-                Short minBathroomsCount, Short maxBathroomsCount, List < String > heating,
-                List < String > constructionTypes, Short minConstructionYear,
-                Short maxConstructionYear, BigDecimal minPrice, BigDecimal maxPrice,
-                List < String > ownershipTypes, String villageName, String regionName,
-                Pageable pageable){
+    public Page<PropertyDTO> getSearchProperties(List<String> propertyTypes, String propertyTransferType,
+                                                 Double minBuiltUpArea, Double maxBuiltUpArea, Double minYardArea,
+                                                 Double maxYardArea, Short minRoomsCount, Short maxRoomsCount,
+                                                 Short minBathroomsCount, Short maxBathroomsCount, List<String> heating,
+                                                 List<String> constructionTypes, List<String> propertyConditions, Short minConstructionYear,
+                                                 Short maxConstructionYear, BigDecimal minPrice, BigDecimal maxPrice,
+                                                 List<String> ownershipTypes, String villageName, String regionName,
+                                                 Pageable pageable) {
 
-            List<PropertyType> propertyTypesValues = mapToPropertyTypeList(propertyTypes);
-            PropertyTransferType propertyTransferTypeValue = mapToPropertyTransferType(propertyTransferType);
-            List<ConstructionType> constructionTypesValues = mapToConstructionTypeList(constructionTypes);
-            List<OwnershipType> ownershipTypesValues = mapToOwnershipTypeList(ownershipTypes);
+        List<PropertyType> propertyTypesValues = mapToPropertyTypeList(propertyTypes);
+        PropertyTransferType propertyTransferTypeValue = mapToPropertyTransferType(propertyTransferType);
+        List<ConstructionType> constructionTypesValues = mapToConstructionTypeList(constructionTypes);
+        List<PropertyCondition> propertyConditionsValues = mapToPropertyConditionList(propertyConditions);
+        List<OwnershipType> ownershipTypesValues = mapToOwnershipTypeList(ownershipTypes);
 
-            Page<Property> properties = propertyRepository.searchProperties(
-                    propertyTypesValues, propertyTransferTypeValue, minBuiltUpArea, maxBuiltUpArea, minYardArea, maxYardArea,
-                    minRoomsCount, maxRoomsCount, minBathroomsCount, maxBathroomsCount, heating, constructionTypesValues,
-                    minConstructionYear, maxConstructionYear, minPrice, maxPrice, ownershipTypesValues, villageName, regionName, pageable);
+        Page<Property> properties = propertyRepository.searchProperties(
+                propertyTypesValues, propertyTransferTypeValue, minBuiltUpArea, maxBuiltUpArea, minYardArea, maxYardArea,
+                minRoomsCount, maxRoomsCount, minBathroomsCount, maxBathroomsCount, heating, constructionTypesValues, propertyConditionsValues,
+                minConstructionYear != null ? minConstructionYear.toString() : null,
+                maxConstructionYear != null ? maxConstructionYear.toString() : null, minPrice, maxPrice, ownershipTypesValues, villageName, regionName, pageable);
 
-            return properties.map(this::propertyToPropertyDTO);
+        return properties.map(this::propertyToPropertyDTO);
+    }
+
+    private List<PropertyType> mapToPropertyTypeList(List<String> propertyTypes) {
+        if (propertyTypes == null) return null;
+        return propertyTypes.stream()
+                .map(type -> {
+                    try {
+                        return PropertyType.valueOf(type);
+                    } catch (IllegalArgumentException e) {
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull)
+                .toList();
+    }
+
+    private PropertyTransferType mapToPropertyTransferType(String propertyTransferType) {
+        if (propertyTransferType == null) return null;
+        try {
+            return PropertyTransferType.valueOf(propertyTransferType);
+        } catch (IllegalArgumentException e) {
+            return null;
         }
+    }
 
-        private List<PropertyType> mapToPropertyTypeList (List < String > propertyTypes) {
-            if (propertyTypes == null) return null;
-            return propertyTypes.stream()
-                    .map(type -> {
-                        try {
-                            return PropertyType.valueOf(type);
-                        } catch (IllegalArgumentException e) {
-                            return null;
-                        }
-                    })
-                    .filter(Objects::nonNull)
-                    .toList();
-        }
+    private List<ConstructionType> mapToConstructionTypeList(List<String> constructionTypes) {
+        if (constructionTypes == null) return null;
+        return constructionTypes.stream()
+                .map(type -> {
+                    try {
+                        return ConstructionType.valueOf(type);
+                    } catch (IllegalArgumentException e) {
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull)
+                .toList();
+    }
 
-        private PropertyTransferType mapToPropertyTransferType (String propertyTransferType){
-            if (propertyTransferType == null) return null;
-            try {
-                return PropertyTransferType.valueOf(propertyTransferType);
-            } catch (IllegalArgumentException e) {
-                return null;
-            }
-        }
-
-        private List<ConstructionType> mapToConstructionTypeList (List < String > constructionTypes) {
-            if (constructionTypes == null) return null;
-            return constructionTypes.stream()
-                    .map(type -> {
-                        try {
-                            return ConstructionType.valueOf(type);
-                        } catch (IllegalArgumentException e) {
-                            return null;
-                        }
-                    })
-                    .filter(Objects::nonNull)
-                    .toList();
-        }
+    private List<PropertyCondition> mapToPropertyConditionList(List<String> propertyConditions) {
+        if (propertyConditions == null) return null;
+        return propertyConditions.stream()
+                .map(type -> {
+                    try {
+                        return PropertyCondition.valueOf(type);
+                    } catch (IllegalArgumentException e) {
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull)
+                .toList();
+    }
 
         private List<OwnershipType> mapToOwnershipTypeList (List < String > ownershipTypes) {
             if (ownershipTypes == null) return null;

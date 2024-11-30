@@ -2,6 +2,7 @@ package com.example.ludogorieSoft.village.model;
 
 import com.example.ludogorieSoft.village.enums.ConstructionType;
 import com.example.ludogorieSoft.village.enums.OwnershipType;
+import com.example.ludogorieSoft.village.enums.PropertyCondition;
 import com.example.ludogorieSoft.village.enums.PropertyTransferType;
 import com.example.ludogorieSoft.village.enums.PropertyType;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -85,9 +86,15 @@ public class UserSearchData {
 
     @ElementCollection(targetClass = ConstructionType.class)
     @CollectionTable(name = "user_search_construction_types", joinColumns = @JoinColumn(name = "user_search_data_id"))
-    @Column(name = "construction_type",columnDefinition="enum('BRICKS', 'PANEL', 'WOOD', 'TIMBER_FRAMED', 'ADOBE', 'STONE', 'CLAY')")
+    @Column(name = "construction_type",columnDefinition="enum('BRICKS', 'PANEL', 'WOOD', 'TIMBER_FRAMED', 'ADOBE', 'REINFORCED_CONCRETE', 'STONE', 'CLAY')")
     @Enumerated(EnumType.STRING)
     private List<ConstructionType> constructionTypes;
+
+    @ElementCollection(targetClass = PropertyCondition.class)
+    @CollectionTable(name = "user_search_property_condition", joinColumns = @JoinColumn(name = "user_search_data_id"))
+    @Enumerated(EnumType.STRING)
+    @Column(name = "property_condition", columnDefinition = "enum('NEW', 'AFTER_COMPLETE_RENOVATION', 'GOOD', 'NEEDS_REPAIR', 'NEEDS_COMPLETE_RENOVATION', 'FOR_DEMOLITION')")
+    private List<PropertyCondition> propertyConditions;
 
     @Min(0)
     private Short minConstructionYear;

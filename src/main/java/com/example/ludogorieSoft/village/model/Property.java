@@ -9,6 +9,7 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
@@ -61,8 +62,14 @@ public class Property {
     @Min(value = 0, message = "The yard area must be greater than or equal to 0")
 
     private Double yardArea;
-    private int roomsCount;
-    private int bathroomsCount;
+
+    @Min(0)
+    @NotNull
+    private Short roomsCount;
+
+    @Min(0)
+    @NotNull
+    private Short bathroomsCount;
 
     @ElementCollection
     @CollectionTable(name = "property_heating", joinColumns = @JoinColumn(name = "property_id"))
@@ -79,6 +86,7 @@ public class Property {
 
     @Column(name = "extras", columnDefinition = "TEXT")
     private String extras;
+
     @Column(name = "description", columnDefinition = "TEXT")
     @NotBlank(message = "Description is required and cannot be blank.")
     @Size(min = 10, max = 500, message = "Description must be between 10 and 500 characters long.")

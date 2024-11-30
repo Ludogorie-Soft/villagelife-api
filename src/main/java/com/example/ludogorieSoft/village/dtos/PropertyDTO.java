@@ -26,8 +26,8 @@ public class PropertyDTO {
     private String phoneNumber;
     private Double buildUpArea;
     private Double yardArea;
-    private int roomsCount;
-    private int bathroomsCount;
+    private Short roomsCount;
+    private Short bathroomsCount;
     private List<String> heating;
     private List<PropertyImageDTO> images;
     private String imageUrl;
