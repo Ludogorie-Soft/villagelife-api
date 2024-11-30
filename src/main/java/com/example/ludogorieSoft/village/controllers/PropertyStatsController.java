@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.*;
 public class PropertyStatsController {
     private final PropertyStatsService propertyStatsService;
 
-    /*@PostMapping
+    @PostMapping
     public ResponseEntity<PropertyStatsDTO> createPropertyStats(@RequestBody PropertyStatsDTO propertyStatsDTO) {
         PropertyStatsDTO createdPropertyStats = propertyStatsService.createPropertyStats(propertyStatsDTO);
         return new ResponseEntity<>(createdPropertyStats, HttpStatus.CREATED);
-    }*/
+    }
 
     @PutMapping("/{propertyId}/increment-views")
     public ResponseEntity<PropertyStatsDTO> incrementPropertyViews(@PathVariable Long propertyId) {

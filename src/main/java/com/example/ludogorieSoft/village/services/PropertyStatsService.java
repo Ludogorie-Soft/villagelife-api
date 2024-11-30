@@ -25,8 +25,6 @@ public class PropertyStatsService {
     public PropertyStats propertyStatsDTOToPropertyStats(PropertyStatsDTO propertyStatsDTO) {
         return modelMapper.map(propertyStatsDTO, PropertyStats.class);
     }
-
-    //да се използва в createProperty
     public PropertyStatsDTO createPropertyStats(PropertyStatsDTO propertyStatsDTO) {
         checkPropertyStatsValidations(propertyStatsDTO);
         PropertyStats propertyStats = propertyStatsRepository.save(propertyStatsDTOToPropertyStats(propertyStatsDTO));
