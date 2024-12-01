@@ -3,6 +3,7 @@ package com.example.ludogorieSoft.village.controllers;
 import com.example.ludogorieSoft.village.dtos.PropertyDTO;
 import com.example.ludogorieSoft.village.exeptions.handler.ApiExceptionHandler;
 import com.example.ludogorieSoft.village.services.PropertyService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -127,5 +129,133 @@ class PropertyControllerIntegrationTest {
 
         String response = mvcResult.getResponse().getContentAsString();
         Assertions.assertNotNull(response);
+    }
+    @Test
+    void testCreateProperty() throws Exception {
+        PropertyDTO propertyDTO = new PropertyDTO();
+        propertyDTO.setId(1L);
+        propertyDTO.setPrice(new BigDecimal("180000"));
+        propertyDTO.setPhoneNumber("1234567890");
+        propertyDTO.setBuildUpArea(120.0);
+        propertyDTO.setYardArea(50.0);
+        propertyDTO.setRoomsCount((short)3);
+        propertyDTO.setBathroomsCount((short)2);
+        propertyDTO.setHeating(Arrays.asList("Gas", "Electric"));
+        propertyDTO.setDescription("A beautiful house in the village.");
+        propertyDTO.setAddress("123 Village St.");
+        propertyDTO.setMainImageBytes(new byte[]{1, 2, 3});
+
+        PropertyDTO createdPropertyDTO = new PropertyDTO();
+        createdPropertyDTO.setId(1L);
+        createdPropertyDTO.setPrice(new BigDecimal("180000"));
+        createdPropertyDTO.setPhoneNumber("1234567890");
+        createdPropertyDTO.setBuildUpArea(120.0);
+        createdPropertyDTO.setYardArea(50.0);
+        createdPropertyDTO.setRoomsCount((short)3);
+        createdPropertyDTO.setBathroomsCount((short)2);
+        createdPropertyDTO.setHeating(Arrays.asList("Gas", "Electric"));
+        createdPropertyDTO.setDescription("A beautiful house in the village.");
+        createdPropertyDTO.setAddress("123 Village St.");
+
+        when(propertyService.createProperty(any(PropertyDTO.class))).thenReturn(createdPropertyDTO);
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/properties")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(propertyDTO)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.price").value(180000))
+                .andExpect(jsonPath("$.phoneNumber").value("1234567890"))
+                .andExpect(jsonPath("$.buildUpArea").value(120.0))
+                .andExpect(jsonPath("$.yardArea").value(50.0))
+                .andExpect(jsonPath("$.heating.length()").value(2))
+                .andExpect(jsonPath("$.heating[0]").value("Gas"))
+                .andExpect(jsonPath("$.heating[1]").value("Electric"))
+                .andExpect(jsonPath("$.description").value("A beautiful house in the village."))
+                .andExpect(jsonPath("$.address").value("123 Village St."))
+                .andReturn();
+
+        String response = mvcResult.getResponse().getContentAsString();
+        Assertions.assertNotNull(response);
+    }
+    @Test
+    void testCreatePropertyInvalidImage() throws Exception {
+        PropertyDTO propertyDTO = new PropertyDTO();
+        propertyDTO.setPrice(new BigDecimal("200000"));
+        propertyDTO.setDescription("A property with an invalid image.");
+        propertyDTO.setAddress("456 Village St.");
+        propertyDTO.setMainImageBytes(new byte[]{});
+
+        PropertyDTO createdPropertyDTO = new PropertyDTO();
+        createdPropertyDTO.setId(1L);
+        createdPropertyDTO.setPrice(new BigDecimal("200000"));
+        createdPropertyDTO.setDescription("A property with an invalid image.");
+        createdPropertyDTO.setAddress("456 Village St.");
+
+        when(propertyService.createProperty(any(PropertyDTO.class))).thenReturn(createdPropertyDTO);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/properties")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(propertyDTO)))
+                .andExpect(status().isCreated())  // Expect 201 Created despite invalid image
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.price").value(200000))
+                .andExpect(jsonPath("$.description").value("A property with an invalid image."))
+                .andExpect(jsonPath("$.address").value("456 Village St."))
+                .andReturn();
+    }
+    @Test
+    void testCreatePropertyWithOptionalFields() throws Exception {
+        PropertyDTO propertyDTO = new PropertyDTO();
+        propertyDTO.setPrice(new BigDecimal("300000"));
+        propertyDTO.setDescription("A property with omitted optional fields.");
+        propertyDTO.setAddress("101 Village St.");
+        propertyDTO.setMainImageBytes(new byte[]{1, 2, 3});
+        propertyDTO.setHeating(Arrays.asList("Gas"));
+
+        PropertyDTO createdPropertyDTO = new PropertyDTO();
+        createdPropertyDTO.setId(1L);
+        createdPropertyDTO.setPrice(new BigDecimal("300000"));
+        createdPropertyDTO.setDescription("A property with omitted optional fields.");
+        createdPropertyDTO.setAddress("101 Village St.");
+
+        when(propertyService.createProperty(any(PropertyDTO.class))).thenReturn(createdPropertyDTO);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/properties")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(propertyDTO)))
+                .andExpect(status().isCreated())  // Expect 201 Created
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.price").value(300000))
+                .andExpect(jsonPath("$.description").value("A property with omitted optional fields."))
+                .andExpect(jsonPath("$.address").value("101 Village St."))
+                .andReturn();
+    }
+    @Test
+    void testCreatePropertyWithLargeDescription() throws Exception {
+        String largeDescription = "A".repeat(500);
+        PropertyDTO propertyDTO = new PropertyDTO();
+        propertyDTO.setPrice(new BigDecimal("400000"));
+        propertyDTO.setDescription(largeDescription);
+        propertyDTO.setAddress("202 Village St.");
+        propertyDTO.setMainImageBytes(new byte[]{1, 2, 3});
+
+        PropertyDTO createdPropertyDTO = new PropertyDTO();
+        createdPropertyDTO.setId(1L);
+        createdPropertyDTO.setPrice(new BigDecimal("400000"));
+        createdPropertyDTO.setDescription(largeDescription);
+        createdPropertyDTO.setAddress("202 Village St.");
+
+        when(propertyService.createProperty(any(PropertyDTO.class))).thenReturn(createdPropertyDTO);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/properties")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(propertyDTO)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.price").value(400000))
+                .andExpect(jsonPath("$.description").value(largeDescription))
+                .andExpect(jsonPath("$.address").value("202 Village St."))
+                .andReturn();
     }
 }

@@ -26,18 +26,21 @@ public class PropertyDTO {
     private String phoneNumber;
     private Double buildUpArea;
     private Double yardArea;
-    private int roomsCount;
-    private int bathroomsCount;
+    private Short roomsCount;
+    private Short bathroomsCount;
     private List<String> heating;
+    private List<PropertyImageDTO> images;
     private String imageUrl;
     private ConstructionType constructionType;
-    private int constructionYear;
+    private String constructionYear;
     private String extras;
     private String description;
     private String address;
     private PropertyStatsDTO propertyStatsDTO;
     private OwnershipType ownershipType;
     private PropertyCondition propertyCondition;
+    private byte[] mainImageBytes;
+    private String heatingText;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)

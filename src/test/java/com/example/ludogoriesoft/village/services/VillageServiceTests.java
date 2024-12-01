@@ -66,11 +66,11 @@ class VillageServiceTests {
         Village village1 = new Village();
         village1.setId(1L);
         village1.setName("Village1");
-        village1.setRegion(new Region(1L, "Region1"));
+        village1.setRegion(new Region(1L, "Region1",""));
         Village village2 = new Village();
         village2.setId(2L);
         village2.setName("Village2");
-        village2.setRegion(new Region(2L, "Region2"));
+        village2.setRegion(new Region(2L, "Region2",""));
         List<Village> mockVillages = List.of(village1, village2);
 
         when(villageRepository.findAll()).thenReturn(mockVillages);
@@ -98,7 +98,7 @@ class VillageServiceTests {
         Village village = new Village();
         village.setId(1L);
         village.setName("Village1");
-        village.setRegion(new Region(1L, "Region1"));
+        village.setRegion(new Region(1L, "Region1",""));
 
         when(villageRepository.findById(1L)).thenReturn(Optional.of(village));
 
@@ -132,7 +132,7 @@ class VillageServiceTests {
         existingVillage.setId(1L);
         existingVillage.setName(villageName);
         existingVillage.setStatus(true);
-        existingVillage.setRegion(new Region(1L, regionName));
+        existingVillage.setRegion(new Region(1L, regionName,""));
 
         VillageDTO savedVillageDTO = new VillageDTO();
         savedVillageDTO.setId(1L);
@@ -172,7 +172,7 @@ class VillageServiceTests {
     void testUpdateVillageWithExistingVillageId() {
         Long villageId = 123L;
         Village existingVillage = new Village();
-        Region region = new Region(1L, "testRegion");
+        Region region = new Region(1L, "testRegion","");
         RegionDTO regionDTO = new RegionDTO(region.getId(), region.getRegionName());
         existingVillage.setId(villageId);
         existingVillage.setName("Existing Village");
