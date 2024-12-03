@@ -5,6 +5,7 @@ import com.example.ludogorieSoft.village.dtos.BusinessCardDTO;
 import com.example.ludogorieSoft.village.dtos.VerificationTokenDTO;
 import com.example.ludogorieSoft.village.dtos.request.AuthenticationRequest;
 import com.example.ludogorieSoft.village.dtos.request.RegisterRequest;
+import com.example.ludogorieSoft.village.dtos.request.ResetPasswordRequest;
 import com.example.ludogorieSoft.village.dtos.request.VerificationRequest;
 import com.example.ludogorieSoft.village.dtos.response.AuthenticationResponce;
 import com.example.ludogorieSoft.village.enums.Role;
@@ -29,6 +30,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -201,5 +203,169 @@ class AuthenticationServiceTest {
         when(verificationTokenService.isTokenExpired(verificationToken)).thenReturn(true);
 
         assertThrows(TokenExpiredException.class, () -> authenticationService.verifyVerificationToken(request));
+    }
+
+    @Test
+    void sendEmailToResetPassword_ShouldSendEmailSuccessfully() {
+        Long userId = 1L;
+        AlternativeUser user = mock(AlternativeUser.class);
+        when(alternativeUserRepository.findById(userId)).thenReturn(Optional.of(user));
+
+        VerificationTokenDTO verificationTokenDTO = mock(VerificationTokenDTO.class);
+        when(verificationTokenService.createVerificationToken(user)).thenReturn(verificationTokenDTO);
+        when(verificationTokenDTO.getToken()).thenReturn("mockToken123");
+
+        String result = authenticationService.sendEmailToResetPassword(userId);
+
+        assertEquals("mockToken123", result);
+        verify(verificationTokenRepository).save(any(VerificationToken.class));
+        verify(emailSenderService).sendResetPasswordEmail(verificationTokenDTO, user);
+    }
+
+    @Test
+    void sendEmailToResetPassword_ShouldThrowExceptionWhenUserNotFound() {
+        Long userId = 1L;
+        when(alternativeUserRepository.findById(userId)).thenReturn(Optional.empty());
+
+        ApiRequestException exception = assertThrows(ApiRequestException.class,
+                () -> authenticationService.sendEmailToResetPassword(userId));
+
+        assertEquals("User not found!", exception.getMessage());
+        verifyNoInteractions(verificationTokenService, verificationTokenRepository, emailSenderService);
+    }
+
+    @Test
+    void resetPassword_ShouldThrowExceptionWhenTokenExpired() {
+        Long userId = 1L;
+        String token = "expiredToken";
+        ResetPasswordRequest request = new ResetPasswordRequest(userId, token, "newPassword", "newPassword");
+
+        VerificationToken verificationToken = mock(VerificationToken.class);
+        when(verificationToken.getExpiryDate()).thenReturn(LocalDateTime.now().minusHours(1));
+
+        AlternativeUser mockUser = mock(AlternativeUser.class);
+        when(mockUser.getId()).thenReturn(userId);
+        when(verificationToken.getAlternativeUser()).thenReturn(mockUser);
+
+        when(verificationTokenRepository.findByToken(token)).thenReturn(Optional.of(verificationToken));
+        when(alternativeUserRepository.findById(userId)).thenReturn(Optional.of(mockUser));
+
+        ApiRequestException exception = assertThrows(ApiRequestException.class,
+                () -> authenticationService.resetPassword(request));
+
+        assertEquals("Expired token!", exception.getMessage());
+    }
+
+    @Test
+    void resetPassword_ShouldThrowExceptionWhenPasswordsDoNotMatch() {
+        Long userId = 1L;
+        String token = "validToken";
+        ResetPasswordRequest request = new ResetPasswordRequest(userId, token, "newPassword", "differentPassword");
+        AlternativeUser mockUser = mock(AlternativeUser.class);
+        when(mockUser.getId()).thenReturn(userId);
+        VerificationToken mockToken = mock(VerificationToken.class);
+        when(mockToken.getAlternativeUser()).thenReturn(mockUser);
+        LocalDateTime mockExpiryDate = LocalDateTime.now().plusDays(1);
+        when(mockToken.getExpiryDate()).thenReturn(mockExpiryDate);
+        when(alternativeUserRepository.findById(userId)).thenReturn(Optional.of(mockUser));
+        when(verificationTokenRepository.findByToken(token)).thenReturn(Optional.of(mockToken));
+        ApiRequestException exception = assertThrows(ApiRequestException.class,
+                () -> authenticationService.resetPassword(request));
+        assertEquals("Passwords do not match", exception.getMessage());
+    }
+@Test
+void resetPassword_ShouldChangePasswordSuccessfully() {
+    Long userId = 1L;
+    String newPassword = "newPassword123";
+    String repeatedPassword = "newPassword123";
+    String token = "validToken";
+    AlternativeUser user = mock(AlternativeUser.class);
+    VerificationToken verificationToken = mock(VerificationToken.class);
+
+    ResetPasswordRequest request = new ResetPasswordRequest();
+    request.setUserId(userId);
+    request.setToken(token);
+    request.setPassword(newPassword);
+    request.setRepeatedPassword(repeatedPassword);
+
+    when(alternativeUserRepository.findById(userId)).thenReturn(Optional.of(user));
+    when(verificationTokenRepository.findByToken(token)).thenReturn(Optional.of(verificationToken));
+    when(verificationToken.getAlternativeUser()).thenReturn(user);
+    when(verificationToken.getExpiryDate()).thenReturn(LocalDateTime.now().plusMinutes(10));
+    when(user.getId()).thenReturn(userId);
+
+    String result = authenticationService.resetPassword(request);
+
+    assertEquals("Password changed successfully!", result);
+    verify(alternativeUserRepository).save(user);
+}
+
+    @Test
+    void resetPassword_ShouldThrowApiRequestException_WhenUserIdIsNull() {
+        ResetPasswordRequest request = new ResetPasswordRequest();
+        request.setUserId(null);
+        request.setToken("validToken");
+        request.setPassword("newPassword123");
+        request.setRepeatedPassword("newPassword123");
+
+        ApiRequestException exception = assertThrows(ApiRequestException.class,
+                () -> authenticationService.resetPassword(request));
+
+        assertEquals("User id can not be null!", exception.getMessage());
+    }
+
+    @Test
+    void resetPassword_ShouldThrowApiRequestException_WhenTokenIsNull() {
+        ResetPasswordRequest request = new ResetPasswordRequest();
+        request.setUserId(1L);
+        request.setToken(null);
+        request.setPassword("newPassword123");
+        request.setRepeatedPassword("newPassword123");
+
+        ApiRequestException exception = assertThrows(ApiRequestException.class,
+                () -> authenticationService.resetPassword(request));
+
+        assertEquals("Token can not be null!", exception.getMessage());
+    }
+
+    @Test
+    void resetPassword_ShouldThrowApiRequestException_WhenPasswordIsNull() {
+        ResetPasswordRequest request = new ResetPasswordRequest();
+        request.setUserId(1L);
+        request.setToken("validToken");
+        request.setPassword(null);
+        request.setRepeatedPassword("newPassword123");
+
+        ApiRequestException exception = assertThrows(ApiRequestException.class,
+                () -> authenticationService.resetPassword(request));
+
+        assertEquals("Password can not be null!", exception.getMessage());
+    }
+
+    @Test
+    void resetPassword_ShouldThrowApiRequestException_WhenRepeatedPasswordIsNull() {
+        ResetPasswordRequest request = new ResetPasswordRequest();
+        request.setUserId(1L);
+        request.setToken("validToken");
+        request.setPassword("newPassword123");
+        request.setRepeatedPassword(null);
+
+        ApiRequestException exception = assertThrows(ApiRequestException.class,
+                () -> authenticationService.resetPassword(request));
+
+        assertEquals("Repeated password can not be null!", exception.getMessage());
+    }
+
+    @Test
+    void resetPassword_ShouldThrowApiRequestException_WhenTokenIsInvalid() {
+        ResetPasswordRequest request = new ResetPasswordRequest(1L, "invalidToken", "newPassword123", "newPassword123");
+        AlternativeUser user = mock(AlternativeUser.class);
+        when(alternativeUserRepository.findById(request.getUserId())).thenReturn(Optional.of(user));
+        when(verificationTokenRepository.findByToken(request.getToken())).thenReturn(Optional.empty());
+
+        ApiRequestException exception = assertThrows(ApiRequestException.class,
+                () -> authenticationService.resetPassword(request));
+
+        assertEquals("Invalid token!", exception.getMessage());
     }
 }

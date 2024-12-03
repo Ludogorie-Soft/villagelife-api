@@ -5,6 +5,7 @@ import com.example.ludogorieSoft.village.dtos.BusinessCardDTO;
 import com.example.ludogorieSoft.village.dtos.VerificationTokenDTO;
 import com.example.ludogorieSoft.village.dtos.request.AuthenticationRequest;
 import com.example.ludogorieSoft.village.dtos.request.RegisterRequest;
+import com.example.ludogorieSoft.village.dtos.request.ResetPasswordRequest;
 import com.example.ludogorieSoft.village.dtos.request.VerificationRequest;
 import com.example.ludogorieSoft.village.dtos.response.AuthenticationResponce;
 import com.example.ludogorieSoft.village.enums.Role;
@@ -31,6 +32,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static java.util.UUID.randomUUID;
@@ -48,6 +50,7 @@ public class AuthenticationService {
     private final EmailSenderService emailSenderService;
     private final BusinessCardRepository businessCardRepository;
     private final ImageService imageService;
+    private static final String INVALID_TOKEN = "Invalid token!";
 
     public String register(RegisterRequest request) {
         checkRegistrationValidations(request);
@@ -116,18 +119,47 @@ public class AuthenticationService {
 
     public String verifyVerificationToken(VerificationRequest request) {
         Optional<VerificationToken> optionalVerificationToken = verificationTokenRepository.findByToken(request.getToken());
-        if (optionalVerificationToken.isEmpty()) throw new ApiRequestException("Invalid token!");
+        if (optionalVerificationToken.isEmpty()) throw new ApiRequestException(INVALID_TOKEN);
         VerificationToken verificationToken = optionalVerificationToken.get();
         AlternativeUser user = verificationToken.getAlternativeUser();
         if (user.isEnabled()) throw new ApiRequestException("Account already verified!");
         if (verificationTokenService.isTokenExpired(verificationToken))
             throw new TokenExpiredException("Expired token!");
         if (!user.getEmail().equals(request.getEmail()))
-            throw new ApiRequestException("Invalid token!");
+            throw new ApiRequestException(INVALID_TOKEN);
         user.setEnabled(true);
         alternativeUserRepository.save(user);
         verificationTokenRepository.delete(verificationToken);
         return "Your account is verified!";
+    }
+
+    public String sendEmailToResetPassword(Long id) {
+        Optional<AlternativeUser> user = alternativeUserRepository.findById(id);
+        if (user.isEmpty()) throw new ApiRequestException("User not found!");
+        VerificationTokenDTO verificationTokenDTO = verificationTokenService.createVerificationToken(user.get());
+        verificationTokenRepository.save(new VerificationToken(verificationTokenDTO.getId(), verificationTokenDTO.getToken(),
+                verificationTokenDTO.getExpiryDate(), user.get()));
+        emailSenderService.sendResetPasswordEmail(verificationTokenDTO, user.get());
+        return verificationTokenDTO.getToken();
+    }
+
+    public String resetPassword(ResetPasswordRequest request) {
+        if (request.getUserId() == null) throw new ApiRequestException("User id can not be null!");
+        if (request.getToken() == null) throw new ApiRequestException("Token can not be null!");
+        if (request.getPassword() == null) throw new ApiRequestException("Password can not be null!");
+        if (request.getRepeatedPassword() == null) throw new ApiRequestException("Repeated password can not be null!");
+        Optional<AlternativeUser> optionalAlternativeUser = alternativeUserRepository.findById(request.getUserId());
+        if (optionalAlternativeUser.isEmpty()) throw new ApiRequestException("User not found!");
+        AlternativeUser user = optionalAlternativeUser.get();
+        Optional<VerificationToken> optionalVerificationToken = verificationTokenRepository.findByToken(request.getToken());
+        if (optionalVerificationToken.isEmpty() || !optionalVerificationToken.get().getAlternativeUser().getId().equals(request.getUserId()))
+            throw new ApiRequestException(INVALID_TOKEN);
+        if (optionalVerificationToken.get().getExpiryDate().isBefore(LocalDateTime.now()))
+            throw new ApiRequestException("Expired token!");
+        if (!request.getPassword().equals(request.getRepeatedPassword())) throw new ApiRequestException("Passwords do not match");
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        alternativeUserRepository.save(user);
+        return "Password changed successfully!";
     }
 
     private void checkRegistrationValidations(RegisterRequest request) {

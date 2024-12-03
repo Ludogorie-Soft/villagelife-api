@@ -3,6 +3,7 @@ package com.example.ludogorieSoft.village.auth;
 import com.example.ludogorieSoft.village.dtos.AlternativeUserDTO;
 import com.example.ludogorieSoft.village.dtos.request.AuthenticationRequest;
 import com.example.ludogorieSoft.village.dtos.request.RegisterRequest;
+import com.example.ludogorieSoft.village.dtos.request.ResetPasswordRequest;
 import com.example.ludogorieSoft.village.dtos.request.VerificationRequest;
 import com.example.ludogorieSoft.village.dtos.response.AuthenticationResponce;
 import com.example.ludogorieSoft.village.enums.Role;
@@ -110,4 +111,42 @@ import static org.mockito.Mockito.*;
         assertEquals("Your account is verified!", response.getBody());
         verify(authenticationService, times(1)).verifyVerificationToken(verificationRequest);
     }
+
+     @Test
+     void testSendResetPasswordEmail() {
+         // Given a valid userId
+         Long userId = 1L;
+
+         // When the service sends the reset password email
+         when(authenticationService.sendEmailToResetPassword(userId)).thenReturn("Reset password email sent successfully");
+
+         // Call the controller method
+         ResponseEntity<String> response = authenticationController.resetPassword(userId);
+
+         // Then verify the response status and message
+         assertEquals(HttpStatus.OK, response.getStatusCode());
+         assertEquals("Reset password email sent successfully", response.getBody());
+         verify(authenticationService, times(1)).sendEmailToResetPassword(userId);
+     }
+
+     // Test for the reset-password endpoint
+     @Test
+     void testResetPassword() {
+         // Given a valid ResetPasswordRequest with new password and token
+         ResetPasswordRequest request = new ResetPasswordRequest();
+         request.setUserId(1L);
+         request.setToken("valid-reset-token");
+         request.setRepeatedPassword("newPassword123");
+
+         // When the service resets the password successfully
+         when(authenticationService.resetPassword(request)).thenReturn("Password reset successfully");
+
+         // Call the controller method
+         ResponseEntity<String> response = authenticationController.resetPassword(request);
+
+         // Then verify the response status and message
+         assertEquals(HttpStatus.OK, response.getStatusCode());
+         assertEquals("Password reset successfully", response.getBody());
+         verify(authenticationService, times(1)).resetPassword(request);
+     }
 }
