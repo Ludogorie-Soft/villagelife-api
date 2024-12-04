@@ -217,7 +217,7 @@ class AuthenticationServiceTest {
 
         String result = authenticationService.sendEmailToResetPassword(userId);
 
-        assertEquals("mockToken123", result);
+        assertEquals("Email sent successfully!", result);
         verify(verificationTokenRepository).save(any(VerificationToken.class));
         verify(emailSenderService).sendResetPasswordEmail(verificationTokenDTO, user);
     }

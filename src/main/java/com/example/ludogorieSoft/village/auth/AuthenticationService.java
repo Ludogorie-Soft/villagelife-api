@@ -140,7 +140,7 @@ public class AuthenticationService {
         verificationTokenRepository.save(new VerificationToken(verificationTokenDTO.getId(), verificationTokenDTO.getToken(),
                 verificationTokenDTO.getExpiryDate(), user.get()));
         emailSenderService.sendResetPasswordEmail(verificationTokenDTO, user.get());
-        return verificationTokenDTO.getToken();
+        return "Email sent successfully!";
     }
 
     public String resetPassword(ResetPasswordRequest request) {
