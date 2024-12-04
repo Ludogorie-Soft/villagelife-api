@@ -156,6 +156,12 @@ public class AuthenticationService {
             throw new ApiRequestException(INVALID_TOKEN);
         if (optionalVerificationToken.get().getExpiryDate().isBefore(LocalDateTime.now()))
             throw new ApiRequestException("Expired token!");
+        if (request.getPassword().isBlank()) throw new ApiRequestException("Password is required!");
+        if (request.getPassword().length() < 8)
+            throw new ApiRequestException("Password must be at least 8 characters long!");
+        if (request.getRepeatedPassword().isBlank()) throw new ApiRequestException("repeated password is required!");
+        if (request.getRepeatedPassword().length() < 8)
+            throw new ApiRequestException("Repeated password must be at least 8 characters long!");
         if (!request.getPassword().equals(request.getRepeatedPassword())) throw new ApiRequestException("Passwords do not match");
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         alternativeUserRepository.save(user);
