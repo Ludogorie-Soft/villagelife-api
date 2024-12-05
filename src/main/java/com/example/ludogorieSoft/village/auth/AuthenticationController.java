@@ -45,8 +45,8 @@ public class AuthenticationController {
     }
 
     @PostMapping("/send-reset-password-email")
-    public ResponseEntity<String> resetPassword(@RequestParam("userId") Long id) {
-        return ResponseEntity.ok(service.sendEmailToResetPassword(id));
+    public ResponseEntity<String> resetPassword(@RequestParam("email") String email) {
+        return ResponseEntity.ok(service.sendEmailToResetPassword(email));
     }
 
     @PostMapping("/reset-password")

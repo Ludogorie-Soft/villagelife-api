@@ -133,8 +133,8 @@ public class AuthenticationService {
         return "Your account is verified!";
     }
 
-    public String sendEmailToResetPassword(Long id) {
-        Optional<AlternativeUser> user = alternativeUserRepository.findById(id);
+    public String sendEmailToResetPassword(String email) {
+        Optional<AlternativeUser> user = alternativeUserRepository.findByEmail(email);
         if (user.isEmpty()) throw new ApiRequestException("User not found!");
         VerificationTokenDTO verificationTokenDTO = verificationTokenService.createVerificationToken(user.get());
         verificationTokenRepository.save(new VerificationToken(verificationTokenDTO.getId(), verificationTokenDTO.getToken(),

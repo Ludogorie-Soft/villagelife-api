@@ -207,15 +207,15 @@ class AuthenticationServiceTest {
 
     @Test
     void sendEmailToResetPassword_ShouldSendEmailSuccessfully() {
-        Long userId = 1L;
+        String email = "user@example.com";
         AlternativeUser user = mock(AlternativeUser.class);
-        when(alternativeUserRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(alternativeUserRepository.findByEmail(email)).thenReturn(Optional.of(user));
 
         VerificationTokenDTO verificationTokenDTO = mock(VerificationTokenDTO.class);
         when(verificationTokenService.createVerificationToken(user)).thenReturn(verificationTokenDTO);
         when(verificationTokenDTO.getToken()).thenReturn("mockToken123");
 
-        String result = authenticationService.sendEmailToResetPassword(userId);
+        String result = authenticationService.sendEmailToResetPassword(email);
 
         assertEquals("Email sent successfully!", result);
         verify(verificationTokenRepository).save(any(VerificationToken.class));
@@ -224,11 +224,11 @@ class AuthenticationServiceTest {
 
     @Test
     void sendEmailToResetPassword_ShouldThrowExceptionWhenUserNotFound() {
-        Long userId = 1L;
-        when(alternativeUserRepository.findById(userId)).thenReturn(Optional.empty());
+        String email = "user@example.com";
+        when(alternativeUserRepository.findByEmail(email)).thenReturn(Optional.empty());
 
         ApiRequestException exception = assertThrows(ApiRequestException.class,
-                () -> authenticationService.sendEmailToResetPassword(userId));
+                () -> authenticationService.sendEmailToResetPassword(email));
 
         assertEquals("User not found!", exception.getMessage());
         verifyNoInteractions(verificationTokenService, verificationTokenRepository, emailSenderService);

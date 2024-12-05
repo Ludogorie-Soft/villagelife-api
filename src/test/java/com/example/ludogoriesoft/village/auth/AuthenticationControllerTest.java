@@ -114,37 +114,28 @@ import static org.mockito.Mockito.*;
 
      @Test
      void testSendResetPasswordEmail() {
-         // Given a valid userId
-         Long userId = 1L;
+         String email = "user@example.com";
 
-         // When the service sends the reset password email
-         when(authenticationService.sendEmailToResetPassword(userId)).thenReturn("Reset password email sent successfully");
+         when(authenticationService.sendEmailToResetPassword(email)).thenReturn("Reset password email sent successfully");
 
-         // Call the controller method
-         ResponseEntity<String> response = authenticationController.resetPassword(userId);
+         ResponseEntity<String> response = authenticationController.resetPassword(email);
 
-         // Then verify the response status and message
          assertEquals(HttpStatus.OK, response.getStatusCode());
          assertEquals("Reset password email sent successfully", response.getBody());
-         verify(authenticationService, times(1)).sendEmailToResetPassword(userId);
+         verify(authenticationService, times(1)).sendEmailToResetPassword(email);
      }
 
-     // Test for the reset-password endpoint
      @Test
      void testResetPassword() {
-         // Given a valid ResetPasswordRequest with new password and token
          ResetPasswordRequest request = new ResetPasswordRequest();
          request.setUserId(1L);
          request.setToken("valid-reset-token");
          request.setRepeatedPassword("newPassword123");
 
-         // When the service resets the password successfully
          when(authenticationService.resetPassword(request)).thenReturn("Password reset successfully");
 
-         // Call the controller method
          ResponseEntity<String> response = authenticationController.resetPassword(request);
 
-         // Then verify the response status and message
          assertEquals(HttpStatus.OK, response.getStatusCode());
          assertEquals("Password reset successfully", response.getBody());
          verify(authenticationService, times(1)).resetPassword(request);
