@@ -9,8 +9,6 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 @AllArgsConstructor
 public class PropertyStatsService {
@@ -58,13 +56,5 @@ public class PropertyStatsService {
 
     public void decrementSavesForProperty(Property property){
         propertyStatsRepository.decrementSavesForProperty(property);
-    }
-
-    public List<PropertyStatsDTO> incrementSeenInResultsByPropertyId(List<Property> properties) {
-        propertyStatsRepository.incrementSeenInResultsForProperties(properties);
-        return properties
-                .stream()
-                .map(property -> propertyStatsToPropertyStatsDTO(property.getPropertyStats()))
-                .toList();
     }
 }

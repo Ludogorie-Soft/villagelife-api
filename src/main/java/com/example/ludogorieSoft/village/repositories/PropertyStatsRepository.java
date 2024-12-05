@@ -8,8 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 public interface PropertyStatsRepository extends JpaRepository<PropertyStats,Long> {
     @Transactional
     @Modifying
@@ -30,9 +28,4 @@ public interface PropertyStatsRepository extends JpaRepository<PropertyStats,Lon
             "AND ps.saves > 0")
     void decrementSavesForProperty(@Param("property") Property property);
 
-    @Transactional
-    @Modifying
-    @Query("UPDATE PropertyStats ps SET ps.seenInResults = ps.seenInResults + 1 " +
-            "WHERE ps IN (SELECT p.propertyStats FROM Property p WHERE p IN :properties AND p.propertyStats IS NOT NULL)")
-    void incrementSeenInResultsForProperties(@Param("properties") List<Property> properties);
 }
