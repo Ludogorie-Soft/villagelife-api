@@ -1,6 +1,5 @@
 package com.example.ludogorieSoft.village.services;
 
-import com.example.ludogorieSoft.village.dtos.PropertyDTO;
 import com.example.ludogorieSoft.village.dtos.PropertyImageDTO;
 import com.example.ludogorieSoft.village.model.Property;
 import com.example.ludogorieSoft.village.model.PropertyImage;
@@ -90,7 +89,7 @@ class PropertyImageServiceTest {
         PropertyImageDTO propertyImageDTO = new PropertyImageDTO();
         propertyImageDTO.setImageName("image1.jpg");
 
-        List<PropertyImage> propertyImages = Arrays.asList(propertyImage);
+        List<PropertyImage> propertyImages = List.of(propertyImage);
         when(propertyImageRepository.findByProperty_VillageIdAndDeletedAtIsNull(1L)).thenReturn(propertyImages);
         when(imageService.getImageFromSpace("image1.jpg")).thenReturn("updated_image1.jpg");
         when(modelMapper.map(any(PropertyImage.class), eq(PropertyImageDTO.class))).thenReturn(propertyImageDTO);
@@ -104,10 +103,6 @@ class PropertyImageServiceTest {
     }
     @Test
     void createPropertyImage_ShouldSaveAndUploadImages() {
-        ImageService imageService = mock(ImageService.class);
-        PropertyImageRepository propertyImageRepository = mock(PropertyImageRepository.class);
-        ModelMapper modelMapper = mock(ModelMapper.class);
-
         PropertyImage propertyImage = new PropertyImage();
         when(modelMapper.map(any(PropertyImageDTO.class), eq(PropertyImage.class))).thenReturn(propertyImage);
 
