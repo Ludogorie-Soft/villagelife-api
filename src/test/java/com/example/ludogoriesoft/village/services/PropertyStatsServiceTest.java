@@ -45,8 +45,7 @@ class PropertyStatsServiceTest {
 
     @Test
     void decrementSavesForPropertyWhenShouldHandleNullProperty() {
-        Property property = null;
-        propertyStatsService.decrementSavesForProperty(property);
+        propertyStatsService.decrementSavesForProperty(null);
         verify(propertyStatsRepository, times(1)).decrementSavesForProperty(null);
     }
 
@@ -59,8 +58,7 @@ class PropertyStatsServiceTest {
 
     @Test
     void incrementSavesForPropertyWhenShouldHandleNullProperty() {
-        Property property = null;
-        propertyStatsService.incrementSavesForProperty(property);
+        propertyStatsService.incrementSavesForProperty(null);
         verify(propertyStatsRepository, times(1)).incrementSavesForProperty(null);
     }
 
@@ -97,12 +95,13 @@ class PropertyStatsServiceTest {
         verifyNoInteractions(propertyStatsRepository);
     }
 
+    @Test
     void checkPropertyStatsValidationsWhenShouldPassWithValidStats() {
         PropertyStatsDTO propertyStatsDTO = new PropertyStatsDTO();
-        propertyStatsDTO.setSeenInResults(10L);
-        propertyStatsDTO.setViews(20L);
-        propertyStatsDTO.setShares(5L);
-        propertyStatsDTO.setSaves(3L);
+        propertyStatsDTO.setSeenInResults(10);
+        propertyStatsDTO.setViews(20);
+        propertyStatsDTO.setShares(5);
+        propertyStatsDTO.setSaves(3);
 
         assertDoesNotThrow(() -> propertyStatsService.checkPropertyStatsValidations(propertyStatsDTO));
     }
@@ -110,10 +109,10 @@ class PropertyStatsServiceTest {
     @Test
     void checkPropertyStatsValidationsWhenShouldThrowExceptionWhenSeenInResultsIsNegative() {
         PropertyStatsDTO propertyStatsDTO = new PropertyStatsDTO();
-        propertyStatsDTO.setSeenInResults(-1L);
-        propertyStatsDTO.setViews(20L);
-        propertyStatsDTO.setShares(5L);
-        propertyStatsDTO.setSaves(3L);
+        propertyStatsDTO.setSeenInResults(-1);
+        propertyStatsDTO.setViews(20);
+        propertyStatsDTO.setShares(5);
+        propertyStatsDTO.setSaves(3);
 
         ApiRequestException exception = assertThrows(ApiRequestException.class,
                 () -> propertyStatsService.checkPropertyStatsValidations(propertyStatsDTO));
@@ -123,10 +122,10 @@ class PropertyStatsServiceTest {
     @Test
     void checkPropertyStatsValidationsWhenShouldThrowExceptionWhenViewsAreNegative() {
         PropertyStatsDTO propertyStatsDTO = new PropertyStatsDTO();
-        propertyStatsDTO.setSeenInResults(10L);
-        propertyStatsDTO.setViews(-1L);
-        propertyStatsDTO.setShares(5L);
-        propertyStatsDTO.setSaves(3L);
+        propertyStatsDTO.setSeenInResults(10);
+        propertyStatsDTO.setViews(-1);
+        propertyStatsDTO.setShares(5);
+        propertyStatsDTO.setSaves(3);
 
         ApiRequestException exception = assertThrows(ApiRequestException.class,
                 () -> propertyStatsService.checkPropertyStatsValidations(propertyStatsDTO));
@@ -136,10 +135,10 @@ class PropertyStatsServiceTest {
     @Test
     void checkPropertyStatsValidationsWhenShouldThrowExceptionWhenSharesAreNegative() {
         PropertyStatsDTO propertyStatsDTO = new PropertyStatsDTO();
-        propertyStatsDTO.setSeenInResults(10L);
-        propertyStatsDTO.setViews(20L);
-        propertyStatsDTO.setShares(-1L);
-        propertyStatsDTO.setSaves(3L);
+        propertyStatsDTO.setSeenInResults(10);
+        propertyStatsDTO.setViews(20);
+        propertyStatsDTO.setShares(-1);
+        propertyStatsDTO.setSaves(3);
 
         ApiRequestException exception = assertThrows(ApiRequestException.class,
                 () -> propertyStatsService.checkPropertyStatsValidations(propertyStatsDTO));
@@ -149,10 +148,10 @@ class PropertyStatsServiceTest {
     @Test
     void checkPropertyStatsValidationsWhenShouldThrowExceptionWhenSavesAreNegative() {
         PropertyStatsDTO propertyStatsDTO = new PropertyStatsDTO();
-        propertyStatsDTO.setSeenInResults(10L);
-        propertyStatsDTO.setViews(20L);
-        propertyStatsDTO.setShares(5L);
-        propertyStatsDTO.setSaves(-1L);
+        propertyStatsDTO.setSeenInResults(10);
+        propertyStatsDTO.setViews(20);
+        propertyStatsDTO.setShares(5);
+        propertyStatsDTO.setSaves(-1);
 
         ApiRequestException exception = assertThrows(ApiRequestException.class,
                 () -> propertyStatsService.checkPropertyStatsValidations(propertyStatsDTO));
@@ -162,10 +161,10 @@ class PropertyStatsServiceTest {
     @Test
     void createPropertyStatsShouldSaveAndReturnDTOWhenValid() {
         PropertyStatsDTO propertyStatsDTO = new PropertyStatsDTO();
-        propertyStatsDTO.setSeenInResults(10L);
-        propertyStatsDTO.setViews(20L);
-        propertyStatsDTO.setShares(5L);
-        propertyStatsDTO.setSaves(3L);
+        propertyStatsDTO.setSeenInResults(10);
+        propertyStatsDTO.setViews(20);
+        propertyStatsDTO.setShares(5);
+        propertyStatsDTO.setSaves(3);
 
         PropertyStats propertyStats = new PropertyStats();
         PropertyStatsDTO expectedDTO = new PropertyStatsDTO();
@@ -183,7 +182,7 @@ class PropertyStatsServiceTest {
     @Test
     void createPropertyStatsShouldThrowExceptionWhenValidationFails() {
         PropertyStatsDTO invalidDTO = new PropertyStatsDTO();
-        invalidDTO.setSeenInResults(-1L);
+        invalidDTO.setSeenInResults(-1);
 
         ApiRequestException exception = assertThrows(ApiRequestException.class,
                 () -> propertyStatsService.createPropertyStats(invalidDTO));

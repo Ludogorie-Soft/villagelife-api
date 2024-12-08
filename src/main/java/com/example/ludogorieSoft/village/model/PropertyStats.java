@@ -27,16 +27,16 @@ public class PropertyStats {
     private Long id;
     @NotNull
     @Min(value = 0, message = "Seen in results cannot be less than 0!")
-    private Long seenInResults;
+    private int seenInResults;
     @NotNull
     @Min(value = 0, message = "Views cannot be less than 0!")
-    private Long views;
+    private int views;
     @NotNull
     @Min(value = 0, message = "Shares cannot be less than 0!")
-    private Long shares;
+    private int shares;
     @NotNull
     @Min(value = 0, message = "Saves cannot be less than 0!")
-    private Long saves;
+    private int saves;
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)

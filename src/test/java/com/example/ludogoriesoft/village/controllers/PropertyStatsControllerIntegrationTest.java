@@ -51,7 +51,7 @@ class PropertyStatsControllerIntegrationTest {
     void testIncrementPropertyViews() throws Exception {
         Long propertyId = 1L;
         PropertyStatsDTO propertyStatsDTO = new PropertyStatsDTO();
-        propertyStatsDTO.setViews(101L);
+        propertyStatsDTO.setViews(101);
 
         when(propertyStatsService.incrementViewsByPropertyId(propertyId)).thenReturn(propertyStatsDTO);
 

@@ -16,10 +16,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class PropertyStatsDTO {
     private Long id;
-    private Long seenInResults;
-    private Long views;
-    private Long shares;
-    private Long saves;
+    private int seenInResults;
+    private int views;
+    private int shares;
+    private int saves;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
