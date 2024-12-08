@@ -76,7 +76,7 @@ public class EmailSenderService {
         LocalDateTime expiryDate = token.getExpiryDate().minusMinutes(15);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd/HH:mm");
         String formattedDate = expiryDate.format(formatter);
-        String resetPasswordLink = "http://localhost:8087/auth/reset-password?token=" + token.getToken() + "&userId=" + user.getId();
+        String resetPasswordLink = "http://localhost:8087/auth/reset-password-form?token=" + token.getToken() + "&userId=" + user.getId();
         return "<div style='text-align: center;'>"
                 + "<a href='https://villagelife.bg'>"
                 + "<img src='cid:logoImage' style='width: 200px;' alt='Site Logo'/>"
