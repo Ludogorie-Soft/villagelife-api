@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class PropertyStatsDTO {
     private Long id;
-    private Long seenInResults;
+    private int seenInResults;
     private int views;
     private int shares;
     private int saves;

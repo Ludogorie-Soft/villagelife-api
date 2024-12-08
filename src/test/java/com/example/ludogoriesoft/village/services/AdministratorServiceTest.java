@@ -7,7 +7,6 @@ import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.AlternativeUser;
 import com.example.ludogorieSoft.village.model.BusinessCard;
 import com.example.ludogorieSoft.village.repositories.AlternativeUserRepository;
-import com.example.ludogorieSoft.village.repositories.VillageRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -35,7 +34,6 @@ class AdministratorServiceTest {
     public void setUp() {
         alternativeUserRepository = mock(AlternativeUserRepository.class);
         modelMapper = mock(ModelMapper.class);
-        VillageRepository villageRepository = mock(VillageRepository.class);
         administratorService = new AdministratorService(alternativeUserRepository, modelMapper);
     }
 
@@ -148,7 +146,7 @@ class AdministratorServiceTest {
         when(alternativeUserRepository.save(any(AlternativeUser.class))).thenReturn(alternativeUser);
         when(modelMapper.map(alternativeUser, AlternativeUserDTO.class)).thenReturn(expectedDTO);
 
-        AlternativeUserDTO resultDTO = administratorService.updateAdministrator(id, administratorRequest);
+        administratorService.updateAdministrator(id, administratorRequest);
 
         verify(alternativeUserRepository, times(1)).findById(id);
         verify(alternativeUserRepository, times(1)).save(any(AlternativeUser.class));
@@ -185,7 +183,7 @@ class AdministratorServiceTest {
         when(alternativeUserRepository.save(any(AlternativeUser.class))).thenReturn(alternativeUser);
         when(modelMapper.map(alternativeUser, AlternativeUserDTO.class)).thenReturn(expectedDTO);
 
-        AlternativeUserDTO resultDTO = administratorService.updateAdministrator(id, administratorRequest);
+        administratorService.updateAdministrator(id, administratorRequest);
 
         verify(alternativeUserRepository, times(1)).findById(id);
         verify(alternativeUserRepository, times(1)).save(any(AlternativeUser.class));
@@ -216,7 +214,7 @@ class AdministratorServiceTest {
         when(alternativeUserRepository.save(any(AlternativeUser.class))).thenReturn(alternativeUser);
         when(modelMapper.map(alternativeUser, AlternativeUserDTO.class)).thenReturn(expectedDTO);
 
-        AlternativeUserDTO resultDTO = administratorService.updateAdministrator(id, administratorRequest);
+        administratorService.updateAdministrator(id, administratorRequest);
 
         verify(alternativeUserRepository, times(1)).findById(id);
         verify(alternativeUserRepository, times(1)).save(any(AlternativeUser.class));

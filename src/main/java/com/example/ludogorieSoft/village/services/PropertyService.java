@@ -80,7 +80,7 @@ public class PropertyService {
         Pageable page = PageRequest.of(pageNumber, elementsCount);
         Page<Property> properties = propertyRepository.findByDeletedAtIsNullOrderByCreatedAtDesc(page);
         List<PropertyDTO> propertyDTOS = properties.stream()
-                .filter(Objects::nonNull) // Ensure property is not null
+                .filter(Objects::nonNull)
                 .map(property -> {
                     PropertyDTO propertyDTO = propertyToPropertyDTO(property);
                     addMainImageToPropertyDTO(propertyDTO);
@@ -112,11 +112,16 @@ public class PropertyService {
     }
 
     public PropertyDTO getPropertyWithMainImageById(Long id) {
-        PropertyDTO propertyDTO = propertyToPropertyDTO(getPropertyById(id));
+        Property property = getPropertyById(id);
+        PropertyDTO propertyDTO = propertyToPropertyDTO(property);
         addMainImageToPropertyDTO(propertyDTO);
+        if (property.getAlternativeUser().getBusinessCard() != null) {
+            propertyDTO.getAlternativeUserDTO().getBusinessCardDTO().setImageName(imageService.getImageFromSpace(property.getAlternativeUser().getBusinessCard().getImageName()));
+        }
         return propertyDTO;
     }
-    public Property getPropertyById(Long id){
+
+    public Property getPropertyById(Long id) {
         Optional<Property> optionalProperty = propertyRepository.findById(id);
         if (optionalProperty.isEmpty()) {
             throw new ApiRequestException("Property with id: " + id + " Not Found");
@@ -146,6 +151,27 @@ public class PropertyService {
                 maxConstructionYear != null ? maxConstructionYear.toString() : null, minPrice, maxPrice, ownershipTypesValues, villageName, regionName, pageable);
 
         return properties.map(this::propertyToPropertyDTO);
+    }
+
+    public void incrementSearchPropertiesSeenInResults(List<String> propertyTypes, String propertyTransferType,
+                                                 Double minBuiltUpArea, Double maxBuiltUpArea, Double minYardArea,
+                                                 Double maxYardArea, Short minRoomsCount, Short maxRoomsCount,
+                                                 Short minBathroomsCount, Short maxBathroomsCount, List<String> heating,
+                                                 List<String> constructionTypes, List<String> propertyConditions, Short minConstructionYear,
+                                                 Short maxConstructionYear, BigDecimal minPrice, BigDecimal maxPrice,
+                                                 List<String> ownershipTypes, String villageName, String regionName) {
+
+        List<PropertyType> propertyTypesValues = mapToPropertyTypeList(propertyTypes);
+        PropertyTransferType propertyTransferTypeValue = mapToPropertyTransferType(propertyTransferType);
+        List<ConstructionType> constructionTypesValues = mapToConstructionTypeList(constructionTypes);
+        List<PropertyCondition> propertyConditionsValues = mapToPropertyConditionList(propertyConditions);
+        List<OwnershipType> ownershipTypesValues = mapToOwnershipTypeList(ownershipTypes);
+
+        propertyRepository.updateSeenInResultsForFilteredProperties(
+                propertyTypesValues, propertyTransferTypeValue, minBuiltUpArea, maxBuiltUpArea, minYardArea, maxYardArea,
+                minRoomsCount, maxRoomsCount, minBathroomsCount, maxBathroomsCount, heating, constructionTypesValues, propertyConditionsValues,
+                minConstructionYear != null ? minConstructionYear.toString() : null,
+                maxConstructionYear != null ? maxConstructionYear.toString() : null, minPrice, maxPrice, ownershipTypesValues, villageName, regionName);
     }
 
     private List<PropertyType> mapToPropertyTypeList(List<String> propertyTypes) {
@@ -199,55 +225,55 @@ public class PropertyService {
                 .toList();
     }
 
-        private List<OwnershipType> mapToOwnershipTypeList (List < String > ownershipTypes) {
-            if (ownershipTypes == null) return null;
-            return ownershipTypes.stream()
-                    .map(type -> {
-                        try {
-                            return OwnershipType.valueOf(type);
-                        } catch (IllegalArgumentException e) {
-                            return null;
-                        }
-                    })
-                    .filter(Objects::nonNull)
-                    .toList();
-        }
-
-        public PropertyDTO createProperty (PropertyDTO propertyDTO){
-            Property property = propertyDTOToProperty(propertyDTO);
-            String imageUUID = randomUUID().toString();
-            String imageName = imageService.uploadImage(propertyDTO.getMainImageBytes(), imageUUID);
-            property.setImageUrl(imageName);
-            List<String> heatingTypes = new ArrayList<>();
-            if (propertyDTO.getHeating() != null) {
-                heatingTypes.addAll(propertyDTO.getHeating());
-            }
-            if (propertyDTO.getHeatingText() != null && !propertyDTO.getHeatingText().trim().isEmpty()) {
-                List<String> additionalHeating = splitHeatingText(propertyDTO.getHeatingText());
-                heatingTypes.addAll(additionalHeating);
-            }
-            property.setHeating(heatingTypes);
-            Property savedProperty = propertyRepository.save(property);
-            propertyImageService.createPropertyImage(propertyDTO.getImages(), savedProperty);
-            return modelMapper.map(savedProperty, PropertyDTO.class);
-        }
-
-        protected List<String> splitHeatingText (String heatingText){
-            if (heatingText == null || heatingText.trim().isEmpty()) {
-                return new ArrayList<>();
-            }
-            Pattern pattern = Pattern.compile("[^;,\\s]{1,100}");
-            Matcher matcher = pattern.matcher(heatingText);
-
-            List<String> heatingTypes = new ArrayList<>();
-            while (matcher.find()) {
-                heatingTypes.add(matcher.group().trim());
-            }
-            return heatingTypes;
-        }
-
-
+    private List<OwnershipType> mapToOwnershipTypeList(List<String> ownershipTypes) {
+        if (ownershipTypes == null) return null;
+        return ownershipTypes.stream()
+                .map(type -> {
+                    try {
+                        return OwnershipType.valueOf(type);
+                    } catch (IllegalArgumentException e) {
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull)
+                .toList();
     }
+
+    public PropertyDTO createProperty(PropertyDTO propertyDTO) {
+        Property property = propertyDTOToProperty(propertyDTO);
+        String imageUUID = randomUUID().toString();
+        String imageName = imageService.uploadImage(propertyDTO.getMainImageBytes(), imageUUID);
+        property.setImageUrl(imageName);
+        List<String> heatingTypes = new ArrayList<>();
+        if (propertyDTO.getHeating() != null) {
+            heatingTypes.addAll(propertyDTO.getHeating());
+        }
+        if (propertyDTO.getHeatingText() != null && !propertyDTO.getHeatingText().trim().isEmpty()) {
+            List<String> additionalHeating = splitHeatingText(propertyDTO.getHeatingText());
+            heatingTypes.addAll(additionalHeating);
+        }
+        property.setHeating(heatingTypes);
+        Property savedProperty = propertyRepository.save(property);
+        propertyImageService.createPropertyImage(propertyDTO.getImages(), savedProperty);
+        return modelMapper.map(savedProperty, PropertyDTO.class);
+    }
+
+    protected List<String> splitHeatingText(String heatingText) {
+        if (heatingText == null || heatingText.trim().isEmpty()) {
+            return new ArrayList<>();
+        }
+        Pattern pattern = Pattern.compile("[^;,\\s]{1,100}");
+        Matcher matcher = pattern.matcher(heatingText);
+
+        List<String> heatingTypes = new ArrayList<>();
+        while (matcher.find()) {
+            heatingTypes.add(matcher.group().trim());
+        }
+        return heatingTypes;
+    }
+
+
+}
 
 
 

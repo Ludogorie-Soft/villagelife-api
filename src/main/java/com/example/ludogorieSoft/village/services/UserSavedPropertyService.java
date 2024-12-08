@@ -1,6 +1,7 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.UserSavedPropertyDTO;
+import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.AlternativeUser;
 import com.example.ludogorieSoft.village.model.Property;
 import com.example.ludogorieSoft.village.model.UserSavedProperty;
@@ -17,7 +18,7 @@ public class UserSavedPropertyService {
     private final UserSavedPropertyRepository userSavedPropertyRepository;
     private final AdministratorService administratorService;
     private final PropertyService propertyService;
-
+    private final PropertyStatsService propertyStatsService;
     public UserSavedPropertyDTO userSavedPropertyToUserSavedPropertyDTO(UserSavedProperty userSavedProperty) {
         return new UserSavedPropertyDTO(userSavedProperty.getId(),
                 administratorService.administratorToAdministratorDTO(userSavedProperty.getUser()),
@@ -47,17 +48,27 @@ public class UserSavedPropertyService {
 
     public UserSavedPropertyDTO toggleUserSavedProperty(Long propertyId, Long userId) {
         UserSavedProperty existingEntry = userSavedPropertyRepository.findByPropertyIdAndUserId(propertyId, userId);
+        Property property = propertyService.getPropertyById(propertyId);
+        if (property == null) {
+            throw new ApiRequestException("Property with Id " + propertyId + " not found.");
+        }
         if (existingEntry == null) {
-            AlternativeUser alternativeUser = administratorService.administratorDTOToAdministrator(administratorService.getAdministratorById(userId));
-            Property property = propertyService.getPropertyById(propertyId);
+            AlternativeUser alternativeUser = administratorService.administratorDTOToAdministrator(
+                    administratorService.getAdministratorById(userId)
+            );
             existingEntry = new UserSavedProperty(null, alternativeUser, property, null);
+            propertyStatsService.incrementSavesForProperty(property);
         } else {
-            if (existingEntry.getDeletedAt() == null){
+            if (existingEntry.getDeletedAt() == null) {
                 existingEntry.setDeletedAt(TimestampUtils.getCurrentTimestamp());
-            } else{
+                propertyStatsService.decrementSavesForProperty(property);
+            } else {
                 existingEntry.setDeletedAt(null);
+                propertyStatsService.incrementSavesForProperty(property);
             }
         }
         return userSavedPropertyToUserSavedPropertyDTO(userSavedPropertyRepository.save(existingEntry));
     }
+
+
 }
