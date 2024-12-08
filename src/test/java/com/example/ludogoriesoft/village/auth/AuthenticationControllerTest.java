@@ -3,6 +3,7 @@ package com.example.ludogorieSoft.village.auth;
 import com.example.ludogorieSoft.village.dtos.AlternativeUserDTO;
 import com.example.ludogorieSoft.village.dtos.request.AuthenticationRequest;
 import com.example.ludogorieSoft.village.dtos.request.RegisterRequest;
+import com.example.ludogorieSoft.village.dtos.request.ResetPasswordRequest;
 import com.example.ludogorieSoft.village.dtos.request.VerificationRequest;
 import com.example.ludogorieSoft.village.dtos.response.AuthenticationResponce;
 import com.example.ludogorieSoft.village.enums.Role;
@@ -110,4 +111,33 @@ import static org.mockito.Mockito.*;
         assertEquals("Your account is verified!", response.getBody());
         verify(authenticationService, times(1)).verifyVerificationToken(verificationRequest);
     }
+
+     @Test
+     void testSendResetPasswordEmail() {
+         String email = "user@example.com";
+
+         when(authenticationService.sendEmailToResetPassword(email)).thenReturn("Reset password email sent successfully");
+
+         ResponseEntity<String> response = authenticationController.resetPassword(email);
+
+         assertEquals(HttpStatus.OK, response.getStatusCode());
+         assertEquals("Reset password email sent successfully", response.getBody());
+         verify(authenticationService, times(1)).sendEmailToResetPassword(email);
+     }
+
+     @Test
+     void testResetPassword() {
+         ResetPasswordRequest request = new ResetPasswordRequest();
+         request.setUserId(1L);
+         request.setToken("valid-reset-token");
+         request.setRepeatedPassword("newPassword123");
+
+         when(authenticationService.resetPassword(request)).thenReturn("Password reset successfully");
+
+         ResponseEntity<String> response = authenticationController.resetPassword(request);
+
+         assertEquals(HttpStatus.OK, response.getStatusCode());
+         assertEquals("Password reset successfully", response.getBody());
+         verify(authenticationService, times(1)).resetPassword(request);
+     }
 }

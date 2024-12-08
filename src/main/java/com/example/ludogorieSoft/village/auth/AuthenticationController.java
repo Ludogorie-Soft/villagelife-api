@@ -3,6 +3,7 @@ package com.example.ludogorieSoft.village.auth;
 import com.example.ludogorieSoft.village.dtos.AlternativeUserDTO;
 import com.example.ludogorieSoft.village.dtos.request.AuthenticationRequest;
 import com.example.ludogorieSoft.village.dtos.request.RegisterRequest;
+import com.example.ludogorieSoft.village.dtos.request.ResetPasswordRequest;
 import com.example.ludogorieSoft.village.dtos.request.VerificationRequest;
 import com.example.ludogorieSoft.village.dtos.response.AuthenticationResponce;
 import com.example.ludogorieSoft.village.services.AuthService;
@@ -36,11 +37,20 @@ public class AuthenticationController {
     }
     @GetMapping("/check")
     public ResponseEntity<String> authorizeAdminToken(@RequestHeader("Authorization") String token) {
-
         return ResponseEntity.ok("Authorized");
     }
     @PostMapping("/verify-verification-token")
     public ResponseEntity<String> verifyVerificationToken(@RequestBody VerificationRequest verificationRequest) {
         return ResponseEntity.ok(service.verifyVerificationToken(verificationRequest));
+    }
+
+    @PostMapping("/send-reset-password-email")
+    public ResponseEntity<String> resetPassword(@RequestParam("email") String email) {
+        return ResponseEntity.ok(service.sendEmailToResetPassword(email));
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequest request) {
+        return ResponseEntity.ok(service.resetPassword(request));
     }
 }

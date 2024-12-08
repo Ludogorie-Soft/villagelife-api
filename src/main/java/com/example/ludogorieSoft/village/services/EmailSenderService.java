@@ -33,6 +33,9 @@ public class EmailSenderService {
     @Value("${spring.mail.password}")
     private String recipientPassword;
 
+    @Value("${host.url}")
+    private String hostURL;
+
     private static final Logger logger = LoggerFactory.getLogger(EmailSenderService.class);
 
     public void sendEmail(String fromEmail, String body, String subject) {
@@ -52,11 +55,41 @@ public class EmailSenderService {
     public void sendVerificationToken(VerificationTokenDTO token, AlternativeUser user) {
         try {
             String body = createVerificationEmailBody(token, user);
-            sendVerificationEmail(user.getEmail(), body);
+            sendToEmail(user.getEmail(), body, "Активационен код");
             logger.info("Verification email sent to " + user.getEmail());
         } catch (MessagingException e) {
             logger.error("An error occurred while sending a verification email", e);
         }
+    }
+
+    public void sendResetPasswordEmail(VerificationTokenDTO token, AlternativeUser user) {
+        try {
+            String body = createResetPasswordEmailBody(token, user);//мейлът праща линк с данните за токена
+            sendToEmail(user.getEmail(), body, "Смяна на парола");
+            logger.info("Reset password email sent to " + user.getEmail());
+        } catch (MessagingException e) {
+            logger.error("An error occurred while sending a verification email", e);
+        }
+    }
+
+    private String createResetPasswordEmailBody(VerificationTokenDTO token, AlternativeUser user) {
+        String fullName = user.getFullName();
+        String email = user.getEmail();
+
+        LocalDateTime expiryDate = token.getExpiryDate().minusMinutes(15);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd/HH:mm");
+        String formattedDate = expiryDate.format(formatter);
+        String resetPasswordLink = hostURL + "/auth/reset-password-form?token=" + token.getToken() + "&userId=" + user.getId();
+        return "<div style='text-align: center;'>"
+                + "<a href='https://villagelife.bg'>"
+                + "<img src='cid:logoImage' style='width: 200px;' alt='Site Logo'/>"
+                + "</a>"
+                + "<h2>Здравейте " + fullName + ",</h2>"
+                + "<p>Получавате този имейл, защото на " + formattedDate + " беше направен опит за промяна на паролата на вашия профил с имейл: <strong>" + email + "</strong>. Ако не сте извършвали такъв опит, игнорирайте имейла.</p>"
+                + "<p>Натиснете <a href='" + resetPasswordLink + "'>ТУК</a>, за да промените паролата си.</p>"
+                + "<p>Пожелаваме Ви успех,<p/>"
+                + "<p>Екип на <a href='https://villagelife.bg'>villagelife.bg</a></p>"
+                + "</div>";
     }
 
     private String createVerificationEmailBody(VerificationTokenDTO token, AlternativeUser user) {
@@ -80,13 +113,13 @@ public class EmailSenderService {
                 + "</div>";
     }
 
-    private void sendVerificationEmail(String email, String body) throws MessagingException {
+    private void sendToEmail(String email, String body, String subject) throws MessagingException {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
         helper.setTo(email);
         helper.setFrom(recipientEmail);
-        helper.setSubject("Активационен код");
+        helper.setSubject(subject);
         helper.setText(body, true);
 
         FileSystemResource logo = new FileSystemResource("src/main/resources/static/images/logo.png");
