@@ -8,7 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.InputStreamSource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -17,6 +19,8 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Properties;
@@ -53,6 +57,7 @@ public class EmailSenderService {
     }
 
     public void sendVerificationToken(VerificationTokenDTO token, AlternativeUser user) {
+        logger.info(">>>>>>>>>>>>>Verification email sent to " + user.getEmail());
         try {
             String body = createVerificationEmailBody(token, user);
             sendToEmail(user.getEmail(), body, "Активационен код");
@@ -122,8 +127,17 @@ public class EmailSenderService {
         helper.setSubject(subject);
         helper.setText(body, true);
 
-        FileSystemResource logo = new FileSystemResource("src/main/resources/static/images/logo.png");
-        helper.addInline("logoImage", logo); // Use "cid:logoImage" in the HTML to refer to this image
+//        FileSystemResource logo = new FileSystemResource("src/main/resources/static/images/logo.png");
+//        helper.addInline("logoImage", logo); // Use "cid:logoImage" in the HTML to refer to this image
+
+        ClassPathResource resource = new ClassPathResource("static/images/logo.png");
+        InputStreamSource logoSource = new InputStreamSource() {
+            @Override
+            public InputStream getInputStream() throws IOException {
+                return resource.getInputStream();
+            }
+        };
+        helper.addInline("logoImage", logoSource, "image/png");
 
         mailSender.send(message);
     }
