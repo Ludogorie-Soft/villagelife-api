@@ -112,7 +112,7 @@ public class EmailSenderService {
                 + "<h2>Здравейте " + fullName + ",</h2>"
                 + "<p>Получавате този имейл, защото на " + formattedDate + " беше извършена регистрация с вашия имейл: <strong>" + email + "</strong>. Ако не сте извършвали регистрация, игнорирайте имейла.</p>"
                 + "<p>Вашият код за активация на профила Ви е: <strong>" + token.getToken() + "</strong></p>"
-                + "<p>Използвайте този код, за да активирате Вашия профил във <a href='https://villagelife.bg'>villagelife.bg</a>.</p>"
+                + "<p>За да активирате профила си, моля използвайте <a href='"+hostURL+"/auth/verify-verification-token'>ТОЗИ</a> линк</p>"
                 + "<p>Пожелаваме Ви успех,<p/>"
                 + "<p>Екип на <a href='https://villagelife.bg'>villagelife.bg</a></p>"
                 + "</div>";

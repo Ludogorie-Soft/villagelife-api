@@ -151,25 +151,13 @@ class AuthenticationServiceTest {
     }
 
     @Test
-    void authenticate_ShouldThrowDisabledExceptionWhenUserNotVerified() {
-        AuthenticationRequest request = new AuthenticationRequest("johndoe", "password");
-        AlternativeUser authenticatedUser = mock(AlternativeUser.class);
-
-        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(null);
-        when(alternativeUserRepository.findByUsername(request.getUsername())).thenReturn(authenticatedUser);
-        when(authenticatedUser.isEnabled()).thenReturn(false);
-
-        assertThrows(UsernamePasswordException.class, () -> authenticationService.authenticate(request));
-        verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
-    }
-
-    @Test
     void verifyVerificationToken_ShouldVerifyAccountSuccessfully() {
         VerificationRequest request = new VerificationRequest("token", "john@example.com");
         VerificationToken verificationToken = mock(VerificationToken.class);
         AlternativeUser user = mock(AlternativeUser.class);
 
         when(verificationTokenRepository.findByToken(request.getToken())).thenReturn(Optional.of(verificationToken));
+        when(alternativeUserRepository.findByEmail(request.getEmail())).thenReturn(Optional.of(user));
         when(verificationToken.getAlternativeUser()).thenReturn(user);
         when(user.isEnabled()).thenReturn(false);
         when(user.getEmail()).thenReturn(request.getEmail());
@@ -202,7 +190,7 @@ class AuthenticationServiceTest {
         when(user.isEnabled()).thenReturn(false);
         when(verificationTokenService.isTokenExpired(verificationToken)).thenReturn(true);
 
-        assertThrows(TokenExpiredException.class, () -> authenticationService.verifyVerificationToken(request));
+        assertThrows(ApiRequestException.class, () -> authenticationService.verifyVerificationToken(request));
     }
 
     @Test

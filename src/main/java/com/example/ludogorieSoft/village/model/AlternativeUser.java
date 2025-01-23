@@ -78,7 +78,7 @@ public class AlternativeUser implements UserDetails {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
     private LocalDateTime deletedAt;
 
-    private boolean enabled = true; //new
+    private boolean enabled = false; //new
 
     @Enumerated(EnumType.STRING)
     private Role role;

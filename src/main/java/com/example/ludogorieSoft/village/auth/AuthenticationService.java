@@ -10,6 +10,7 @@ import com.example.ludogorieSoft.village.dtos.request.VerificationRequest;
 import com.example.ludogorieSoft.village.dtos.response.AuthenticationResponce;
 import com.example.ludogorieSoft.village.enums.Role;
 import com.example.ludogorieSoft.village.exeptions.AccessDeniedException;
+import com.example.ludogorieSoft.village.exeptions.AccountNotActivatedException;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.exeptions.TokenExpiredException;
 import com.example.ludogorieSoft.village.exeptions.UsernamePasswordException;
@@ -51,6 +52,8 @@ public class AuthenticationService {
     private final BusinessCardRepository businessCardRepository;
     private final ImageService imageService;
     private static final String INVALID_TOKEN = "Invalid token!";
+    private static final String NOT_REGISTERED = "Account not registered!";
+    private static final String ALREADY_ACTIVATED = "Account activated already!";
 
     public String register(RegisterRequest request) {
         checkRegistrationValidations(request);
@@ -95,29 +98,28 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponce authenticate(AuthenticationRequest request) {
-
+        var user = alternativeUserRepository.findByUsername(request.getUsername());
         try {
+            if (!user.isEnabled()) throw new DisabledException("User not verified!!!");
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             request.getUsername(),
                             request.getPassword()
                     )
             );
-            var user = alternativeUserRepository.findByUsername(request.getUsername());
-            if (!user.isEnabled()) throw new UsernamePasswordException("User not verified!!!");
             var jwtToken = jwtService.generateToken(user);
-
             return AuthenticationResponce.builder()
                     .token(jwtToken)
                     .build();
         } catch (DisabledException e) {
-            throw new DisabledException("User not verified!!!");
+            throw new AccountNotActivatedException("User not verified!!!");
         } catch (Exception e) {
             throw new UsernamePasswordException("Wrong username or password");
         }
     }
 
     public String verifyVerificationToken(VerificationRequest request) {
+        checkIfAlreadyVerified(request.getEmail());
         Optional<VerificationToken> optionalVerificationToken = verificationTokenRepository.findByToken(request.getToken());
         if (optionalVerificationToken.isEmpty()) throw new ApiRequestException(INVALID_TOKEN);
         VerificationToken verificationToken = optionalVerificationToken.get();
@@ -162,7 +164,8 @@ public class AuthenticationService {
         if (request.getRepeatedPassword().isBlank()) throw new ApiRequestException("repeated password is required!");
         if (request.getRepeatedPassword().length() < 8)
             throw new ApiRequestException("Repeated password must be at least 8 characters long!");
-        if (!request.getPassword().equals(request.getRepeatedPassword())) throw new ApiRequestException("Passwords do not match");
+        if (!request.getPassword().equals(request.getRepeatedPassword()))
+            throw new ApiRequestException("Passwords do not match");
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         alternativeUserRepository.save(user);
         return "Password changed successfully!";
@@ -198,5 +201,13 @@ public class AuthenticationService {
             throw new ApiRequestException("Invalid business card phone number!");
         if (card.getNumberOfEmployees() < 0)
             throw new ApiRequestException("The number of employees cannot be negative!");
+    }
+
+    private void checkIfAlreadyVerified(String email){
+        AlternativeUser alternativeUser = alternativeUserRepository.findByEmail(email)
+                .orElseThrow(()->new ApiRequestException(NOT_REGISTERED));
+        if(alternativeUser.isEnabled()){
+            throw new ApiRequestException(ALREADY_ACTIVATED);
+        }
     }
 }
