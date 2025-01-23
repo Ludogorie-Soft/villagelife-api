@@ -12,7 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,22 +23,26 @@ public class AuthenticationController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@Valid @RequestBody RegisterRequest request){
+    public ResponseEntity<String> register(@Valid @RequestBody RegisterRequest request) {
         return ResponseEntity.ok(service.register(request));
     }
+
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponce> authenticate(@RequestBody AuthenticationRequest request){
+    public ResponseEntity<AuthenticationResponce> authenticate(@RequestBody AuthenticationRequest request) {
         return ResponseEntity.ok(service.authenticate(request));
     }
+
     @GetMapping("/get-info")
-    public ResponseEntity<AlternativeUserDTO> getAdministratorInfo(){
+    public ResponseEntity<AlternativeUserDTO> getAdministratorInfo() {
         AlternativeUserDTO alternativeUserDTO = authService.getAdministratorInfo();
         return new ResponseEntity<>(alternativeUserDTO, HttpStatus.OK);
     }
+
     @GetMapping("/check")
     public ResponseEntity<String> authorizeAdminToken(@RequestHeader("Authorization") String token) {
         return ResponseEntity.ok("Authorized");
     }
+
     @PostMapping("/verify-verification-token")
     public ResponseEntity<String> verifyVerificationToken(@RequestBody VerificationRequest verificationRequest) {
         return ResponseEntity.ok(service.verifyVerificationToken(verificationRequest));

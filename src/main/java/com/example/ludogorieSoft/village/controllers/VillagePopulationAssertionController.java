@@ -8,7 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
+
 import java.util.List;
 
 @RestController
@@ -18,9 +19,10 @@ public class VillagePopulationAssertionController {
     private final VillagePopulationAssertionService villagePopulationAssertionService;
 
     @GetMapping
-    public ResponseEntity<List<VillagePopulationAssertionDTO>> getAllVillagePopulationAssertions(){
+    public ResponseEntity<List<VillagePopulationAssertionDTO>> getAllVillagePopulationAssertions() {
         return ResponseEntity.ok(villagePopulationAssertionService.getAllVillagePopulationAssertion());
     }
+
     @GetMapping("/{id}")
     public ResponseEntity<VillagePopulationAssertionDTO> getVillagePopulationAssertionById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(villagePopulationAssertionService.getByID(id));
@@ -30,6 +32,7 @@ public class VillagePopulationAssertionController {
     public ResponseEntity<List<VillagePopulationAssertionDTO>> getVillagePopulationAssertionByVillageId(@PathVariable("id") Long id) {
         return ResponseEntity.ok(villagePopulationAssertionService.getVillagePopulationAssertionByVillageId(id));
     }
+
     @PutMapping("/{id}")
     public ResponseEntity<VillagePopulationAssertionDTO> updateVillagePopulationAssertionById(@PathVariable("id") Long id, @Valid @RequestBody VillagePopulationAssertionDTO villagePopulationAssertionDTO) {
         return ResponseEntity.ok(villagePopulationAssertionService.updateVillagePopulationAssertion(id, villagePopulationAssertionDTO));

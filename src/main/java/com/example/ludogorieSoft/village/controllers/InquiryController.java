@@ -8,7 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
+
 import java.util.List;
 
 @RestController
@@ -16,6 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 public class InquiryController {
     private final InquiryService inquiryService;
+
     @PostMapping
     public ResponseEntity<InquiryDTO> createInquiry(@Valid @RequestBody InquiryDTO inquiryDTO) {
         try {

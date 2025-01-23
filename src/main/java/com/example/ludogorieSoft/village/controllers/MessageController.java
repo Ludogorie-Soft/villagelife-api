@@ -8,7 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
+
 import java.util.List;
 
 @RestController
@@ -16,6 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 public class MessageController {
     private final MessageService messageService;
+
     @PostMapping
     public ResponseEntity<MessageDTO> createMessage(@Valid @RequestBody MessageDTO messageDTO) {
         try {
@@ -25,6 +27,7 @@ public class MessageController {
             throw new ApiRequestException("Error creating message");
         }
     }
+
     @GetMapping
     public ResponseEntity<List<MessageDTO>> getAllMessages() {
         return ResponseEntity.ok(messageService.getAllMessages());

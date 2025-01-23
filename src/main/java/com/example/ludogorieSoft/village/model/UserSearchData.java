@@ -10,14 +10,26 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Size;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -51,7 +63,7 @@ public class UserSearchData {
     @Column(name = "property_type", columnDefinition = "enum('PLOT','AGRICULTURAL_LAND','HOUSE','VILLA','FLOOR_OF_A_HOUSE','BUSINESS_PROPERTY','APARTMENT')")
     private List<PropertyType> propertyTypes;
 
-    @Column(name = "property_transfer_type",columnDefinition="enum('SALE','RENT')")
+    @Column(name = "property_transfer_type", columnDefinition = "enum('SALE','RENT')")
     @Enumerated(EnumType.STRING)
     private PropertyTransferType propertyTransferType;
 
@@ -86,7 +98,7 @@ public class UserSearchData {
 
     @ElementCollection(targetClass = ConstructionType.class)
     @CollectionTable(name = "user_search_construction_types", joinColumns = @JoinColumn(name = "user_search_data_id"))
-    @Column(name = "construction_type",columnDefinition="enum('BRICKS', 'PANEL', 'WOOD', 'TIMBER_FRAMED', 'ADOBE', 'REINFORCED_CONCRETE', 'STONE', 'CLAY')")
+    @Column(name = "construction_type", columnDefinition = "enum('BRICKS', 'PANEL', 'WOOD', 'TIMBER_FRAMED', 'ADOBE', 'REINFORCED_CONCRETE', 'STONE', 'CLAY')")
     @Enumerated(EnumType.STRING)
     private List<ConstructionType> constructionTypes;
 
