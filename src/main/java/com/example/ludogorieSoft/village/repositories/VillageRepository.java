@@ -45,11 +45,11 @@ public interface VillageRepository extends JpaRepository<Village, Long> {
             Pageable pageable);
 
 
-    @Query("SELECT DISTINCT v FROM Village v " +
+    @Query("SELECT DISTINCT v, ev.villageStatus, ev.dateDeleted FROM Village v " +
             "JOIN v.ethnicityVillages ev " +
             "WHERE ev.dateDeleted IS NOT NULL " +
             "ORDER BY ev.villageStatus DESC, ev.dateDeleted ASC")
-    List<Village> findAllVillagesWithRejectedResponses();
+    List<Object[]> findAllVillagesWithRejectedResponses();
 
     List<Village> findByName(String name);
 

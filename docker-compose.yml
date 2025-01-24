@@ -8,6 +8,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: village
+    volumes:
+      - village_db_data:/var/lib/mysql
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$${MYSQL_ROOT_PASSWORD}" ]
       interval: 10s
@@ -54,11 +56,11 @@ services:
     ports:
       - "8087:8087"
     environment:
-     BACKEND_URL: http://backend:${SERVER_PORT}/api/v1
-     DATASOURCE_URL: ${DATASOURCE_URL}
-     DB_PASSWORD: ${PASSWORD}
-     SECRET_KEY: ${SECRET_KEY}
-     SLACK_TOKEN: ${SLACK_TOKEN}
+      BACKEND_URL: http://backend:${SERVER_PORT}/api/v1
+      DATASOURCE_URL: ${DATASOURCE_URL}
+      DB_PASSWORD: ${PASSWORD}
+      SECRET_KEY: ${SECRET_KEY}
+      SLACK_TOKEN: ${SLACK_TOKEN}
     depends_on:
       backend:
         condition: service_started
@@ -70,3 +72,5 @@ services:
 networks:
   village-network:
     driver: bridge
+volumes:
+  village_db_data:
