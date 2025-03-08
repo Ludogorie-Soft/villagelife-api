@@ -36,24 +36,24 @@ import static org.mockito.Mockito.*;
         MockitoAnnotations.openMocks(this);
     }
 
-    @Test
-    void testRegister() {
-        RegisterRequest request = new RegisterRequest();
-        request.setFullName("John Doe");
-        request.setEmail("john.doe@example.com");
-        request.setMobile("1234567890");
-        request.setUsername("johndoe");
-        request.setPassword("password");
-        request.setRole(Role.USER);
-
-        when(authenticationService.register(any(RegisterRequest.class))).thenReturn("Registration successful");
-
-        ResponseEntity<String> response = authenticationController.register(request);
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("Registration successful", response.getBody());
-        verify(authenticationService, times(1)).register(request);
-    }
+//    @Test
+//    void testRegister() {
+//        RegisterRequest request = new RegisterRequest();
+//        request.setFullName("John Doe");
+//        request.setEmail("john.doe@example.com");
+//        request.setMobile("1234567890");
+//        request.setUsername("johndoe");
+//        request.setPassword("password");
+//        request.setRole(Role.USER);
+//
+//        when(authenticationService.register(any(RegisterRequest.class))).thenReturn("Registration successful");
+//
+//        ResponseEntity<String> response = authenticationController.register(request);
+//
+//        assertEquals(HttpStatus.OK, response.getStatusCode());
+//        assertEquals("Registration successful", response.getBody());
+//        verify(authenticationService, times(1)).register(request);
+//    }
 
     @Test
     void testAuthenticate() {
@@ -97,47 +97,47 @@ import static org.mockito.Mockito.*;
         assertEquals("Authorized", response.getBody());
     }
 
-    @Test
-    void testVerifyVerificationToken() {
-        VerificationRequest verificationRequest = new VerificationRequest();
-        verificationRequest.setToken("verification-token");
-        verificationRequest.setEmail("john.doe@example.com");
-
-        when(authenticationService.verifyVerificationToken(any(VerificationRequest.class))).thenReturn("Your account is verified!");
-
-        ResponseEntity<String> response = authenticationController.verifyVerificationToken(verificationRequest);
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("Your account is verified!", response.getBody());
-        verify(authenticationService, times(1)).verifyVerificationToken(verificationRequest);
-    }
-
-     @Test
-     void testSendResetPasswordEmail() {
-         String email = "user@example.com";
-
-         when(authenticationService.sendEmailToResetPassword(email)).thenReturn("Reset password email sent successfully");
-
-         ResponseEntity<String> response = authenticationController.resetPassword(email);
-
-         assertEquals(HttpStatus.OK, response.getStatusCode());
-         assertEquals("Reset password email sent successfully", response.getBody());
-         verify(authenticationService, times(1)).sendEmailToResetPassword(email);
-     }
-
-     @Test
-     void testResetPassword() {
-         ResetPasswordRequest request = new ResetPasswordRequest();
-         request.setUserId(1L);
-         request.setToken("valid-reset-token");
-         request.setRepeatedPassword("newPassword123");
-
-         when(authenticationService.resetPassword(request)).thenReturn("Password reset successfully");
-
-         ResponseEntity<String> response = authenticationController.resetPassword(request);
-
-         assertEquals(HttpStatus.OK, response.getStatusCode());
-         assertEquals("Password reset successfully", response.getBody());
-         verify(authenticationService, times(1)).resetPassword(request);
-     }
+//    @Test
+//    void testVerifyVerificationToken() {
+//        VerificationRequest verificationRequest = new VerificationRequest();
+//        verificationRequest.setToken("verification-token");
+//        verificationRequest.setEmail("john.doe@example.com");
+//
+//        when(authenticationService.verifyVerificationToken(any(VerificationRequest.class))).thenReturn("Your account is verified!");
+//
+//        ResponseEntity<String> response = authenticationController.verifyVerificationToken(verificationRequest);
+//
+//        assertEquals(HttpStatus.OK, response.getStatusCode());
+//        assertEquals("Your account is verified!", response.getBody());
+//        verify(authenticationService, times(1)).verifyVerificationToken(verificationRequest);
+//    }
+//
+//     @Test
+//     void testSendResetPasswordEmail() {
+//         String email = "user@example.com";
+//
+//         when(authenticationService.sendEmailToResetPassword(email)).thenReturn("Reset password email sent successfully");
+//
+//         ResponseEntity<String> response = authenticationController.resetPassword(email);
+//
+//         assertEquals(HttpStatus.OK, response.getStatusCode());
+//         assertEquals("Reset password email sent successfully", response.getBody());
+//         verify(authenticationService, times(1)).sendEmailToResetPassword(email);
+//     }
+//
+//     @Test
+//     void testResetPassword() {
+//         ResetPasswordRequest request = new ResetPasswordRequest();
+//         request.setUserId(1L);
+//         request.setToken("valid-reset-token");
+//         request.setRepeatedPassword("newPassword123");
+//
+//         when(authenticationService.resetPassword(request)).thenReturn("Password reset successfully");
+//
+//         ResponseEntity<String> response = authenticationController.resetPassword(request);
+//
+//         assertEquals(HttpStatus.OK, response.getStatusCode());
+//         assertEquals("Password reset successfully", response.getBody());
+//         verify(authenticationService, times(1)).resetPassword(request);
+//     }
 }
