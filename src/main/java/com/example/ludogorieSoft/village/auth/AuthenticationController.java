@@ -22,10 +22,10 @@ public class AuthenticationController {
     private final AuthenticationService service;
     private final AuthService authService;
 
-    @PostMapping("/register")
-    public ResponseEntity<String> register(@Valid @RequestBody RegisterRequest request){
-        return ResponseEntity.ok(service.register(request));
-    }
+//    @PostMapping("/register")
+//    public ResponseEntity<String> register(@Valid @RequestBody RegisterRequest request){
+//        return ResponseEntity.ok(service.register(request));
+//    }
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponce> authenticate(@RequestBody AuthenticationRequest request){
         return ResponseEntity.ok(service.authenticate(request));
@@ -39,18 +39,18 @@ public class AuthenticationController {
     public ResponseEntity<String> authorizeAdminToken(@RequestHeader("Authorization") String token) {
         return ResponseEntity.ok("Authorized");
     }
-    @PostMapping("/verify-verification-token")
-    public ResponseEntity<String> verifyVerificationToken(@RequestBody VerificationRequest verificationRequest) {
-        return ResponseEntity.ok(service.verifyVerificationToken(verificationRequest));
-    }
+//    @PostMapping("/verify-verification-token")
+//    public ResponseEntity<String> verifyVerificationToken(@RequestBody VerificationRequest verificationRequest) {
+//        return ResponseEntity.ok(service.verifyVerificationToken(verificationRequest));
+//    }
 
-    @PostMapping("/send-reset-password-email")
-    public ResponseEntity<String> resetPassword(@RequestParam("email") String email) {
-        return ResponseEntity.ok(service.sendEmailToResetPassword(email));
-    }
+//    @PostMapping("/send-reset-password-email")
+//    public ResponseEntity<String> resetPassword(@RequestParam("email") String email) {
+//        return ResponseEntity.ok(service.sendEmailToResetPassword(email));
+//    }
 
-    @PostMapping("/reset-password")
-    public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequest request) {
-        return ResponseEntity.ok(service.resetPassword(request));
-    }
+//    @PostMapping("/reset-password")
+//    public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequest request) {
+//        return ResponseEntity.ok(service.resetPassword(request));
+//    }
 }
