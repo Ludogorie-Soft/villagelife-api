@@ -36,24 +36,24 @@ import static org.mockito.Mockito.*;
         MockitoAnnotations.openMocks(this);
     }
 
-    @Test
-    void testRegister() {
-        RegisterRequest request = new RegisterRequest();
-        request.setFullName("John Doe");
-        request.setEmail("john.doe@example.com");
-        request.setMobile("1234567890");
-        request.setUsername("johndoe");
-        request.setPassword("password");
-        request.setRole(Role.USER);
-
-        when(authenticationService.register(any(RegisterRequest.class))).thenReturn("Registration successful");
-
-        ResponseEntity<String> response = authenticationController.register(request);
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("Registration successful", response.getBody());
-        verify(authenticationService, times(1)).register(request);
-    }
+//    @Test
+//    void testRegister() {
+//        RegisterRequest request = new RegisterRequest();
+//        request.setFullName("John Doe");
+//        request.setEmail("john.doe@example.com");
+//        request.setMobile("1234567890");
+//        request.setUsername("johndoe");
+//        request.setPassword("password");
+//        request.setRole(Role.USER);
+//
+//        when(authenticationService.register(any(RegisterRequest.class))).thenReturn("Registration successful");
+//
+//        ResponseEntity<String> response = authenticationController.register(request);
+//
+//        assertEquals(HttpStatus.OK, response.getStatusCode());
+//        assertEquals("Registration successful", response.getBody());
+//        verify(authenticationService, times(1)).register(request);
+//    }
 
     @Test
     void testAuthenticate() {

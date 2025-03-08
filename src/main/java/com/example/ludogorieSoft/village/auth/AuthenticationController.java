@@ -7,11 +7,13 @@ import com.example.ludogorieSoft.village.dtos.request.ResetPasswordRequest;
 import com.example.ludogorieSoft.village.dtos.request.VerificationRequest;
 import com.example.ludogorieSoft.village.dtos.response.AuthenticationResponce;
 import com.example.ludogorieSoft.village.services.AuthService;
+import com.example.ludogorieSoft.village.services.CaptchaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @RestController
@@ -21,9 +23,13 @@ public class AuthenticationController {
 
     private final AuthenticationService service;
     private final AuthService authService;
+    private final CaptchaService captchaService;
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@Valid @RequestBody RegisterRequest request){
+    public ResponseEntity<String> register(@Valid @RequestBody RegisterRequest request, HttpServletRequest httpRequest){
+        final String response = httpRequest.getParameter("g-recaptcha-response");
+        captchaService.processResponse(response);
+
         return ResponseEntity.ok(service.register(request));
     }
     @PostMapping("/authenticate")
