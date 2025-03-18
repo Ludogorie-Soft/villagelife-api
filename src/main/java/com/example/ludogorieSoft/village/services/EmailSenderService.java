@@ -1,6 +1,7 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.dtos.VerificationTokenDTO;
+import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.AlternativeUser;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -9,8 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.InputStreamSource;
+import org.springframework.mail.MailSendException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -139,7 +140,11 @@ public class EmailSenderService {
         };
         helper.addInline("logoImage", logoSource, "image/png");
 
-        mailSender.send(message);
+        try {
+            mailSender.send(message);
+        } catch (MailSendException ex) {
+            throw new ApiRequestException(ex.getMessage());
+        }
     }
 
     @PostConstruct

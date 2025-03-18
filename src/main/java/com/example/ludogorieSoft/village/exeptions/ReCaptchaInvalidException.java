@@ -1,21 +1,11 @@
 package com.example.ludogorieSoft.village.exeptions;
 
-public final class ReCaptchaInvalidException extends RuntimeException {
-
-    public ReCaptchaInvalidException() {
-        super();
-    }
-
+public class ReCaptchaInvalidException extends ApiRequestException {
     public ReCaptchaInvalidException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
-    public ReCaptchaInvalidException(final String message) {
+    public ReCaptchaInvalidException(String message) {
         super(message);
     }
-
-    public ReCaptchaInvalidException(final Throwable cause) {
-        super(cause);
-    }
-
 }

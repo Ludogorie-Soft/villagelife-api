@@ -1,35 +1,18 @@
 package com.example.ludogorieSoft.village.services;
 
-import com.example.ludogorieSoft.village.config.CaptchaSettings;
 import com.example.ludogorieSoft.village.dtos.response.GoogleResponse;
 import com.example.ludogorieSoft.village.exeptions.ReCaptchaInvalidException;
 import com.example.ludogorieSoft.village.exeptions.ReCaptchaUnavailableException;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestOperations;
-import org.springframework.web.client.RestTemplate;
-
-import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
-import java.util.regex.Pattern;
 
 @Service("captchaService")
 public class CaptchaService extends AbstractCaptchaService {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(CaptchaService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CaptchaService.class);
 
     @Override
     public void processResponse(final String response) {

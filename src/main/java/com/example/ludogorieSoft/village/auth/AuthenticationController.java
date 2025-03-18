@@ -27,9 +27,8 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@Valid @RequestBody RegisterRequest request, HttpServletRequest httpRequest){
-        final String response = httpRequest.getParameter("g-recaptcha-response");
+        final String response = request.getCaptchaResponse();
         captchaService.processResponse(response);
-
         return ResponseEntity.ok(service.register(request));
     }
     @PostMapping("/authenticate")

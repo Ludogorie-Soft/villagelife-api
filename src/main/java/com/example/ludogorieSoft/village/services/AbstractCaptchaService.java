@@ -12,7 +12,6 @@ import org.springframework.web.client.RestOperations;
 
 import javax.servlet.http.HttpServletRequest;
 
-
 public abstract class AbstractCaptchaService implements ICaptchaService{
 
     private final static Logger LOGGER = LoggerFactory.getLogger(AbstractCaptchaService.class);
