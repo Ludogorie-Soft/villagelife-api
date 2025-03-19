@@ -13,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @RestController
@@ -26,7 +25,7 @@ public class AuthenticationController {
     private final CaptchaService captchaService;
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@Valid @RequestBody RegisterRequest request, HttpServletRequest httpRequest){
+    public ResponseEntity<String> register(@Valid @RequestBody RegisterRequest request){
         final String response = request.getCaptchaResponse();
         captchaService.processResponse(response);
         return ResponseEntity.ok(service.register(request));
