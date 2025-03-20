@@ -8,6 +8,7 @@ import com.example.ludogorieSoft.village.dtos.request.VerificationRequest;
 import com.example.ludogorieSoft.village.dtos.response.AuthenticationResponce;
 import com.example.ludogorieSoft.village.enums.Role;
 import com.example.ludogorieSoft.village.services.AuthService;
+import com.example.ludogorieSoft.village.services.CaptchaService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -31,30 +32,35 @@ import static org.mockito.Mockito.*;
     @Mock
     private AuthService authService;
 
+     @Mock
+     private CaptchaService captchaService;
+
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 
-//    @Test
-//    void testRegister() {
-//        RegisterRequest request = new RegisterRequest();
-//        request.setFullName("John Doe");
-//        request.setEmail("john.doe@example.com");
-//        request.setMobile("1234567890");
-//        request.setUsername("johndoe");
-//        request.setPassword("password");
-//        request.setRole(Role.USER);
-//
-//        when(authenticationService.register(any(RegisterRequest.class))).thenReturn("Registration successful");
-//
-//        ResponseEntity<String> response = authenticationController.register(request);
-//
-//        assertEquals(HttpStatus.OK, response.getStatusCode());
-//        assertEquals("Registration successful", response.getBody());
-//        verify(authenticationService, times(1)).register(request);
-//    }
+     @Test
+     void testRegister() {
+         RegisterRequest request = new RegisterRequest();
+         request.setFullName("John Doe");
+         request.setEmail("john.doe@example.com");
+         request.setMobile("1234567890");
+         request.setUsername("johndoe");
+         request.setPassword("password");
+         request.setRole(Role.USER);
+         request.setCaptchaResponse("valid-captcha-response"); // Set captcha response
 
+         doNothing().when(captchaService).processResponse(anyString());
+         when(authenticationService.register(any(RegisterRequest.class))).thenReturn("Registration successful");
+
+         ResponseEntity<String> response = authenticationController.register(request);
+
+         assertEquals(HttpStatus.OK, response.getStatusCode());
+         assertEquals("Registration successful", response.getBody());
+         verify(captchaService, times(1)).processResponse("valid-captcha-response");
+         verify(authenticationService, times(1)).register(request);
+     }
     @Test
     void testAuthenticate() {
         AuthenticationRequest request = new AuthenticationRequest();
