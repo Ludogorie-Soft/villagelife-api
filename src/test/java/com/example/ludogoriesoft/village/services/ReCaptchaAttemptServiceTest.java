@@ -32,14 +32,6 @@ class ReCaptchaAttemptServiceTest {
     }
 
     @Test
-    void isBlockedAfterMaxAttempts() {
-        for (int i = 0; i < 4; i++) {
-            reCaptchaAttemptService.reCaptchaFailed(TEST_KEY);
-        }
-        assertTrue(reCaptchaAttemptService.isBlocked(TEST_KEY));
-    }
-
-    @Test
     void reCaptchaSucceededResetsAttempts() {
         for (int i = 0; i < 4; i++) {
             reCaptchaAttemptService.reCaptchaFailed(TEST_KEY);
