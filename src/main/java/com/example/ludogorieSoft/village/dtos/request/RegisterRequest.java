@@ -20,4 +20,5 @@ public class RegisterRequest {
     private Role role;
     private String jobTitle;
     private BusinessCardDTO businessCardDTO;
+    private String captchaResponse;
 }

@@ -65,7 +65,7 @@ class AuthenticationServiceTest {
 
     @Test
     void registerShouldRegisterAdminWhenAuthenticatedAsAdmin() {
-        RegisterRequest request = new RegisterRequest("John Doe", "john@example.com", "username", "password", "1234567890", Role.ADMIN, null, null);
+        RegisterRequest request = new RegisterRequest("John Doe", "john@example.com", "username", "password", "1234567890", Role.ADMIN, null, null, null);
         Authentication authentication = mock(Authentication.class);
         AlternativeUser loggedUser = AlternativeUser.builder().username("adminUser").role(Role.ADMIN).build();
         when(SecurityContextHolder.getContext().getAuthentication()).thenReturn(authentication);
@@ -93,7 +93,7 @@ class AuthenticationServiceTest {
         nonAdminUser.setRole(Role.USER);
         when(alternativeUserRepository.findByUsername("someNonAdminUser")).thenReturn(nonAdminUser);
 
-        RegisterRequest request = new RegisterRequest("John Doe", "john@example.com", "username", "password", "1234567890", Role.ADMIN, null, null);
+        RegisterRequest request = new RegisterRequest("John Doe", "john@example.com", "username", "password", "1234567890", Role.ADMIN, null, null, null);
 
         Exception exception = assertThrows(AccessDeniedException.class, () -> authenticationService.register(request));
 
@@ -103,7 +103,7 @@ class AuthenticationServiceTest {
     @Test
     void registerShouldRegisterAgencyUserWithBusinessCard() {
         BusinessCardDTO businessCardDTO = new BusinessCardDTO(1L, "Company Name",null, null, "company@example.com", "1234567890", "Some Address", "http://website.com", 50, null);
-        RegisterRequest request = new RegisterRequest("John Doe", "john@example.com", "username", "password", "1234567890", Role.AGENCY, "Job Title", businessCardDTO);
+        RegisterRequest request = new RegisterRequest("John Doe", "john@example.com", "username", "password", "1234567890", Role.AGENCY, "Job Title", businessCardDTO, null);
 
         when(passwordEncoder.encode(request.getPassword())).thenReturn("encodedPassword");
         when(businessCardRepository.existsByEmail(businessCardDTO.getEmail())).thenReturn(false);
@@ -125,7 +125,7 @@ class AuthenticationServiceTest {
     @Test
     void registerShouldThrowApiRequestExceptionForInvalidBusinessCardEmail() {
         BusinessCardDTO businessCardDTO = new BusinessCardDTO(1l, "Company Name", null, null, "invalid-email", "1234567890", "Some Address", "http://website.com", 50, null);
-        RegisterRequest request = new RegisterRequest("John Doe", "john@example.com", "username", "password", "1234567890", Role.AGENCY, "Job Title", businessCardDTO);
+        RegisterRequest request = new RegisterRequest("John Doe", "john@example.com", "username", "password", "1234567890", Role.AGENCY, "Job Title", businessCardDTO, null);
 
         ApiRequestException exception = assertThrows(ApiRequestException.class, () -> authenticationService.register(request));
 
