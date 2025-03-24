@@ -36,6 +36,11 @@ class CaptchaServiceTest {
     @InjectMocks
     private CaptchaService captchaService;
 
+    private static final String CLIENT_IP = "127.0.0.1";
+
+    private static final String RESPONSE = "validResponse";
+    private static final String SECRET = "test-secret";
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -43,106 +48,90 @@ class CaptchaServiceTest {
 
     @Test
     void processResponse_WhenClientBlocked_ThrowsReCaptchaInvalidException() {
-        String clientIP = "127.0.0.1";
         when(request.getHeader("X-Forwarded-For")).thenReturn(null);
-        when(request.getRemoteAddr()).thenReturn(clientIP);
-        when(reCaptchaAttemptService.isBlocked(clientIP)).thenReturn(true);
+        when(request.getRemoteAddr()).thenReturn(CLIENT_IP);
+        when(reCaptchaAttemptService.isBlocked(CLIENT_IP)).thenReturn(true);
 
         assertThrows(ReCaptchaInvalidException.class, () -> captchaService.processResponse("anyResponse"));
-        verify(reCaptchaAttemptService).isBlocked(clientIP);
+        verify(reCaptchaAttemptService).isBlocked(CLIENT_IP);
     }
 
     @Test
     void processResponse_WhenResponseInvalid_ThrowsReCaptchaInvalidException() {
         String invalidResponse = "invalid!@#";
-        String clientIP = "127.0.0.1";
         when(request.getHeader("X-Forwarded-For")).thenReturn(null);
-        when(request.getRemoteAddr()).thenReturn(clientIP);
-        when(reCaptchaAttemptService.isBlocked(clientIP)).thenReturn(false);
+        when(request.getRemoteAddr()).thenReturn(CLIENT_IP);
+        when(reCaptchaAttemptService.isBlocked(CLIENT_IP)).thenReturn(false);
 
         assertThrows(ReCaptchaInvalidException.class, () -> captchaService.processResponse(invalidResponse));
     }
 
     @Test
     void processResponse_WhenGoogleResponseHasClientError_IncrementsAttempts() {
-        String response = "validResponse";
-        String clientIP = "127.0.0.1";
-        String secret = "test-secret";
-        URI expectedUri = URI.create(String.format(AbstractCaptchaService.RECAPTCHA_URL_TEMPLATE, secret, response, clientIP));
+        URI expectedUri = URI.create(String.format(AbstractCaptchaService.RECAPTCHA_URL_TEMPLATE, SECRET, RESPONSE, CLIENT_IP));
 
-        setupClientAndSecret(clientIP, secret);
+        setupClientAndSecret(CLIENT_IP, SECRET);
         GoogleResponse googleResponse = mock(GoogleResponse.class);
         when(googleResponse.isSuccess()).thenReturn(false);
         when(googleResponse.hasClientError()).thenReturn(true);
         when(restTemplate.getForObject(expectedUri, GoogleResponse.class)).thenReturn(googleResponse);
 
-        assertThrows(ReCaptchaInvalidException.class, () -> captchaService.processResponse(response));
-        verify(reCaptchaAttemptService).reCaptchaFailed(clientIP);
+        assertThrows(ReCaptchaInvalidException.class, () -> captchaService.processResponse(RESPONSE));
+        verify(reCaptchaAttemptService).reCaptchaFailed(CLIENT_IP);
     }
 
     @Test
     void processResponse_WhenGoogleResponseNotSuccessNoClientError_ThrowsException() {
-        String response = "validResponse";
-        String clientIP = "127.0.0.1";
-        String secret = "test-secret";
-        URI expectedUri = URI.create(String.format(AbstractCaptchaService.RECAPTCHA_URL_TEMPLATE, secret, response, clientIP));
+        URI expectedUri = URI.create(String.format(AbstractCaptchaService.RECAPTCHA_URL_TEMPLATE, SECRET, RESPONSE, CLIENT_IP));
 
-        setupClientAndSecret(clientIP, secret);
+        setupClientAndSecret(CLIENT_IP, SECRET);
         GoogleResponse googleResponse = mock(GoogleResponse.class);
         when(googleResponse.isSuccess()).thenReturn(false);
         when(googleResponse.hasClientError()).thenReturn(false);
         when(restTemplate.getForObject(expectedUri, GoogleResponse.class)).thenReturn(googleResponse);
 
-        assertThrows(ReCaptchaInvalidException.class, () -> captchaService.processResponse(response));
-        verify(reCaptchaAttemptService, never()).reCaptchaFailed(clientIP);
+        assertThrows(ReCaptchaInvalidException.class, () -> captchaService.processResponse(RESPONSE));
+        verify(reCaptchaAttemptService, never()).reCaptchaFailed(CLIENT_IP);
     }
 
     @Test
     void processResponse_WhenGoogleResponseSuccess_ResetsAttempts() {
-        String response = "validResponse";
-        String clientIP = "127.0.0.1";
-        String secret = "test-secret";
-        URI expectedUri = URI.create(String.format(AbstractCaptchaService.RECAPTCHA_URL_TEMPLATE, secret, response, clientIP));
+        URI expectedUri = URI.create(String.format(AbstractCaptchaService.RECAPTCHA_URL_TEMPLATE, SECRET, RESPONSE, CLIENT_IP));
 
-        setupClientAndSecret(clientIP, secret);
+        setupClientAndSecret(CLIENT_IP, SECRET);
         GoogleResponse googleResponse = mock(GoogleResponse.class);
         when(googleResponse.isSuccess()).thenReturn(true);
         when(restTemplate.getForObject(expectedUri, GoogleResponse.class)).thenReturn(googleResponse);
 
-        assertDoesNotThrow(() -> captchaService.processResponse(response));
-        verify(reCaptchaAttemptService).reCaptchaSucceeded(clientIP);
+        assertDoesNotThrow(() -> captchaService.processResponse(RESPONSE));
+        verify(reCaptchaAttemptService).reCaptchaSucceeded(CLIENT_IP);
     }
 
     @Test
     void processResponse_WhenRestClientException_ThrowsReCaptchaUnavailable() {
-        String response = "validResponse";
-        String clientIP = "127.0.0.1";
-        String secret = "test-secret";
-        URI expectedUri = URI.create(String.format(AbstractCaptchaService.RECAPTCHA_URL_TEMPLATE, secret, response, clientIP));
+        URI expectedUri = URI.create(String.format(AbstractCaptchaService.RECAPTCHA_URL_TEMPLATE, SECRET, RESPONSE, CLIENT_IP));
 
-        setupClientAndSecret(clientIP, secret);
+        setupClientAndSecret(CLIENT_IP, SECRET);
         when(restTemplate.getForObject(expectedUri, GoogleResponse.class)).thenThrow(new RestClientException("Error"));
 
-        assertThrows(ReCaptchaUnavailableException.class, () -> captchaService.processResponse(response));
+        assertThrows(ReCaptchaUnavailableException.class, () -> captchaService.processResponse(RESPONSE));
     }
 
     @Test
     void processResponse_ConstructsCorrectUri() {
-        String response = "testResponse";
-        String secret = "testSecret";
         String clientIP = "192.168.1.1";
-        URI expectedUri = URI.create(String.format(AbstractCaptchaService.RECAPTCHA_URL_TEMPLATE, secret, response, clientIP));
+        URI expectedUri = URI.create(String.format(AbstractCaptchaService.RECAPTCHA_URL_TEMPLATE, SECRET, RESPONSE, clientIP));
 
         when(request.getHeader("X-Forwarded-For")).thenReturn("192.168.1.1,10.0.0.1");
         when(request.getRemoteAddr()).thenReturn("10.0.0.1");
         when(reCaptchaAttemptService.isBlocked(clientIP)).thenReturn(false);
-        when(captchaSettings.getSecret()).thenReturn(secret);
+        when(captchaSettings.getSecret()).thenReturn(SECRET);
 
         GoogleResponse googleResponse = mock(GoogleResponse.class);
         when(googleResponse.isSuccess()).thenReturn(true);
         when(restTemplate.getForObject(expectedUri, GoogleResponse.class)).thenReturn(googleResponse);
 
-        captchaService.processResponse(response);
+        captchaService.processResponse(RESPONSE);
 
         verify(restTemplate).getForObject(expectedUri, GoogleResponse.class);
     }
