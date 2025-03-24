@@ -1,8 +1,8 @@
-package com.example.ludogorieSoft.village.services;
+package com.example.ludogorieSoft.village.services.interfaces;
 
 import com.example.ludogorieSoft.village.exeptions.ReCaptchaInvalidException;
 
-public interface ICaptchaService {
+public interface Captchable {
 
     default void processResponse(final String response) throws ReCaptchaInvalidException {}
 
