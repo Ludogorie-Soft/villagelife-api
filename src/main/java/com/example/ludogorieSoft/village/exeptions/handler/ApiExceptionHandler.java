@@ -68,4 +68,9 @@ public class ApiExceptionHandler {
     public ResponseEntity<Object> handleUsernamePasswordException() {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Wrong username or password");
     }
+
+    @ExceptionHandler(ReCaptchaUnavailableException.class)
+    public ResponseEntity<String> handleReCaptchaUnavailableException(ReCaptchaUnavailableException ex) {
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(ex.getMessage());
+    }
 }
