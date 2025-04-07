@@ -4,6 +4,7 @@ import com.example.ludogorieSoft.village.dtos.EthnicityVillageDTO;
 import com.example.ludogorieSoft.village.exeptions.handler.ApiExceptionHandler;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.services.EthnicityVillageService;
+import com.example.ludogorieSoft.village.slack.SlackMessage;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
@@ -46,6 +47,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class EthnicityVillageControllerIntegrationTest {
     @MockBean
     private EthnicityVillageService ethnicityVillageService;
+
+    @MockBean
+    private SlackMessage slackMessage;
 
     @Autowired
     private MockMvc mockMvc;

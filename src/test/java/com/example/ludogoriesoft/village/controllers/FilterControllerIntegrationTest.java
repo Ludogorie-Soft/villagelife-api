@@ -8,6 +8,7 @@ import com.example.ludogorieSoft.village.enums.PropertyType;
 import com.example.ludogorieSoft.village.exeptions.handler.ApiExceptionHandler;
 import com.example.ludogorieSoft.village.services.PropertyService;
 import com.example.ludogorieSoft.village.services.VillageService;
+import com.example.ludogorieSoft.village.slack.SlackMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +66,9 @@ class FilterControllerIntegrationTest {
 
     @MockBean
     private PropertyService propertyService;
+
+    @MockBean
+    private SlackMessage slackMessage;
 
     @BeforeEach
     public void setup() {

@@ -4,6 +4,7 @@ import com.example.ludogorieSoft.village.dtos.RegionDTO;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.exeptions.handler.ApiExceptionHandler;
 import com.example.ludogorieSoft.village.services.RegionService;
+import com.example.ludogorieSoft.village.slack.SlackMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -53,6 +54,9 @@ class RegionControllerIntegrationTest {
 
     @MockBean
     private RegionService regionService;
+
+    @MockBean
+    private SlackMessage slackMessage;
 
     private static String asJsonString(final Object obj) {
         try {

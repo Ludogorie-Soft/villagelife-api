@@ -6,6 +6,7 @@ import com.example.ludogorieSoft.village.dtos.UserSavedPropertyDTO;
 import com.example.ludogorieSoft.village.enums.Role;
 import com.example.ludogorieSoft.village.exeptions.handler.ApiExceptionHandler;
 import com.example.ludogorieSoft.village.services.UserSavedPropertyService;
+import com.example.ludogorieSoft.village.slack.SlackMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,6 +46,9 @@ class UserSavedPropertyControllerIntegrationTest {
 
     @MockBean
     private UserSavedPropertyService userSavedPropertyService;
+
+    @MockBean
+    private SlackMessage slackMessage;
 
     @Autowired
     private ObjectMapper objectMapper;
