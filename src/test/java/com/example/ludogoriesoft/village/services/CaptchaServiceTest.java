@@ -4,6 +4,7 @@ import com.example.ludogorieSoft.village.config.CaptchaSettings;
 import com.example.ludogorieSoft.village.dtos.response.GoogleResponse;
 import com.example.ludogorieSoft.village.exeptions.ReCaptchaInvalidException;
 import com.example.ludogorieSoft.village.exeptions.ReCaptchaUnavailableException;
+import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -12,7 +13,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestOperations;
 
-import javax.servlet.http.HttpServletRequest;
 
 import java.net.URI;
 
