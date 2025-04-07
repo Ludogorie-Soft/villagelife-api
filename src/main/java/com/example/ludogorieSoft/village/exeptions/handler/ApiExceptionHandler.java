@@ -3,6 +3,7 @@ package com.example.ludogorieSoft.village.exeptions.handler;
 import com.example.ludogorieSoft.village.exeptions.AccessDeniedException;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.exeptions.NoConsentException;
+import com.example.ludogorieSoft.village.exeptions.ReCaptchaUnavailableException;
 import com.example.ludogorieSoft.village.exeptions.TokenExpiredException;
 import com.example.ludogorieSoft.village.exeptions.UsernamePasswordException;
 import com.example.ludogorieSoft.village.slack.SlackMessage;
