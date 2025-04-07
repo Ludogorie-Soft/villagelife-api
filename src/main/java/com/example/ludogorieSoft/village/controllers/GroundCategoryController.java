@@ -7,7 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
+
 import java.util.List;
 
 @RestController
@@ -25,6 +26,7 @@ public class GroundCategoryController {
     public ResponseEntity<GroundCategoryDTO> getGroundCategoryByID(@PathVariable("id") Long id) {
         return ResponseEntity.ok(groundCategoryService.getByID(id));
     }
+
     @GetMapping("/name/{name}")
     public ResponseEntity<GroundCategoryDTO> getGroundCategoryByName(@PathVariable("name") String name) {
         return ResponseEntity.ok(groundCategoryService.getByGroundCategoryName(name));

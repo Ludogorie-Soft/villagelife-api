@@ -1,11 +1,15 @@
 package com.example.ludogorieSoft.village.exeptions.handler;
 
-import com.example.ludogorieSoft.village.exeptions.*;
+import com.example.ludogorieSoft.village.exeptions.AccessDeniedException;
+import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
+import com.example.ludogorieSoft.village.exeptions.NoConsentException;
+import com.example.ludogorieSoft.village.exeptions.ReCaptchaUnavailableException;
+import com.example.ludogorieSoft.village.exeptions.TokenExpiredException;
+import com.example.ludogorieSoft.village.exeptions.UsernamePasswordException;
 import com.example.ludogorieSoft.village.slack.SlackMessage;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +18,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 
 @RestControllerAdvice
-@AllArgsConstructor
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class ApiExceptionHandler {
-    private SlackMessage slackMessage;
+
+    private final SlackMessage slackMessage;
 
     @ExceptionHandler(Exception.class)
     public void alertSlackChannelWhenUnhandledExceptionOccurs(Exception ex) {
@@ -64,5 +68,10 @@ public class ApiExceptionHandler {
     @ExceptionHandler(UsernamePasswordException.class)
     public ResponseEntity<Object> handleUsernamePasswordException() {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Wrong username or password");
+    }
+
+    @ExceptionHandler(ReCaptchaUnavailableException.class)
+    public ResponseEntity<String> handleReCaptchaUnavailableException(ReCaptchaUnavailableException ex) {
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(ex.getMessage());
     }
 }

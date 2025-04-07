@@ -2,6 +2,7 @@ package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.dtos.EthnicityDTO;
 import com.example.ludogorieSoft.village.services.EthnicityService;
+import com.example.ludogorieSoft.village.slack.SlackMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,6 +41,9 @@ class EthnicityControllerIntegrationTest {
 
     @MockBean
     private EthnicityService ethnicityService;
+
+    @MockBean
+    private SlackMessage slackMessage;
 
     @Autowired
     private ObjectMapper objectMapper;

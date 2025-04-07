@@ -1,10 +1,11 @@
 package com.example.ludogorieSoft.village.services;
 
-import com.example.ludogorieSoft.village.dtos.AdministratorDTO;
+import com.example.ludogorieSoft.village.dtos.AlternativeUserDTO;
 import com.example.ludogorieSoft.village.dtos.VillageDTO;
 import com.example.ludogorieSoft.village.dtos.response.VillageResponse;
-import com.example.ludogorieSoft.village.model.*;
-import com.example.ludogorieSoft.village.repositories.*;
+import com.example.ludogorieSoft.village.model.Population;
+import com.example.ludogorieSoft.village.model.Village;
+import com.example.ludogorieSoft.village.repositories.VillageRepository;
 import com.example.ludogorieSoft.village.utils.TimestampUtils;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -12,7 +13,11 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -76,7 +81,8 @@ public class AdminVillageService {
     }
 
     public List<VillageResponse> getRejectedVillageResponsesWithSortedAnswers(boolean status) {
-        List<Village> villagesWithRejectedResponses = villageRepository.findAllVillagesWithRejectedResponses();
+        List<Village> villagesWithRejectedResponses = villageRepository.findAllVillagesWithRejectedResponses().stream()
+                .map(result -> (Village) result[0]).toList();
         List<VillageResponse> villageResponses = new ArrayList<>();
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -99,7 +105,7 @@ public class AdminVillageService {
         villageResponse.setDateUpload(village.getDateUpload());
 
         if (village.getAdmin() != null) {
-            villageResponse.setAdmin(modelMapper.map(village.getAdmin(), AdministratorDTO.class));
+            villageResponse.setAdmin(modelMapper.map(village.getAdmin(), AlternativeUserDTO.class));
             villageResponse.setDateApproved(village.getDateApproved());
         }
         List<Population> answers = new ArrayList<>();

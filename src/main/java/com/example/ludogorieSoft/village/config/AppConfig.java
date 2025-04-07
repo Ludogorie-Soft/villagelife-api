@@ -9,8 +9,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.RestOperations;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.format.DateTimeFormatter;
 
@@ -45,5 +49,18 @@ public class AppConfig {
         return MinioClient.builder().endpoint(spaceBucketOriginUrl)
                 .region("fra1")
                 .credentials(digitalOceanAccessKey ,digitalOceanSecretKey).build();
+    }
+    @Bean
+    public ClientHttpRequestFactory clientHttpRequestFactory() {
+        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+        factory.setConnectTimeout(3 * 1000);
+        factory.setReadTimeout(7 * 1000);
+        return factory;
+    }
+
+    @Bean
+    public RestOperations restTemplate() {
+        RestTemplate restTemplate = new RestTemplate(this.clientHttpRequestFactory());
+        return restTemplate;
     }
 }

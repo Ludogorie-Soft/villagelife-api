@@ -1,14 +1,18 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.model.Region;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.constraints.NotBlank;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import javax.persistence.*;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.constraints.NotBlank;
 import java.lang.reflect.Field;
 import java.util.Set;
 
@@ -39,13 +43,16 @@ class RegionTest {
         Class<?> regionClass = Region.class;
         boolean hasAllArgsConstructor = false;
         try {
-            regionClass.getDeclaredConstructor(Long.class, String.class);
+            // Adjusted to match the new constructor with three parameters
+            regionClass.getDeclaredConstructor(Long.class, String.class, String.class);
             hasAllArgsConstructor = true;
         } catch (NoSuchMethodException e) {
+            // Constructor does not exist
         }
 
         Assertions.assertTrue(hasAllArgsConstructor);
     }
+
 
     @Test
     void hasNoArgsConstructor() {

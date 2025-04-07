@@ -4,6 +4,7 @@ import com.example.ludogorieSoft.village.dtos.GroundCategoryDTO;
 import com.example.ludogorieSoft.village.exeptions.handler.ApiExceptionHandler;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.services.GroundCategoryService;
+import com.example.ludogorieSoft.village.slack.SlackMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -49,6 +50,9 @@ class GroundCategoryControllerIntegrationTest {
 
     @MockBean
     private GroundCategoryService groundCategoryService;
+
+    @MockBean
+    private SlackMessage slackMessage;
 
     @BeforeEach
     public void setup() {

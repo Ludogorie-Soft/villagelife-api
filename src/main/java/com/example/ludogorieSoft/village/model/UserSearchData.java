@@ -1,0 +1,135 @@
+package com.example.ludogorieSoft.village.model;
+
+import com.example.ludogorieSoft.village.enums.ConstructionType;
+import com.example.ludogorieSoft.village.enums.OwnershipType;
+import com.example.ludogorieSoft.village.enums.PropertyCondition;
+import com.example.ludogorieSoft.village.enums.PropertyTransferType;
+import com.example.ludogorieSoft.village.enums.PropertyType;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Size;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Entity
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Table(name = "user_search_data")
+public class UserSearchData {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "alternative_user_id", nullable = false)
+    private AlternativeUser alternativeUser;
+
+    @NotBlank
+    @Size(max = 50)
+    private String searchName;
+
+    private String villageName;
+
+    private String regionName;
+
+    @ElementCollection(targetClass = PropertyType.class)
+    @CollectionTable(name = "user_search_property_types", joinColumns = @JoinColumn(name = "user_search_data_id"))
+    @Enumerated(EnumType.STRING)
+    @Column(name = "property_type", columnDefinition = "enum('PLOT','AGRICULTURAL_LAND','HOUSE','VILLA','FLOOR_OF_A_HOUSE','BUSINESS_PROPERTY','APARTMENT')")
+    private List<PropertyType> propertyTypes;
+
+    @Column(name = "property_transfer_type", columnDefinition = "enum('SALE','RENT')")
+    @Enumerated(EnumType.STRING)
+    private PropertyTransferType propertyTransferType;
+
+    @Min(0)
+    private Double minBuiltUpArea;
+
+    @Min(0)
+    private Double maxBuiltUpArea;
+
+    @Min(0)
+    private Double minYardArea;
+
+    @Min(0)
+    private Double maxYardArea;
+
+    @Min(0)
+    private Short minRoomsCount;
+
+    @Min(0)
+    private Short maxRoomsCount;
+
+    @Min(0)
+    private Short minBathroomsCount;
+
+    @Min(0)
+    private Short maxBathroomsCount;
+
+    @ElementCollection
+    @CollectionTable(name = "heating_options", joinColumns = @JoinColumn(name = "user_search_data_id"))
+    @Column(name = "heating")
+    private List<String> heating;
+
+    @ElementCollection(targetClass = ConstructionType.class)
+    @CollectionTable(name = "user_search_construction_types", joinColumns = @JoinColumn(name = "user_search_data_id"))
+    @Column(name = "construction_type", columnDefinition = "enum('BRICKS', 'PANEL', 'WOOD', 'TIMBER_FRAMED', 'ADOBE', 'REINFORCED_CONCRETE', 'STONE', 'CLAY')")
+    @Enumerated(EnumType.STRING)
+    private List<ConstructionType> constructionTypes;
+
+    @ElementCollection(targetClass = PropertyCondition.class)
+    @CollectionTable(name = "user_search_property_condition", joinColumns = @JoinColumn(name = "user_search_data_id"))
+    @Enumerated(EnumType.STRING)
+    @Column(name = "property_condition", columnDefinition = "enum('NEW', 'AFTER_COMPLETE_RENOVATION', 'GOOD', 'NEEDS_REPAIR', 'NEEDS_COMPLETE_RENOVATION', 'FOR_DEMOLITION')")
+    private List<PropertyCondition> propertyConditions;
+
+    @Min(0)
+    private Short minConstructionYear;
+
+    @Min(0)
+    private Short maxConstructionYear;
+
+    @Min(0)
+    private BigDecimal minPrice;
+
+    @Min(0)
+    private BigDecimal maxPrice;
+
+    @ElementCollection(targetClass = OwnershipType.class)
+    @CollectionTable(name = "user_search_ownership_types", joinColumns = @JoinColumn(name = "user_search_data_id"))
+    @Enumerated(EnumType.STRING)
+    @Column(name = "ownership_type", columnDefinition = "enum('INDIVIDUAL','AGENCY','BUILDER','INVESTOR')")
+    private List<OwnershipType> ownershipTypes;
+
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
+    private LocalDateTime deletedAt;
+}
+
+

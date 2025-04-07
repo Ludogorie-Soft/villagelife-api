@@ -1,26 +1,30 @@
 package com.example.ludogorieSoft.village.controllers;
 
+import com.example.ludogorieSoft.village.dtos.PropertyDTO;
 import com.example.ludogorieSoft.village.dtos.VillageDTO;
 import com.example.ludogorieSoft.village.enums.Children;
+import com.example.ludogorieSoft.village.services.PropertyService;
 import com.example.ludogorieSoft.village.services.VillageService;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-
-import lombok.AllArgsConstructor;
-
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/filter")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class FilterController {
-    private VillageService villageSearchService;
+    private final PropertyService propertyService;
+    private final VillageService villageSearchService;
 
     @GetMapping("/searchVillages")
     public ResponseEntity<Page<VillageDTO>> searchVillagesByCriteria(
@@ -39,5 +43,66 @@ public class FilterController {
         }
         Page<VillageDTO> villages = villageSearchService.getSearchVillages2(region, villageName, objectAroundVillageDTOS, livingConditionDTOS, childrenEnum, pageable);
         return ResponseEntity.ok(villages);
+    }
+
+    @GetMapping("/searchProperties")
+    public ResponseEntity<Page<PropertyDTO>> searchPropertiesByCriteria(
+            @RequestParam(value = "propertyTypes", required = false) List<String> propertyTypes,
+            @RequestParam(value = "propertyTransferType", required = false) String propertyTransferType,
+            @RequestParam(value = "minBuiltUpArea", required = false) Double minBuiltUpArea,
+            @RequestParam(value = "maxBuiltUpArea", required = false) Double maxBuiltUpArea,
+            @RequestParam(value = "minYardArea", required = false) Double minYardArea,
+            @RequestParam(value = "maxYardArea", required = false) Double maxYardArea,
+            @RequestParam(value = "minRoomsCount", required = false) Short minRoomsCount,
+            @RequestParam(value = "maxRoomsCount", required = false) Short maxRoomsCount,
+            @RequestParam(value = "minBathroomsCount", required = false) Short minBathroomsCount,
+            @RequestParam(value = "maxBathroomsCount", required = false) Short maxBathroomsCount,
+            @RequestParam(value = "heating", required = false) List<String> heating,
+            @RequestParam(value = "constructionTypes", required = false) List<String> constructionTypes,
+            @RequestParam(value = "propertyConditions", required = false) List<String> propertyConditions,
+            @RequestParam(value = "minConstructionYear", required = false) Short minConstructionYear,
+            @RequestParam(value = "maxConstructionYear", required = false) Short maxConstructionYear,
+            @RequestParam(value = "minPrice", required = false) BigDecimal minPrice,
+            @RequestParam(value = "maxPrice", required = false) BigDecimal maxPrice,
+            @RequestParam(value = "ownershipTypes", required = false) List<String> ownershipTypes,
+            @RequestParam(value = "villageName", required = false) String villageName,
+            @RequestParam(value = "regionName", required = false) String regionName,
+            @PageableDefault(size = 6, sort = "createdAt") Pageable pageable
+    ) {
+        Page<PropertyDTO> properties = propertyService.getSearchProperties(propertyTypes, propertyTransferType,
+                minBuiltUpArea, maxBuiltUpArea, minYardArea, maxYardArea, minRoomsCount, maxRoomsCount, minBathroomsCount,
+                maxBathroomsCount, heating, constructionTypes, propertyConditions, minConstructionYear, maxConstructionYear, minPrice,
+                maxPrice, ownershipTypes, villageName, regionName, pageable);
+        return ResponseEntity.ok(properties);
+    }
+
+    @PutMapping("/increment-seen-in-results")
+    public ResponseEntity<Void> incrementSearchPropertiesSeenInResults(
+            @RequestParam(value = "propertyTypes", required = false) List<String> propertyTypes,
+            @RequestParam(value = "propertyTransferType", required = false) String propertyTransferType,
+            @RequestParam(value = "minBuiltUpArea", required = false) Double minBuiltUpArea,
+            @RequestParam(value = "maxBuiltUpArea", required = false) Double maxBuiltUpArea,
+            @RequestParam(value = "minYardArea", required = false) Double minYardArea,
+            @RequestParam(value = "maxYardArea", required = false) Double maxYardArea,
+            @RequestParam(value = "minRoomsCount", required = false) Short minRoomsCount,
+            @RequestParam(value = "maxRoomsCount", required = false) Short maxRoomsCount,
+            @RequestParam(value = "minBathroomsCount", required = false) Short minBathroomsCount,
+            @RequestParam(value = "maxBathroomsCount", required = false) Short maxBathroomsCount,
+            @RequestParam(value = "heating", required = false) List<String> heating,
+            @RequestParam(value = "constructionTypes", required = false) List<String> constructionTypes,
+            @RequestParam(value = "propertyConditions", required = false) List<String> propertyConditions,
+            @RequestParam(value = "minConstructionYear", required = false) Short minConstructionYear,
+            @RequestParam(value = "maxConstructionYear", required = false) Short maxConstructionYear,
+            @RequestParam(value = "minPrice", required = false) BigDecimal minPrice,
+            @RequestParam(value = "maxPrice", required = false) BigDecimal maxPrice,
+            @RequestParam(value = "ownershipTypes", required = false) List<String> ownershipTypes,
+            @RequestParam(value = "villageName", required = false) String villageName,
+            @RequestParam(value = "regionName", required = false) String regionName
+    ) {
+        propertyService.incrementSearchPropertiesSeenInResults(propertyTypes, propertyTransferType,
+                minBuiltUpArea, maxBuiltUpArea, minYardArea, maxYardArea, minRoomsCount, maxRoomsCount, minBathroomsCount,
+                maxBathroomsCount, heating, constructionTypes, propertyConditions, minConstructionYear, maxConstructionYear, minPrice,
+                maxPrice, ownershipTypes, villageName, regionName);
+        return ResponseEntity.noContent().build();
     }
 }

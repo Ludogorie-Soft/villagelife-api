@@ -1,11 +1,12 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.authorization.JWTService;
-import com.example.ludogorieSoft.village.dtos.AdministratorDTO;
+import com.example.ludogorieSoft.village.dtos.AlternativeUserDTO;
+import com.example.ludogorieSoft.village.enums.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 @RequiredArgsConstructor
@@ -13,13 +14,18 @@ public class AuthService {
     private final AdministratorService administratorService;
     private final HttpServletRequest request;
     private final JWTService jwtService;
+    private final ImageService imageService;
 
-    public AdministratorDTO getAdministratorInfo(){
+    public AlternativeUserDTO getAdministratorInfo() {
         String authHeather = request.getHeader("Authorization");
         String jwt;
         String username;
         jwt = authHeather.substring(7);
         username = jwtService.extractUsername(jwt);
-        return administratorService.findAdminByUsername(username);
+        AlternativeUserDTO alternativeUserDTO = administratorService.findAdminByUsername(username);
+        if (alternativeUserDTO.getRole() != Role.USER && alternativeUserDTO.getRole() != Role.ADMIN) {
+            alternativeUserDTO.getBusinessCardDTO().setImageName(imageService.getImageFromSpace(alternativeUserDTO.getBusinessCardDTO().getImageName()));
+        }
+        return alternativeUserDTO;
     }
 }

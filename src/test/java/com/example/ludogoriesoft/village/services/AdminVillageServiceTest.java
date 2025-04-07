@@ -1,22 +1,10 @@
 package com.example.ludogorieSoft.village.services;
 
-import static java.time.LocalDateTime.now;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-
 import com.example.ludogorieSoft.village.dtos.VillageDTO;
 import com.example.ludogorieSoft.village.dtos.response.VillageResponse;
 import com.example.ludogorieSoft.village.model.Population;
 import com.example.ludogorieSoft.village.model.Village;
 import com.example.ludogorieSoft.village.repositories.VillageRepository;
-import com.example.ludogorieSoft.village.utils.TimestampUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,7 +13,24 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
+import static java.time.LocalDateTime.now;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyBoolean;
+import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.argThat;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class AdminVillageServiceTest {
 
@@ -110,10 +115,11 @@ class AdminVillageServiceTest {
         Village village2 = new Village();
         village2.setId(2L);
 
-        List<Village> villages = new ArrayList<>();
-        villages.add(village1);
-        villages.add(village2);
+        Object[] result1 = new Object[]{village1, "APPROVED"}; // Village and status
+        Object[] result2 = new Object[]{village2, "REJECTED"}; // Village and status
+        List<Object[]> villages = Arrays.asList(result1, result2);
 
+        // Mock the repository method to return the list of Object[]
         when(villageRepository.findAllVillagesWithRejectedResponses()).thenReturn(villages);
 
         Population population1 = new Population();
@@ -172,8 +178,9 @@ class AdminVillageServiceTest {
         assertEquals("2023-08-15 10:00:00", formattedDates.get(0));
         assertEquals("2023-08-15 11:00:00", formattedDates.get(1));
     }
+
     @Test
-     void testGetRejectedAnswersForVillage() {
+    void testGetRejectedAnswersForVillage() {
         Long villageId = 1L;
         boolean status = false;
 
@@ -195,7 +202,7 @@ class AdminVillageServiceTest {
     }
 
     @Test
-     void testGetAnswersToApprove() {
+    void testGetAnswersToApprove() {
         Long villageId = 1L;
         boolean status = true;
 

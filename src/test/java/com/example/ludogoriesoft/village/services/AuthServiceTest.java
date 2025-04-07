@@ -1,16 +1,16 @@
 package com.example.ludogorieSoft.village.services;
 
 import com.example.ludogorieSoft.village.authorization.JWTService;
-import com.example.ludogorieSoft.village.dtos.AdministratorDTO;
+import com.example.ludogorieSoft.village.dtos.AlternativeUserDTO;
+import com.example.ludogorieSoft.village.dtos.BusinessCardDTO;
+import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
 
-import javax.servlet.http.HttpServletRequest;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -21,6 +21,8 @@ class AuthServiceTest {
     private HttpServletRequest request;
     @Mock
     private JWTService jwtService;
+    @Mock
+    private ImageService imageService;
     @InjectMocks
     private AuthService authService;
 
@@ -38,11 +40,12 @@ class AuthServiceTest {
         String username = "testuser";
         when(jwtService.extractUsername(jwtToken)).thenReturn(username);
 
-        AdministratorDTO expectedAdminDTO = new AdministratorDTO();
+        AlternativeUserDTO expectedAdminDTO = new AlternativeUserDTO();
         expectedAdminDTO.setUsername(username);
+        expectedAdminDTO.setBusinessCardDTO(new BusinessCardDTO());
         when(administratorService.findAdminByUsername(username)).thenReturn(expectedAdminDTO);
 
-        AdministratorDTO result = authService.getAdministratorInfo();
+        AlternativeUserDTO result = authService.getAdministratorInfo();
 
         verify(request).getHeader("Authorization");
         verify(jwtService).extractUsername(jwtToken);

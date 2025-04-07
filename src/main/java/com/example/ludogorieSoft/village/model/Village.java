@@ -1,9 +1,22 @@
 package com.example.ludogorieSoft.village.model;
 
-import lombok.*;
+import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -31,7 +44,7 @@ public class Village {
     private Boolean status;
     @ManyToOne
     @JoinColumn(name = "admin_id")
-    private Administrator admin;
+    private AlternativeUser admin;
     private LocalDateTime dateApproved;
 
     @OneToMany(mappedBy = "village", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -68,6 +81,5 @@ public class Village {
     private List<VillageVideo> villageVideos;
 
     private int approvedResponsesCount;
-
 
 }

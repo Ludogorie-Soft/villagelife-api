@@ -1,18 +1,18 @@
 package com.example.ludogorieSoft.village.services;
 
+import com.example.ludogorieSoft.village.dtos.AlternativeUserDTO;
 import com.example.ludogorieSoft.village.dtos.RegionDTO;
 import com.example.ludogorieSoft.village.dtos.VillageDTO;
-
-import com.example.ludogorieSoft.village.dtos.*;
-
 import com.example.ludogorieSoft.village.enums.Children;
-
-import com.example.ludogorieSoft.village.model.*;
-import com.example.ludogorieSoft.village.repositories.VillageRepository;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
+import com.example.ludogorieSoft.village.model.AlternativeUser;
+import com.example.ludogorieSoft.village.model.Village;
+import com.example.ludogorieSoft.village.repositories.VillageRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -25,12 +25,12 @@ import static java.time.LocalDateTime.now;
 @AllArgsConstructor
 public class VillageService {
 
+    private static final String ERROR_MESSAGE1 = "Village with id ";
+    private static final String ERROR_MESSAGE2 = " not found  ";
     private final VillageRepository villageRepository;
     private final ModelMapper modelMapper;
     private final RegionService regionService;
     private final AuthService authService;
-    private static final String ERROR_MESSAGE1 = "Village with id ";
-    private static final String ERROR_MESSAGE2 = " not found  ";
     private final TranslatorService translatorService;
 
 
@@ -89,9 +89,9 @@ public class VillageService {
             RegionDTO regionDTO = regionService.findRegionByName(villageDTO.getRegion());
             village.setRegion(regionService.checkRegion(regionDTO.getId()));
 
-            AdministratorDTO administratorDTO = authService.getAdministratorInfo();
+            AlternativeUserDTO alternativeUserDTO = authService.getAdministratorInfo();
 
-            village.setAdmin(modelMapper.map(administratorDTO, Administrator.class));
+            village.setAdmin(modelMapper.map(alternativeUserDTO, AlternativeUser.class));
             village.setStatus(true);
             village.setDateApproved(now());
 
@@ -174,21 +174,22 @@ public class VillageService {
 
         String[] villageNameAndRegionName = key.split(", ");
         List<Village> village = villageRepository.findSingleVillageByNameAndRegionName_forUpload(villageNameAndRegionName[0], villageNameAndRegionName[1]);
-
         if (!village.isEmpty()) {
             return villageToVillageDTO(village.get(0));
         }
         return null;
     }
+
     public void translateVillagesNames() {
         List<Village> villagesList = villageRepository.findAll();
 
         villagesList.forEach(village -> {
-                    String translatedName = translatorService.translateToLatin(village.getName());
-                    village.setLatinName(translatedName);
-                    villageRepository.save(village);
-                });
+            String translatedName = translatorService.translateToLatin(village.getName());
+            village.setLatinName(translatedName);
+            villageRepository.save(village);
+        });
     }
+
     public List<Long> getAllApprovedVillagesByStatus(boolean status) {
         return villageRepository.findAllApprovedVillageIdsByStatus(status);
     }

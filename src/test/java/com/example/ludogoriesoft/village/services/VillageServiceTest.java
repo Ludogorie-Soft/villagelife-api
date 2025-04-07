@@ -16,7 +16,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 
 import java.util.ArrayList;
 
@@ -213,7 +212,7 @@ class VillageServiceTest {
         Village village = new Village();
         village.setName("NewVillage");
         village.setLatinName("NewVillage");
-        village.setRegion(new Region(1L, "NewRegion"));
+        village.setRegion(new Region(1L, "NewRegion",""));
         village.setStatus(false);
         Village savedVillage = new Village();
         savedVillage.setId(1L);
@@ -241,7 +240,7 @@ class VillageServiceTest {
 
         Village existingVillage = new Village();
         existingVillage.setName("ExistingVillage");
-        existingVillage.setRegion(new Region(1L, "ExistingRegion"));
+        existingVillage.setRegion(new Region(1L, "ExistingRegion",""));
         existingVillage.setStatus(true);
         when(villageRepository.findSingleVillageByNameAndRegionName("ExistingVillage", "ExistingRegion")).thenReturn(existingVillage);
         when(villageRepository.save(any(Village.class))).thenReturn(existingVillage);
@@ -312,15 +311,15 @@ class VillageServiceTest {
         RegionDTO updatedRegionDTO = new RegionDTO();
         updatedRegionDTO.setId(1L);
 
-        AdministratorDTO administratorDTO = new AdministratorDTO();
-        administratorDTO.setId(1L);
+        AlternativeUserDTO alternativeUserDTO = new AlternativeUserDTO();
+        alternativeUserDTO.setId(1L);
 
         when(villageRepository.findById(villageId)).thenReturn(Optional.of(existingVillage));
         when(regionService.findRegionByName(villageDTO.getRegion())).thenReturn(updatedRegionDTO);
-        when(authService.getAdministratorInfo()).thenReturn(administratorDTO);
+        when(authService.getAdministratorInfo()).thenReturn(alternativeUserDTO);
         when(villageRepository.save(any(Village.class))).thenReturn(existingVillage);
         when(modelMapper.map(any(Village.class), eq(VillageDTO.class))).thenReturn(villageDTO);
-        when(modelMapper.map(any(Administrator.class), eq(AdministratorDTO.class))).thenReturn(new AdministratorDTO());
+        when(modelMapper.map(any(AlternativeUser.class), eq(AlternativeUserDTO.class))).thenReturn(new AlternativeUserDTO());
 
         VillageDTO updatedVillageDTO = villageService.updateVillageStatus(villageId, villageDTO);
 
@@ -372,7 +371,7 @@ class VillageServiceTest {
     }
     @Test
     void testGetVillageByNameAndRegionName_WhenVillageExists() {
-       Region region = new Region(1L,"RegionName");
+       Region region = new Region(1L,"RegionName","");
         String key = "VillageName, RegionName";
 
         Village mockVillage = new Village();

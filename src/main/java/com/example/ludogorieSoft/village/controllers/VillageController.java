@@ -9,7 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
+
 import java.util.List;
 
 @RestController
@@ -31,7 +32,7 @@ public class VillageController {
     public ResponseEntity<VillageInfo> getVillageInfoById(@PathVariable("id") Long id) {
         boolean status = true;
         String answerDate = null;
-        VillageInfo villageInfo = villageInfoService.getVillageInfoByVillageId(id,status,answerDate);
+        VillageInfo villageInfo = villageInfoService.getVillageInfoByVillageId(id, status, answerDate);
         return ResponseEntity.ok(villageInfo);
     }
 
@@ -64,12 +65,15 @@ public class VillageController {
     public void increaseApprovedResponsesCount(@PathVariable Long id) {
         villageService.increaseApprovedResponsesCount(id);
     }
+
     @GetMapping("/name/{key}")
     public VillageDTO findVillageByNameAndRegion(@PathVariable String key) {
-       return villageService.getVillageByNameAndRegionName(key);
+        return villageService.getVillageByNameAndRegionName(key);
     }
+
     @GetMapping("/status/{status}")
     public List<Long> testSitemap(@PathVariable boolean status) {
         return villageService.getAllApprovedVillagesByStatus(status);
     }
+
 }

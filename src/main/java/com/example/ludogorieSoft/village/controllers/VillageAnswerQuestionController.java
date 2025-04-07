@@ -8,7 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
+
 import java.util.List;
 
 @RestController
@@ -26,6 +27,7 @@ public class VillageAnswerQuestionController {
     public ResponseEntity<VillageAnswerQuestionDTO> getVillageAnswerQuestionById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(villageAnswerQuestionService.getVillageAnswerQuestionById(id));
     }
+
     @GetMapping("/village/{id}")
     public ResponseEntity<List<VillageAnswerQuestionDTO>> getVillageAnswerQuestionByVillageId(@PathVariable("id") Long id) {
         return ResponseEntity.ok(villageAnswerQuestionService.getVillageAnswerQuestionByVillageId(id));
@@ -51,8 +53,9 @@ public class VillageAnswerQuestionController {
             return ResponseEntity.notFound().build();
         }
     }
+
     @GetMapping("/answers/{questionName}")
-    public ResponseEntity<List<Object[]>> findVillageNameAndAnswerByQuestionName(@PathVariable("questionName") String questionName){
+    public ResponseEntity<List<Object[]>> findVillageNameAndAnswerByQuestionName(@PathVariable("questionName") String questionName) {
         return ResponseEntity.ok(villageAnswerQuestionService.findVillageNameAndAnswerByQuestionName(questionName));
     }
 }

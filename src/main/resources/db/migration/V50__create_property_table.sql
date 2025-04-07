@@ -1,0 +1,36 @@
+CREATE TABLE IF NOT EXISTS properties (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    village_id BIGINT,
+    alternative_user_id BIGINT,
+    property_type ENUM('PLOT', 'AGRICULTURAL_LAND', 'HOUSE', 'VILLA', 'FLOOR_OF_A_HOUSE', 'BUSINESS_PROPERTY', 'APARTMENT') NOT NULL,
+    property_transfer_type ENUM('SALE', 'RENT') NOT NULL,
+    price DECIMAL(19, 2) CHECK (price >= 0),
+    phone_number VARCHAR(255) UNIQUE NOT NULL,
+    build_up_area DOUBLE NOT NULL CHECK (build_up_area >= 0),
+    yard_area DOUBLE NOT NULL CHECK (yard_area >= 0),
+    rooms_count INT NOT NULL CHECK (rooms_count >= 0),
+    bathrooms_count INT NOT NULL CHECK (bathrooms_count >= 0),
+    image_url VARCHAR(255),
+    construction_type ENUM('BRICKS', 'PANEL', 'WOOD', 'TIMBER_FRAMED', 'ADOBE', 'STONE', 'CLAY') NOT NULL,
+    construction_year VARCHAR(4),
+    extras TEXT,
+    description TEXT,
+    address VARCHAR(255),
+    stats_id BIGINT,
+    ownership_type ENUM('INDIVIDUAL', 'AGENCY', 'BUILDER', 'INVESTOR') NOT NULL,
+    property_condition ENUM('NEW','AFTER_COMPLETE_RENOVATION', 'GOOD', 'NEEDS_REPAIR', 'NEEDS_COMPLETE_RENOVATION', 'FOR_DEMOLITION') NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NULL,
+    deactivated_at TIMESTAMP NULL,
+    deleted_at TIMESTAMP NULL,
+    FOREIGN KEY (village_id) REFERENCES villages(id),
+    FOREIGN KEY (alternative_user_id) REFERENCES alternative_users(id),
+    FOREIGN KEY (stats_id) REFERENCES property_stats(id)
+);
+
+CREATE TABLE IF NOT EXISTS property_heating(
+    property_id BIGINT,
+    heating VARCHAR(255),
+    PRIMARY KEY (property_id, heating),
+    FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE
+);

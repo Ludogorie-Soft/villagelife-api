@@ -1,6 +1,6 @@
 package com.example.ludogorieSoft.village.controllers;
 
-import com.example.ludogorieSoft.village.dtos.AdministratorDTO;
+import com.example.ludogorieSoft.village.dtos.AlternativeUserDTO;
 import com.example.ludogorieSoft.village.dtos.request.AdministratorRequest;
 import com.example.ludogorieSoft.village.services.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,16 +29,16 @@ class AdministratorControllerTest {
 
     @Test
     void getAllAdministrators_shouldReturnListOfAdministrators() {
-        AdministratorDTO createdAdministrator1 = new AdministratorDTO();
+        AlternativeUserDTO createdAdministrator1 = new AlternativeUserDTO();
         createdAdministrator1.setId(1L);
         createdAdministrator1.setUsername("username1");
-        AdministratorDTO createdAdministrator2 = new AdministratorDTO();
+        AlternativeUserDTO createdAdministrator2 = new AlternativeUserDTO();
         createdAdministrator2.setId(1L);
         createdAdministrator2.setUsername("username2");
-        List<AdministratorDTO> administrators = Arrays.asList(createdAdministrator1, createdAdministrator2);
+        List<AlternativeUserDTO> administrators = Arrays.asList(createdAdministrator1, createdAdministrator2);
         when(administratorService.getAllAdministrators()).thenReturn(administrators);
 
-        ResponseEntity<List<AdministratorDTO>> response = administratorController.getAllAdministrators();
+        ResponseEntity<List<AlternativeUserDTO>> response = administratorController.getAllAdministrators();
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(administrators, response.getBody());
@@ -47,12 +47,12 @@ class AdministratorControllerTest {
     @Test
     void getAdministratorById_shouldReturnAdministrator() {
         Long administratorId = 1L;
-        AdministratorDTO administrator = new AdministratorDTO();
+        AlternativeUserDTO administrator = new AlternativeUserDTO();
         administrator.setId(administratorId);
         administrator.setUsername("username");
         when(administratorService.getAdministratorById(administratorId)).thenReturn(administrator);
 
-        ResponseEntity<AdministratorDTO> response = administratorController.getAdministratorById(administratorId);
+        ResponseEntity<AlternativeUserDTO> response = administratorController.getAdministratorById(administratorId);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(administrator, response.getBody());
@@ -63,12 +63,12 @@ class AdministratorControllerTest {
         Long administratorId = 1L;
         AdministratorRequest request = new AdministratorRequest();
         request.setUsername("username");
-        AdministratorDTO updatedAdministrator = new AdministratorDTO();
+        AlternativeUserDTO updatedAdministrator = new AlternativeUserDTO();
         updatedAdministrator.setId(administratorId);
         updatedAdministrator.setUsername("username");
         when(administratorService.updateAdministrator(administratorId, request)).thenReturn(updatedAdministrator);
 
-        ResponseEntity<AdministratorDTO> response = administratorController.updateAdministrator(administratorId, request);
+        ResponseEntity<AlternativeUserDTO> response = administratorController.updateAdministrator(administratorId, request);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(updatedAdministrator, response.getBody());

@@ -1,0 +1,76 @@
+services:
+  db:
+    image: mysql:8.3
+    container_name: mysql
+    hostname: mysql
+    ports:
+      - '3308:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: village
+    volumes:
+      - village_db_data:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u $${DB_USERNAME}", "-p$${MYSQL_ROOT_PASSWORD}" ]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
+    networks:
+      - village-network
+
+  backend:
+    #    build: .
+    image: ludogoriesoft/villagelife-backend:latest
+    ports:
+      - "8181:8181"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATASOURCE_URL: ${DATASOURCE_URL}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DIGITAL_OCEAN_ACCESS_KEY: ${DIGITAL_OCEAN_ACCESS_KEY}
+      DIGITAL_OCEAN_BUCKET_NAME: ${DIGITAL_OCEAN_BUCKET_NAME}
+      DIGITAL_OCEAN_SECRET_KEY: ${DIGITAL_OCEAN_SECRET_KEY}
+      EMAIL: ${EMAIL}
+      HOST_URL: ${HOST_URL}
+      PASSWORD: ${PASSWORD}
+      SECRET_KEY: ${SECRET_KEY}
+      SERVER_PORT: ${SERVER_PORT}
+      SLACK_TOKEN: ${SLACK_TOKEN}
+      SPACE_BUCKET_ORIGIN_URL: ${SPACE_BUCKET_ORIGIN_URL}
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8181/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - village-network
+
+  frontend:
+    #    build:
+    #      context: .././villagelife-front-end
+    image: ludogoriesoft/villagelife-frontend:latest
+    ports:
+      - "80:8080"
+    environment:
+      BACKEND_URL: http://backend:${SERVER_PORT}/api/v1
+      DATASOURCE_URL: ${DATASOURCE_URL}
+      DB_PASSWORD: ${PASSWORD}
+      SECRET_KEY: ${SECRET_KEY}
+      SLACK_TOKEN: ${SLACK_TOKEN}
+    depends_on:
+      backend:
+        condition: service_started
+      db:
+        condition: service_started
+    networks:
+      - village-network
+
+networks:
+  village-network:
+    driver: bridge
+volumes:
+  village_db_data:
