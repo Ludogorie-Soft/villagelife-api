@@ -1,9 +1,9 @@
 package com.example.ludogorieSoft.village.model;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+import jakarta.persistence.*;
 
 @Entity
 @Getter

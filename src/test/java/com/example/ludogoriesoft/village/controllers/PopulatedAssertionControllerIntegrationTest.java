@@ -4,6 +4,7 @@ import com.example.ludogorieSoft.village.dtos.PopulatedAssertionDTO;
 import com.example.ludogorieSoft.village.exeptions.handler.ApiExceptionHandler;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.services.PopulatedAssertionService;
+import com.example.ludogorieSoft.village.slack.SlackMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
@@ -48,6 +49,9 @@ class PopulatedAssertionControllerIntegrationTest {
 
     @MockBean
     private PopulatedAssertionService populatedAssertionService;
+
+    @MockBean
+    private SlackMessage slackMessage;
 
     @BeforeEach
     public void setup() {

@@ -7,7 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
+
 import java.util.List;
 
 @RestController
@@ -26,10 +27,12 @@ public class UserSavedPropertyController {
     public ResponseEntity<List<UserSavedPropertyDTO>> getAllUserSavedProperties() {
         return ResponseEntity.ok(userSavedPropertyService.getAllUserSavedProperties());
     }
+
     @GetMapping("/property/{propertyId}/user/{userId}")
     public ResponseEntity<Boolean> isPropertySavedByPropertyIdAndAlternativeUserId(@PathVariable("propertyId") Long propertyId, @PathVariable("userId") Long userId) {
         return ResponseEntity.ok(userSavedPropertyService.isPropertySavedByPropertyIdAndAlternativeUserId(propertyId, userId));
     }
+
     @PostMapping("/toggle/property/{propertyId}/user/{userId}")
     public ResponseEntity<UserSavedPropertyDTO> togglePropertySavedByPropertyIdAndAlternativeUserId(@PathVariable("propertyId") Long propertyId, @PathVariable("userId") Long userId) {
         return ResponseEntity.ok(userSavedPropertyService.toggleUserSavedProperty(propertyId, userId));

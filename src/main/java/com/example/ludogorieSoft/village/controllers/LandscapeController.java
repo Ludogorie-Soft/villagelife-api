@@ -7,7 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
+
 import java.util.List;
 
 @RestController
@@ -15,6 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 public class LandscapeController {
     private final LandscapeService landscapeService;
+
     @GetMapping
     public ResponseEntity<List<LandscapeDTO>> getAllLandscapes() {
         return ResponseEntity.ok(landscapeService.getAllLandscapes());
@@ -30,6 +32,7 @@ public class LandscapeController {
         LandscapeDTO createdLandscape = landscapeService.createLandscape(landscapeDTO);
         return new ResponseEntity<>(createdLandscape, HttpStatus.CREATED);
     }
+
     @PutMapping("/{id}")
     public ResponseEntity<LandscapeDTO> updateLandscape(@PathVariable("id") Long id, @Valid @RequestBody LandscapeDTO landscapeDTO) {
         return ResponseEntity.ok(landscapeService.updateLandscape(id, landscapeDTO));

@@ -11,6 +11,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CsrfFilter;
+import org.springframework.security.web.csrf.XorCsrfTokenRequestAttributeHandler;
 import org.springframework.security.web.util.matcher.AndRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestHeaderRequestMatcher;
 
@@ -24,31 +25,35 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf()
+        http.csrf(csrf -> csrf
+                .csrfTokenRequestHandler(new XorCsrfTokenRequestAttributeHandler())
                 .requireCsrfProtectionMatcher(new AndRequestMatcher(
                         CsrfFilter.DEFAULT_CSRF_MATCHER,
-                        new RequestHeaderRequestMatcher(HttpHeaders.COOKIE)))
-                .and()
-                .cors().disable()
-                .authorizeHttpRequests()
-                .antMatchers("/api/v1/admins/**", "/api/v1/villageImages/resume/{id}", "/api/v1/villageImages/reject/{id}", "/api/v1/villageImages/deleted/with-base64/village/{villageId}", "/api/v1/villageImages/with-base64/village/{villageId}", "/api/v1/villageImages/admin-upload")
-                .hasAuthority("ADMIN")
-                .antMatchers("/api/v1/user-search-data/**")
-                .authenticated()
-                .and()
-                .authorizeHttpRequests()
-                .anyRequest()
-                .permitAll()
-                .and()
-                .sessionManagement()
+                        new RequestHeaderRequestMatcher(HttpHeaders.COOKIE)
+                ))
+        );
+        http.cors(cors -> cors.disable());
+        http.authorizeHttpRequests(auth -> auth
+                .requestMatchers(
+                        "/api/v1/admins/**",
+                        "/api/v1/villageImages/resume/{id}",
+                        "/api/v1/villageImages/reject/{id}",
+                        "/api/v1/villageImages/deleted/with-base64/village/{villageId}",
+                        "/api/v1/villageImages/with-base64/village/{villageId}",
+                        "/api/v1/villageImages/admin-upload"
+                ).hasAuthority("ADMIN")
+                .requestMatchers("/api/v1/user-search-data/**").authenticated()
+                .anyRequest().permitAll()
+        );
+        http.sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling()
-                .authenticationEntryPoint(jwtAuthenticationEntryPoint);
-
+        );
+        http.authenticationProvider(authenticationProvider);
+        http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+        http.exceptionHandling(exception -> exception
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+        );
         return http.build();
     }
 }
+

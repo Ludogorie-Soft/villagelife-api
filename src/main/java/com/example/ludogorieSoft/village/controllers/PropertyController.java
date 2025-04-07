@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -22,6 +22,7 @@ import java.util.List;
 @AllArgsConstructor
 public class PropertyController {
     private final PropertyService propertyService;
+
     @PostMapping
     public ResponseEntity<PropertyDTO> createProperty(@Valid @RequestBody PropertyDTO propertyDTO) {
         PropertyDTO createdProperty = propertyService.createProperty(propertyDTO);

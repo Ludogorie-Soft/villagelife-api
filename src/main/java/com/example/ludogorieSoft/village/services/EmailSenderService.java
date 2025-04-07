@@ -3,6 +3,8 @@ package com.example.ludogorieSoft.village.services;
 import com.example.ludogorieSoft.village.dtos.VerificationTokenDTO;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.AlternativeUser;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -17,9 +19,8 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
+import jakarta.annotation.PostConstruct;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
@@ -30,18 +31,15 @@ import java.util.Properties;
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class EmailSenderService {
+    private static final Logger logger = LoggerFactory.getLogger(EmailSenderService.class);
     @Autowired
     private JavaMailSender mailSender;
     @Value("${spring.mail.username}")
     private String recipientEmail;
-
     @Value("${spring.mail.password}")
     private String recipientPassword;
-
     @Value("${host.url}")
     private String hostURL;
-
-    private static final Logger logger = LoggerFactory.getLogger(EmailSenderService.class);
 
     public void sendEmail(String fromEmail, String body, String subject) {
         MimeMessage message = mailSender.createMimeMessage();
@@ -113,7 +111,7 @@ public class EmailSenderService {
                 + "<h2>Здравейте " + fullName + ",</h2>"
                 + "<p>Получавате този имейл, защото на " + formattedDate + " беше извършена регистрация с вашия имейл: <strong>" + email + "</strong>. Ако не сте извършвали регистрация, игнорирайте имейла.</p>"
                 + "<p>Вашият код за активация на профила Ви е: <strong>" + token.getToken() + "</strong></p>"
-                + "<p>За да активирате профила си, моля използвайте <a href='"+hostURL+"/auth/verify-verification-token'>ТОЗИ</a> линк</p>"
+                + "<p>За да активирате профила си, моля използвайте <a href='" + hostURL + "/auth/verify-verification-token'>ТОЗИ</a> линк</p>"
                 + "<p>Пожелаваме Ви успех,<p/>"
                 + "<p>Екип на <a href='https://villagelife.bg'>villagelife.bg</a></p>"
                 + "</div>";
@@ -159,6 +157,7 @@ public class EmailSenderService {
             mailProperties.put("mail.smtp.starttls.enable", "true");
         }
     }
+
     public void addTableRow(StringBuilder emailBody, String title, String info) {
         emailBody.append("<tr><td style=\"border: 1px solid #CCCCCC; padding: 5px; width: 30%;\">").append(title).append("</td><td style=\"border: 1px solid #CCCCCC; padding: 5px;\">").append(info).append("</td></tr>");
     }

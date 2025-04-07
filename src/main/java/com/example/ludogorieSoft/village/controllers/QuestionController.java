@@ -8,7 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
+
 import java.util.List;
 
 @RestController
@@ -17,6 +18,7 @@ import java.util.List;
 public class QuestionController {
 
     private final QuestionService questionService;
+
     @GetMapping
     public ResponseEntity<List<QuestionDTO>> getAllQuestions() {
         return ResponseEntity.ok(questionService.getAllQuestions());

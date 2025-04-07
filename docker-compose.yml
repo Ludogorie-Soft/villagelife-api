@@ -4,12 +4,14 @@ services:
     container_name: mysql
     hostname: mysql
     ports:
-      - '3306:3306'
+      - '3308:3306'
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: village
+    volumes:
+      - village_db_data:/var/lib/mysql
     healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$${MYSQL_ROOT_PASSWORD}" ]
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u $${DB_USERNAME}", "-p$${MYSQL_ROOT_PASSWORD}" ]
       interval: 10s
       retries: 5
       start_period: 30s
@@ -18,10 +20,10 @@ services:
       - village-network
 
   backend:
-    build: .
+    #    build: .
     image: ludogoriesoft/villagelife-backend:latest
     ports:
-      - "8080:8080"
+      - "8181:8181"
     depends_on:
       db:
         condition: service_healthy
@@ -40,7 +42,7 @@ services:
       SLACK_TOKEN: ${SLACK_TOKEN}
       SPACE_BUCKET_ORIGIN_URL: ${SPACE_BUCKET_ORIGIN_URL}
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8080/actuator/health" ]
+      test: [ "CMD", "curl", "-f", "http://localhost:8181/actuator/health" ]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -48,17 +50,17 @@ services:
       - village-network
 
   frontend:
-    build:
-      context: .././villagelife-front-end
+    #    build:
+    #      context: .././villagelife-front-end
     image: ludogoriesoft/villagelife-frontend:latest
     ports:
-      - "8087:8087"
+      - "80:8080"
     environment:
-     BACKEND_URL: http://backend:${SERVER_PORT}/api/v1
-     DATASOURCE_URL: ${DATASOURCE_URL}
-     DB_PASSWORD: ${PASSWORD}
-     SECRET_KEY: ${SECRET_KEY}
-     SLACK_TOKEN: ${SLACK_TOKEN}
+      BACKEND_URL: http://backend:${SERVER_PORT}/api/v1
+      DATASOURCE_URL: ${DATASOURCE_URL}
+      DB_PASSWORD: ${PASSWORD}
+      SECRET_KEY: ${SECRET_KEY}
+      SLACK_TOKEN: ${SLACK_TOKEN}
     depends_on:
       backend:
         condition: service_started
@@ -70,3 +72,5 @@ services:
 networks:
   village-network:
     driver: bridge
+volumes:
+  village_db_data:

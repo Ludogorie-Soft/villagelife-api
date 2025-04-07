@@ -1,7 +1,12 @@
 package com.example.ludogorieSoft.village.authorization;
 
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.SignatureException;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -11,18 +16,16 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+
 @Component
 @RequiredArgsConstructor
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
     private final JWTService jwtService;
     private final UserDetailsService userDetailsService;
+
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws jakarta.servlet.ServletException, IOException {
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
         final String username;
@@ -51,7 +54,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         } catch (SignatureException ex) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            ( response).sendError(HttpServletResponse.SC_FORBIDDEN, "No valid signature");
+            (response).sendError(HttpServletResponse.SC_FORBIDDEN, "No valid signature");
 
         } catch (MalformedJwtException ex) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
@@ -63,13 +66,11 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
         } catch (UnsupportedJwtException ex) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            ( response).sendError(HttpServletResponse.SC_FORBIDDEN, "Unsupported authorization token ");
+            (response).sendError(HttpServletResponse.SC_FORBIDDEN, "Unsupported authorization token ");
 
         } catch (IllegalArgumentException ex) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             (response).sendError(HttpServletResponse.SC_FORBIDDEN, "JWT claims string is empty");
-
         }
     }
-
 }

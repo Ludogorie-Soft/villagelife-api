@@ -9,7 +9,8 @@ import com.example.ludogorieSoft.village.dtos.request.ResetPasswordRequest;
 import com.example.ludogorieSoft.village.dtos.request.VerificationRequest;
 import com.example.ludogorieSoft.village.dtos.response.AuthenticationResponce;
 import com.example.ludogorieSoft.village.enums.Role;
-import com.example.ludogorieSoft.village.exeptions.*;
+import com.example.ludogorieSoft.village.exeptions.AccessDeniedException;
+import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.AlternativeUser;
 import com.example.ludogorieSoft.village.model.VerificationToken;
 import com.example.ludogorieSoft.village.repositories.AlternativeUserRepository;
@@ -33,8 +34,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
 
 class AuthenticationServiceTest {
     @Mock
@@ -261,32 +270,33 @@ class AuthenticationServiceTest {
                 () -> authenticationService.resetPassword(request));
         assertEquals("Passwords do not match", exception.getMessage());
     }
-@Test
-void resetPassword_ShouldChangePasswordSuccessfully() {
-    Long userId = 1L;
-    String newPassword = "newPassword123";
-    String repeatedPassword = "newPassword123";
-    String token = "validToken";
-    AlternativeUser user = mock(AlternativeUser.class);
-    VerificationToken verificationToken = mock(VerificationToken.class);
 
-    ResetPasswordRequest request = new ResetPasswordRequest();
-    request.setUserId(userId);
-    request.setToken(token);
-    request.setPassword(newPassword);
-    request.setRepeatedPassword(repeatedPassword);
+    @Test
+    void resetPassword_ShouldChangePasswordSuccessfully() {
+        Long userId = 1L;
+        String newPassword = "newPassword123";
+        String repeatedPassword = "newPassword123";
+        String token = "validToken";
+        AlternativeUser user = mock(AlternativeUser.class);
+        VerificationToken verificationToken = mock(VerificationToken.class);
 
-    when(alternativeUserRepository.findById(userId)).thenReturn(Optional.of(user));
-    when(verificationTokenRepository.findByToken(token)).thenReturn(Optional.of(verificationToken));
-    when(verificationToken.getAlternativeUser()).thenReturn(user);
-    when(verificationToken.getExpiryDate()).thenReturn(LocalDateTime.now().plusMinutes(10));
-    when(user.getId()).thenReturn(userId);
+        ResetPasswordRequest request = new ResetPasswordRequest();
+        request.setUserId(userId);
+        request.setToken(token);
+        request.setPassword(newPassword);
+        request.setRepeatedPassword(repeatedPassword);
 
-    String result = authenticationService.resetPassword(request);
+        when(alternativeUserRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(verificationTokenRepository.findByToken(token)).thenReturn(Optional.of(verificationToken));
+        when(verificationToken.getAlternativeUser()).thenReturn(user);
+        when(verificationToken.getExpiryDate()).thenReturn(LocalDateTime.now().plusMinutes(10));
+        when(user.getId()).thenReturn(userId);
 
-    assertEquals("Password changed successfully!", result);
-    verify(alternativeUserRepository).save(user);
-}
+        String result = authenticationService.resetPassword(request);
+
+        assertEquals("Password changed successfully!", result);
+        verify(alternativeUserRepository).save(user);
+    }
 
     @Test
     void resetPassword_ShouldThrowApiRequestException_WhenUserIdIsNull() {

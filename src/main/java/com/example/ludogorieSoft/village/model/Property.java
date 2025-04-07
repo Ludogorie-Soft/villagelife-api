@@ -1,20 +1,37 @@
 package com.example.ludogorieSoft.village.model;
 
-import com.example.ludogorieSoft.village.enums.*;
+import com.example.ludogorieSoft.village.enums.ConstructionType;
+import com.example.ludogorieSoft.village.enums.OwnershipType;
+import com.example.ludogorieSoft.village.enums.PropertyCondition;
+import com.example.ludogorieSoft.village.enums.PropertyTransferType;
+import com.example.ludogorieSoft.village.enums.PropertyType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -37,12 +54,12 @@ public class Property {
     @JoinColumn(name = "alternative_user_id")
     private AlternativeUser alternativeUser;
 
-    @Column(name = "property_type",columnDefinition="enum('PLOT','AGRICULTURAL_LAND','HOUSE','VILLA','FLOOR_OF_A_HOUSE','BUSINESS_PROPERTY','APARTMENT')")
+    @Column(name = "property_type", columnDefinition = "enum('PLOT','AGRICULTURAL_LAND','HOUSE','VILLA','FLOOR_OF_A_HOUSE','BUSINESS_PROPERTY','APARTMENT')")
     @Enumerated(EnumType.STRING)
     @NotNull(message = "Property type is required.")
     private PropertyType propertyType;
 
-    @Column(name = "property_transfer_type",columnDefinition="enum('SALE','RENT')")
+    @Column(name = "property_transfer_type", columnDefinition = "enum('SALE','RENT')")
     @Enumerated(EnumType.STRING)
     private PropertyTransferType propertyTransferType;
 
@@ -77,7 +94,7 @@ public class Property {
 
     private String imageUrl;
 
-    @Column(name = "construction_type",columnDefinition="enum('BRICKS', 'PANEL', 'WOOD', 'TIMBER_FRAMED', 'ADOBE', 'STONE', 'CLAY')")
+    @Column(name = "construction_type", columnDefinition = "enum('BRICKS', 'PANEL', 'WOOD', 'TIMBER_FRAMED', 'ADOBE', 'STONE', 'CLAY')")
     @Enumerated(EnumType.STRING)
     private ConstructionType constructionType;
 
@@ -97,12 +114,12 @@ public class Property {
     @JoinColumn(name = "stats_id")
     private PropertyStats propertyStats;
 
-    @Column(name = "ownership_type",columnDefinition="enum('INDIVIDUAL','AGENCY','BUILDER','INVESTOR')")
+    @Column(name = "ownership_type", columnDefinition = "enum('INDIVIDUAL','AGENCY','BUILDER','INVESTOR')")
     @Enumerated(EnumType.STRING)
     @NotNull(message = "Ownership type is required.")
     private OwnershipType ownershipType;
 
-    @Column(name = "property_condition",columnDefinition="enum('NEW','AFTER_COMPLETE_RENOVATION', 'GOOD', 'NEEDS_REPAIR', 'NEEDS_COMPLETE_RENOVATION', 'FOR_DEMOLITION')")
+    @Column(name = "property_condition", columnDefinition = "enum('NEW','AFTER_COMPLETE_RENOVATION', 'GOOD', 'NEEDS_REPAIR', 'NEEDS_COMPLETE_RENOVATION', 'FOR_DEMOLITION')")
     @Enumerated(EnumType.STRING)
     @NotNull(message = "Property condition is required.")
     private PropertyCondition propertyCondition;

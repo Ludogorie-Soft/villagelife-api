@@ -4,12 +4,12 @@ import com.example.ludogorieSoft.village.dtos.AlternativeUserDTO;
 import com.example.ludogorieSoft.village.dtos.BusinessCardDTO;
 import com.example.ludogorieSoft.village.dtos.PropertyDTO;
 import com.example.ludogorieSoft.village.dtos.PropertyStatsDTO;
-import com.example.ludogorieSoft.village.enums.PropertyCondition;
-import com.example.ludogorieSoft.village.enums.Role;
 import com.example.ludogorieSoft.village.enums.ConstructionType;
 import com.example.ludogorieSoft.village.enums.OwnershipType;
+import com.example.ludogorieSoft.village.enums.PropertyCondition;
 import com.example.ludogorieSoft.village.enums.PropertyTransferType;
 import com.example.ludogorieSoft.village.enums.PropertyType;
+import com.example.ludogorieSoft.village.enums.Role;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.model.Property;
 import com.example.ludogorieSoft.village.repositories.PropertyRepository;
@@ -21,8 +21,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -34,8 +34,8 @@ import static java.util.UUID.randomUUID;
 @Service
 @AllArgsConstructor
 public class PropertyService {
-    private PropertyRepository propertyRepository;
     private final ModelMapper modelMapper;
+    private PropertyRepository propertyRepository;
     private VillageService villageService;
     private ImageService imageService;
     private PropertyImageService propertyImageService;
@@ -154,12 +154,12 @@ public class PropertyService {
     }
 
     public void incrementSearchPropertiesSeenInResults(List<String> propertyTypes, String propertyTransferType,
-                                                 Double minBuiltUpArea, Double maxBuiltUpArea, Double minYardArea,
-                                                 Double maxYardArea, Short minRoomsCount, Short maxRoomsCount,
-                                                 Short minBathroomsCount, Short maxBathroomsCount, List<String> heating,
-                                                 List<String> constructionTypes, List<String> propertyConditions, Short minConstructionYear,
-                                                 Short maxConstructionYear, BigDecimal minPrice, BigDecimal maxPrice,
-                                                 List<String> ownershipTypes, String villageName, String regionName) {
+                                                       Double minBuiltUpArea, Double maxBuiltUpArea, Double minYardArea,
+                                                       Double maxYardArea, Short minRoomsCount, Short maxRoomsCount,
+                                                       Short minBathroomsCount, Short maxBathroomsCount, List<String> heating,
+                                                       List<String> constructionTypes, List<String> propertyConditions, Short minConstructionYear,
+                                                       Short maxConstructionYear, BigDecimal minPrice, BigDecimal maxPrice,
+                                                       List<String> ownershipTypes, String villageName, String regionName) {
 
         List<PropertyType> propertyTypesValues = mapToPropertyTypeList(propertyTypes);
         PropertyTransferType propertyTransferTypeValue = mapToPropertyTransferType(propertyTransferType);
@@ -240,6 +240,12 @@ public class PropertyService {
     }
 
     public PropertyDTO createProperty(PropertyDTO propertyDTO) {
+        if (propertyDTO.getRoomsCount() == null) {
+            propertyDTO.setRoomsCount((short) 0);
+        }
+        if (propertyDTO.getBathroomsCount() == null) {
+            propertyDTO.setBathroomsCount((short) 0);
+        }
         Property property = propertyDTOToProperty(propertyDTO);
         String imageUUID = randomUUID().toString();
         String imageName = imageService.uploadImage(propertyDTO.getMainImageBytes(), imageUUID);

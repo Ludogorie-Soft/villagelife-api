@@ -6,7 +6,7 @@ import com.example.ludogorieSoft.village.enums.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 @RequiredArgsConstructor
@@ -16,14 +16,14 @@ public class AuthService {
     private final JWTService jwtService;
     private final ImageService imageService;
 
-    public AlternativeUserDTO getAdministratorInfo(){
+    public AlternativeUserDTO getAdministratorInfo() {
         String authHeather = request.getHeader("Authorization");
         String jwt;
         String username;
         jwt = authHeather.substring(7);
         username = jwtService.extractUsername(jwt);
         AlternativeUserDTO alternativeUserDTO = administratorService.findAdminByUsername(username);
-        if(alternativeUserDTO.getRole() != Role.USER && alternativeUserDTO.getRole() != Role.ADMIN) {
+        if (alternativeUserDTO.getRole() != Role.USER && alternativeUserDTO.getRole() != Role.ADMIN) {
             alternativeUserDTO.getBusinessCardDTO().setImageName(imageService.getImageFromSpace(alternativeUserDTO.getBusinessCardDTO().getImageName()));
         }
         return alternativeUserDTO;

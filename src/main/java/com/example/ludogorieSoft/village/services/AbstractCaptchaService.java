@@ -5,13 +5,13 @@ import java.util.regex.Pattern;
 import com.example.ludogorieSoft.village.config.CaptchaSettings;
 import com.example.ludogorieSoft.village.exeptions.ReCaptchaInvalidException;
 import com.example.ludogorieSoft.village.services.interfaces.Captchable;
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestOperations;
 
-import javax.servlet.http.HttpServletRequest;
 
 public abstract class AbstractCaptchaService implements Captchable {
 

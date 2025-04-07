@@ -4,6 +4,7 @@ import com.example.ludogorieSoft.village.dtos.LivingConditionDTO;
 import com.example.ludogorieSoft.village.exeptions.handler.ApiExceptionHandler;
 import com.example.ludogorieSoft.village.exeptions.ApiRequestException;
 import com.example.ludogorieSoft.village.services.LivingConditionService;
+import com.example.ludogorieSoft.village.slack.SlackMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -51,6 +52,9 @@ class LivingConditionControllerIntegrationTest {
 
     @MockBean
     private LivingConditionService livingConditionService;
+
+    @MockBean
+    private SlackMessage slackMessage;
 
     @BeforeEach
     public void setup() {
