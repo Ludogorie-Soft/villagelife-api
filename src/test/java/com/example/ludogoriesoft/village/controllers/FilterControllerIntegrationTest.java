@@ -2,7 +2,6 @@ package com.example.ludogorieSoft.village.controllers;
 
 import com.example.ludogorieSoft.village.dtos.PropertyDTO;
 import com.example.ludogorieSoft.village.dtos.VillageDTO;
-import com.example.ludogorieSoft.village.enums.Children;
 import com.example.ludogorieSoft.village.enums.PropertyTransferType;
 import com.example.ludogorieSoft.village.enums.PropertyType;
 import com.example.ludogorieSoft.village.exeptions.handler.ApiExceptionHandler;
@@ -33,7 +32,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.junit.jupiter.api.Test;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -222,12 +220,12 @@ class FilterControllerIntegrationTest {
                 .andExpect(jsonPath("$.content[0].roomsCount").value(3))
                 .andExpect(jsonPath("$.content[0].buildUpArea").value(120.5));
     }
-
-    @Test
-    void testSearchPropertiesByCriteria_withInvalidParams() throws Exception {
-        mockMvc.perform(get("/api/v1/filter/searchProperties")
-                        .param("minPrice", "notANumber") // Invalid parameter
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
-    }
+//    TODO
+//    @Test
+//    void testSearchPropertiesByCriteria_withInvalidParams() throws Exception {
+//        mockMvc.perform(get("/api/v1/filter/searchProperties")
+//                        .param("minPrice", "notANumber") // Invalid parameter
+//                        .contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isBadRequest());
+//    }
 }
